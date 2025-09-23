@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/restaurant.dart';
+import '../../core/utils/animation_manager.dart';
+import '../../core/utils/accessibility_helper.dart';
 import 'restaurant_card_components/card_background.dart';
 import 'restaurant_card_components/discount_badge.dart';
 import 'restaurant_card_components/popularity_badge.dart';
@@ -29,14 +31,25 @@ class _RestaurantCardState extends State<RestaurantCard>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
+  bool _animationsEnabled = true;
+  final AnimationManager _animationManager = AnimationManager();
 
   @override
   void initState() {
     super.initState();
+    // Créer le contrôleur d'animation
     _controller = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
+    
+    // Enregistrer l'animation dans le gestionnaire pour éviter les collisions
+    _animationManager.registerAnimation(
+      id: 'restaurant_card_${widget.restaurant.id}',
+      controller: _controller,
+      priority: true,
+    );
+    
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
@@ -45,9 +58,18 @@ class _RestaurantCardState extends State<RestaurantCard>
       curve: Curves.easeInOut,
     ));
   }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Vérifier les préférences d'accessibilité
+    final mediaQuery = MediaQuery.of(context);
+    _animationsEnabled = !mediaQuery.disableAnimations;
+  }
 
   @override
   void dispose() {
+    _animationManager.cancelAnimation('restaurant_card_${widget.restaurant.id}');
     _controller.dispose();
     super.dispose();
   }
@@ -57,32 +79,43 @@ class _RestaurantCardState extends State<RestaurantCard>
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    return GestureDetector(
-      onTapDown: (_) => _onTapDown(),
-      onTapUp: (_) => _onTapUp(),
-      onTapCancel: _onTapCancel,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) => Transform.scale(
-          scale: _scaleAnimation.value,
-          child: _buildCard(context, isDarkMode),
-        ),
+    return Semantics(
+      button: true,
+      label: 'Restaurant ${widget.restaurant.name}',
+      hint: 'Toucher pour voir les détails',
+      child: GestureDetector(
+        onTapDown: (_) => _onTapDown(),
+        onTapUp: (_) => _onTapUp(),
+        onTapCancel: _onTapCancel,
+        child: _animationsEnabled
+            ? AnimatedBuilder(
+                animation: _scaleAnimation,
+                builder: (context, child) => Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: _buildCard(context, isDarkMode),
+                ),
+              )
+            : _buildCard(context, isDarkMode),
       ),
     );
   }
 
   void _onTapDown() {
+    if (!_animationsEnabled) return;
     setState(() => _isPressed = true);
     _controller.forward();
   }
 
   void _onTapUp() {
     setState(() => _isPressed = false);
-    _controller.reverse();
+    if (_animationsEnabled) {
+      _controller.reverse();
+    }
     widget.onTap?.call();
   }
 
   void _onTapCancel() {
+    if (!_animationsEnabled) return;
     setState(() => _isPressed = false);
     _controller.reverse();
   }
@@ -177,14 +210,16 @@ class _RestaurantCardState extends State<RestaurantCard>
         // Nom du restaurant
         Text(
           widget.restaurant.name,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 16,
+            fontSize: AccessibleFontSizes.medium,
             fontWeight: FontWeight.bold,
-            shadows: [Shadow(color: Colors.black, blurRadius: 4)],
+            shadows: const [Shadow(color: Colors.black, blurRadius: 4)],
+            letterSpacing: 0.2,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
+          semanticsLabel: widget.restaurant.name,
         ),
         
         const SizedBox(height: 2),
@@ -297,10 +332,11 @@ class _RestaurantCardState extends State<RestaurantCard>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // Badge de réduction
+            // Badge de réduction
           if (widget.restaurant.hasActiveOffer) ...[
             DiscountBadge(
               discountPercentage: widget.restaurant.discountPercentage,
+              animationsEnabled: _animationsEnabled,
             ),
             if (_isPopular) const SizedBox(width: 8),
           ],

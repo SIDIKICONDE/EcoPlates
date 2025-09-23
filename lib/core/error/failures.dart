@@ -5,9 +5,9 @@ abstract class Failure extends Equatable {
   final String message;
   final String? code;
   final dynamic details;
-  
+
   const Failure(this.message, {this.code, this.details});
-  
+
   @override
   List<Object?> get props => [message, code, details];
 }
@@ -30,14 +30,14 @@ class CacheFailure extends Failure {
 /// Erreur de validation des données
 class ValidationFailure extends Failure {
   final Map<String, List<String>>? fieldErrors;
-  
+
   const ValidationFailure(
     super.message, {
     super.code,
     super.details,
     this.fieldErrors,
   });
-  
+
   @override
   List<Object?> get props => [message, code, details, fieldErrors];
 }
@@ -61,7 +61,7 @@ class BusinessFailure extends Failure {
 class NotFoundFailure extends Failure {
   final String? resourceType;
   final String? resourceId;
-  
+
   const NotFoundFailure(
     super.message, {
     super.code,
@@ -69,7 +69,7 @@ class NotFoundFailure extends Failure {
     this.resourceType,
     this.resourceId,
   });
-  
+
   @override
   List<Object?> get props => [message, code, details, resourceType, resourceId];
 }
@@ -88,7 +88,7 @@ class UnexpectedFailure extends Failure {
 class QuotaExceededFailure extends Failure {
   final int? currentUsage;
   final int? limit;
-  
+
   const QuotaExceededFailure(
     super.message, {
     super.code,
@@ -96,7 +96,7 @@ class QuotaExceededFailure extends Failure {
     this.currentUsage,
     this.limit,
   });
-  
+
   @override
   List<Object?> get props => [message, code, details, currentUsage, limit];
 }
@@ -105,7 +105,7 @@ class QuotaExceededFailure extends Failure {
 class PaymentFailure extends Failure {
   final String? transactionId;
   final String? paymentMethod;
-  
+
   const PaymentFailure(
     super.message, {
     super.code,
@@ -113,9 +113,15 @@ class PaymentFailure extends Failure {
     this.transactionId,
     this.paymentMethod,
   });
-  
+
   @override
-  List<Object?> get props => [message, code, details, transactionId, paymentMethod];
+  List<Object?> get props => [
+    message,
+    code,
+    details,
+    transactionId,
+    paymentMethod,
+  ];
 }
 
 /// Erreur de conflit (409)
@@ -160,17 +166,17 @@ extension FailureExtension on Failure {
         return 'Une erreur inattendue s\'est produite.';
     }
   }
-  
+
   /// Indique si l'erreur est récupérable (peut être réessayée)
   bool get isRecoverable {
-    return this is NetworkFailure || 
-           this is TimeoutFailure || 
-           (this is ServerFailure && code != '500');
+    return this is NetworkFailure ||
+        this is TimeoutFailure ||
+        (this is ServerFailure && code != '500');
   }
-  
+
   /// Indique si l'erreur nécessite une ré-authentification
   bool get requiresReauth {
-    return this is AuthenticationFailure || 
-           (code == '401' || code == 'TOKEN_EXPIRED');
+    return this is AuthenticationFailure ||
+        (code == '401' || code == 'TOKEN_EXPIRED');
   }
 }

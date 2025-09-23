@@ -105,7 +105,9 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       final offer = FoodOffer(
         id: widget.initialOffer?.id ?? '',
         merchantId: '', // Sera défini par le provider
-        merchantName: widget.initialOffer?.merchantName ?? '', // Sera défini par le provider
+        merchantName:
+            widget.initialOffer?.merchantName ??
+            '', // Sera défini par le provider
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         type: _selectedType,
@@ -122,13 +124,15 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
         isHalal: _isHalal,
         status: widget.initialOffer?.status ?? OfferStatus.draft,
         createdAt: widget.initialOffer?.createdAt ?? DateTime.now(),
-        location: widget.initialOffer?.location ?? const Location(
-          latitude: 0,
-          longitude: 0,
-          address: '',
-          city: '',
-          postalCode: '',
-        ), // Sera défini par le provider
+        location:
+            widget.initialOffer?.location ??
+            const Location(
+              latitude: 0,
+              longitude: 0,
+              address: '',
+              city: '',
+              postalCode: '',
+            ), // Sera défini par le provider
       );
 
       widget.onSaved(offer);
@@ -185,16 +189,16 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       children: [
         Text(
           'Photos du produit',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8.h),
         Text(
           'Ajoutez jusqu\'à 4 photos pour attirer plus de clients',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.grey,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
         SizedBox(height: 16.h),
         SizedBox(
@@ -218,10 +222,7 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       margin: EdgeInsets.only(right: 8.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.r),
-        image: DecorationImage(
-          image: FileImage(image),
-          fit: BoxFit.cover,
-        ),
+        image: DecorationImage(image: FileImage(image), fit: BoxFit.cover),
       ),
       child: Stack(
         children: [
@@ -236,11 +237,7 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
                   color: Colors.black54,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.close,
-                  size: 16,
-                  color: Colors.white,
-                ),
+                child: const Icon(Icons.close, size: 16, color: Colors.white),
               ),
             ),
           ),
@@ -258,21 +255,17 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
         margin: EdgeInsets.only(right: 8.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
-          border: Border.all(
-            color: Colors.grey,
-            style: BorderStyle.solid,
-          ),
+          border: Border.all(color: Colors.grey, style: BorderStyle.solid),
         ),
-        child: const Icon(
-          Icons.add_a_photo,
-          color: Colors.grey,
-        ),
+        child: const Icon(Icons.add_a_photo, color: Colors.grey),
       ),
     );
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedFile != null) {
       setState(() => _images.add(File(pickedFile.path)));
       widget.onChanged?.call();
@@ -285,26 +278,22 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       children: [
         Text(
           'Informations de base',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 16.h),
         AdaptiveTextField(
           controller: _titleController,
           placeholder: 'Titre de l\'offre *',
-          decoration: const InputDecoration(
-            labelText: 'Titre de l\'offre *',
-          ),
+          decoration: const InputDecoration(labelText: 'Titre de l\'offre *'),
           onChanged: (value) => widget.onChanged?.call(),
         ),
         SizedBox(height: 16.h),
         AdaptiveTextField(
           controller: _descriptionController,
           placeholder: 'Description détaillée',
-          decoration: const InputDecoration(
-            labelText: 'Description',
-          ),
+          decoration: const InputDecoration(labelText: 'Description'),
           onChanged: (value) => widget.onChanged?.call(),
         ),
       ],
@@ -317,9 +306,9 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       children: [
         Text(
           'Prix et quantité',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 16.h),
         Row(
@@ -356,9 +345,7 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
           controller: _quantityController,
           placeholder: 'Quantité disponible',
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Quantité',
-          ),
+          decoration: const InputDecoration(labelText: 'Quantité'),
           onChanged: (value) => widget.onChanged?.call(),
         ),
       ],
@@ -371,9 +358,9 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       children: [
         Text(
           'Horaires de collecte',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 16.h),
         // Implémentation simplifiée - à compléter selon les besoins
@@ -388,9 +375,9 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       children: [
         Text(
           'Options diététiques',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 16.h),
         Row(
@@ -426,9 +413,9 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       children: [
         Text(
           'Allergènes',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 16.h),
         // Implémentation simplifiée - à compléter selon les besoins
@@ -442,10 +429,7 @@ class _CreateOfferFormState extends State<CreateOfferForm> {
       onPressed: _isSubmitting ? null : _handleSubmit,
       child: Text(
         widget.isEditing ? 'Mettre à jour' : 'Publier l\'offre',
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
   }

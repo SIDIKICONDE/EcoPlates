@@ -34,7 +34,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final _shellNavigatorKey = GlobalKey<NavigatorState>();
-  
+
   static GoRouter createRouter(AppMode mode) {
     // Déterminer la route initiale selon le mode
     String initialLocation;
@@ -49,7 +49,7 @@ class AppRouter {
         initialLocation = '/onboarding';
         break;
     }
-    
+
     return GoRouter(
       navigatorKey: _rootNavigatorKey,
       initialLocation: initialLocation,
@@ -60,23 +60,19 @@ class AppRouter {
           path: '/onboarding',
           name: 'onboarding',
           pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: UserTypeSelectionScreen(),
-            );
+            return const MaterialPage(child: UserTypeSelectionScreen());
           },
         ),
-        
+
         // Page d'accueil principale (type Too Good To Go)
         GoRoute(
           path: '/',
           name: 'main-home',
           pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: MainHomeScreen(),
-            );
+            return const MaterialPage(child: MainHomeScreen());
           },
         ),
-        
+
         // Page de détail d'un restaurant
         GoRoute(
           path: '/restaurant/:id',
@@ -88,7 +84,7 @@ class AppRouter {
             );
           },
         ),
-        
+
         // Routes consommateur avec navigation
         ShellRoute(
           navigatorKey: _shellNavigatorKey,
@@ -96,73 +92,59 @@ class AppRouter {
             return AdaptiveNavigationScaffold(child: child);
           },
           routes: [
-          GoRoute(
-            path: '/home',
-            name: 'home',
-            pageBuilder: (context, state) {
-              return const MaterialPage(
-                child: ConsumerHomeScreen(),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/history',
-            name: 'history',
-            pageBuilder: (context, state) {
-              return const MaterialPage(
-                child: OrderHistoryScreen(),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/profile',
-            name: 'profile',
-            pageBuilder: (context, state) {
-              return const MaterialPage(
-                child: ProfileScreen(),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/offers',
-            name: 'offers',
-            pageBuilder: (context, state) {
-              return const MaterialPage(
-                child: FoodOffersScreen(),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/reservations',
-            name: 'reservations',
-            pageBuilder: (context, state) {
-              return const MaterialPage(
-                child: ReservationsScreen(),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/favorites',
-            name: 'favorites',
-            pageBuilder: (context, state) {
-              return const MaterialPage(
-                child: FavoritesScreen(),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/offer/:id',
-            name: 'offer-detail',
-            pageBuilder: (context, state) {
-              final offerId = state.pathParameters['id']!;
-              return MaterialPage(
-                child: OfferDetailScreen(offerId: offerId),
-              );
-            },
-          ),
-        ],
-      ),
-        
+            GoRoute(
+              path: '/home',
+              name: 'home',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: ConsumerHomeScreen());
+              },
+            ),
+            GoRoute(
+              path: '/history',
+              name: 'history',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: OrderHistoryScreen());
+              },
+            ),
+            GoRoute(
+              path: '/profile',
+              name: 'profile',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: ProfileScreen());
+              },
+            ),
+            GoRoute(
+              path: '/offers',
+              name: 'offers',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: FoodOffersScreen());
+              },
+            ),
+            GoRoute(
+              path: '/reservations',
+              name: 'reservations',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: ReservationsScreen());
+              },
+            ),
+            GoRoute(
+              path: '/favorites',
+              name: 'favorites',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: FavoritesScreen());
+              },
+            ),
+            GoRoute(
+              path: '/offer/:id',
+              name: 'offer-detail',
+              pageBuilder: (context, state) {
+                final offerId = state.pathParameters['id']!;
+                return MaterialPage(child: OfferDetailScreen(offerId: offerId));
+              },
+            ),
+          ],
+        ),
+
         // Routes associations
         GoRoute(
           path: '/association/:id',
@@ -174,7 +156,7 @@ class AppRouter {
             );
           },
         ),
-        
+
         // Gestion association (pour les membres)
         GoRoute(
           path: '/association/:id/manage',
@@ -186,7 +168,7 @@ class AppRouter {
             );
           },
         ),
-        
+
         // Page d'accueil association
         GoRoute(
           path: '/association/:id/home',
@@ -203,110 +185,92 @@ class AppRouter {
           path: '/merchant/dashboard',
           name: 'merchant-dashboard',
           pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: MerchantHomeScreen(),
-            );
+            return const MaterialPage(child: MerchantHomeScreen());
           },
         ),
-        
+
         // Scan réservé aux commerçants
         GoRoute(
           path: '/merchant/scan',
           name: 'merchant-scan',
           pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: ScanScreen(),
-            );
+            return const MaterialPage(child: ScanScreen());
           },
         ),
         GoRoute(
           path: '/merchant/scan-return',
           name: 'merchant-scan-return',
           pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: ScanScreen(),
-            );
+            return const MaterialPage(child: ScanScreen());
           },
         ),
-        
+
         // Dashboard Analytics
         GoRoute(
           path: '/merchant/analytics',
           name: 'merchant-analytics',
           pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: AnalyticsDashboardScreen(),
-            );
+            return const MaterialPage(child: AnalyticsDashboardScreen());
           },
         ),
-        
+
         // Gestion des offres
         GoRoute(
           path: '/merchant/offers',
           name: 'merchant-offers',
           pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: OffersListScreen(),
-            );
+            return const MaterialPage(child: OffersListScreen());
           },
         ),
-        
+
         // Création d'offre
         GoRoute(
           path: '/merchant/offers/create',
           name: 'merchant-create-offer',
           pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: CreateOfferScreen(),
-            );
+            return const MaterialPage(child: CreateOfferScreen());
           },
         ),
-        
+
         // Édition d'offre
         GoRoute(
           path: '/merchant/offers/:id/edit',
           name: 'merchant-edit-offer',
           pageBuilder: (context, state) {
             final offerId = state.pathParameters['id']!;
-            return MaterialPage(
-              child: EditOfferScreen(offerId: offerId),
-            );
+            return MaterialPage(child: EditOfferScreen(offerId: offerId));
           },
         ),
       ],
-    errorPageBuilder: (context, state) {
-      return MaterialPage(
-        child: Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Colors.red,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Page non trouvée',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  state.uri.toString(),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => context.go('/home'),
-                  child: const Text('Retour à l\'accueil'),
-                ),
-              ],
+      errorPageBuilder: (context, state) {
+        return MaterialPage(
+          child: Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Page non trouvée',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    state.uri.toString(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => context.go('/home'),
+                    child: const Text('Retour à l\'accueil'),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
   }
 }

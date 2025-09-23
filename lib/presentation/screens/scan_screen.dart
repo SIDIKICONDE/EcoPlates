@@ -14,31 +14,32 @@ class ScanScreen extends ConsumerStatefulWidget {
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
 }
 
-class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObserver {
+class _ScanScreenState extends ConsumerState<ScanScreen>
+    with WidgetsBindingObserver {
   MobileScannerController? _cameraController;
   bool _isProcessing = false;
   bool _hasPermission = false;
   bool _torchEnabled = false;
   String? _lastScannedCode;
-  
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _initializeCamera();
   }
-  
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _cameraController?.dispose();
     super.dispose();
   }
-  
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (_cameraController == null) return;
-    
+
     switch (state) {
       case AppLifecycleState.paused:
         _cameraController!.stop();
@@ -50,11 +51,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
         break;
     }
   }
-  
+
   Future<void> _initializeCamera() async {
     // Vérifier la permission de la caméra
     final status = await Permission.camera.request();
-    
+
     if (status.isGranted) {
       setState(() {
         _hasPermission = true;
@@ -68,28 +69,28 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
       setState(() => _hasPermission = false);
     }
   }
-  
+
   Future<void> _processQrCode(String code) async {
     // Éviter de traiter le même code plusieurs fois
     if (_isProcessing || code == _lastScannedCode) return;
-    
+
     setState(() {
       _isProcessing = true;
       _lastScannedCode = code;
     });
-    
+
     // Vibrer pour feedback
     // HapticFeedback.mediumImpact();
-    
+
     // Arrêter temporairement le scanner
     _cameraController?.stop();
-    
+
     try {
       final service = ref.read(qrScannerServiceProvider);
       final result = await service.processQrCode(code);
-      
+
       if (!mounted) return;
-      
+
       // Afficher le résultat approprié
       if (result.isError) {
         _showErrorDialog(result.message!);
@@ -108,7 +109,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
       });
     }
   }
-  
+
   void _showResultBottomSheet(QrScanResult result) {
     showModalBottomSheet(
       context: context,
@@ -120,13 +121,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
       ),
     );
   }
-  
+
   Future<void> _handleAction(QrScanResult result) async {
     Navigator.pop(context);
-    
+
     final service = ref.read(qrScannerServiceProvider);
     bool success = false;
-    
+
     try {
       switch (result.action) {
         case QrScanAction.collect:
@@ -148,18 +149,18 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
         case QrScanAction.returnPlate:
           // Plus utilisé dans le nouveau flux
           break;
-          
+
         default:
           break;
       }
     } catch (e) {
       _showErrorDialog('Erreur lors de l\'action: $e');
     }
-    
+
     // Réinitialiser pour permettre un nouveau scan
     setState(() => _lastScannedCode = null);
   }
-  
+
   void _showSuccessDialog(String title, String message) {
     showDialog(
       context: context,
@@ -184,7 +185,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
       ),
     );
   }
-  
+
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -228,7 +229,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                'Pour scanner les QR codes des commandes, nous avons besoin d\'accéder à votre caméra.',
+                  'Pour scanner les QR codes des commandes, nous avons besoin d\'accéder à votre caméra.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey),
                 ),
@@ -251,15 +252,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
         ),
       );
     }
-    
+
     if (_cameraController == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scanner une commande'),
@@ -289,13 +286,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
               }
             },
           ),
-          
+
           // Overlay avec cadre de scan
           CustomPaint(
             painter: ScannerOverlayPainter(),
             child: const SizedBox.expand(),
           ),
-          
+
           // Instructions
           Positioned(
             top: 50,
@@ -309,15 +306,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
               ),
               child: const Text(
                 'Placez le QR code de la commande dans le cadre',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 16),
                 textAlign: TextAlign.center,
               ),
             ),
           ),
-          
+
           // Indicateur de traitement
           if (_isProcessing)
             Container(
@@ -326,22 +320,17 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(
-                      color: Colors.white,
-                    ),
+                    CircularProgressIndicator(color: Colors.white),
                     SizedBox(height: 16),
                     Text(
                       'Traitement en cours...',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ],
                 ),
               ),
             ),
-            
+
           // Historique récent
           Positioned(
             bottom: 20,
@@ -362,18 +351,15 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with WidgetsBindingObse
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.history,
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  Icon(Icons.history, color: Theme.of(context).primaryColor),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                      const Text(
-                        'Commandes du jour',
+                        const Text(
+                          'Commandes du jour',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,

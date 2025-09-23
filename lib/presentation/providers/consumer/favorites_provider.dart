@@ -33,16 +33,18 @@ class FavoritesState {
   bool isOfferFavorite(String offerId) => favoriteOfferIds.contains(offerId);
 
   /// Vérifie si un commerçant est favori
-  bool isMerchantFavorite(String merchantId) => favoriteMerchantIds.contains(merchantId);
+  bool isMerchantFavorite(String merchantId) =>
+      favoriteMerchantIds.contains(merchantId);
 
   /// Compte total de favoris
-  int get totalFavorites => favoriteOfferIds.length + favoriteMerchantIds.length;
+  int get totalFavorites =>
+      favoriteOfferIds.length + favoriteMerchantIds.length;
 }
 
 /// Notifier pour gérer l'état des favoris
 class FavoritesNotifier extends StateNotifier<FavoritesState> {
   final FavoritesService _service;
-  
+
   FavoritesNotifier(this._service) : super(const FavoritesState()) {
     _initialize();
   }
@@ -60,9 +62,9 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   /// Toggle le statut favori d'une offre avec animation
   Future<bool> toggleOfferFavorite(String offerId) async {
     if (!state.isInitialized) return false;
-    
+
     final isFavorite = await _service.toggleOfferFavorite(offerId);
-    
+
     // Mise à jour optimiste de l'état
     if (isFavorite) {
       state = state.copyWith(
@@ -73,16 +75,16 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
         favoriteOfferIds: {...state.favoriteOfferIds}..remove(offerId),
       );
     }
-    
+
     return isFavorite;
   }
 
   /// Toggle le statut favori d'un commerçant
   Future<bool> toggleMerchantFavorite(String merchantId) async {
     if (!state.isInitialized) return false;
-    
+
     final isFavorite = await _service.toggleMerchantFavorite(merchantId);
-    
+
     // Mise à jour optimiste de l'état
     if (isFavorite) {
       state = state.copyWith(
@@ -93,14 +95,14 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
         favoriteMerchantIds: {...state.favoriteMerchantIds}..remove(merchantId),
       );
     }
-    
+
     return isFavorite;
   }
 
   /// Ajoute une offre aux favoris
   Future<void> addOfferToFavorites(String offerId) async {
     if (!state.isInitialized) return;
-    
+
     await _service.addOfferToFavorites(offerId);
     state = state.copyWith(
       favoriteOfferIds: {...state.favoriteOfferIds, offerId},
@@ -110,7 +112,7 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   /// Retire une offre des favoris
   Future<void> removeOfferFromFavorites(String offerId) async {
     if (!state.isInitialized) return;
-    
+
     await _service.removeOfferFromFavorites(offerId);
     state = state.copyWith(
       favoriteOfferIds: {...state.favoriteOfferIds}..remove(offerId),
@@ -120,12 +122,9 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   /// Efface tous les favoris
   Future<void> clearAllFavorites() async {
     if (!state.isInitialized) return;
-    
+
     await _service.clearAllFavorites();
-    state = state.copyWith(
-      favoriteOfferIds: {},
-      favoriteMerchantIds: {},
-    );
+    state = state.copyWith(favoriteOfferIds: {}, favoriteMerchantIds: {});
   }
 
   /// Recharge les favoris depuis le stockage
@@ -142,26 +141,27 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
 }
 
 /// Provider principal pour les favoris
-final favoritesProvider = StateNotifierProvider<FavoritesNotifier, FavoritesState>((ref) {
-  final service = ref.watch(favoritesServiceProvider);
-  return FavoritesNotifier(service);
-});
+final favoritesProvider =
+    StateNotifierProvider<FavoritesNotifier, FavoritesState>((ref) {
+      final service = ref.watch(favoritesServiceProvider);
+      return FavoritesNotifier(service);
+    });
 
 /// Provider pour récupérer les offres favorites
 final favoriteOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
   final favorites = ref.watch(favoritesProvider);
-  
+
   if (!favorites.isInitialized || favorites.favoriteOfferIds.isEmpty) {
     return [];
   }
-  
+
   // Récupérer toutes les offres
   final allOffers = await ref.watch(nearbyOffersProvider.future);
-  
+
   // Filtrer uniquement les offres favorites
-  return allOffers.where((offer) => 
-    favorites.favoriteOfferIds.contains(offer.id)
-  ).toList();
+  return allOffers
+      .where((offer) => favorites.favoriteOfferIds.contains(offer.id))
+      .toList();
 });
 
 /// Provider pour vérifier si une offre est favorite
@@ -171,7 +171,10 @@ final isOfferFavoriteProvider = Provider.family<bool, String>((ref, offerId) {
 });
 
 /// Provider pour vérifier si un commerçant est favori
-final isMerchantFavoriteProvider = Provider.family<bool, String>((ref, merchantId) {
+final isMerchantFavoriteProvider = Provider.family<bool, String>((
+  ref,
+  merchantId,
+) {
   final favorites = ref.watch(favoritesProvider);
   return favorites.isMerchantFavorite(merchantId);
 });

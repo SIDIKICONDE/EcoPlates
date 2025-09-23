@@ -107,18 +107,21 @@ class Restaurant {
   double calculateDistance(double userLat, double userLng) {
     // Formule de Haversine pour calculer la distance
     const double earthRadius = 6371; // Rayon de la Terre en km
-    
+
     double lat1Rad = latitude * (3.141592653589793 / 180);
     double lat2Rad = userLat * (3.141592653589793 / 180);
     double deltaLat = (userLat - latitude) * (3.141592653589793 / 180);
     double deltaLng = (userLng - longitude) * (3.141592653589793 / 180);
-    
-    double a = (deltaLat / 2).sin() * (deltaLat / 2).sin() +
-        lat1Rad.cos() * lat2Rad.cos() *
-        (deltaLng / 2).sin() * (deltaLng / 2).sin();
-    
+
+    double a =
+        (deltaLat / 2).sin() * (deltaLat / 2).sin() +
+        lat1Rad.cos() *
+            lat2Rad.cos() *
+            (deltaLng / 2).sin() *
+            (deltaLng / 2).sin();
+
     double c = 2 * a.sqrt().asin();
-    
+
     return earthRadius * c;
   }
 
@@ -134,7 +137,7 @@ class Restaurant {
     if (originalPrice == 0) return 0;
     return ((originalPrice - discountedPrice) / originalPrice) * 100;
   }
-  
+
   /// Extensions pour le calcul de sin/cos/asin/sqrt
 }
 

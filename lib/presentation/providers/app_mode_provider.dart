@@ -4,8 +4,8 @@ import '../../domain/entities/user.dart';
 
 /// Mode de l'application selon le type d'utilisateur
 enum AppMode {
-  consumer,  // Mode consommateur
-  merchant,  // Mode commerçant
+  consumer, // Mode consommateur
+  merchant, // Mode commerçant
   onboarding, // Mode onboarding (pas encore connecté)
 }
 
@@ -20,7 +20,7 @@ final currentUserProvider = StateProvider<User?>((ref) => null);
 /// Notifier pour gérer le mode de l'application
 class AppModeNotifier extends StateNotifier<AppMode> {
   AppModeNotifier() : super(AppMode.onboarding);
-  
+
   /// Change le mode de l'application selon le type d'utilisateur
   void setModeFromUser(User user) {
     if (user.isConsumer) {
@@ -32,12 +32,12 @@ class AppModeNotifier extends StateNotifier<AppMode> {
       state = AppMode.merchant;
     }
   }
-  
+
   /// Réinitialise le mode (lors de la déconnexion)
   void reset() {
     state = AppMode.onboarding;
   }
-  
+
   /// Force un mode spécifique (utile pour les tests)
   void setMode(AppMode mode) {
     state = mode;

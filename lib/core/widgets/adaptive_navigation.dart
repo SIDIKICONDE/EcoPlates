@@ -9,16 +9,16 @@ import 'adaptive_widgets.dart';
 class AdaptiveBottomNavigation extends StatelessWidget {
   final int currentIndex;
   final List<AdaptiveNavItem> items;
-  
+
   const AdaptiveBottomNavigation({
     super.key,
     required this.currentIndex,
     required this.items,
   });
-  
+
   void _onItemTapped(BuildContext context, int index) {
     if (index == currentIndex) return;
-    
+
     switch (index) {
       case 0:
         context.go('/home');
@@ -31,7 +31,7 @@ class AdaptiveBottomNavigation extends StatelessWidget {
         break;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
@@ -70,7 +70,7 @@ class AdaptiveNavItem {
   final IconData icon;
   final IconData? activeIcon;
   final String label;
-  
+
   const AdaptiveNavItem({
     required this.icon,
     this.activeIcon,
@@ -81,12 +81,9 @@ class AdaptiveNavItem {
 /// Scaffold avec navigation adaptative intégrée
 class AdaptiveNavigationScaffold extends StatelessWidget {
   final Widget child;
-  
-  const AdaptiveNavigationScaffold({
-    super.key,
-    required this.child,
-  });
-  
+
+  const AdaptiveNavigationScaffold({super.key, required this.child});
+
   int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.toString();
     if (location.startsWith('/home')) return 0;
@@ -94,11 +91,11 @@ class AdaptiveNavigationScaffold extends StatelessWidget {
     if (location.startsWith('/profile')) return 2;
     return 0;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final currentIndex = _calculateSelectedIndex(context);
-    
+
     if (PlatformUtils.shouldUseCupertino) {
       // iOS/macOS: Utiliser CupertinoTabScaffold
       return CupertinoTabScaffold(
@@ -143,18 +140,9 @@ class AdaptiveNavigationScaffold extends StatelessWidget {
         bottomNavigationBar: AdaptiveBottomNavigation(
           currentIndex: currentIndex,
           items: const [
-            AdaptiveNavItem(
-              icon: Icons.home,
-              label: 'Accueil',
-            ),
-            AdaptiveNavItem(
-              icon: Icons.history,
-              label: 'Historique',
-            ),
-            AdaptiveNavItem(
-              icon: Icons.person,
-              label: 'Profil',
-            ),
+            AdaptiveNavItem(icon: Icons.home, label: 'Accueil'),
+            AdaptiveNavItem(icon: Icons.history, label: 'Historique'),
+            AdaptiveNavItem(icon: Icons.person, label: 'Profil'),
           ],
         ),
       );

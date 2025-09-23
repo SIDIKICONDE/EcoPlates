@@ -5,9 +5,8 @@ import '../../data/services/food_offer_service.dart';
 class SearchOffersUseCase {
   final FoodOfferService _offerService;
 
-  SearchOffersUseCase({
-    required FoodOfferService offerService,
-  }) : _offerService = offerService;
+  SearchOffersUseCase({required FoodOfferService offerService})
+    : _offerService = offerService;
 
   /// Rechercher des offres avec filtres
   Future<List<FoodOffer>> execute({
@@ -24,7 +23,7 @@ class SearchOffersUseCase {
       // Si une recherche textuelle est fournie
       if (searchQuery != null && searchQuery.isNotEmpty) {
         final searchResults = await _offerService.searchOffers(searchQuery);
-        
+
         // Appliquer les filtres supplémentaires localement
         return _applyLocalFilters(
           searchResults,
@@ -68,7 +67,9 @@ class SearchOffersUseCase {
         radius: radius,
       );
     } catch (e) {
-      throw Exception('Erreur lors de la récupération des offres à proximité: $e');
+      throw Exception(
+        'Erreur lors de la récupération des offres à proximité: $e',
+      );
     }
   }
 
@@ -77,7 +78,9 @@ class SearchOffersUseCase {
     try {
       return await _offerService.getPopularOffers();
     } catch (e) {
-      throw Exception('Erreur lors de la récupération des offres populaires: $e');
+      throw Exception(
+        'Erreur lors de la récupération des offres populaires: $e',
+      );
     }
   }
 
@@ -85,11 +88,13 @@ class SearchOffersUseCase {
   Future<List<FoodOffer>> getExpiringOffers() async {
     try {
       final offers = await _offerService.getExpiringOffers();
-      
+
       // Filtrer uniquement celles qui sont encore disponibles
       return offers.where((offer) => offer.isAvailable).toList();
     } catch (e) {
-      throw Exception('Erreur lors de la récupération des offres expirantes: $e');
+      throw Exception(
+        'Erreur lors de la récupération des offres expirantes: $e',
+      );
     }
   }
 
@@ -114,9 +119,7 @@ class SearchOffersUseCase {
 
     // Filtrer par types
     if (types != null && types.isNotEmpty) {
-      filtered = filtered
-          .where((offer) => types.contains(offer.type))
-          .toList();
+      filtered = filtered.where((offer) => types.contains(offer.type)).toList();
     }
 
     // Filtrer par gratuité
@@ -157,23 +160,25 @@ class SearchOffersUseCase {
           });
         }
         break;
-      
+
       case SortBy.price:
         sorted.sort((a, b) => a.discountedPrice.compareTo(b.discountedPrice));
         break;
-      
+
       case SortBy.discount:
-        sorted.sort((a, b) => b.discountPercentage.compareTo(a.discountPercentage));
+        sorted.sort(
+          (a, b) => b.discountPercentage.compareTo(a.discountPercentage),
+        );
         break;
-      
+
       case SortBy.expiry:
         sorted.sort((a, b) => a.pickupEndTime.compareTo(b.pickupEndTime));
         break;
-      
+
       case SortBy.newest:
         sorted.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         break;
-      
+
       case SortBy.popularity:
         // Tri par défaut si pas de métrique de popularité
         break;

@@ -8,41 +8,41 @@ class ScannerOverlayPainter extends CustomPainter {
     final scanAreaSize = size.width * 0.75;
     final scanAreaLeft = (size.width - scanAreaSize) / 2;
     final scanAreaTop = (size.height - scanAreaSize) / 2;
-    
+
     // Dessiner l'overlay sombre
     final backgroundPaint = Paint()
       ..color = Colors.black.withValues(alpha: 0.5);
-    
+
     final scanArea = RRect.fromRectAndRadius(
       Rect.fromLTWH(scanAreaLeft, scanAreaTop, scanAreaSize, scanAreaSize),
       const Radius.circular(20),
     );
-    
+
     // Créer le chemin avec le trou pour la zone de scan
     final backgroundPath = Path()
       ..addRect(Rect.fromLTWH(0, 0, size.width, size.height))
       ..addRRect(scanArea)
       ..fillType = PathFillType.evenOdd;
-    
+
     canvas.drawPath(backgroundPath, backgroundPaint);
-    
+
     // Dessiner le cadre de la zone de scan
     final borderPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
-    
+
     canvas.drawRRect(scanArea, borderPaint);
-    
+
     // Dessiner les coins accentués
     final cornerPaint = Paint()
       ..color = Theme.of(NavigatorState().context).primaryColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round;
-    
+
     const cornerLength = 30.0;
-    
+
     // Coin supérieur gauche
     canvas.drawLine(
       Offset(scanAreaLeft, scanAreaTop + cornerLength),
@@ -61,7 +61,7 @@ class ScannerOverlayPainter extends CustomPainter {
       Offset(scanAreaLeft + cornerLength, scanAreaTop),
       cornerPaint,
     );
-    
+
     // Coin supérieur droit
     canvas.drawLine(
       Offset(scanAreaLeft + scanAreaSize - cornerLength, scanAreaTop),
@@ -80,10 +80,13 @@ class ScannerOverlayPainter extends CustomPainter {
       Offset(scanAreaLeft + scanAreaSize, scanAreaTop + cornerLength),
       cornerPaint,
     );
-    
+
     // Coin inférieur droit
     canvas.drawLine(
-      Offset(scanAreaLeft + scanAreaSize, scanAreaTop + scanAreaSize - cornerLength),
+      Offset(
+        scanAreaLeft + scanAreaSize,
+        scanAreaTop + scanAreaSize - cornerLength,
+      ),
       Offset(scanAreaLeft + scanAreaSize, scanAreaTop + scanAreaSize - 20),
       cornerPaint,
     );
@@ -101,10 +104,13 @@ class ScannerOverlayPainter extends CustomPainter {
     );
     canvas.drawLine(
       Offset(scanAreaLeft + scanAreaSize - 20, scanAreaTop + scanAreaSize),
-      Offset(scanAreaLeft + scanAreaSize - cornerLength, scanAreaTop + scanAreaSize),
+      Offset(
+        scanAreaLeft + scanAreaSize - cornerLength,
+        scanAreaTop + scanAreaSize,
+      ),
       cornerPaint,
     );
-    
+
     // Coin inférieur gauche
     canvas.drawLine(
       Offset(scanAreaLeft + cornerLength, scanAreaTop + scanAreaSize),
@@ -124,7 +130,7 @@ class ScannerOverlayPainter extends CustomPainter {
       cornerPaint,
     );
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
@@ -133,13 +139,13 @@ class ScannerOverlayPainter extends CustomPainter {
 class QrResultBottomSheet extends StatelessWidget {
   final QrScanResult result;
   final VoidCallback onConfirm;
-  
+
   const QrResultBottomSheet({
     super.key,
     required this.result,
     required this.onConfirm,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     IconData icon;
@@ -147,7 +153,7 @@ class QrResultBottomSheet extends StatelessWidget {
     String title;
     String description;
     String buttonText;
-    
+
     switch (result.action) {
       case QrScanAction.borrow:
         icon = Icons.shopping_bag_outlined;
@@ -156,7 +162,7 @@ class QrResultBottomSheet extends StatelessWidget {
         description = 'Cette fonctionnalité n\'est plus utilisée';
         buttonText = 'Confirmer l\'emprunt';
         break;
-        
+
       case QrScanAction.returnPlate:
         icon = Icons.assignment_return;
         color = Colors.green;
@@ -164,15 +170,16 @@ class QrResultBottomSheet extends StatelessWidget {
         description = 'Cette fonctionnalité n\'est plus utilisée';
         buttonText = 'Confirmer le retour';
         break;
-        
+
       case QrScanAction.collect:
         icon = Icons.assignment_turned_in;
         color = Colors.blue;
         title = 'Valider cette commande ?';
-        description = 'Commande ${result.reservationId}\nCode: ${result.confirmationCode}';
+        description =
+            'Commande ${result.reservationId}\nCode: ${result.confirmationCode}';
         buttonText = 'Confirmer la collecte';
         break;
-        
+
       case QrScanAction.info:
         icon = Icons.info_outline;
         color = Colors.orange;
@@ -180,7 +187,7 @@ class QrResultBottomSheet extends StatelessWidget {
         description = result.message ?? 'Information indisponible';
         buttonText = 'OK';
         break;
-        
+
       default:
         icon = Icons.error_outline;
         color = Colors.red;
@@ -188,7 +195,7 @@ class QrResultBottomSheet extends StatelessWidget {
         description = result.message ?? 'Une erreur est survenue';
         buttonText = 'Fermer';
     }
-    
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -210,7 +217,7 @@ class QrResultBottomSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // Icon
               Container(
                 padding: const EdgeInsets.all(16),
@@ -218,15 +225,11 @@ class QrResultBottomSheet extends StatelessWidget {
                   color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  size: 48,
-                  color: color,
-                ),
+                child: Icon(icon, size: 48, color: color),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Title
               Text(
                 title,
@@ -235,20 +238,20 @@ class QrResultBottomSheet extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Description
               Text(
                 description,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Informations supplémentaires pour la collecte
               if (result.action == QrScanAction.collect) ...[
                 Container(
@@ -276,7 +279,7 @@ class QrResultBottomSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
               ],
-              
+
               // Boutons
               if (result.action != QrScanAction.info) ...[
                 Row(
@@ -306,9 +309,7 @@ class QrResultBottomSheet extends StatelessWidget {
                         ),
                         child: Text(
                           buttonText,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -328,9 +329,7 @@ class QrResultBottomSheet extends StatelessWidget {
                     ),
                     child: Text(
                       buttonText,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

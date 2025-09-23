@@ -6,14 +6,14 @@ import '../../domain/entities/reservation.dart';
 class StatisticsService {
   static const String _boxName = 'user_statistics';
   static const String _statsKey = 'stats_data';
-  
+
   late Box _box;
-  
+
   /// Initialise le service de statistiques
   Future<void> init() async {
     _box = await Hive.openBox(_boxName);
   }
-  
+
   /// Récupère les statistiques stockées
   UserStatistics getStoredStatistics() {
     final dynamic stored = _box.get(_statsKey);
@@ -22,12 +22,12 @@ class StatisticsService {
     }
     return UserStatistics.empty();
   }
-  
+
   /// Sauvegarde les statistiques
   Future<void> saveStatistics(UserStatistics stats) async {
     await _box.put(_statsKey, stats.toMap());
   }
-  
+
   /// Calcule les statistiques basées sur les réservations
   UserStatistics calculateStatistics(List<Reservation> reservations) {
     int mealsSaved = 0;
@@ -48,7 +48,8 @@ class StatisticsService {
         // Pour une implémentation complète, ces données viendraient des offres
         const avgOriginalPrice = 15.0; // Prix moyen original estimé
         const avgDiscountedPrice = 8.0; // Prix moyen réduit estimé
-        final savings = (avgOriginalPrice - avgDiscountedPrice) * reservation.quantity;
+        final savings =
+            (avgOriginalPrice - avgDiscountedPrice) * reservation.quantity;
         moneySaved += savings;
 
         // Calculer le CO2 économisé (estimation : 2.5 kg CO2 par repas)
@@ -60,8 +61,10 @@ class StatisticsService {
         }
 
         // Statistiques par catégorie (utiliser offerId comme approximation)
-        final category = 'unknown'; // Sans accès aux offres, on ne peut pas déterminer la catégorie
-        categoryCount[category] = (categoryCount[category] ?? 0) + reservation.quantity;
+        final category =
+            'unknown'; // Sans accès aux offres, on ne peut pas déterminer la catégorie
+        categoryCount[category] =
+            (categoryCount[category] ?? 0) + reservation.quantity;
 
         // Économies par commerçant (utiliser merchantId comme clé)
         merchantSavings[reservation.merchantId] =
@@ -73,15 +76,15 @@ class StatisticsService {
 
       totalReservations++;
     }
-    
+
     // Calculer les streaks
     final streak = _calculateStreak(reservationDates);
     final longestStreak = _calculateLongestStreak(reservationDates);
-    
+
     // Calculer les moyennes
     final avgSavingsPerMeal = mealsSaved > 0 ? moneySaved / mealsSaved : 0.0;
     final avgCo2PerMeal = mealsSaved > 0 ? co2Saved / mealsSaved : 0.0;
-    
+
     // Trouver la catégorie favorite
     String? favoriteCategory;
     if (categoryCount.isNotEmpty) {
@@ -89,7 +92,7 @@ class StatisticsService {
           .reduce((a, b) => a.value > b.value ? a : b)
           .key;
     }
-    
+
     // Trouver le commerçant favori
     String? favoriteMerchant;
     if (merchantSavings.isNotEmpty) {
@@ -97,7 +100,7 @@ class StatisticsService {
           .reduce((a, b) => a.value > b.value ? a : b)
           .key;
     }
-    
+
     return UserStatistics(
       totalMealsSaved: mealsSaved,
       totalMoneySaved: moneySaved,
@@ -115,39 +118,44 @@ class StatisticsService {
       lastUpdated: DateTime.now(),
     );
   }
-  
+
   /// Calcule le streak actuel (jours consécutifs)
   int _calculateStreak(List<DateTime> dates) {
     if (dates.isEmpty) return 0;
-    
+
     dates.sort();
     final today = DateTime.now();
     int streak = 0;
     DateTime currentDate = today;
-    
+
     for (int i = dates.length - 1; i >= 0; i--) {
       final date = DateTime(dates[i].year, dates[i].month, dates[i].day);
-      final compareDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
-      
-      if (date == compareDate || date == compareDate.subtract(const Duration(days: 1))) {
+      final compareDate = DateTime(
+        currentDate.year,
+        currentDate.month,
+        currentDate.day,
+      );
+
+      if (date == compareDate ||
+          date == compareDate.subtract(const Duration(days: 1))) {
         streak++;
         currentDate = dates[i];
       } else {
         break;
       }
     }
-    
+
     return streak;
   }
-  
+
   /// Calcule le plus long streak
   int _calculateLongestStreak(List<DateTime> dates) {
     if (dates.isEmpty) return 0;
-    
+
     dates.sort();
     int maxStreak = 1;
     int currentStreak = 1;
-    
+
     for (int i = 1; i < dates.length; i++) {
       final diff = dates[i].difference(dates[i - 1]).inDays;
       if (diff == 1) {
@@ -157,10 +165,10 @@ class StatisticsService {
         currentStreak = 1;
       }
     }
-    
+
     return maxStreak;
   }
-  
+
   /// Ajoute une réservation aux statistiques
   Future<void> addReservationToStats(Reservation reservation) async {
     if (reservation.status != ReservationStatus.collected) return;
@@ -170,14 +178,16 @@ class StatisticsService {
     // Utiliser des estimations pour les données non disponibles
     const avgOriginalPrice = 15.0;
     const avgDiscountedPrice = 8.0;
-    final savings = (avgOriginalPrice - avgDiscountedPrice) * reservation.quantity;
+    final savings =
+        (avgOriginalPrice - avgDiscountedPrice) * reservation.quantity;
     final isFree = savings >= avgOriginalPrice * reservation.quantity * 0.8;
 
     final updatedStats = UserStatistics(
       totalMealsSaved: stats.totalMealsSaved + reservation.quantity,
       totalMoneySaved: stats.totalMoneySaved + savings,
       totalCo2Saved: stats.totalCo2Saved + (reservation.quantity * 2.5),
-      totalFreeMeals: stats.totalFreeMeals + (isFree ? reservation.quantity : 0),
+      totalFreeMeals:
+          stats.totalFreeMeals + (isFree ? reservation.quantity : 0),
       totalReservations: stats.totalReservations + 1,
       currentStreak: stats.currentStreak, // Recalculer si nécessaire
       longestStreak: stats.longestStreak,
@@ -279,10 +289,12 @@ class UserStatistics {
       favoriteMerchant: map['favoriteMerchant'],
       categoryBreakdown: Map<String, int>.from(map['categoryBreakdown'] ?? {}),
       merchantSavings: Map<String, double>.from(map['merchantSavings'] ?? {}),
-      lastUpdated: DateTime.parse(map['lastUpdated'] ?? DateTime.now().toIso8601String()),
+      lastUpdated: DateTime.parse(
+        map['lastUpdated'] ?? DateTime.now().toIso8601String(),
+      ),
     );
   }
-  
+
   /// Obtient un accomplissement basé sur les statistiques
   String getAchievement() {
     if (totalMealsSaved >= 100) return 'Héros de l\'anti-gaspi 🦸';
@@ -292,12 +304,12 @@ class UserStatistics {
     if (totalMealsSaved >= 5) return 'Débutant engagé 🍃';
     return 'Nouveau membre 🌾';
   }
-  
+
   /// Calcule le niveau de l'utilisateur
   int getUserLevel() {
     return (totalMealsSaved / 10).floor() + 1;
   }
-  
+
   /// Calcule le pourcentage vers le prochain niveau
   double getProgressToNextLevel() {
     return (totalMealsSaved % 10) / 10.0;

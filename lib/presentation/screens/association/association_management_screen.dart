@@ -11,12 +11,9 @@ import '../../providers/app_mode_provider.dart';
 /// Écran principal de gestion pour les associations
 class AssociationManagementScreen extends ConsumerStatefulWidget {
   final String associationId;
-  
-  const AssociationManagementScreen({
-    super.key,
-    required this.associationId,
-  });
-  
+
+  const AssociationManagementScreen({super.key, required this.associationId});
+
   @override
   ConsumerState<AssociationManagementScreen> createState() =>
       _AssociationManagementScreenState();
@@ -25,7 +22,7 @@ class AssociationManagementScreen extends ConsumerStatefulWidget {
 class _AssociationManagementScreenState
     extends ConsumerState<AssociationManagementScreen> {
   int _selectedIndex = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     final isIOS = ref.watch(isIOSProvider);
@@ -34,9 +31,7 @@ class _AssociationManagementScreenState
     final associationFuture = associationUseCase(widget.associationId);
 
     return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(
-        title: const Text('Gestion Association'),
-      ),
+      appBar: AdaptiveAppBar(title: const Text('Gestion Association')),
       body: FutureBuilder<Either<Failure, Association>>(
         future: associationFuture,
         builder: (context, snapshot) {
@@ -55,22 +50,16 @@ class _AssociationManagementScreenState
       ),
     );
   }
-  
+
   Widget _buildMainContent(Association association, bool isIOS) {
     return Row(
       children: [
-        if (!isIOS) 
-          SizedBox(
-            width: 300,
-            child: _buildDrawer(context),
-          ),
-        Expanded(
-          child: _buildContent(association),
-        ),
+        if (!isIOS) SizedBox(width: 300, child: _buildDrawer(context)),
+        Expanded(child: _buildContent(association)),
       ],
     );
   }
-  
+
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
@@ -91,9 +80,9 @@ class _AssociationManagementScreenState
                 const SizedBox(height: 8),
                 Text(
                   'Association',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.headlineSmall?.copyWith(color: Colors.white),
                 ),
               ],
             ),
@@ -141,8 +130,7 @@ class _AssociationManagementScreenState
       ),
     );
   }
-  
-  
+
   Widget _buildContent(Association association) {
     switch (_selectedIndex) {
       case 0:
@@ -159,7 +147,7 @@ class _AssociationManagementScreenState
         return _DashboardView(association: association);
     }
   }
-  
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -171,13 +159,13 @@ class _AssociationManagementScreenState
 /// Vue tableau de bord
 class _DashboardView extends StatelessWidget {
   final Association association;
-  
+
   const _DashboardView({required this.association});
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -210,8 +198,9 @@ class _DashboardView extends StatelessWidget {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      Icon(Icons.location_on, 
-                        size: 16, 
+                      Icon(
+                        Icons.location_on,
+                        size: 16,
                         color: theme.colorScheme.secondary,
                       ),
                       const SizedBox(width: 4),
@@ -226,12 +215,9 @@ class _DashboardView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Statistiques rapides
-          Text(
-            'Statistiques',
-            style: theme.textTheme.titleLarge,
-          ),
+          Text('Statistiques', style: theme.textTheme.titleLarge),
           const SizedBox(height: 8),
           GridView.count(
             shrinkWrap: true,
@@ -268,12 +254,9 @@ class _DashboardView extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // Informations détaillées
-          Text(
-            'Informations',
-            style: theme.textTheme.titleLarge,
-          ),
+          Text('Informations', style: theme.textTheme.titleLarge),
           const SizedBox(height: 8),
           Card(
             child: Padding(
@@ -284,21 +267,16 @@ class _DashboardView extends StatelessWidget {
                     label: 'Président',
                     value: association.details.presidentName,
                   ),
-                  _InfoRow(
-                    label: 'SIRET',
-                    value: association.siret,
-                  ),
-                  _InfoRow(
-                    label: 'RNA',
-                    value: association.rna,
-                  ),
+                  _InfoRow(label: 'SIRET', value: association.siret),
+                  _InfoRow(label: 'RNA', value: association.rna),
                   _InfoRow(
                     label: 'Année de création',
                     value: association.details.yearFounded.toString(),
                   ),
                   _InfoRow(
                     label: 'Bénéficiaires',
-                    value: '${association.details.beneficiariesCount} personnes',
+                    value:
+                        '${association.details.beneficiariesCount} personnes',
                   ),
                   if (association.details.hasColdChain)
                     const _InfoRow(
@@ -325,9 +303,9 @@ class _DashboardView extends StatelessWidget {
 /// Vue des offres disponibles pour l'association
 class _OffersView extends ConsumerWidget {
   final String associationId;
-  
+
   const _OffersView({required this.associationId});
-  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final offersAsync = ref.watch(
@@ -340,21 +318,17 @@ class _OffersView extends ConsumerWidget {
         );
       }),
     );
-    
+
     return offersAsync.when(
       loading: () => const Center(child: CircularProgressIndicator.adaptive()),
-      error: (error, stack) => Center(
-        child: Text('Erreur: $error'),
-      ),
+      error: (error, stack) => Center(child: Text('Erreur: $error')),
       data: (result) => result.fold(
-        (failure) => Center(
-          child: Text('Erreur: ${failure.message}'),
-        ),
+        (failure) => Center(child: Text('Erreur: ${failure.message}')),
         (offers) => _buildOffersList(context, offers),
       ),
     );
   }
-  
+
   Widget _buildOffersList(BuildContext context, List<FoodOffer> offers) {
     if (offers.isEmpty) {
       return const Center(
@@ -376,7 +350,7 @@ class _OffersView extends ConsumerWidget {
         ),
       );
     }
-    
+
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: offers.length,
@@ -391,13 +365,13 @@ class _OffersView extends ConsumerWidget {
 /// Widget pour afficher une offre
 class _OfferCard extends StatelessWidget {
   final FoodOffer offer;
-  
+
   const _OfferCard({required this.offer});
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -471,21 +445,26 @@ class _OfferCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      offer.merchantName,
-                      style: theme.textTheme.bodyMedium,
-                    ),
+                    Text(offer.merchantName, style: theme.textTheme.bodyMedium),
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.inventory_2, size: 16, color: Colors.grey[600]),
+                        Icon(
+                          Icons.inventory_2,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${offer.quantity} disponibles',
                           style: theme.textTheme.bodySmall,
                         ),
                         const SizedBox(width: 16),
-                        Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
+                        Icon(
+                          Icons.access_time,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           _formatPickupTime(offer.pickupEndTime),
@@ -502,11 +481,11 @@ class _OfferCard extends StatelessWidget {
       ),
     );
   }
-  
+
   String _formatPickupTime(DateTime time) {
     final now = DateTime.now();
     final difference = time.difference(now);
-    
+
     if (difference.inHours < 1) {
       return '${difference.inMinutes} min';
     } else if (difference.inHours < 24) {
@@ -520,35 +499,31 @@ class _OfferCard extends StatelessWidget {
 /// Autres vues (simplifiées pour l'instant)
 class _CollectionsView extends StatelessWidget {
   final String associationId;
-  
+
   const _CollectionsView({required this.associationId});
-  
+
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Gestion des collectes - À implémenter'),
-    );
+    return const Center(child: Text('Gestion des collectes - À implémenter'));
   }
 }
 
 class _VolunteersView extends StatelessWidget {
   final Association association;
-  
+
   const _VolunteersView({required this.association});
-  
+
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Gestion des bénévoles - À implémenter'),
-    );
+    return const Center(child: Text('Gestion des bénévoles - À implémenter'));
   }
 }
 
 class _ImpactView extends StatelessWidget {
   final String associationId;
-  
+
   const _ImpactView({required this.associationId});
-  
+
   @override
   Widget build(BuildContext context) {
     return const Center(
@@ -560,14 +535,14 @@ class _ImpactView extends StatelessWidget {
 // Widgets utilitaires
 class _StatusBadge extends StatelessWidget {
   final AssociationStatus status;
-  
+
   const _StatusBadge({required this.status});
-  
+
   @override
   Widget build(BuildContext context) {
     final color = _getStatusColor();
     final text = _getStatusText();
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -585,7 +560,7 @@ class _StatusBadge extends StatelessWidget {
       ),
     );
   }
-  
+
   Color _getStatusColor() {
     switch (status) {
       case AssociationStatus.validated:
@@ -600,7 +575,7 @@ class _StatusBadge extends StatelessWidget {
         return Colors.grey;
     }
   }
-  
+
   String _getStatusText() {
     switch (status) {
       case AssociationStatus.validated:
@@ -622,14 +597,14 @@ class _StatCard extends StatelessWidget {
   final String value;
   final IconData icon;
   final Color color;
-  
+
   const _StatCard({
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -640,10 +615,7 @@ class _StatCard extends StatelessWidget {
           children: [
             Icon(icon, size: 32, color: color),
             const SizedBox(height: 8),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
+            Text(value, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 4),
             Text(
               title,
@@ -661,13 +633,9 @@ class _InfoRow extends StatelessWidget {
   final String label;
   final String value;
   final Color? valueColor;
-  
-  const _InfoRow({
-    required this.label,
-    required this.value,
-    this.valueColor,
-  });
-  
+
+  const _InfoRow({required this.label, required this.value, this.valueColor});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -677,9 +645,9 @@ class _InfoRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
           ),
           Text(
             value,

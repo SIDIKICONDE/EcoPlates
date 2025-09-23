@@ -6,8 +6,10 @@ class ApiClient {
   final Dio _dio;
 
   ApiClient({Dio? dio})
-      : _dio = dio ??
-            Dio(BaseOptions(
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
               baseUrl: EnvConfig.apiBaseUrl,
               connectTimeout: const Duration(seconds: 30),
               receiveTimeout: const Duration(seconds: 30),
@@ -15,7 +17,8 @@ class ApiClient {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
               },
-            ));
+            ),
+          );
 
   /// Méthode GET
   Future<Response> get(

@@ -69,7 +69,7 @@ class OfferCard extends StatelessWidget {
                           : _buildPlaceholderImage(),
                     ),
                   ),
-                  
+
                   // Badge de réduction en haut à gauche
                   Positioned(
                     top: 12,
@@ -93,7 +93,7 @@ class OfferCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   // Badge de temps restant en haut à droite
                   if (offer.canPickup)
                     Positioned(
@@ -129,7 +129,7 @@ class OfferCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                  
+
                   // Quantité disponible
                   if (offer.quantity > 0)
                     Positioned(
@@ -155,7 +155,7 @@ class OfferCard extends StatelessWidget {
                     ),
                 ],
               ),
-              
+
               // Contenu de la carte
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -182,7 +182,7 @@ class OfferCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    
+
                     // Titre de l'offre
                     Text(
                       offer.title,
@@ -194,7 +194,7 @@ class OfferCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 6),
-                    
+
                     // Description
                     Text(
                       offer.description,
@@ -207,7 +207,7 @@ class OfferCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 12),
-                    
+
                     // Informations du bas
                     Row(
                       children: [
@@ -231,13 +231,15 @@ class OfferCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: offer.isFree ? Colors.green : theme.primaryColor,
+                                  color: offer.isFree
+                                      ? Colors.green
+                                      : theme.primaryColor,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        
+
                         // Distance et horaire
                         Row(
                           children: [
@@ -274,7 +276,7 @@ class OfferCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
+
                     // Badges diététiques
                     if (offer.isVegetarian || offer.isVegan || offer.isHalal)
                       Padding(
@@ -291,18 +293,14 @@ class OfferCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                    
+
                     // Impact écologique
                     if (offer.co2Saved > 0)
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.eco,
-                              size: 16,
-                              color: Colors.green[600],
-                            ),
+                            Icon(Icons.eco, size: 16, color: Colors.green[600]),
                             const SizedBox(width: 4),
                             Text(
                               '${(offer.co2Saved / 1000).toStringAsFixed(1)} kg CO₂ économisés',
@@ -441,7 +439,7 @@ class OfferCard extends StatelessWidget {
     final start = offer.pickupStartTime;
     final end = offer.pickupEndTime;
     return '${start.hour.toString().padLeft(2, '0')}h${start.minute.toString().padLeft(2, '0')} - '
-           '${end.hour.toString().padLeft(2, '0')}h${end.minute.toString().padLeft(2, '0')}';
+        '${end.hour.toString().padLeft(2, '0')}h${end.minute.toString().padLeft(2, '0')}';
   }
 
   String _formatTimeRemaining(Duration duration) {

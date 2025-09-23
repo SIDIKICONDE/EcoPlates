@@ -14,7 +14,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
   double _maxPrice = 10.0;
   TimeOfDay? _pickupTimeStart;
   TimeOfDay? _pickupTimeEnd;
-  
+
   final List<FilterCategory> _categories = [
     FilterCategory('Tout', Icons.apps, isSelected: true),
     FilterCategory('Boulangerie', Icons.bakery_dining),
@@ -38,7 +38,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
       decoration: const BoxDecoration(
@@ -57,7 +57,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // Header
           Padding(
             padding: const EdgeInsets.all(16),
@@ -66,10 +66,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
               children: [
                 const Text(
                   'Filtres',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 TextButton(
                   onPressed: _resetFilters,
@@ -78,7 +75,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
               ],
             ),
           ),
-          
+
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -125,7 +122,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Prix maximum
                   _buildSectionTitle('Prix maximum'),
                   const SizedBox(height: 8),
@@ -166,7 +163,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Catégories
                   _buildSectionTitle('Catégories'),
                   const SizedBox(height: 12),
@@ -201,15 +198,19 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
                             } else {
                               // Désélectionner "Tout" si une autre catégorie est sélectionnée
                               if (selected) {
-                                _categories.firstWhere((c) => c.name == 'Tout')
-                                    .isSelected = false;
+                                _categories
+                                        .firstWhere((c) => c.name == 'Tout')
+                                        .isSelected =
+                                    false;
                               }
                               category.isSelected = selected;
-                              
+
                               // Si aucune catégorie n'est sélectionnée, sélectionner "Tout"
                               if (!_categories.any((c) => c.isSelected)) {
-                                _categories.firstWhere((c) => c.name == 'Tout')
-                                    .isSelected = true;
+                                _categories
+                                        .firstWhere((c) => c.name == 'Tout')
+                                        .isSelected =
+                                    true;
                               }
                             }
                           });
@@ -218,7 +219,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
                     }).toList(),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Tags
                   _buildSectionTitle('Filtres rapides'),
                   const SizedBox(height: 12),
@@ -239,9 +240,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
                         selectedColor: theme.primaryColor,
                         backgroundColor: Colors.grey.shade200,
                         labelStyle: TextStyle(
-                          color: tag.isSelected
-                              ? Colors.white
-                              : Colors.black87,
+                          color: tag.isSelected ? Colors.white : Colors.black87,
                         ),
                         onSelected: (selected) {
                           setState(() {
@@ -252,7 +251,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
                     }).toList(),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Horaires de collecte
                   _buildSectionTitle('Horaires de collecte'),
                   const SizedBox(height: 12),
@@ -286,7 +285,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Options supplémentaires
                   _buildSectionTitle('Options'),
                   const SizedBox(height: 12),
@@ -327,10 +326,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-      ),
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     );
   }
 
@@ -360,19 +356,13 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
           children: [
             Text(
               label,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
             ),
             Text(
               time != null
                   ? '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
                   : '--:--',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
           ],
         ),
@@ -392,12 +382,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
         children: [
           Icon(icon, size: 20, color: Colors.grey.shade600),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 14),
-            ),
-          ),
+          Expanded(child: Text(title, style: const TextStyle(fontSize: 14))),
           Switch(
             value: value,
             onChanged: onChanged,
@@ -414,12 +399,12 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
       _maxPrice = 10.0;
       _pickupTimeStart = null;
       _pickupTimeEnd = null;
-      
+
       // Réinitialiser les catégories
       for (var category in _categories) {
         category.isSelected = category.name == 'Tout';
       }
-      
+
       // Réinitialiser les tags
       for (var tag in _tags) {
         tag.isSelected = false;
@@ -433,11 +418,7 @@ class FilterCategory {
   final IconData icon;
   bool isSelected;
 
-  FilterCategory(
-    this.name,
-    this.icon, {
-    this.isSelected = false,
-  });
+  FilterCategory(this.name, this.icon, {this.isSelected = false});
 }
 
 class FilterTag {
@@ -445,9 +426,5 @@ class FilterTag {
   final IconData icon;
   bool isSelected;
 
-  FilterTag(
-    this.name,
-    this.icon, {
-    this.isSelected = false,
-  });
+  FilterTag(this.name, this.icon, {this.isSelected = false});
 }

@@ -70,7 +70,8 @@ class ReservationCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (!isHistory && reservation.status == ReservationStatus.confirmed)
+                  if (!isHistory &&
+                      reservation.status == ReservationStatus.confirmed)
                     IconButton(
                       icon: const Icon(Icons.cancel_outlined),
                       onPressed: onCancel,
@@ -79,9 +80,10 @@ class ReservationCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              
+
               // Informations de collecte
-              if (!isHistory && reservation.status == ReservationStatus.confirmed) ...[
+              if (!isHistory &&
+                  reservation.status == ReservationStatus.confirmed) ...[
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -156,9 +158,10 @@ class ReservationCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
               ],
-              
+
               // Code de confirmation
-              if (!isHistory && reservation.status == ReservationStatus.confirmed)
+              if (!isHistory &&
+                  reservation.status == ReservationStatus.confirmed)
                 Row(
                   children: [
                     Icon(
@@ -177,14 +180,10 @@ class ReservationCard extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    Icon(
-                      Icons.qr_code,
-                      size: 20,
-                      color: Colors.grey[600],
-                    ),
+                    Icon(Icons.qr_code, size: 20, color: Colors.grey[600]),
                   ],
                 ),
-              
+
               // Informations de paiement
               if (reservation.paymentInfo != null) ...[
                 const SizedBox(height: 8),
@@ -200,10 +199,7 @@ class ReservationCard extends StatelessWidget {
                       reservation.paymentInfo!.amount == 0
                           ? 'Gratuit'
                           : '${reservation.paymentInfo!.amount.toStringAsFixed(2)}€',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[700],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                     ),
                     if (reservation.quantity > 1) ...[
                       const SizedBox(width: 8),
@@ -228,7 +224,7 @@ class ReservationCard extends StatelessWidget {
                   ],
                 ),
               ],
-              
+
               // Date pour l'historique
               if (isHistory) ...[
                 const SizedBox(height: 8),
@@ -242,10 +238,7 @@ class ReservationCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       _formatDate(reservation.reservedAt),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -260,7 +253,7 @@ class ReservationCard extends StatelessWidget {
   Widget _buildStatusIcon() {
     IconData icon;
     Color color;
-    
+
     switch (reservation.status) {
       case ReservationStatus.confirmed:
         icon = Icons.schedule;
@@ -282,18 +275,14 @@ class ReservationCard extends StatelessWidget {
         icon = Icons.pending;
         color = Colors.grey;
     }
-    
+
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 24,
-      ),
+      child: Icon(icon, color: color, size: 24),
     );
   }
 
@@ -348,7 +337,7 @@ class ReservationCard extends StatelessWidget {
     final start = reservation.pickupStartTime;
     final end = reservation.pickupEndTime;
     final now = DateTime.now();
-    
+
     String day;
     if (start.day == now.day) {
       day = "Aujourd'hui";
@@ -357,15 +346,15 @@ class ReservationCard extends StatelessWidget {
     } else {
       day = '${start.day}/${start.month}';
     }
-    
+
     return '$day ${start.hour.toString().padLeft(2, '0')}h${start.minute.toString().padLeft(2, '0')} - '
-           '${end.hour.toString().padLeft(2, '0')}h${end.minute.toString().padLeft(2, '0')}';
+        '${end.hour.toString().padLeft(2, '0')}h${end.minute.toString().padLeft(2, '0')}';
   }
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return "Aujourd'hui à ${date.hour.toString().padLeft(2, '0')}h${date.minute.toString().padLeft(2, '0')}";
     } else if (difference.inDays == 1) {

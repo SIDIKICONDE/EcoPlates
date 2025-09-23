@@ -29,20 +29,20 @@ class UserTypeSelectionScreen extends ConsumerWidget {
               Text(
                 'Bienvenue sur EcoPlates',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
               Text(
                 'Choisissez votre profil pour commencer',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
-              
+
               // Carte Consommateur
               _UserTypeCard(
                 icon: Icons.person,
@@ -61,9 +61,9 @@ class UserTypeSelectionScreen extends ConsumerWidget {
                   context.go('/home');
                 },
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // Carte Commerçant
               _UserTypeCard(
                 icon: Icons.store,
@@ -82,9 +82,9 @@ class UserTypeSelectionScreen extends ConsumerWidget {
                   context.go('/merchant/dashboard');
                 },
               ),
-              
+
               const Spacer(),
-              
+
               // Liens en bas
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -127,7 +127,7 @@ class _UserTypeCard extends StatelessWidget {
   final List<String> features;
   final Color color;
   final VoidCallback onTap;
-  
+
   const _UserTypeCard({
     required this.icon,
     required this.title,
@@ -136,7 +136,7 @@ class _UserTypeCard extends StatelessWidget {
     required this.color,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -160,11 +160,7 @@ class _UserTypeCard extends StatelessWidget {
                     color: color.withAlpha(30),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
-                    icon,
-                    color: color,
-                    size: 32,
-                  ),
+                  child: Icon(icon, color: color, size: 32),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -173,47 +169,40 @@ class _UserTypeCard extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         subtitle,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                       ),
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: color,
-                  size: 20,
-                ),
+                Icon(Icons.arrow_forward_ios, color: color, size: 20),
               ],
             ),
             const SizedBox(height: 16),
-            ...features.map((feature) => Padding(
-              padding: const EdgeInsets.only(left: 8, bottom: 8),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 16,
-                    color: color,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      feature,
-                      style: Theme.of(context).textTheme.bodySmall,
+            ...features.map(
+              (feature) => Padding(
+                padding: const EdgeInsets.only(left: 8, bottom: 8),
+                child: Row(
+                  children: [
+                    Icon(Icons.check_circle_outline, size: 16, color: color),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        feature,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )),
+            ),
           ],
         ),
       ),

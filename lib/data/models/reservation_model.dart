@@ -57,8 +57,8 @@ class ReservationModel {
       cancellationReason: reservation.cancellationReason,
       collectedAt: reservation.collectedAt,
       confirmationCode: reservation.confirmationCode,
-      paymentInfo: reservation.paymentInfo != null 
-          ? PaymentInfoModel.fromEntity(reservation.paymentInfo!) 
+      paymentInfo: reservation.paymentInfo != null
+          ? PaymentInfoModel.fromEntity(reservation.paymentInfo!)
           : null,
       quantity: reservation.quantity,
     );
@@ -78,13 +78,15 @@ class ReservationModel {
       cancellationReason: cancellationReason,
       collectedAt: collectedAt,
       confirmationCode: confirmationCode,
-      paymentInfo: paymentInfo != null ? PaymentInfo(
-        paymentId: paymentInfo!.paymentId,
-        method: paymentInfo!.method,
-        amount: paymentInfo!.amount,
-        paidAt: paymentInfo!.paidAt,
-        status: paymentInfo!.status,
-      ) : null,
+      paymentInfo: paymentInfo != null
+          ? PaymentInfo(
+              paymentId: paymentInfo!.paymentId,
+              method: paymentInfo!.method,
+              amount: paymentInfo!.amount,
+              paidAt: paymentInfo!.paidAt,
+              status: paymentInfo!.status,
+            )
+          : null,
       quantity: quantity,
     );
   }

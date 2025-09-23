@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../widgets/home/brand_slider_section.dart';
 import '../widgets/home/categories_section.dart';
 import '../widgets/home/restaurant_slider_section.dart';
 import '../widgets/home/surprise_box_section.dart';
@@ -26,15 +27,12 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'EcoPlates',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         backgroundColor: theme.primaryColor,
         elevation: 0,
@@ -75,10 +73,21 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
+            // Section des grandes enseignes (en premier, position premium)
+            const BrandSliderSection(),
+
             // Section des catégories
             const CategoriesSection(),
-            
+
+            // Section "Recommandé pour vous"
+            RestaurantSliderSection(
+              title: '🎯 Recommandé pour vous',
+              subtitle: 'Sélection personnalisée selon vos goûts',
+              actionText: 'Voir tout',
+              onActionTap: () => context.go('/recommended'),
+              filterType: 'recommended',
+            ),
+
             // Section "Près de vous"
             RestaurantSliderSection(
               title: '🔥 Près de vous',
@@ -87,7 +96,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
               onActionTap: () => context.go('/nearby'),
               filterType: 'nearby',
             ),
-            
+
             // Section "Nouveautés"
             RestaurantSliderSection(
               title: '✨ Nouveautés',
@@ -96,7 +105,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
               onActionTap: () => context.go('/new'),
               filterType: 'new',
             ),
-            
+
             // Section "Meilleures offres"
             RestaurantSliderSection(
               title: '💎 Meilleures offres',
@@ -105,7 +114,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
               onActionTap: () => context.go('/best-deals'),
               filterType: 'best-deals',
             ),
-            
+
             // Section "Dernière chance"
             RestaurantSliderSection(
               title: '⏰ Dernière chance',
@@ -115,16 +124,16 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
               isUrgent: true,
               filterType: 'closing-soon',
             ),
-            
+
             // Section "Colis anti-gaspi"
             const SurpriseBoxSection(),
-            
+
             // Espacement en bas
             const SizedBox(height: 80),
           ],
         ),
       ),
-      
+
       // FAB pour ajouter aux favoris ou filtrer
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showFilterSheet(context),
@@ -145,10 +154,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
           children: [
             const Text(
               'Sélectionner une localisation',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ListTile(
@@ -194,10 +200,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
               children: [
                 const Text(
                   'Filtres',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -208,10 +211,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             const SizedBox(height: 20),
             const Text(
               'Distance',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             Wrap(
@@ -226,10 +226,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             const SizedBox(height: 20),
             const Text(
               'Prix',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             Wrap(
@@ -244,10 +241,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             const SizedBox(height: 20),
             const Text(
               'Type de nourriture',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             Wrap(
@@ -289,9 +283,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
       onSelected: (selected) {},
       backgroundColor: Colors.grey.shade100,
       selectedColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
-      labelStyle: const TextStyle(
-        fontSize: 14,
-      ),
+      labelStyle: const TextStyle(fontSize: 14),
     );
   }
 }

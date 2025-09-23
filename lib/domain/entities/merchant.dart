@@ -16,7 +16,7 @@ class Merchant {
   final List<String> certifications;
   final double rating;
   final int totalReviews;
-  
+
   const Merchant({
     required this.id,
     required this.name,
@@ -35,17 +35,18 @@ class Merchant {
     this.rating = 0.0,
     this.totalReviews = 0,
   });
-  
+
   /// Vérifie si le commerçant est vérifié
-  bool get isVerified => status == MerchantStatus.verified && verifiedAt != null;
-  
+  bool get isVerified =>
+      status == MerchantStatus.verified && verifiedAt != null;
+
   /// Calcule l'impact écologique total
   double get totalCo2Saved => stats.totalCo2Saved;
-  
+
   /// Vérifie si le commerçant peut créer une nouvelle offre
-  bool get canCreateOffer => 
-    status == MerchantStatus.verified && 
-    stats.activeOffers < settings.maxActiveOffers;
+  bool get canCreateOffer =>
+      status == MerchantStatus.verified &&
+      stats.activeOffers < settings.maxActiveOffers;
 }
 
 /// Types de commerces
@@ -62,22 +63,22 @@ enum MerchantType {
 
 /// Statut du commerçant
 enum MerchantStatus {
-  pending,      // En attente de vérification
-  verified,     // Vérifié
-  suspended,    // Suspendu
-  inactive,     // Inactif
+  pending, // En attente de vérification
+  verified, // Vérifié
+  suspended, // Suspendu
+  inactive, // Inactif
 }
 
 /// Informations business
 class BusinessInfo {
   final String registrationNumber; // SIRET/SIREN
-  final String vatNumber;          // Numéro TVA
+  final String vatNumber; // Numéro TVA
   final String? website;
   final String? description;
   final List<String> specialties;
   final OpeningHours openingHours;
   final List<String> paymentMethods;
-  
+
   const BusinessInfo({
     required this.registrationNumber,
     required this.vatNumber,
@@ -93,18 +94,15 @@ class BusinessInfo {
 class OpeningHours {
   final Map<DayOfWeek, DayHours> schedule;
   final List<Holiday> holidays;
-  
-  const OpeningHours({
-    required this.schedule,
-    this.holidays = const [],
-  });
-  
+
+  const OpeningHours({required this.schedule, this.holidays = const []});
+
   /// Vérifie si ouvert maintenant
   bool get isOpenNow {
     final now = DateTime.now();
     final todaySchedule = schedule[DayOfWeek.fromDateTime(now)];
     if (todaySchedule == null || !todaySchedule.isOpen) return false;
-    
+
     final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
     return todaySchedule.isTimeInRange(currentTime);
   }
@@ -112,8 +110,14 @@ class OpeningHours {
 
 /// Jour de la semaine
 enum DayOfWeek {
-  monday, tuesday, wednesday, thursday, friday, saturday, sunday;
-  
+  monday,
+  tuesday,
+  wednesday,
+  thursday,
+  friday,
+  saturday,
+  sunday;
+
   static DayOfWeek fromDateTime(DateTime date) {
     return DayOfWeek.values[date.weekday - 1];
   }
@@ -126,7 +130,7 @@ class DayHours {
   final TimeOfDay? closeTime;
   final TimeOfDay? breakStart;
   final TimeOfDay? breakEnd;
-  
+
   const DayHours({
     required this.isOpen,
     this.openTime,
@@ -134,24 +138,24 @@ class DayHours {
     this.breakStart,
     this.breakEnd,
   });
-  
+
   bool isTimeInRange(TimeOfDay time) {
     if (!isOpen || openTime == null || closeTime == null) return false;
-    
+
     final timeMinutes = time.hour * 60 + time.minute;
     final openMinutes = openTime!.hour * 60 + openTime!.minute;
     final closeMinutes = closeTime!.hour * 60 + closeTime!.minute;
-    
+
     // Gérer la pause déjeuner
     if (breakStart != null && breakEnd != null) {
       final breakStartMinutes = breakStart!.hour * 60 + breakStart!.minute;
       final breakEndMinutes = breakEnd!.hour * 60 + breakEnd!.minute;
-      
+
       if (timeMinutes >= breakStartMinutes && timeMinutes <= breakEndMinutes) {
         return false;
       }
     }
-    
+
     return timeMinutes >= openMinutes && timeMinutes <= closeMinutes;
   }
 }
@@ -161,7 +165,7 @@ class Holiday {
   final DateTime date;
   final String name;
   final bool isClosed;
-  
+
   const Holiday({
     required this.date,
     required this.name,
@@ -173,7 +177,7 @@ class Holiday {
 class TimeOfDay {
   final int hour;
   final int minute;
-  
+
   const TimeOfDay({required this.hour, required this.minute});
 }
 
@@ -186,7 +190,7 @@ class Address {
   final double latitude;
   final double longitude;
   final String? additionalInfo;
-  
+
   const Address({
     required this.street,
     required this.city,
@@ -196,7 +200,7 @@ class Address {
     required this.longitude,
     this.additionalInfo,
   });
-  
+
   String get fullAddress => '$street, $postalCode $city';
 }
 
@@ -211,7 +215,7 @@ class MerchantSettings {
   final List<NotificationChannel> enabledChannels;
   final bool requireConfirmationCode;
   final int defaultPickupDuration; // en minutes
-  
+
   const MerchantSettings({
     this.maxActiveOffers = 10,
     this.maxDailyOffers = 20,
@@ -219,18 +223,17 @@ class MerchantSettings {
     this.notifyOnReservation = true,
     this.notifyOnLowStock = true,
     this.lowStockThreshold = 5,
-    this.enabledChannels = const [NotificationChannel.push, NotificationChannel.email],
+    this.enabledChannels = const [
+      NotificationChannel.push,
+      NotificationChannel.email,
+    ],
     this.requireConfirmationCode = true,
     this.defaultPickupDuration = 30,
   });
 }
 
 /// Canaux de notification
-enum NotificationChannel {
-  push,
-  email,
-  sms,
-}
+enum NotificationChannel { push, email, sms }
 
 /// Statistiques du commerçant
 class MerchantStats {
@@ -243,7 +246,7 @@ class MerchantStats {
   final int totalMealsSaved;
   final double averageRating;
   final Map<DateTime, DailyStats> dailyStats;
-  
+
   const MerchantStats({
     required this.totalOffers,
     required this.activeOffers,
@@ -255,7 +258,7 @@ class MerchantStats {
     required this.averageRating,
     this.dailyStats = const {},
   });
-  
+
   /// Taux de completion
   double get completionRate {
     if (totalReservations == 0) return 0;
@@ -271,7 +274,7 @@ class DailyStats {
   final int completed;
   final double revenue;
   final double co2Saved;
-  
+
   const DailyStats({
     required this.date,
     required this.offersCreated,

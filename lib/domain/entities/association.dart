@@ -12,7 +12,7 @@ class Association {
   final AssociationStats stats;
   final List<String> volunteerUserIds;
   final List<String> beneficiaryZones; // Zones d'intervention
-  
+
   const Association({
     required this.id,
     required this.name,
@@ -27,35 +27,35 @@ class Association {
     this.volunteerUserIds = const [],
     this.beneficiaryZones = const [],
   });
-  
+
   /// Vérifie si l'association est validée et active
   bool get isActive => status == AssociationStatus.validated;
-  
+
   /// Vérifie si l'association peut collecter des offres
   bool get canCollectOffers => isActive && details.hasCollectAgreement;
-  
+
   /// Calcule l'impact social total
   int get totalImpact => stats.mealsDistributed + stats.peopleHelped;
 }
 
 /// Types d'associations caritatives
 enum AssociationType {
-  foodBank,           // Banque alimentaire
-  socialRestaurant,   // Restaurant social/solidaire
-  charity,            // Association caritative générale
+  foodBank, // Banque alimentaire
+  socialRestaurant, // Restaurant social/solidaire
+  charity, // Association caritative générale
   studentAssociation, // Association étudiante
-  religiousOrg,       // Organisation religieuse
-  redCross,          // Croix-Rouge et similaires
-  other,             // Autre type
+  religiousOrg, // Organisation religieuse
+  redCross, // Croix-Rouge et similaires
+  other, // Autre type
 }
 
 /// Statut de validation de l'association
 enum AssociationStatus {
-  pending,    // En attente de validation
-  validated,  // Validée et active
-  suspended,  // Suspendue temporairement
-  rejected,   // Rejetée
-  expired,    // Validation expirée
+  pending, // En attente de validation
+  validated, // Validée et active
+  suspended, // Suspendue temporairement
+  rejected, // Rejetée
+  expired, // Validation expirée
 }
 
 /// Détails de l'association
@@ -76,7 +76,7 @@ class AssociationDetails {
   final bool hasVehicles; // Véhicules de collecte
   final List<String> certifications; // Agréments et certifications
   final OpeningHours collectHours; // Horaires de collecte
-  
+
   const AssociationDetails({
     required this.description,
     required this.address,
@@ -106,7 +106,7 @@ class AssociationStats {
   final int platesUsed; // Nombre d'assiettes EcoPlates utilisées
   final int volunteersHours; // Heures de bénévolat
   final DateTime lastActivityAt;
-  
+
   const AssociationStats({
     this.mealsDistributed = 0,
     this.peopleHelped = 0,
@@ -116,14 +116,14 @@ class AssociationStats {
     this.volunteersHours = 0,
     required this.lastActivityAt,
   });
-  
+
   /// Impact score basé sur les activités
   double get impactScore {
-    return (mealsDistributed * 0.1) + 
-           (peopleHelped * 0.2) + 
-           (foodSaved * 100) + 
-           (co2Saved * 200) +
-           (platesUsed * 0.05);
+    return (mealsDistributed * 0.1) +
+        (peopleHelped * 0.2) +
+        (foodSaved * 100) +
+        (co2Saved * 200) +
+        (platesUsed * 0.05);
   }
 }
 
@@ -131,20 +131,17 @@ class AssociationStats {
 class OpeningHours {
   final Map<DayOfWeek, TimeSlot> schedule;
   final String? specialNotes;
-  
-  const OpeningHours({
-    required this.schedule,
-    this.specialNotes,
-  });
-  
+
+  const OpeningHours({required this.schedule, this.specialNotes});
+
   /// Vérifie si ouvert maintenant
   bool get isOpenNow {
     final now = DateTime.now();
     final today = DayOfWeek.values[now.weekday - 1];
     final slot = schedule[today];
-    
+
     if (slot == null || !slot.isOpen) return false;
-    
+
     final currentMinutes = now.hour * 60 + now.minute;
     return currentMinutes >= slot.openTime && currentMinutes <= slot.closeTime;
   }
@@ -166,17 +163,17 @@ class TimeSlot {
   final bool isOpen;
   final int openTime; // Minutes depuis minuit (ex: 540 = 9h00)
   final int closeTime; // Minutes depuis minuit (ex: 1080 = 18h00)
-  
+
   const TimeSlot({
     required this.isOpen,
     required this.openTime,
     required this.closeTime,
   });
-  
+
   /// Convertit les minutes en format HH:MM
   String get openTimeFormatted => _minutesToTime(openTime);
   String get closeTimeFormatted => _minutesToTime(closeTime);
-  
+
   String _minutesToTime(int minutes) {
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
@@ -193,7 +190,7 @@ class GroupCollection {
   final String? volunteerAssignedId;
   final GroupCollectionStatus status;
   final String? notes;
-  
+
   const GroupCollection({
     required this.id,
     required this.associationId,
@@ -207,8 +204,8 @@ class GroupCollection {
 
 /// Statut d'une collecte groupée
 enum GroupCollectionStatus {
-  scheduled,   // Programmée
-  inProgress,  // En cours
-  completed,   // Terminée
-  cancelled,   // Annulée
+  scheduled, // Programmée
+  inProgress, // En cours
+  completed, // Terminée
+  cancelled, // Annulée
 }

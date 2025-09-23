@@ -7,17 +7,13 @@ class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback? onTap;
 
-  const RestaurantCard({
-    super.key,
-    required this.restaurant,
-    this.onTap,
-  });
+  const RestaurantCard({super.key, required this.restaurant, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -51,7 +47,9 @@ class RestaurantCard extends StatelessWidget {
                             placeholder: (context, url) => Container(
                               color: Colors.grey.shade200,
                               child: const Center(
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               ),
                             ),
                             errorWidget: (context, url, error) => Container(
@@ -259,27 +257,21 @@ class RestaurantCard extends StatelessWidget {
                       children: [
                         // Note
                         if (restaurant.rating != null) ...[
-                          Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Colors.amber,
-                          ),
+                          Icon(Icons.star, size: 14, color: Colors.amber),
                           const SizedBox(width: 2),
                           Text(
                             restaurant.rating!.toStringAsFixed(1),
                             style: TextStyle(
                               fontSize: 12,
-                              color: isDarkMode ? Colors.white70 : Colors.black54,
+                              color: isDarkMode
+                                  ? Colors.white70
+                                  : Colors.black54,
                             ),
                           ),
                           const SizedBox(width: 8),
                         ],
                         // Horaire de collecte
-                        Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: Colors.grey,
-                        ),
+                        Icon(Icons.access_time, size: 14, color: Colors.grey),
                         const SizedBox(width: 2),
                         Expanded(
                           child: Text(
@@ -348,4 +340,3 @@ class RestaurantCard extends StatelessWidget {
     }
   }
 }
-

@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../../domain/entities/reservation.dart';
-import '../../providers/commerce/offers_provider.dart' hide userLocationProvider;
+import '../../providers/commerce/offers_provider.dart'
+    hide userLocationProvider;
 import '../../providers/commerce/reservations_provider.dart';
 import '../../providers/consumer/favorites_provider.dart';
 import '../../providers/consumer/statistics_provider.dart';
@@ -80,20 +81,20 @@ class ConsumerHomeScreen extends ConsumerWidget {
               // Carte de bienvenue
               _buildWelcomeCard(context),
               const SizedBox(height: 20),
-              
+
               // Statistiques écologiques
               _buildEcoStats(context),
               const SizedBox(height: 24),
-              
+
               // Actions principales
               Text(
                 'Que voulez-vous faire ?',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              
+
               // Grille d'actions
               GridView.count(
                 shrinkWrap: true,
@@ -122,12 +123,17 @@ class ConsumerHomeScreen extends ConsumerWidget {
                   ),
                   Consumer(
                     builder: (context, ref, child) {
-                      final reservationsAsync = ref.watch(userReservationsProvider);
+                      final reservationsAsync = ref.watch(
+                        userReservationsProvider,
+                      );
                       final activeReservationsCount = reservationsAsync.when(
-                        data: (reservations) => reservations.where(
-                          (r) => r.status == ReservationStatus.pending || 
-                                r.status == ReservationStatus.confirmed
-                        ).length,
+                        data: (reservations) => reservations
+                            .where(
+                              (r) =>
+                                  r.status == ReservationStatus.pending ||
+                                  r.status == ReservationStatus.confirmed,
+                            )
+                            .length,
                         loading: () => 0,
                         error: (_, __) => 0,
                       );
@@ -136,7 +142,9 @@ class ConsumerHomeScreen extends ConsumerWidget {
                         title: 'Mes Réservations',
                         subtitle: '$activeReservationsCount en cours',
                         color: Colors.purple,
-                        badge: activeReservationsCount > 0 ? '$activeReservationsCount' : null,
+                        badge: activeReservationsCount > 0
+                            ? '$activeReservationsCount'
+                            : null,
                         onTap: () => context.go('/reservations'),
                       );
                     },
@@ -151,7 +159,7 @@ class ConsumerHomeScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               // Section offres du jour
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,17 +177,17 @@ class ConsumerHomeScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              
+
               // Carrousel d'offres rapides
               Consumer(
                 builder: (context, ref, child) {
                   final offersAsync = ref.watch(nearbyOffersProvider);
-                  
+
                   return offersAsync.when(
                     data: (offers) {
                       // Prendre seulement les 5 premières offres pour le carrousel
                       final topOffers = offers.take(5).toList();
-                      
+
                       if (topOffers.isEmpty) {
                         return Container(
                           height: 120,
@@ -192,33 +200,37 @@ class ConsumerHomeScreen extends ConsumerWidget {
                           ),
                         );
                       }
-                      
+
                       return SizedBox(
                         height: 120,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: topOffers.length,
-                          separatorBuilder: (context, index) => const SizedBox(width: 12),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 12),
                           itemBuilder: (context, index) {
                             final offer = topOffers[index];
-                            final userLocation = ref.watch(userLocationProvider);
+                            final userLocation = ref.watch(
+                              userLocationProvider,
+                            );
                             String distance = 'Localisation inconnue';
-                            
+
                             if (userLocation != null) {
                               final distanceKm = offer.location.distanceFrom(
-                                userLocation.latitude, 
-                                userLocation.longitude
+                                userLocation.latitude,
+                                userLocation.longitude,
                               );
-                              distance = distanceKm < 1 
-                                ? '${(distanceKm * 1000).round()}m'
-                                : '${distanceKm.toStringAsFixed(1)}km';
+                              distance = distanceKm < 1
+                                  ? '${(distanceKm * 1000).round()}m'
+                                  : '${distanceKm.toStringAsFixed(1)}km';
                             }
-                            
+
                             return _QuickOfferCard(
                               title: offer.merchantName,
                               subtitle: offer.title,
                               price: offer.priceText,
-                              originalPrice: '${offer.originalPrice.toStringAsFixed(2)}€',
+                              originalPrice:
+                                  '${offer.originalPrice.toStringAsFixed(2)}€',
                               distance: distance,
                               isFree: offer.isFree,
                               color: _getOfferColor(offer.category),
@@ -232,9 +244,7 @@ class ConsumerHomeScreen extends ConsumerWidget {
                     },
                     loading: () => SizedBox(
                       height: 120,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      child: Center(child: CircularProgressIndicator()),
                     ),
                     error: (error, stack) => Container(
                       height: 120,
@@ -255,7 +265,7 @@ class ConsumerHomeScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   /// Méthode helper pour obtenir la couleur selon la catégorie
   Color _getOfferColor(FoodCategory category) {
     switch (category) {
@@ -279,7 +289,7 @@ class ConsumerHomeScreen extends ConsumerWidget {
     final hour = DateTime.now().hour;
     String greeting;
     IconData icon;
-    
+
     if (hour < 12) {
       greeting = 'Bonjour';
       icon = Icons.wb_sunny;
@@ -290,7 +300,7 @@ class ConsumerHomeScreen extends ConsumerWidget {
       greeting = 'Bonsoir';
       icon = Icons.nights_stay;
     }
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -323,10 +333,7 @@ class ConsumerHomeScreen extends ConsumerWidget {
                 const SizedBox(height: 4),
                 const Text(
                   'Prêt à sauver de la nourriture aujourd\'hui ?',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
               ],
             ),
@@ -340,7 +347,7 @@ class ConsumerHomeScreen extends ConsumerWidget {
     return Consumer(
       builder: (context, ref, child) {
         final statsAsync = ref.watch(userStatisticsProvider);
-        
+
         return statsAsync.when(
           data: (stats) => Row(
             children: [
@@ -374,20 +381,62 @@ class ConsumerHomeScreen extends ConsumerWidget {
           ),
           loading: () => Row(
             children: [
-              Expanded(child: _StatCard(icon: Icons.eco, value: '...', label: 'CO₂ économisé', color: Colors.green)),
+              Expanded(
+                child: _StatCard(
+                  icon: Icons.eco,
+                  value: '...',
+                  label: 'CO₂ économisé',
+                  color: Colors.green,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _StatCard(icon: Icons.restaurant, value: '...', label: 'Repas sauvés', color: Colors.orange)),
+              Expanded(
+                child: _StatCard(
+                  icon: Icons.restaurant,
+                  value: '...',
+                  label: 'Repas sauvés',
+                  color: Colors.orange,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _StatCard(icon: Icons.euro, value: '...', label: 'Économisé', color: Colors.blue)),
+              Expanded(
+                child: _StatCard(
+                  icon: Icons.euro,
+                  value: '...',
+                  label: 'Économisé',
+                  color: Colors.blue,
+                ),
+              ),
             ],
           ),
           error: (_, __) => Row(
             children: [
-              Expanded(child: _StatCard(icon: Icons.eco, value: '0 kg', label: 'CO₂ économisé', color: Colors.green)),
+              Expanded(
+                child: _StatCard(
+                  icon: Icons.eco,
+                  value: '0 kg',
+                  label: 'CO₂ économisé',
+                  color: Colors.green,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _StatCard(icon: Icons.restaurant, value: '0', label: 'Repas sauvés', color: Colors.orange)),
+              Expanded(
+                child: _StatCard(
+                  icon: Icons.restaurant,
+                  value: '0',
+                  label: 'Repas sauvés',
+                  color: Colors.orange,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _StatCard(icon: Icons.euro, value: '0€', label: 'Économisé', color: Colors.blue)),
+              Expanded(
+                child: _StatCard(
+                  icon: Icons.euro,
+                  value: '0€',
+                  label: 'Économisé',
+                  color: Colors.blue,
+                ),
+              ),
             ],
           ),
         );
@@ -424,10 +473,7 @@ class _ActionTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withValues(alpha: 0.3),
-            width: 1,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
         ),
         child: Stack(
           children: [
@@ -450,10 +496,7 @@ class _ActionTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -530,10 +573,7 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 11, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -570,115 +610,115 @@ class _QuickOfferCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-      width: 200,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            color.withValues(alpha: 0.8),
-            color.withValues(alpha: 0.6),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        width: 200,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              color.withValues(alpha: 0.8),
+              color.withValues(alpha: 0.6),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
         ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on,
-                      color: Colors.white,
-                      size: 12,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      distance,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              if (!isFree) ...[
-                Text(
-                  originalPrice,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
-                    decoration: TextDecoration.lineThrough,
+                    ],
                   ),
                 ),
-                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.white,
+                        size: 12,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        distance,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: isFree ? Colors.green : Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  price,
-                  style: TextStyle(
-                    color: isFree ? Colors.white : color,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+            ),
+            Row(
+              children: [
+                if (!isFree) ...[
+                  Text(
+                    originalPrice,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isFree ? Colors.green : Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    price,
+                    style: TextStyle(
+                      color: isFree ? Colors.white : color,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -21,7 +21,9 @@ class ProfileScreen extends ConsumerWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.1),
               ),
               child: Column(
                 children: [
@@ -42,9 +44,9 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 4),
                   Text(
                     'user@ecoplates.com',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -75,7 +77,7 @@ class ProfileScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             // Options du profil
             Padding(
               padding: const EdgeInsets.all(16),
@@ -86,9 +88,7 @@ class ProfileScreen extends ConsumerWidget {
                     title: 'Informations personnelles',
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Fonctionnalité à venir'),
-                        ),
+                        const SnackBar(content: Text('Fonctionnalité à venir')),
                       );
                     },
                   ),
@@ -139,7 +139,8 @@ class ProfileScreen extends ConsumerWidget {
                         AdaptiveDialog.show(
                           context: context,
                           title: 'Déconnexion',
-                          content: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                          content:
+                              'Êtes-vous sûr de vouloir vous déconnecter ?',
                           actions: [
                             AdaptiveDialogAction(
                               text: 'Annuler',
@@ -179,14 +180,14 @@ class _StatCard extends StatelessWidget {
   final String value;
   final String label;
   final Color color;
-  
+
   const _StatCard({
     required this.icon,
     required this.value,
     required this.label,
     required this.color,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -208,15 +209,15 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
           ),
         ],
       ),
@@ -230,7 +231,7 @@ class _ProfileMenuItem extends StatelessWidget {
   final String? subtitle;
   final Widget? trailing;
   final VoidCallback? onTap;
-  
+
   const _ProfileMenuItem({
     required this.icon,
     required this.title,
@@ -238,14 +239,18 @@ class _ProfileMenuItem extends StatelessWidget {
     this.trailing,
     this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle!) : null,
-      trailing: trailing ?? (onTap != null ? const Icon(Icons.arrow_forward_ios, size: 16) : null),
+      trailing:
+          trailing ??
+          (onTap != null
+              ? const Icon(Icons.arrow_forward_ios, size: 16)
+              : null),
       onTap: onTap,
     );
   }

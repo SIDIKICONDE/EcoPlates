@@ -9,7 +9,7 @@ class CategoriesSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     final categories = [
       RestaurantCategory(
         id: 'all',
@@ -54,7 +54,7 @@ class CategoriesSection extends ConsumerWidget {
         color: Colors.pink,
       ),
     ];
-    
+
     return Container(
       color: isDarkMode ? Colors.grey.shade900 : Colors.grey.shade50,
       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -65,10 +65,7 @@ class CategoriesSection extends ConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Catégories',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 8),
@@ -83,7 +80,8 @@ class CategoriesSection extends ConsumerWidget {
                 return _CategoryCard(
                   category: category,
                   onTap: () {
-                    ref.read(selectedCategoryProvider.notifier).state = category.id;
+                    ref.read(selectedCategoryProvider.notifier).state =
+                        category.id;
                   },
                 );
               },
@@ -100,10 +98,7 @@ class _CategoryCard extends StatelessWidget {
   final RestaurantCategory category;
   final VoidCallback onTap;
 
-  const _CategoryCard({
-    required this.category,
-    required this.onTap,
-  });
+  const _CategoryCard({required this.category, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -126,19 +121,12 @@ class _CategoryCard extends StatelessWidget {
                   width: 0.5,
                 ),
               ),
-              child: Icon(
-                category.icon,
-                color: category.color,
-                size: 20,
-              ),
+              child: Icon(category.icon, color: category.color, size: 20),
             ),
             const SizedBox(height: 4),
             Text(
               category.name,
-              style: const TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

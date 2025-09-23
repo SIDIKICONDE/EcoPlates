@@ -196,105 +196,108 @@ class FiltersNotifier extends StateNotifier<OfferFilters> {
 }
 
 /// Présets de filtres pour accès rapide
-enum FilterPreset {
-  freeOnly,
-  vegetarian,
-  bakery,
-  dinner,
-  nearMe,
-}
+enum FilterPreset { freeOnly, vegetarian, bakery, dinner, nearMe }
 
 /// Provider principal pour les filtres
-final filtersProvider = StateNotifierProvider<FiltersNotifier, OfferFilters>((ref) {
+final filtersProvider = StateNotifierProvider<FiltersNotifier, OfferFilters>((
+  ref,
+) {
   return FiltersNotifier();
 });
 
 /// Provider pour filtrer les offres selon les critères
-final filteredOffersProvider = Provider.family<List<FoodOffer>, List<FoodOffer>>((ref, offers) {
-  final filters = ref.watch(filtersProvider);
-  
-  return offers.where((offer) {
-    // Filtre gratuit
-    if (filters.isFreeOnly && !offer.isFree) {
-      return false;
-    }
-    
-    // Filtre catégories
-    if (filters.selectedCategories.isNotEmpty && 
-        !filters.selectedCategories.contains(offer.category)) {
-      return false;
-    }
-    
-    // Filtre préférences alimentaires
-    if (filters.dietaryPreferences.isNotEmpty) {
-      bool matchesPreference = false;
-      for (final pref in filters.dietaryPreferences) {
-        switch (pref) {
-          case 'vegetarian':
-            if (offer.isVegetarian) matchesPreference = true;
-            break;
-          case 'vegan':
-            if (offer.isVegan) matchesPreference = true;
-            break;
-          case 'halal':
-            if (offer.isHalal) matchesPreference = true;
-            break;
-        }
-      }
-      if (!matchesPreference) return false;
-    }
-    
-    // Filtre prix maximum
-    if (filters.maxPrice != null && offer.discountedPrice > filters.maxPrice!) {
-      return false;
-    }
-    
-    // Filtre horaire de collecte
-    if (filters.pickupTimeStart != null || filters.pickupTimeEnd != null) {
-      final offerStartTime = TimeOfDay.fromDateTime(offer.pickupStartTime);
-      final offerEndTime = TimeOfDay.fromDateTime(offer.pickupEndTime);
-      
-      if (filters.pickupTimeStart != null) {
-        if (_timeToMinutes(offerStartTime) < _timeToMinutes(filters.pickupTimeStart!)) {
+final filteredOffersProvider =
+    Provider.family<List<FoodOffer>, List<FoodOffer>>((ref, offers) {
+      final filters = ref.watch(filtersProvider);
+
+      return offers.where((offer) {
+        // Filtre gratuit
+        if (filters.isFreeOnly && !offer.isFree) {
           return false;
         }
-      }
-      
-      if (filters.pickupTimeEnd != null) {
-        if (_timeToMinutes(offerEndTime) > _timeToMinutes(filters.pickupTimeEnd!)) {
+
+        // Filtre catégories
+        if (filters.selectedCategories.isNotEmpty &&
+            !filters.selectedCategories.contains(offer.category)) {
           return false;
         }
-      }
-    }
-    
-    // Filtre offres expirées
-    if (!filters.showExpiredOffers && !offer.isAvailable) {
-      return false;
-    }
-    
-    return true;
-  }).toList()
-    ..sort((a, b) {
-      // Appliquer le tri
-      switch (filters.sortBy) {
-        case SortOption.distance:
-          // TODO: Implémenter avec la vraie distance utilisateur
-          return 0;
-        case SortOption.price:
-          return a.discountedPrice.compareTo(b.discountedPrice);
-        case SortOption.discount:
-          final discountA = (a.originalPrice - a.discountedPrice) / a.originalPrice;
-          final discountB = (b.originalPrice - b.discountedPrice) / b.originalPrice;
-          return discountB.compareTo(discountA); // Plus grande réduction en premier
-        case SortOption.pickupTime:
-          return a.pickupStartTime.compareTo(b.pickupStartTime);
-        case SortOption.newest:
-          return b.createdAt.compareTo(a.createdAt);
-        case SortOption.expiringSoon:
-          return a.pickupEndTime.compareTo(b.pickupEndTime);
-      }
+
+        // Filtre préférences alimentaires
+        if (filters.dietaryPreferences.isNotEmpty) {
+          bool matchesPreference = false;
+          for (final pref in filters.dietaryPreferences) {
+            switch (pref) {
+              case 'vegetarian':
+                if (offer.isVegetarian) matchesPreference = true;
+                break;
+              case 'vegan':
+                if (offer.isVegan) matchesPreference = true;
+                break;
+              case 'halal':
+                if (offer.isHalal) matchesPreference = true;
+                break;
+            }
+          }
+          if (!matchesPreference) return false;
+        }
+
+        // Filtre prix maximum
+        if (filters.maxPrice != null &&
+            offer.discountedPrice > filters.maxPrice!) {
+          return false;
+        }
+
+        // Filtre horaire de collecte
+        if (filters.pickupTimeStart != null || filters.pickupTimeEnd != null) {
+          final offerStartTime = TimeOfDay.fromDateTime(offer.pickupStartTime);
+          final offerEndTime = TimeOfDay.fromDateTime(offer.pickupEndTime);
+
+          if (filters.pickupTimeStart != null) {
+            if (_timeToMinutes(offerStartTime) <
+                _timeToMinutes(filters.pickupTimeStart!)) {
+              return false;
+            }
+          }
+
+          if (filters.pickupTimeEnd != null) {
+            if (_timeToMinutes(offerEndTime) >
+                _timeToMinutes(filters.pickupTimeEnd!)) {
+              return false;
+            }
+          }
+        }
+
+        // Filtre offres expirées
+        if (!filters.showExpiredOffers && !offer.isAvailable) {
+          return false;
+        }
+
+        return true;
+      }).toList()..sort((a, b) {
+        // Appliquer le tri
+        switch (filters.sortBy) {
+          case SortOption.distance:
+            // TODO: Implémenter avec la vraie distance utilisateur
+            return 0;
+          case SortOption.price:
+            return a.discountedPrice.compareTo(b.discountedPrice);
+          case SortOption.discount:
+            final discountA =
+                (a.originalPrice - a.discountedPrice) / a.originalPrice;
+            final discountB =
+                (b.originalPrice - b.discountedPrice) / b.originalPrice;
+            return discountB.compareTo(
+              discountA,
+            ); // Plus grande réduction en premier
+          case SortOption.pickupTime:
+            return a.pickupStartTime.compareTo(b.pickupStartTime);
+          case SortOption.newest:
+            return b.createdAt.compareTo(a.createdAt);
+          case SortOption.expiringSoon:
+            return a.pickupEndTime.compareTo(b.pickupEndTime);
+        }
+      });
     });
-});
 
 /// Convertit TimeOfDay en minutes pour la comparaison
 int _timeToMinutes(TimeOfDay time) {
@@ -304,11 +307,11 @@ int _timeToMinutes(TimeOfDay time) {
 /// Provider pour obtenir les filtres actifs sous forme de Map
 final activeFiltersProvider = Provider<Map<String, dynamic>?>((ref) {
   final filters = ref.watch(filtersProvider);
-  
+
   if (!filters.hasActiveFilters) {
     return null;
   }
-  
+
   return {
     'maxDistance': filters.maxDistance,
     'maxPrice': filters.maxPrice,

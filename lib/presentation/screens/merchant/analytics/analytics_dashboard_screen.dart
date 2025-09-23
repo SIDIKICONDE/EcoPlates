@@ -18,29 +18,31 @@ class AnalyticsDashboardScreen extends ConsumerStatefulWidget {
   const AnalyticsDashboardScreen({super.key});
 
   @override
-  ConsumerState<AnalyticsDashboardScreen> createState() => _AnalyticsDashboardScreenState();
+  ConsumerState<AnalyticsDashboardScreen> createState() =>
+      _AnalyticsDashboardScreenState();
 }
 
-class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScreen> 
+class _AnalyticsDashboardScreenState
+    extends ConsumerState<AnalyticsDashboardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
         title: const Text('Analytics'),
@@ -76,12 +78,12 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   Widget _buildPeriodSelector() {
     return Consumer(
       builder: (context, ref, child) {
         final period = ref.watch(analyticsPeriodProvider);
-        
+
         return PopupMenuButton<AnalyticsPeriodSelection>(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -119,7 +121,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       },
     );
   }
-  
+
   /// Onglet Vue d'ensemble
   Widget _buildOverviewTab() {
     return Consumer(
@@ -127,7 +129,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         final analyticsAsync = ref.watch(merchantAnalyticsProvider);
         final realtimeDashboard = ref.watch(realtimeDashboardProvider);
         final performanceScore = ref.watch(performanceScoreProvider);
-        
+
         return analyticsAsync.when(
           data: (result) => result.fold(
             (failure) => _buildErrorState(failure),
@@ -143,19 +145,19 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                     // Score global
                     _buildGlobalScoreCard(performanceScore),
                     SizedBox(height: 16.h),
-                    
+
                     // Métriques temps réel
                     _buildRealtimeMetrics(realtimeDashboard),
                     SizedBox(height: 16.h),
-                    
+
                     // Graphique des revenus
                     _buildRevenueChart(analytics),
                     SizedBox(height: 16.h),
-                    
+
                     // Top insights
                     _buildInsights(),
                     SizedBox(height: 16.h),
-                    
+
                     // Comparaison avec période précédente
                     _buildComparisonCards(),
                   ],
@@ -164,20 +166,19 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
             ),
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => _buildErrorState(
-            MerchantErrorHandler.handleError(error),
-          ),
+          error: (error, stack) =>
+              _buildErrorState(MerchantErrorHandler.handleError(error)),
         );
       },
     );
   }
-  
+
   /// Onglet Performance
   Widget _buildPerformanceTab() {
     return Consumer(
       builder: (context, ref, child) {
         final analyticsAsync = ref.watch(merchantAnalyticsProvider);
-        
+
         return analyticsAsync.when(
           data: (result) => result.fold(
             (failure) => _buildErrorState(failure),
@@ -188,15 +189,15 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                   // Taux de conversion
                   _buildConversionFunnel(analytics),
                   SizedBox(height: 16.h),
-                  
+
                   // Distribution des offres par heure
                   _buildOffersByHourChart(analytics.performance.offersByHour),
                   SizedBox(height: 16.h),
-                  
+
                   // Métriques de performance détaillées
                   _buildPerformanceMetrics(analytics.performance),
                   SizedBox(height: 16.h),
-                  
+
                   // Prédictions
                   _buildPredictionsSection(),
                 ],
@@ -204,20 +205,19 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
             ),
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => _buildErrorState(
-            MerchantErrorHandler.handleError(error),
-          ),
+          error: (error, stack) =>
+              _buildErrorState(MerchantErrorHandler.handleError(error)),
         );
       },
     );
   }
-  
+
   /// Onglet Impact écologique
   Widget _buildEcologicalTab() {
     return Consumer(
       builder: (context, ref, child) {
         final ecoMetrics = ref.watch(ecoMetricsSummaryProvider);
-        
+
         return SingleChildScrollView(
           padding: EdgeInsets.all(16.w),
           child: Column(
@@ -225,19 +225,19 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
               // Score de durabilité
               _buildSustainabilityScore(ecoMetrics['sustainabilityScore'] ?? 0),
               SizedBox(height: 16.h),
-              
+
               // Métriques écologiques principales
               _buildEcoMetricsGrid(ecoMetrics),
               SizedBox(height: 16.h),
-              
+
               // Équivalences visuelles
               _buildEcoEquivalences(ecoMetrics),
               SizedBox(height: 16.h),
-              
+
               // Graphique d'impact dans le temps
               _buildEcoImpactChart(),
               SizedBox(height: 16.h),
-              
+
               // Achievements écologiques
               _buildEcoAchievements(),
             ],
@@ -246,13 +246,13 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       },
     );
   }
-  
+
   /// Onglet Clients
   Widget _buildCustomersTab() {
     return Consumer(
       builder: (context, ref, child) {
         final analyticsAsync = ref.watch(merchantAnalyticsProvider);
-        
+
         return analyticsAsync.when(
           data: (result) => result.fold(
             (failure) => _buildErrorState(failure),
@@ -263,15 +263,17 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                   // Métriques clients principales
                   _buildCustomerMetricsCards(analytics.customers),
                   SizedBox(height: 16.h),
-                  
+
                   // Distribution des notes
-                  _buildRatingDistribution(analytics.customers.ratingDistribution),
+                  _buildRatingDistribution(
+                    analytics.customers.ratingDistribution,
+                  ),
                   SizedBox(height: 16.h),
-                  
+
                   // Comportement client
                   _buildCustomerBehavior(analytics.customers.behavior),
                   SizedBox(height: 16.h),
-                  
+
                   // Segments clients
                   _buildCustomerSegments(analytics.customers.segments),
                 ],
@@ -279,30 +281,30 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
             ),
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => _buildErrorState(
-            MerchantErrorHandler.handleError(error),
-          ),
+          error: (error, stack) =>
+              _buildErrorState(MerchantErrorHandler.handleError(error)),
         );
       },
     );
   }
-  
+
   // Widgets composants
-  
+
   Widget _buildGlobalScoreCard(double score) {
     final color = _getScoreColor(score);
-    
+
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
+            colors: [
+              color.withValues(alpha: 0.1),
+              color.withValues(alpha: 0.05),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -312,10 +314,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
           children: [
             Text(
               'Score de Performance Global',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 16.h),
             SizedBox(
@@ -344,10 +343,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                         ),
                         Text(
                           '/100',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -369,8 +365,10 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
-  Widget _buildRealtimeMetrics(AsyncValue<Either<Failure, RealtimeDashboard>> dashboardAsync) {
+
+  Widget _buildRealtimeMetrics(
+    AsyncValue<Either<Failure, RealtimeDashboard>> dashboardAsync,
+  ) {
     return dashboardAsync.when(
       data: (result) => result.fold(
         (_) => const SizedBox.shrink(),
@@ -417,7 +415,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       error: (_, __) => const SizedBox.shrink(),
     );
   }
-  
+
   Widget _buildMetricCard({
     required String title,
     required String value,
@@ -448,12 +446,11 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
               Icon(icon, color: color, size: 24.sp),
               if (trend != null)
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 6.w,
-                    vertical: 2.h,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
-                    color: trend.startsWith('+') ? Colors.green[50] : Colors.red[50],
+                    color: trend.startsWith('+')
+                        ? Colors.green[50]
+                        : Colors.red[50],
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Text(
@@ -481,10 +478,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
               SizedBox(height: 4.h),
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
               ),
             ],
           ),
@@ -492,16 +486,16 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   Widget _buildRevenueChart(Analytics analytics) {
     final sales = analytics.sales;
     final dailyRevenue = sales.dailyRevenue.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
-    
+
     if (dailyRevenue.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(16.w),
@@ -538,10 +532,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                     drawVerticalLine: false,
                     horizontalInterval: sales.totalRevenue / 5,
                     getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: Colors.grey[300]!,
-                        strokeWidth: 1,
-                      );
+                      return FlLine(color: Colors.grey[300]!, strokeWidth: 1);
                     },
                   ),
                   titlesData: FlTitlesData(
@@ -568,7 +559,8 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          if (value.toInt() >= 0 && value.toInt() < dailyRevenue.length) {
+                          if (value.toInt() >= 0 &&
+                              value.toInt() < dailyRevenue.length) {
                             final date = dailyRevenue[value.toInt()].key;
                             return Text(
                               '${date.day}/${date.month}',
@@ -597,7 +589,9 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                       dotData: const FlDotData(show: false),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                        color: Theme.of(
+                          context,
+                        ).primaryColor.withValues(alpha: 0.1),
                       ),
                     ),
                   ],
@@ -609,44 +603,44 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   Widget _buildInsights() {
     return Consumer(
       builder: (context, ref, child) {
         final insightsAsync = ref.watch(merchantInsightsProvider);
-        
+
         return insightsAsync.when(
-          data: (result) => result.fold(
-            (_) => const SizedBox.shrink(),
-            (insights) {
-              if (insights.isEmpty) return const SizedBox.shrink();
-              
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Insights & Recommandations',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
+          data: (result) =>
+              result.fold((_) => const SizedBox.shrink(), (insights) {
+                if (insights.isEmpty) return const SizedBox.shrink();
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Insights & Recommandations',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 12.h),
-                  ...insights.take(3).map((insight) => _buildInsightCard(insight)),
-                ],
-              );
-            },
-          ),
+                    SizedBox(height: 12.h),
+                    ...insights
+                        .take(3)
+                        .map((insight) => _buildInsightCard(insight)),
+                  ],
+                );
+              }),
           loading: () => const CircularProgressIndicator(),
           error: (_, __) => const SizedBox.shrink(),
         );
       },
     );
   }
-  
+
   Widget _buildInsightCard(Insight insight) {
     final color = _getInsightColor(insight.type);
-    
+
     return Card(
       margin: EdgeInsets.only(bottom: 8.h),
       child: ListTile(
@@ -656,28 +650,18 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
             color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            _getInsightIcon(insight.type),
-            color: color,
-            size: 20.sp,
-          ),
+          child: Icon(_getInsightIcon(insight.type), color: color, size: 20.sp),
         ),
         title: Text(
           insight.title,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
         ),
         subtitle: Text(
           insight.recommendation,
           style: TextStyle(fontSize: 12.sp),
         ),
         trailing: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 8.w,
-            vertical: 4.h,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12.r),
@@ -694,12 +678,12 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   Widget _buildComparisonCards() {
     return Consumer(
       builder: (context, ref, child) {
         final comparisonAsync = ref.watch(performanceComparisonProvider);
-        
+
         return comparisonAsync.when(
           data: (result) => result.fold(
             (_) => const SizedBox.shrink(),
@@ -732,7 +716,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       },
     );
   }
-  
+
   Widget _buildComparisonTile({
     required String metric,
     required double current,
@@ -741,7 +725,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
   }) {
     final isPositive = changePercent >= 0;
     final color = isPositive ? Colors.green : Colors.red;
-    
+
     return Card(
       margin: EdgeInsets.only(bottom: 8.h),
       child: ListTile(
@@ -752,10 +736,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
           style: TextStyle(fontSize: 12.sp),
         ),
         trailing: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 8.w,
-            vertical: 4.h,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12.r),
@@ -782,22 +763,22 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   // Méthodes utilitaires
-  
+
   Color _getScoreColor(double score) {
     if (score >= 80) return Colors.green;
     if (score >= 60) return Colors.orange;
     return Colors.red;
   }
-  
+
   String _getScoreLabel(double score) {
     if (score >= 80) return 'Excellent !';
     if (score >= 60) return 'Bon';
     if (score >= 40) return 'À améliorer';
     return 'Attention requise';
   }
-  
+
   Color _getInsightColor(InsightType type) {
     switch (type) {
       case InsightType.pricing:
@@ -812,7 +793,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         return Colors.teal;
     }
   }
-  
+
   IconData _getInsightIcon(InsightType type) {
     switch (type) {
       case InsightType.pricing:
@@ -827,7 +808,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         return Icons.eco;
     }
   }
-  
+
   String _formatMetricValue(String metric, double value) {
     if (metric.contains('€') || metric.contains('Chiffre')) {
       return '${value.toStringAsFixed(2)}€';
@@ -840,7 +821,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
     }
     return value.toStringAsFixed(0);
   }
-  
+
   String _getPeriodLabel(AnalyticsPeriod period) {
     switch (period) {
       case AnalyticsPeriod.daily:
@@ -857,7 +838,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         return 'Personnalisé';
     }
   }
-  
+
   Widget _buildErrorState(Failure failure) {
     return Center(
       child: Padding(
@@ -865,27 +846,17 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64.sp,
-              color: Colors.red[400],
-            ),
+            Icon(Icons.error_outline, size: 64.sp, color: Colors.red[400]),
             SizedBox(height: 16.h),
             Text(
               'Erreur de chargement',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 8.h),
             Text(
               failure.userMessage,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
             ),
             SizedBox(height: 24.h),
             ElevatedButton.icon(
@@ -900,7 +871,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   void _showExportOptions() {
     showModalBottomSheet(
       context: context,
@@ -912,10 +883,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
             children: [
               Text(
                 'Exporter les données',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16.h),
               ListTile(
@@ -948,61 +916,55 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   Future<void> _exportReport(ReportFormat format) async {
     final result = await ref.read(generateReportProvider(format).future);
-    
-    result.fold(
-      (failure) => context.showError(failure),
-      (report) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Rapport généré : ${report.downloadUrl}'),
-            action: SnackBarAction(
-              label: 'Télécharger',
-              onPressed: () {
-                // TODO: Implémenter le téléchargement
-              },
-            ),
+
+    result.fold((failure) => context.showError(failure), (report) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Rapport généré : ${report.downloadUrl}'),
+          action: SnackBarAction(
+            label: 'Télécharger',
+            onPressed: () {
+              // TODO: Implémenter le téléchargement
+            },
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
-  
+
   Future<void> _exportData(ExportFormat format) async {
     final result = await ref.read(
       exportDataProvider((format: format, types: ExportDataType.values)).future,
     );
-    
-    result.fold(
-      (failure) => context.showError(failure),
-      (url) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Export prêt : $url'),
-            action: SnackBarAction(
-              label: 'Télécharger',
-              onPressed: () {
-                // TODO: Implémenter le téléchargement
-              },
-            ),
+
+    result.fold((failure) => context.showError(failure), (url) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Export prêt : $url'),
+          action: SnackBarAction(
+            label: 'Télécharger',
+            onPressed: () {
+              // TODO: Implémenter le téléchargement
+            },
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
-  
+
   // Méthodes de construction des widgets supplémentaires
-  
+
   Widget _buildConversionFunnel(Analytics analytics) {
     return ConversionFunnelWidget(analytics: analytics);
   }
-  
+
   Widget _buildOffersByHourChart(Map<int, int> offersByHour) {
     return OffersByHourChart(offersByHour: offersByHour);
   }
-  
+
   Widget _buildPerformanceMetrics(PerformanceMetrics performance) {
     return Card(
       child: Padding(
@@ -1012,22 +974,31 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
           children: [
             Text(
               'Métriques détaillées',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
-            _buildMetricRow('Temps moyen de collecte', '${performance.avgPickupTime.inMinutes} min'),
-            _buildMetricRow('Taux de no-show', '${performance.noShowRate.toStringAsFixed(1)}%'),
-            _buildMetricRow('Score de satisfaction', '${performance.satisfactionScore.toStringAsFixed(1)}/5'),
-            _buildMetricRow('Taux de fidélité', '${performance.repeatCustomerRate.toStringAsFixed(1)}%'),
+            _buildMetricRow(
+              'Temps moyen de collecte',
+              '${performance.avgPickupTime.inMinutes} min',
+            ),
+            _buildMetricRow(
+              'Taux de no-show',
+              '${performance.noShowRate.toStringAsFixed(1)}%',
+            ),
+            _buildMetricRow(
+              'Score de satisfaction',
+              '${performance.satisfactionScore.toStringAsFixed(1)}/5',
+            ),
+            _buildMetricRow(
+              'Taux de fidélité',
+              '${performance.repeatCustomerRate.toStringAsFixed(1)}%',
+            ),
           ],
         ),
       ),
     );
   }
-  
+
   Widget _buildMetricRow(String label, String value) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
@@ -1036,28 +1007,22 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
           ),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
           ),
         ],
       ),
     );
   }
-  
+
   Widget _buildPredictionsSection() {
     return Consumer(
       builder: (context, ref, child) {
         final predictionsAsync = ref.watch(merchantPredictionsProvider(0));
-        
+
         return predictionsAsync.when(
           data: (result) => result.fold(
             (_) => const SizedBox.shrink(),
@@ -1104,137 +1069,140 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       },
     );
   }
-  
-  Widget _buildPredictionItem(String label, String value, IconData icon, Color color) {
+
+  Widget _buildPredictionItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return ListTile(
       leading: Icon(icon, color: color),
       title: Text(label),
       trailing: Text(
         value,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
       ),
     );
   }
-  
+
   Widget _buildSustainabilityScore(double score) {
     return SustainabilityScoreWidget(score: score);
   }
-  
+
   Widget _buildEcoMetricsGrid(Map<String, dynamic> metrics) {
     return EcoMetricsGrid(metrics: metrics);
   }
-  
+
   Widget _buildEcoEquivalences(Map<String, dynamic> metrics) {
     return EcoEquivalencesWidget(metrics: metrics);
   }
-  
+
   Widget _buildEcoImpactChart() {
     return Consumer(
       builder: (context, ref, child) {
         final analyticsAsync = ref.watch(merchantAnalyticsProvider);
-        
+
         return analyticsAsync.when(
-          data: (result) => result.fold(
-            (_) => const SizedBox.shrink(),
-            (analytics) {
-              final ecology = analytics.ecological;
-              final monthlyImpact = ecology.monthlyImpact.entries.toList()
-                ..sort((a, b) => a.key.compareTo(b.key));
-              
-              if (monthlyImpact.isEmpty) return const SizedBox.shrink();
-              
-              return Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Impact écologique mensuel',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+          data: (result) => result.fold((_) => const SizedBox.shrink(), (
+            analytics,
+          ) {
+            final ecology = analytics.ecological;
+            final monthlyImpact = ecology.monthlyImpact.entries.toList()
+              ..sort((a, b) => a.key.compareTo(b.key));
+
+            if (monthlyImpact.isEmpty) return const SizedBox.shrink();
+
+            return Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Impact écologique mensuel',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 16.h),
-                      SizedBox(
-                        height: 200.h,
-                        child: LineChart(
-                          LineChartData(
-                            gridData: FlGridData(show: false),
-                            titlesData: FlTitlesData(
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  reservedSize: 40,
-                                  getTitlesWidget: (value, meta) {
-                                    return Text(
-                                      '${value.toStringAsFixed(0)} kg',
-                                      style: TextStyle(fontSize: 10.sp),
-                                    );
-                                  },
-                                ),
-                              ),
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  getTitlesWidget: (value, meta) {
-                                    if (value.toInt() >= 0 && value.toInt() < monthlyImpact.length) {
-                                      final month = monthlyImpact[value.toInt()].key;
-                                      return Text(
-                                        month.substring(5),
-                                        style: TextStyle(fontSize: 10.sp),
-                                      );
-                                    }
-                                    return const Text('');
-                                  },
-                                ),
-                              ),
-                              rightTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                              topTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
+                    ),
+                    SizedBox(height: 16.h),
+                    SizedBox(
+                      height: 200.h,
+                      child: LineChart(
+                        LineChartData(
+                          gridData: FlGridData(show: false),
+                          titlesData: FlTitlesData(
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 40,
+                                getTitlesWidget: (value, meta) {
+                                  return Text(
+                                    '${value.toStringAsFixed(0)} kg',
+                                    style: TextStyle(fontSize: 10.sp),
+                                  );
+                                },
                               ),
                             ),
-                            borderData: FlBorderData(show: false),
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: monthlyImpact.asMap().entries.map((entry) {
-                                  return FlSpot(
-                                    entry.key.toDouble(),
-                                    entry.value.value['co2Saved'] ?? 0,
-                                  );
-                                }).toList(),
-                                isCurved: true,
-                                color: Colors.green,
-                                barWidth: 3,
-                                dotData: const FlDotData(show: true),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  color: Colors.green.withValues(alpha: 0.1),
-                                ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: (value, meta) {
+                                  if (value.toInt() >= 0 &&
+                                      value.toInt() < monthlyImpact.length) {
+                                    final month =
+                                        monthlyImpact[value.toInt()].key;
+                                    return Text(
+                                      month.substring(5),
+                                      style: TextStyle(fontSize: 10.sp),
+                                    );
+                                  }
+                                  return const Text('');
+                                },
                               ),
-                            ],
+                            ),
+                            rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
                           ),
+                          borderData: FlBorderData(show: false),
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: monthlyImpact.asMap().entries.map((entry) {
+                                return FlSpot(
+                                  entry.key.toDouble(),
+                                  entry.value.value['co2Saved'] ?? 0,
+                                );
+                              }).toList(),
+                              isCurved: true,
+                              color: Colors.green,
+                              barWidth: 3,
+                              dotData: const FlDotData(show: true),
+                              belowBarData: BarAreaData(
+                                show: true,
+                                color: Colors.green.withValues(alpha: 0.1),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          }),
           loading: () => const CircularProgressIndicator(),
           error: (_, __) => const SizedBox.shrink(),
         );
       },
     );
   }
-  
+
   Widget _buildEcoAchievements() {
     return Card(
       child: Padding(
@@ -1244,10 +1212,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
           children: [
             Text(
               'Achievements écologiques',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
             _buildAchievement(
@@ -1276,8 +1241,14 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
-  Widget _buildAchievement(String title, String description, bool unlocked, IconData icon, Color color) {
+
+  Widget _buildAchievement(
+    String title,
+    String description,
+    bool unlocked,
+    IconData icon,
+    Color color,
+  ) {
     return Opacity(
       opacity: unlocked ? 1.0 : 0.4,
       child: ListTile(
@@ -1287,11 +1258,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
             color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 24.sp,
-          ),
+          child: Icon(icon, color: color, size: 24.sp),
         ),
         title: Text(title),
         subtitle: Text(description),
@@ -1301,7 +1268,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   Widget _buildCustomerMetricsCards(CustomerMetrics customers) {
     return GridView.count(
       crossAxisCount: 2,
@@ -1342,11 +1309,11 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ],
     );
   }
-  
+
   Widget _buildRatingDistribution(Map<int, int> distribution) {
     return RatingDistributionChart(distribution: distribution);
   }
-  
+
   Widget _buildCustomerBehavior(CustomerBehavior behavior) {
     return Card(
       child: Padding(
@@ -1356,10 +1323,7 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
           children: [
             Text(
               'Comportement client',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
             _buildBehaviorItem(
@@ -1387,29 +1351,25 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       ),
     );
   }
-  
+
   Widget _buildBehaviorItem(String label, String value, IconData icon) {
     return ListTile(
       dense: true,
       leading: Icon(icon, size: 20.sp),
       title: Text(label),
-      trailing: Text(
-        value,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      trailing: Text(value, style: TextStyle(fontWeight: FontWeight.w600)),
     );
   }
-  
+
   Widget _buildCustomerSegments(List<CustomerSegment> segments) {
     return CustomerSegmentsWidget(segments: segments);
   }
 
   int _getMostPreferredHour(Map<int, int> pickupTimeDistribution) {
     if (pickupTimeDistribution.isEmpty) return 12;
-    final mostPreferred = pickupTimeDistribution.entries
-        .reduce((a, b) => a.value > b.value ? a : b);
+    final mostPreferred = pickupTimeDistribution.entries.reduce(
+      (a, b) => a.value > b.value ? a : b,
+    );
     return mostPreferred.key;
   }
 }

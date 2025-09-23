@@ -43,7 +43,9 @@ abstract class MerchantRepository {
   Future<Either<Failure, void>> deleteMerchant(String id);
 
   /// Récupère les commerçants par catégorie
-  Future<Either<Failure, List<Merchant>>> getMerchantsByCategory(String category);
+  Future<Either<Failure, List<Merchant>>> getMerchantsByCategory(
+    String category,
+  );
 
   /// Récupère les statistiques d'un commerçant
   Future<Either<Failure, MerchantStats>> getMerchantStats(String id);

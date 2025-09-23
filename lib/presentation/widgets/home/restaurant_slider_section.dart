@@ -27,7 +27,7 @@ class RestaurantSliderSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final restaurantsAsync = ref.watch(nearbyRestaurantsProvider);
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       child: Column(
@@ -36,7 +36,7 @@ class RestaurantSliderSection extends ConsumerWidget {
           // Header de la section
           _buildHeader(context),
           const SizedBox(height: 12),
-          
+
           // Slider horizontal de restaurants
           restaurantsAsync.when(
             data: (restaurants) => _buildRestaurantList(context, restaurants),
@@ -68,10 +68,7 @@ class RestaurantSliderSection extends ConsumerWidget {
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 13,
-                ),
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
               ),
             ],
           ),
@@ -90,18 +87,21 @@ class RestaurantSliderSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildRestaurantList(BuildContext context, List<Restaurant> restaurants) {
+  Widget _buildRestaurantList(
+    BuildContext context,
+    List<Restaurant> restaurants,
+  ) {
     if (restaurants.isEmpty) {
       return _buildEmptyState();
     }
-    
+
     // Filtrer selon le type de section
     List<Restaurant> filteredRestaurants = _filterRestaurants(restaurants);
-    
+
     if (filteredRestaurants.isEmpty) {
       return _buildEmptyState();
     }
-    
+
     return SizedBox(
       height: 280,
       child: ListView.builder(
@@ -130,22 +130,50 @@ class RestaurantSliderSection extends ConsumerWidget {
       case 'new':
         // Prendre les 5 derniers ajoutés
         return restaurants.take(5).toList();
-      
+
       case 'best-deals':
         // Trier par réduction et prendre les 5 premiers
-        final filtered = restaurants
-          .where((r) => r.hasActiveOffer)
-          .toList()
-          ..sort((a, b) => b.discountPercentage.compareTo(a.discountPercentage));
+        final filtered = restaurants.where((r) => r.hasActiveOffer).toList()
+          ..sort(
+            (a, b) => b.discountPercentage.compareTo(a.discountPercentage),
+          );
         return filtered.take(5).toList();
-      
+
       case 'closing-soon':
         // Filtrer ceux qui ferment bientôt
         return restaurants
-          .where((r) => r.availableOffers > 0 && r.availableOffers <= 3)
-          .take(5)
-          .toList();
-      
+            .where((r) => r.availableOffers > 0 && r.availableOffers <= 3)
+            .take(5)
+            .toList();
+            
+      case 'recommended':
+        // Recommandations basées sur les favoris et les offres actives
+        final recommendedList = <Restaurant>[];
+        
+        // D'abord les favoris avec offres
+        final favoritesWithOffers = restaurants
+            .where((r) => r.isFavorite && r.hasActiveOffer)
+            .toList();
+        recommendedList.addAll(favoritesWithOffers);
+        
+        // Ensuite les restaurants avec les meilleures notes
+        final highRated = restaurants
+            .where((r) => !r.isFavorite && r.rating != null && r.rating! >= 4.5)
+            .toList()
+          ..sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
+        
+        recommendedList.addAll(highRated.take(5 - recommendedList.length));
+        
+        // Si pas assez, compléter avec des restaurants proches
+        if (recommendedList.length < 5) {
+          final nearby = restaurants
+              .where((r) => !recommendedList.contains(r))
+              .take(5 - recommendedList.length);
+          recommendedList.addAll(nearby);
+        }
+        
+        return recommendedList.take(6).toList();
+
       case 'nearby':
       default:
         // Près de vous - prendre les 10 premiers
@@ -183,17 +211,11 @@ class RestaurantSliderSection extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.restaurant_menu,
-              size: 50,
-              color: Colors.grey.shade400,
-            ),
+            Icon(Icons.restaurant_menu, size: 50, color: Colors.grey.shade400),
             const SizedBox(height: 8),
             Text(
               'Pas d\'offres disponibles',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(color: Colors.grey.shade600),
             ),
           ],
         ),
@@ -213,17 +235,11 @@ class RestaurantSliderSection extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 50,
-              color: Colors.red.shade400,
-            ),
+            Icon(Icons.error_outline, size: 50, color: Colors.red.shade400),
             const SizedBox(height: 8),
             Text(
               'Erreur de chargement',
-              style: TextStyle(
-                color: Colors.red.shade600,
-              ),
+              style: TextStyle(color: Colors.red.shade600),
             ),
             const SizedBox(height: 8),
             TextButton(
@@ -265,14 +281,12 @@ class ShimmerCard extends StatelessWidget {
             height: 120,
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
             ),
             child: Center(
-              child: Icon(
-                Icons.image,
-                size: 60,
-                color: Colors.grey.shade400,
-              ),
+              child: Icon(Icons.image, size: 60, color: Colors.grey.shade400),
             ),
           ),
           // Content placeholder

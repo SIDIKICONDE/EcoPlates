@@ -8,7 +8,9 @@ import '../../../domain/usecases/manage_association_usecase.dart';
 import '../../../data/services/association_service.dart';
 
 /// Provider pour l'association actuelle
-final currentAssociationIdProvider = StateProvider<String>((ref) => 'default-association-id');
+final currentAssociationIdProvider = StateProvider<String>(
+  (ref) => 'default-association-id',
+);
 
 /// Provider pour récupérer l'association actuelle
 final currentAssociationProvider = FutureProvider<Association>((ref) async {
@@ -22,7 +24,9 @@ final currentAssociationProvider = FutureProvider<Association>((ref) async {
 });
 
 /// Provider pour les statistiques d'impact
-final associationImpactProvider = FutureProvider<AssociationImpactReport>((ref) async {
+final associationImpactProvider = FutureProvider<AssociationImpactReport>((
+  ref,
+) async {
   final associationId = ref.watch(currentAssociationIdProvider);
   final useCase = ref.watch(calculateAssociationImpactUseCaseProvider);
   final result = await useCase(
@@ -36,7 +40,9 @@ final associationImpactProvider = FutureProvider<AssociationImpactReport>((ref) 
 });
 
 /// Provider pour les offres prioritaires
-final associationPriorityOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
+final associationPriorityOffersProvider = FutureProvider<List<FoodOffer>>((
+  ref,
+) async {
   final associationId = ref.watch(currentAssociationIdProvider);
   final useCase = ref.watch(getAssociationPriorityOffersUseCaseProvider);
   final result = await useCase(
@@ -53,26 +59,22 @@ final associationPriorityOffersProvider = FutureProvider<List<FoodOffer>>((ref) 
 /// Page d'accueil dédiée aux associations
 class AssociationHomeScreen extends ConsumerWidget {
   final String associationId;
-  
-  const AssociationHomeScreen({
-    super.key,
-    required this.associationId,
-  });
-  
+
+  const AssociationHomeScreen({super.key, required this.associationId});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Définir l'ID de l'association
     ref.read(currentAssociationIdProvider.notifier).state = associationId;
-    
+
     final theme = Theme.of(context);
     final associationAsync = ref.watch(currentAssociationProvider);
-    
+
     return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(
-        title: const Text('Tableau de bord Association'),
-      ),
+      appBar: AdaptiveAppBar(title: const Text('Tableau de bord Association')),
       body: associationAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+        loading: () =>
+            const Center(child: CircularProgressIndicator.adaptive()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -102,19 +104,19 @@ class AssociationHomeScreen extends ConsumerWidget {
                 // Carte de bienvenue avec statut
                 _buildWelcomeCard(context, ref, association),
                 const SizedBox(height: 20),
-                
+
                 // Actions rapides
                 _buildQuickActions(context, ref, association),
                 const SizedBox(height: 24),
-                
+
                 // Statistiques d'impact
                 _buildImpactStats(context, ref),
                 const SizedBox(height: 24),
-                
+
                 // Collecte groupée suggérée
                 _buildGroupedCollectionCard(context, ref, association),
                 const SizedBox(height: 24),
-                
+
                 // Offres prioritaires
                 Text(
                   'Offres prioritaires',
@@ -125,7 +127,7 @@ class AssociationHomeScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 _buildPriorityOffers(context, ref),
                 const SizedBox(height: 24),
-                
+
                 // Section bénévoles disponibles
                 Text(
                   'Bénévoles disponibles',
@@ -136,7 +138,7 @@ class AssociationHomeScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 _buildVolunteersSection(context, ref, association),
                 const SizedBox(height: 24),
-                
+
                 // Collectes récentes et à venir
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -148,7 +150,8 @@ class AssociationHomeScreen extends ConsumerWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () => context.go('/association/$associationId/collections'),
+                      onPressed: () =>
+                          context.go('/association/$associationId/collections'),
                       child: const Text('Voir tout'),
                     ),
                   ],
@@ -156,7 +159,7 @@ class AssociationHomeScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 _buildCollectionsSection(context, ref),
                 const SizedBox(height: 24),
-                
+
                 // Actualités et partenaires
                 _buildNewsSection(context, ref),
               ],
@@ -166,13 +169,17 @@ class AssociationHomeScreen extends ConsumerWidget {
       ),
     );
   }
-  
-  Widget _buildWelcomeCard(BuildContext context, WidgetRef ref, Association association) {
+
+  Widget _buildWelcomeCard(
+    BuildContext context,
+    WidgetRef ref,
+    Association association,
+  ) {
     final theme = Theme.of(context);
     final hour = DateTime.now().hour;
     String greeting;
     IconData icon;
-    
+
     if (hour < 12) {
       greeting = 'Bonjour';
       icon = Icons.wb_sunny;
@@ -183,7 +190,7 @@ class AssociationHomeScreen extends ConsumerWidget {
       greeting = 'Bonsoir';
       icon = Icons.nights_stay;
     }
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -233,10 +240,7 @@ class AssociationHomeScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           const Text(
             'Ensemble, luttons contre le gaspillage alimentaire',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 14),
           ),
           if (association.details.hasCollectAgreement) ...[
             const SizedBox(height: 8),
@@ -259,12 +263,12 @@ class AssociationHomeScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildStatusBadge(AssociationStatus status) {
     Color color;
     String text;
     IconData icon;
-    
+
     switch (status) {
       case AssociationStatus.validated:
         color = Colors.green;
@@ -286,7 +290,7 @@ class AssociationHomeScreen extends ConsumerWidget {
         text = 'Inactive';
         icon = Icons.cancel;
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -310,14 +314,17 @@ class AssociationHomeScreen extends ConsumerWidget {
       ),
     );
   }
-  
-  Widget _buildQuickActions(BuildContext context, WidgetRef ref, Association association) {
+
+  Widget _buildQuickActions(
+    BuildContext context,
+    WidgetRef ref,
+    Association association,
+  ) {
     return SizedBox(
       height: 80,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          
           _QuickActionItem(
             icon: Icons.shopping_basket,
             label: 'Collectes',
@@ -329,7 +336,8 @@ class AssociationHomeScreen extends ConsumerWidget {
             icon: Icons.people,
             label: 'Bénévoles',
             color: Colors.purple,
-            onTap: () => context.go('/association/${association.id}/volunteers'),
+            onTap: () =>
+                context.go('/association/${association.id}/volunteers'),
           ),
           const SizedBox(width: 12),
           _QuickActionItem(
@@ -349,11 +357,11 @@ class AssociationHomeScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildImpactStats(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final impactAsync = ref.watch(associationImpactProvider);
-    
+
     return impactAsync.when(
       loading: () => const _StatsLoadingCard(),
       error: (error, stack) => Card(
@@ -370,7 +378,7 @@ class AssociationHomeScreen extends ConsumerWidget {
       data: (impact) => LayoutBuilder(
         builder: (context, constraints) {
           final isTablet = constraints.maxWidth > 600;
-          
+
           if (isTablet) {
             return Row(
               children: [
@@ -447,10 +455,14 @@ class AssociationHomeScreen extends ConsumerWidget {
       ),
     );
   }
-  
-  Widget _buildGroupedCollectionCard(BuildContext context, WidgetRef ref, Association association) {
+
+  Widget _buildGroupedCollectionCard(
+    BuildContext context,
+    WidgetRef ref,
+    Association association,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Card(
       elevation: 4,
       child: Container(
@@ -477,11 +489,7 @@ class AssociationHomeScreen extends ConsumerWidget {
                     color: theme.colorScheme.primary,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
-                    Icons.route,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                  child: const Icon(Icons.route, color: Colors.white, size: 24),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -497,7 +505,8 @@ class AssociationHomeScreen extends ConsumerWidget {
                       Text(
                         '5 commerces • 12.3 km • ~45 min',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                          color: theme.colorScheme.onPrimaryContainer
+                              .withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -519,7 +528,9 @@ class AssociationHomeScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => context.go('/association/${association.id}/collection-route'),
+                onPressed: () => context.go(
+                  '/association/${association.id}/collection-route',
+                ),
                 icon: const Icon(Icons.map),
                 label: const Text('Voir la tournée'),
                 style: ElevatedButton.styleFrom(
@@ -533,26 +544,22 @@ class AssociationHomeScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildPriorityOffers(BuildContext context, WidgetRef ref) {
     final offersAsync = ref.watch(associationPriorityOffersProvider);
-    
+
     return offersAsync.when(
       loading: () => const SizedBox(
         height: 180,
         child: Center(child: CircularProgressIndicator.adaptive()),
       ),
-      error: (error, stack) => SizedBox(
-        height: 180,
-        child: Center(
-          child: Text('Erreur: $error'),
-        ),
-      ),
+      error: (error, stack) =>
+          SizedBox(height: 180, child: Center(child: Text('Erreur: $error'))),
       data: (offers) {
         if (offers.isEmpty) {
           return const _EmptyOffersCard();
         }
-        
+
         return SizedBox(
           height: 180,
           child: ListView.separated(
@@ -571,8 +578,12 @@ class AssociationHomeScreen extends ConsumerWidget {
       },
     );
   }
-  
-  Widget _buildVolunteersSection(BuildContext context, WidgetRef ref, Association association) {
+
+  Widget _buildVolunteersSection(
+    BuildContext context,
+    WidgetRef ref,
+    Association association,
+  ) {
     // Mock data pour l'instant
     final volunteers = [
       _VolunteerData('Marie D.', true, 'assets/avatar1.jpg'),
@@ -580,7 +591,7 @@ class AssociationHomeScreen extends ConsumerWidget {
       _VolunteerData('Sophie L.', false, 'assets/avatar3.jpg'),
       _VolunteerData('Ahmed B.', true, 'assets/avatar4.jpg'),
     ];
-    
+
     return SizedBox(
       height: 100,
       child: ListView.separated(
@@ -594,7 +605,7 @@ class AssociationHomeScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildCollectionsSection(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
@@ -621,10 +632,10 @@ class AssociationHomeScreen extends ConsumerWidget {
       ],
     );
   }
-  
+
   Widget _buildNewsSection(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -644,7 +655,10 @@ class AssociationHomeScreen extends ConsumerWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(4),
@@ -659,10 +673,7 @@ class AssociationHomeScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      'Il y a 2 jours',
-                      style: theme.textTheme.bodySmall,
-                    ),
+                    Text('Il y a 2 jours', style: theme.textTheme.bodySmall),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -678,10 +689,7 @@ class AssociationHomeScreen extends ConsumerWidget {
                   style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 12),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Lire plus →'),
-                ),
+                TextButton(onPressed: () {}, child: const Text('Lire plus →')),
               ],
             ),
           ),
@@ -698,14 +706,14 @@ class _QuickActionItem extends StatelessWidget {
   final String label;
   final Color color;
   final VoidCallback onTap;
-  
+
   const _QuickActionItem({
     required this.icon,
     required this.label,
     required this.color,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -747,7 +755,7 @@ class _StatCard extends StatelessWidget {
   final Color color;
   final String? trend;
   final bool isFullWidth;
-  
+
   const _StatCard({
     required this.icon,
     required this.value,
@@ -756,7 +764,7 @@ class _StatCard extends StatelessWidget {
     this.trend,
     this.isFullWidth = false,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -781,7 +789,10 @@ class _StatCard extends StatelessWidget {
               Icon(icon, color: color, size: 24),
               if (trend != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -807,13 +818,7 @@ class _StatCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
-          ),
+          Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
         ],
       ),
     );
@@ -822,23 +827,24 @@ class _StatCard extends StatelessWidget {
 
 class _StatsLoadingCard extends StatelessWidget {
   const _StatsLoadingCard();
-  
+
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: List.generate(3, (index) => Expanded(
-        child: Container(
-          margin: EdgeInsets.only(left: index > 0 ? 12 : 0),
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Center(
-            child: CircularProgressIndicator.adaptive(),
+      children: List.generate(
+        3,
+        (index) => Expanded(
+          child: Container(
+            margin: EdgeInsets.only(left: index > 0 ? 12 : 0),
+            height: 120,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Center(child: CircularProgressIndicator.adaptive()),
           ),
         ),
-      )),
+      ),
     );
   }
 }
@@ -846,12 +852,9 @@ class _StatsLoadingCard extends StatelessWidget {
 class _MerchantChip extends StatelessWidget {
   final String name;
   final int items;
-  
-  const _MerchantChip({
-    required this.name,
-    required this.items,
-  });
-  
+
+  const _MerchantChip({required this.name, required this.items});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -864,10 +867,7 @@ class _MerchantChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            name,
-            style: const TextStyle(fontSize: 12),
-          ),
+          Text(name, style: const TextStyle(fontSize: 12)),
           const SizedBox(width: 4),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -893,16 +893,13 @@ class _MerchantChip extends StatelessWidget {
 class _PriorityOfferCard extends StatelessWidget {
   final FoodOffer offer;
   final VoidCallback onTap;
-  
-  const _PriorityOfferCard({
-    required this.offer,
-    required this.onTap,
-  });
-  
+
+  const _PriorityOfferCard({required this.offer, required this.onTap});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -924,7 +921,9 @@ class _PriorityOfferCard extends StatelessWidget {
           children: [
             // Image
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
               child: Container(
                 height: 100,
                 width: double.infinity,
@@ -938,16 +937,17 @@ class _PriorityOfferCard extends StatelessWidget {
                         width: double.infinity,
                       )
                     else
-                      const Center(
-                        child: Icon(Icons.restaurant, size: 40),
-                      ),
+                      const Center(child: Icon(Icons.restaurant, size: 40)),
                     // Badge gratuit
                     if (offer.isFree)
                       Positioned(
                         top: 8,
                         right: 8,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(12),
@@ -967,7 +967,10 @@ class _PriorityOfferCard extends StatelessWidget {
                       bottom: 8,
                       left: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.black.withValues(alpha: 0.7),
                           borderRadius: BorderRadius.circular(12),
@@ -1018,7 +1021,7 @@ class _PriorityOfferCard extends StatelessWidget {
 
 class _EmptyOffersCard extends StatelessWidget {
   const _EmptyOffersCard();
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1036,18 +1039,12 @@ class _EmptyOffersCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               'Aucune offre prioritaire',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             const SizedBox(height: 4),
             Text(
               'Revenez plus tard',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             ),
           ],
         ),
@@ -1061,15 +1058,15 @@ class _VolunteerData {
   final String name;
   final bool isAvailable;
   final String avatar;
-  
+
   _VolunteerData(this.name, this.isAvailable, this.avatar);
 }
 
 class _VolunteerAvatar extends StatelessWidget {
   final _VolunteerData volunteer;
-  
+
   const _VolunteerAvatar({required this.volunteer});
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -1103,39 +1100,32 @@ class _VolunteerAvatar extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        Text(
-          volunteer.name,
-          style: const TextStyle(fontSize: 12),
-        ),
+        Text(volunteer.name, style: const TextStyle(fontSize: 12)),
       ],
     );
   }
 }
 
-enum _CollectionStatus {
-  upcoming,
-  inProgress,
-  completed,
-}
+enum _CollectionStatus { upcoming, inProgress, completed }
 
 class _CollectionTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final _CollectionStatus status;
   final VoidCallback onTap;
-  
+
   const _CollectionTile({
     required this.title,
     required this.subtitle,
     required this.status,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     IconData icon;
     Color color;
-    
+
     switch (status) {
       case _CollectionStatus.upcoming:
         icon = Icons.schedule;
@@ -1150,7 +1140,7 @@ class _CollectionTile extends StatelessWidget {
         color = Colors.green;
         break;
     }
-    
+
     return Card(
       child: ListTile(
         leading: Container(

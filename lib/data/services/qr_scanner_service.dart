@@ -57,10 +57,16 @@ class QrScannerService {
   }
 
   /// Valide une commande (réservation) - réservé aux commerçants
-  Future<bool> confirmOrder(String reservationId, String confirmationCode) async {
+  Future<bool> confirmOrder(
+    String reservationId,
+    String confirmationCode,
+  ) async {
     try {
       final reservationService = ReservationService();
-      await reservationService.confirmCollection(reservationId, confirmationCode);
+      await reservationService.confirmCollection(
+        reservationId,
+        confirmationCode,
+      );
       return true;
     } catch (e) {
       throw Exception('Erreur lors de la validation: $e');
@@ -176,10 +182,7 @@ class PlateHistory {
 }
 
 /// Actions sur une assiette (conservé si nécessaire)
-enum PlateAction {
-  borrowed,
-  returned,
-}
+enum PlateAction { borrowed, returned }
 
 /// Provider pour le service de scan QR
 final qrScannerServiceProvider = Provider<QrScannerService>((ref) {

@@ -10,31 +10,22 @@ import '../../widgets/consumer/favorite_button.dart';
 /// Écran de détail d'une offre alimentaire
 class OfferDetailScreen extends ConsumerWidget {
   final String offerId;
-  
-  const OfferDetailScreen({
-    super.key,
-    required this.offerId,
-  });
+
+  const OfferDetailScreen({super.key, required this.offerId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final offerAsync = ref.watch(offerByIdProvider(offerId));
-    
+
     return Scaffold(
       body: offerAsync.when(
         data: (offer) => _buildOfferDetail(context, ref, offer),
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red[400],
-              ),
+              Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
               const SizedBox(height: 16),
               Text(
                 'Offre non trouvée',
@@ -56,18 +47,22 @@ class OfferDetailScreen extends ConsumerWidget {
       ),
     );
   }
-  
-  Widget _buildOfferDetail(BuildContext context, WidgetRef ref, FoodOffer offer) {
+
+  Widget _buildOfferDetail(
+    BuildContext context,
+    WidgetRef ref,
+    FoodOffer offer,
+  ) {
     final userLocation = ref.watch(userLocationProvider);
     String distance = 'Localisation inconnue';
     if (userLocation != null) {
       final distanceKm = offer.location.distanceFrom(
-        userLocation.latitude, 
-        userLocation.longitude
+        userLocation.latitude,
+        userLocation.longitude,
       );
       distance = '${distanceKm.toStringAsFixed(1)} km';
     }
-    
+
     return CustomScrollView(
       slivers: [
         // App Bar avec image
@@ -82,11 +77,12 @@ class OfferDetailScreen extends ConsumerWidget {
                   Image.network(
                     offer.images.first,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
+                    errorBuilder: (context, error, stackTrace) =>
+                        _buildPlaceholderImage(),
                   )
                 else
                   _buildPlaceholderImage(),
-                
+
                 // Overlay gradient
                 Container(
                   decoration: BoxDecoration(
@@ -101,13 +97,16 @@ class OfferDetailScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                
+
                 // Badge de réduction
                 Positioned(
                   top: 100,
                   right: 16,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: offer.isFree ? Colors.green : Colors.orange,
                       borderRadius: BorderRadius.circular(20),
@@ -143,9 +142,7 @@ class OfferDetailScreen extends ConsumerWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      isFavorite 
-                        ? 'Ajouté aux favoris' 
-                        : 'Retiré des favoris',
+                      isFavorite ? 'Ajouté aux favoris' : 'Retiré des favoris',
                     ),
                     duration: const Duration(seconds: 1),
                   ),
@@ -154,7 +151,7 @@ class OfferDetailScreen extends ConsumerWidget {
             ),
           ],
         ),
-        
+
         // Contenu principal
         SliverToBoxAdapter(
           child: Padding(
@@ -172,16 +169,14 @@ class OfferDetailScreen extends ConsumerWidget {
                         children: [
                           Text(
                             offer.title,
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             offer.merchantName,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -204,8 +199,8 @@ class OfferDetailScreen extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: offer.isFree 
-                                ? Colors.green 
+                            color: offer.isFree
+                                ? Colors.green
                                 : Theme.of(context).primaryColor,
                           ),
                         ),
@@ -213,9 +208,9 @@ class OfferDetailScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Informations importantes
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -248,7 +243,10 @@ class OfferDetailScreen extends ConsumerWidget {
                       ),
                       if (offer.quantity <= 5)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(12),
@@ -265,26 +263,29 @@ class OfferDetailScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Description
                 Text(
                   'Description',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   offer.description,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Tags et régimes alimentaires
-                if (offer.isVegetarian || offer.isVegan || offer.isHalal || offer.allergens.isNotEmpty) ...[
+                if (offer.isVegetarian ||
+                    offer.isVegan ||
+                    offer.isHalal ||
+                    offer.allergens.isNotEmpty) ...[
                   Text(
                     'Informations diététiques',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -299,23 +300,31 @@ class OfferDetailScreen extends ConsumerWidget {
                       if (offer.isVegetarian)
                         _buildInfoChip('Végétarien', Icons.eco, Colors.green),
                       if (offer.isVegan)
-                        _buildInfoChip('Vegan', Icons.local_florist, Colors.green.shade700),
+                        _buildInfoChip(
+                          'Vegan',
+                          Icons.local_florist,
+                          Colors.green.shade700,
+                        ),
                       if (offer.isHalal)
                         _buildInfoChip('Halal', Icons.star, Colors.blue),
-                      ...offer.allergens.map((allergen) => 
-                        _buildInfoChip('Contient: $allergen', Icons.warning, Colors.orange)
+                      ...offer.allergens.map(
+                        (allergen) => _buildInfoChip(
+                          'Contient: $allergen',
+                          Icons.warning,
+                          Colors.orange,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
                 ],
-                
+
                 // Localisation
                 Text(
                   'Localisation',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -332,17 +341,17 @@ class OfferDetailScreen extends ConsumerWidget {
                           ),
                           Text(
                             '${offer.location.postalCode} ${offer.location.city}',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                           if (offer.location.additionalInfo != null)
                             Text(
                               offer.location.additionalInfo!,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                                fontStyle: FontStyle.italic,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Colors.grey[600],
+                                    fontStyle: FontStyle.italic,
+                                  ),
                             ),
                         ],
                       ),
@@ -355,9 +364,9 @@ class OfferDetailScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Impact écologique
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -391,7 +400,7 @@ class OfferDetailScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 100), // Espace pour le bouton flottant
               ],
             ),
@@ -400,20 +409,16 @@ class OfferDetailScreen extends ConsumerWidget {
       ],
     );
   }
-  
+
   Widget _buildPlaceholderImage() {
     return Container(
       color: Colors.grey.shade300,
       child: Center(
-        child: Icon(
-          Icons.restaurant,
-          size: 80,
-          color: Colors.grey.shade500,
-        ),
+        child: Icon(Icons.restaurant, size: 80, color: Colors.grey.shade500),
       ),
     );
   }
-  
+
   Widget _buildInfoChip(String label, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -429,16 +434,13 @@ class OfferDetailScreen extends ConsumerWidget {
           const SizedBox(width: 4),
           Text(
             label,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(color: color, fontWeight: FontWeight.w500),
           ),
         ],
       ),
     );
   }
-  
+
   String _formatTime(DateTime dateTime) {
     return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
@@ -447,21 +449,23 @@ class OfferDetailScreen extends ConsumerWidget {
 /// Bottom Sheet pour la réservation
 class _ReservationBottomSheet extends ConsumerStatefulWidget {
   final FoodOffer offer;
-  
+
   const _ReservationBottomSheet({required this.offer});
 
   @override
-  ConsumerState<_ReservationBottomSheet> createState() => _ReservationBottomSheetState();
+  ConsumerState<_ReservationBottomSheet> createState() =>
+      _ReservationBottomSheetState();
 }
 
-class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet> {
+class _ReservationBottomSheetState
+    extends ConsumerState<_ReservationBottomSheet> {
   int quantity = 1;
   bool isLoading = false;
-  
+
   @override
   Widget build(BuildContext context) {
     final totalPrice = widget.offer.discountedPrice * quantity;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -477,32 +481,34 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // Titre
           Text(
             'Réserver cette offre',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          
+
           // Sélection de quantité
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Quantité',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text('Quantité', style: Theme.of(context).textTheme.titleMedium),
               Row(
                 children: [
                   IconButton(
-                    onPressed: quantity > 1 ? () => setState(() => quantity--) : null,
+                    onPressed: quantity > 1
+                        ? () => setState(() => quantity--)
+                        : null,
                     icon: const Icon(Icons.remove_circle_outline),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey[300]!),
                       borderRadius: BorderRadius.circular(8),
@@ -513,8 +519,8 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
                     ),
                   ),
                   IconButton(
-                    onPressed: quantity < widget.offer.quantity 
-                        ? () => setState(() => quantity++) 
+                    onPressed: quantity < widget.offer.quantity
+                        ? () => setState(() => quantity++)
                         : null,
                     icon: const Icon(Icons.add_circle_outline),
                   ),
@@ -522,9 +528,9 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Récapitulatif
           Container(
             padding: const EdgeInsets.all(16),
@@ -536,18 +542,12 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Offre'),
-                    Text(widget.offer.title),
-                  ],
+                  children: [Text('Offre'), Text(widget.offer.title)],
                 ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Quantité'),
-                    Text(quantity.toString()),
-                  ],
+                  children: [Text('Quantité'), Text(quantity.toString())],
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -560,13 +560,13 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
                       ),
                     ),
                     Text(
-                      widget.offer.isFree 
-                          ? 'GRATUIT' 
+                      widget.offer.isFree
+                          ? 'GRATUIT'
                           : '${totalPrice.toStringAsFixed(2)}€',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: widget.offer.isFree 
-                            ? Colors.green 
+                        color: widget.offer.isFree
+                            ? Colors.green
                             : Theme.of(context).primaryColor,
                       ),
                     ),
@@ -575,9 +575,9 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
               ],
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Bouton de confirmation
           SizedBox(
             width: double.infinity,
@@ -589,7 +589,7 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: isLoading 
+              child: isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
                   : const Text(
                       'Confirmer la réservation',
@@ -600,31 +600,33 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
                     ),
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Annuler'),
           ),
-          
+
           // Espace pour le safe area
           SizedBox(height: MediaQuery.of(context).padding.bottom),
         ],
       ),
     );
   }
-  
+
   Future<void> _makeReservation() async {
     setState(() => isLoading = true);
-    
+
     try {
       // TODO: Utiliser le vrai service de réservation
-      await ref.read(createReservationProvider((
-        offerId: widget.offer.id,
-        quantity: quantity,
-      )).future);
-      
+      await ref.read(
+        createReservationProvider((
+          offerId: widget.offer.id,
+          quantity: quantity,
+        )).future,
+      );
+
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -654,18 +656,15 @@ class _ReservationBottomSheetState extends ConsumerState<_ReservationBottomSheet
 /// Bouton de réservation flottant
 class ReservationFloatingButton extends ConsumerWidget {
   final FoodOffer offer;
-  
-  const ReservationFloatingButton({
-    super.key,
-    required this.offer,
-  });
+
+  const ReservationFloatingButton({super.key, required this.offer});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!offer.isAvailable || !offer.canPickup) {
       return Container(); // N'affiche pas le bouton si l'offre n'est pas disponible
     }
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
@@ -697,7 +696,9 @@ class ReservationFloatingButton extends ConsumerWidget {
               const Icon(Icons.shopping_bag_outlined),
               const SizedBox(width: 8),
               Text(
-                offer.isFree ? 'Réserver - GRATUIT' : 'Réserver - ${offer.priceText}',
+                offer.isFree
+                    ? 'Réserver - GRATUIT'
+                    : 'Réserver - ${offer.priceText}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

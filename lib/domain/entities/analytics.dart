@@ -9,7 +9,7 @@ class Analytics {
   final InventoryMetrics inventory;
   final List<Trend> trends;
   final DateTime generatedAt;
-  
+
   const Analytics({
     required this.merchantId,
     required this.period,
@@ -21,7 +21,7 @@ class Analytics {
     this.trends = const [],
     required this.generatedAt,
   });
-  
+
   /// Score de performance global (0-100)
   double get globalScore {
     final scores = [
@@ -39,25 +39,14 @@ class DateRange {
   final DateTime start;
   final DateTime end;
   final AnalyticsPeriod type;
-  
-  const DateRange({
-    required this.start,
-    required this.end,
-    required this.type,
-  });
-  
+
+  const DateRange({required this.start, required this.end, required this.type});
+
   int get daysCount => end.difference(start).inDays + 1;
 }
 
 /// Types de périodes
-enum AnalyticsPeriod {
-  daily,
-  weekly,
-  monthly,
-  quarterly,
-  yearly,
-  custom,
-}
+enum AnalyticsPeriod { daily, weekly, monthly, quarterly, yearly, custom }
 
 /// Métriques de performance
 class PerformanceMetrics {
@@ -77,7 +66,7 @@ class PerformanceMetrics {
   final double repeatCustomerRate; // %
   final Map<int, int> offersByHour; // Heure -> Nombre d'offres
   final Map<String, int> offersByCategory;
-  
+
   const PerformanceMetrics({
     required this.totalOffers,
     required this.activeOffers,
@@ -96,9 +85,9 @@ class PerformanceMetrics {
     this.offersByHour = const {},
     this.offersByCategory = const {},
   });
-  
-  int get totalReservations => 
-    completedReservations + cancelledReservations + noShowReservations;
+
+  int get totalReservations =>
+      completedReservations + cancelledReservations + noShowReservations;
 }
 
 /// Métriques de ventes
@@ -112,7 +101,7 @@ class SalesMetrics {
   final Map<String, double> revenueByCategory;
   final List<TopSellingItem> topSellingItems;
   final PriceAnalysis priceAnalysis;
-  
+
   const SalesMetrics({
     required this.totalRevenue,
     required this.averageBasketValue,
@@ -133,7 +122,7 @@ class TopSellingItem {
   final int quantity;
   final double revenue;
   final double percentageOfTotal;
-  
+
   const TopSellingItem({
     required this.offerId,
     required this.offerTitle,
@@ -149,7 +138,7 @@ class PriceAnalysis {
   final double optimalPricePoint;
   final Map<double, int> priceDistribution; // Prix -> Nombre de ventes
   final List<PriceSuggestion> suggestions;
-  
+
   const PriceAnalysis({
     required this.averageDiscount,
     required this.optimalPricePoint,
@@ -165,7 +154,7 @@ class PriceSuggestion {
   final double suggestedPrice;
   final String reason;
   final double expectedImpact; // % d'augmentation des ventes
-  
+
   const PriceSuggestion({
     required this.offerId,
     required this.currentPrice,
@@ -184,10 +173,11 @@ class EcologicalMetrics {
   final double foodWastePrevented; // kg
   final double sustainabilityScore; // 0-100
   final Map<String, double> impactByCategory;
-  final Map<String, Map<String, double>> monthlyImpact; // Mois -> {co2Saved, mealsSaved, etc.}
+  final Map<String, Map<String, double>>
+  monthlyImpact; // Mois -> {co2Saved, mealsSaved, etc.}
   final List<EcoAchievement> achievements;
   final CarbonFootprint carbonFootprint;
-  
+
   const EcologicalMetrics({
     required this.totalCo2Saved,
     required this.mealsSaved,
@@ -200,10 +190,11 @@ class EcologicalMetrics {
     this.achievements = const [],
     required this.carbonFootprint,
   });
-  
+
   /// Équivalent en arbres plantés
-  double get treesEquivalent => totalCo2Saved / 21; // 1 arbre absorbe ~21kg CO2/an
-  
+  double get treesEquivalent =>
+      totalCo2Saved / 21; // 1 arbre absorbe ~21kg CO2/an
+
   /// Équivalent en km de voiture évités
   double get carKmEquivalent => totalCo2Saved / 0.12; // Moyenne 120g CO2/km
 }
@@ -214,7 +205,7 @@ class CarbonFootprint {
   final double saved; // CO2 économisé
   final double net; // Empreinte nette
   final Map<String, double> breakdown; // Répartition par catégorie
-  
+
   const CarbonFootprint({
     required this.baseline,
     required this.saved,
@@ -231,7 +222,7 @@ class EcoAchievement {
   final String iconUrl;
   final DateTime unlockedAt;
   final int level; // Bronze: 1, Silver: 2, Gold: 3
-  
+
   const EcoAchievement({
     required this.id,
     required this.title,
@@ -280,7 +271,7 @@ class CustomerSegment {
   final double percentage;
   final double averageSpend;
   final List<String> characteristics;
-  
+
   const CustomerSegment({
     required this.name,
     required this.count,
@@ -321,7 +312,7 @@ class InventoryMetrics {
   final Map<String, int> stockByCategory;
   final List<InventoryAlert> alerts;
   final StockPrediction prediction;
-  
+
   const InventoryMetrics({
     required this.totalItems,
     required this.lowStockItems,
@@ -342,7 +333,7 @@ class InventoryAlert {
   final String message;
   final DateTime createdAt;
   final bool isResolved;
-  
+
   const InventoryAlert({
     required this.itemId,
     required this.itemName,
@@ -354,19 +345,14 @@ class InventoryAlert {
 }
 
 /// Types d'alertes inventaire
-enum InventoryAlertType {
-  lowStock,
-  outOfStock,
-  expiringSoon,
-  overstocked,
-}
+enum InventoryAlertType { lowStock, outOfStock, expiringSoon, overstocked }
 
 /// Prédiction de stock
 class StockPrediction {
   final Map<String, int> nextWeekNeeds;
   final List<ReorderSuggestion> reorderSuggestions;
   final double accuracy; // % de précision des prédictions passées
-  
+
   const StockPrediction({
     this.nextWeekNeeds = const {},
     this.reorderSuggestions = const [],
@@ -382,7 +368,7 @@ class ReorderSuggestion {
   final int suggestedQuantity;
   final DateTime suggestedOrderDate;
   final String reason;
-  
+
   const ReorderSuggestion({
     required this.itemId,
     required this.itemName,
@@ -402,7 +388,7 @@ class Trend {
   final double changePercentage;
   final TrendDirection direction;
   final String insight;
-  
+
   const Trend({
     required this.type,
     required this.metric,
@@ -415,17 +401,7 @@ class Trend {
 }
 
 /// Types de tendances
-enum TrendType {
-  sales,
-  customers,
-  ecological,
-  inventory,
-  performance,
-}
+enum TrendType { sales, customers, ecological, inventory, performance }
 
 /// Direction de la tendance
-enum TrendDirection {
-  up,
-  down,
-  stable,
-}
+enum TrendDirection { up, down, stable }

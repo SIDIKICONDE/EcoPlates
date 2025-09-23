@@ -17,7 +17,7 @@ class FoodOffersScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filters = ref.watch(filtersProvider);
     final filtersNotifier = ref.read(filtersProvider.notifier);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('EcoPlates'),
@@ -62,9 +62,7 @@ class FoodOffersScreen extends ConsumerWidget {
             onPressed: () {
               // TODO: Afficher la carte
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Vue carte bientôt disponible'),
-                ),
+                const SnackBar(content: Text('Vue carte bientôt disponible')),
               );
             },
           ),
@@ -87,17 +85,19 @@ class FoodOffersScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             // Header avec statistiques dynamiques
             Consumer(
               builder: (context, ref, child) {
                 final statsAsync = ref.watch(userStatisticsProvider);
-                
+
                 return statsAsync.when(
                   data: (stats) => SliverToBoxAdapter(
                     child: Container(
                       padding: const EdgeInsets.all(16),
-                      color: Theme.of(context).colorScheme.primary.withAlpha(20),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha(20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -109,13 +109,15 @@ class FoodOffersScreen extends ConsumerWidget {
                           ),
                           _StatWidget(
                             icon: Icons.euro,
-                            value: '${stats.totalMoneySaved.toStringAsFixed(0)}€',
+                            value:
+                                '${stats.totalMoneySaved.toStringAsFixed(0)}€',
                             label: 'Économisé',
                             color: Colors.blue,
                           ),
                           _StatWidget(
                             icon: Icons.eco,
-                            value: '${stats.totalCo2Saved.toStringAsFixed(1)}kg',
+                            value:
+                                '${stats.totalCo2Saved.toStringAsFixed(1)}kg',
                             label: 'CO2 évité',
                             color: Colors.orange,
                           ),
@@ -126,15 +128,15 @@ class FoodOffersScreen extends ConsumerWidget {
                   loading: () => const SliverToBoxAdapter(
                     child: SizedBox(
                       height: 100,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      child: Center(child: CircularProgressIndicator()),
                     ),
                   ),
                   error: (_, __) => SliverToBoxAdapter(
                     child: Container(
                       padding: const EdgeInsets.all(16),
-                      color: Theme.of(context).colorScheme.primary.withAlpha(20),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha(20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -163,7 +165,7 @@ class FoodOffersScreen extends ConsumerWidget {
                 );
               },
             ),
-            
+
             // Filtres rapides
             SliverToBoxAdapter(
               child: Container(
@@ -190,39 +192,51 @@ class FoodOffersScreen extends ConsumerWidget {
                     _FilterChip(
                       label: 'Végétarien',
                       icon: Icons.eco,
-                      isSelected: filters.dietaryPreferences.contains('vegetarian'),
-                      onTap: () => filtersNotifier.toggleDietaryPreference('vegetarian'),
+                      isSelected: filters.dietaryPreferences.contains(
+                        'vegetarian',
+                      ),
+                      onTap: () =>
+                          filtersNotifier.toggleDietaryPreference('vegetarian'),
                     ),
                     const SizedBox(width: 8),
                     _FilterChip(
                       label: 'Boulangerie',
                       icon: Icons.bakery_dining,
-                      isSelected: filters.selectedCategories.contains(FoodCategory.boulangerie),
-                      onTap: () => filtersNotifier.toggleCategory(FoodCategory.boulangerie),
+                      isSelected: filters.selectedCategories.contains(
+                        FoodCategory.boulangerie,
+                      ),
+                      onTap: () => filtersNotifier.toggleCategory(
+                        FoodCategory.boulangerie,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     _FilterChip(
                       label: 'Dîner',
                       icon: Icons.dinner_dining,
-                      isSelected: filters.selectedCategories.contains(FoodCategory.diner),
-                      onTap: () => filtersNotifier.toggleCategory(FoodCategory.diner),
+                      isSelected: filters.selectedCategories.contains(
+                        FoodCategory.diner,
+                      ),
+                      onTap: () =>
+                          filtersNotifier.toggleCategory(FoodCategory.diner),
                     ),
                   ],
                 ),
               ),
             ),
-            
+
             // Liste des offres
             Consumer(
               builder: (context, ref, child) {
                 final offersAsync = ref.watch(nearbyOffersProvider);
-                
+
                 return offersAsync.when(
                   data: (allOffers) {
                     // Appliquer la recherche d'abord
                     final searchResults = ref.watch(searchResultsProvider);
                     // Puis appliquer les filtres
-                    final offers = ref.watch(filteredOffersProvider(searchResults));
+                    final offers = ref.watch(
+                      filteredOffersProvider(searchResults),
+                    );
                     if (offers.isEmpty) {
                       return SliverFillRemaining(
                         child: Center(
@@ -237,16 +251,14 @@ class FoodOffersScreen extends ConsumerWidget {
                               const SizedBox(height: 16),
                               Text(
                                 'Aucune offre disponible',
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(color: Colors.grey[600]),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 'Vérifiez plus tard ou élargissez votre zone de recherche',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey[500],
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.grey[500]),
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -254,67 +266,65 @@ class FoodOffersScreen extends ConsumerWidget {
                         ),
                       );
                     }
-                    
+
                     return SliverPadding(
                       padding: const EdgeInsets.all(16),
                       sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            if (index >= offers.length) return null;
-                            final offer = offers[index];
-                            final userLocation = ref.watch(userLocationProvider);
-                            
-                            String distance = 'Distance inconnue';
-                            if (userLocation != null) {
-                              final distanceKm = offer.location.distanceFrom(
-                                userLocation.latitude, 
-                                userLocation.longitude
-                              );
-                              distance = '${distanceKm.toStringAsFixed(1)} km';
-                            }
-                            
-                            // Formatage des horaires
-                            final pickupTimeText = '${_formatTime(offer.pickupStartTime)} - ${_formatTime(offer.pickupEndTime)}';
-                            
-                            // Tags basés sur l'offre
-                            List<String> tags = [];
-                            if (offer.isFree) tags.add('GRATUIT');
-                            if (offer.isVegetarian) tags.add('Végétarien');
-                            if (offer.isVegan) tags.add('Vegan');
-                            if (offer.isHalal) tags.add('Halal');
-                            tags.add(_getCategoryName(offer.category));
-                            
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                bottom: index < offers.length - 1 ? 12.0 : 0,
-                              ),
-                              child: _OfferCard(
-                                merchantName: offer.merchantName,
-                                title: offer.title,
-                                description: offer.description,
-                                originalPrice: offer.originalPrice,
-                                discountedPrice: offer.discountedPrice,
-                                pickupTime: pickupTimeText,
-                                distance: distance,
-                                imageUrl: offer.images.isNotEmpty ? offer.images.first : null,
-                                quantity: offer.quantity,
-                                isFree: offer.isFree,
-                                tags: tags,
-                                onTap: () {
-                                  context.go('/offer/${offer.id}');
-                                },
-                              ),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          if (index >= offers.length) return null;
+                          final offer = offers[index];
+                          final userLocation = ref.watch(userLocationProvider);
+
+                          String distance = 'Distance inconnue';
+                          if (userLocation != null) {
+                            final distanceKm = offer.location.distanceFrom(
+                              userLocation.latitude,
+                              userLocation.longitude,
                             );
-                          },
-                          childCount: offers.length,
-                        ),
+                            distance = '${distanceKm.toStringAsFixed(1)} km';
+                          }
+
+                          // Formatage des horaires
+                          final pickupTimeText =
+                              '${_formatTime(offer.pickupStartTime)} - ${_formatTime(offer.pickupEndTime)}';
+
+                          // Tags basés sur l'offre
+                          List<String> tags = [];
+                          if (offer.isFree) tags.add('GRATUIT');
+                          if (offer.isVegetarian) tags.add('Végétarien');
+                          if (offer.isVegan) tags.add('Vegan');
+                          if (offer.isHalal) tags.add('Halal');
+                          tags.add(_getCategoryName(offer.category));
+
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: index < offers.length - 1 ? 12.0 : 0,
+                            ),
+                            child: _OfferCard(
+                              merchantName: offer.merchantName,
+                              title: offer.title,
+                              description: offer.description,
+                              originalPrice: offer.originalPrice,
+                              discountedPrice: offer.discountedPrice,
+                              pickupTime: pickupTimeText,
+                              distance: distance,
+                              imageUrl: offer.images.isNotEmpty
+                                  ? offer.images.first
+                                  : null,
+                              quantity: offer.quantity,
+                              isFree: offer.isFree,
+                              tags: tags,
+                              onTap: () {
+                                context.go('/offer/${offer.id}');
+                              },
+                            ),
+                          );
+                        }, childCount: offers.length),
                       ),
                     );
                   },
                   loading: () => SliverFillRemaining(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: Center(child: CircularProgressIndicator()),
                   ),
                   error: (error, stack) => SliverFillRemaining(
                     child: Center(
@@ -334,9 +344,8 @@ class FoodOffersScreen extends ConsumerWidget {
                           const SizedBox(height: 8),
                           Text(
                             'Tirez vers le bas pour réessayer',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -350,12 +359,12 @@ class FoodOffersScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   /// Formate l'heure pour l'affichage
   String _formatTime(DateTime dateTime) {
     return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
-  
+
   /// Retourne le nom de la catégorie pour l'affichage
   String _getCategoryName(FoodCategory category) {
     switch (category) {
@@ -389,14 +398,14 @@ class _StatWidget extends StatelessWidget {
   final String value;
   final String label;
   final Color color;
-  
+
   const _StatWidget({
     required this.icon,
     required this.value,
     required this.label,
     required this.color,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -405,15 +414,15 @@ class _StatWidget extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           value,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
       ],
     );
@@ -426,14 +435,14 @@ class _FilterChip extends StatelessWidget {
   final IconData icon;
   final bool isSelected;
   final VoidCallback onTap;
-  
+
   const _FilterChip({
     required this.label,
     required this.icon,
     required this.isSelected,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -442,8 +451,8 @@ class _FilterChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? Theme.of(context).colorScheme.primary 
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
               : Colors.grey.shade200,
           borderRadius: BorderRadius.circular(20),
         ),
@@ -485,7 +494,7 @@ class _OfferCard extends StatelessWidget {
   final bool isFree;
   final List<String> tags;
   final VoidCallback? onTap;
-  
+
   const _OfferCard({
     required this.merchantName,
     required this.title,
@@ -500,20 +509,18 @@ class _OfferCard extends StatelessWidget {
     required this.tags,
     this.onTap,
   });
-  
+
   String get _discountBadge {
     if (isFree) return 'GRATUIT';
     final discount = ((originalPrice - discountedPrice) / originalPrice * 100);
     return '-${discount.toStringAsFixed(0)}%';
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -596,7 +603,7 @@ class _OfferCard extends StatelessWidget {
                   ),
               ],
             ),
-            
+
             // Contenu
             Padding(
               padding: const EdgeInsets.all(12),
@@ -610,7 +617,8 @@ class _OfferCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           merchantName,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -627,67 +635,70 @@ class _OfferCard extends StatelessWidget {
                           const SizedBox(width: 2),
                           Text(
                             distance,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey.shade600,
-                                ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: Colors.grey.shade600),
                           ),
                         ],
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  
+
                   // Titre
                   Text(
                     title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-                  
+
                   // Description
                   Text(
                     description,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade700,
-                        ),
+                      color: Colors.grey.shade700,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-                  
+
                   // Tags
                   Wrap(
                     spacing: 6,
                     runSpacing: 4,
-                    children: tags.map((tag) => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: tag == 'GRATUIT' 
-                            ? Colors.green.shade100 
-                            : Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        tag,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: tag == 'GRATUIT' 
-                              ? Colors.green.shade800 
-                              : Colors.grey.shade700,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    )).toList(),
+                    children: tags
+                        .map(
+                          (tag) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: tag == 'GRATUIT'
+                                  ? Colors.green.shade100
+                                  : Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              tag,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: tag == 'GRATUIT'
+                                    ? Colors.green.shade800
+                                    : Colors.grey.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   // Prix et horaire
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -707,11 +718,15 @@ class _OfferCard extends StatelessWidget {
                             const SizedBox(width: 8),
                           ],
                           Text(
-                            isFree ? 'GRATUIT' : '${discountedPrice.toStringAsFixed(2)}€',
+                            isFree
+                                ? 'GRATUIT'
+                                : '${discountedPrice.toStringAsFixed(2)}€',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: isFree ? Colors.green : Theme.of(context).colorScheme.primary,
+                              color: isFree
+                                  ? Colors.green
+                                  : Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ],

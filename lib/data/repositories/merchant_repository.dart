@@ -6,56 +6,56 @@ import '../../core/error/failures.dart';
 abstract class MerchantRepository {
   /// Récupérer un commerçant par son ID
   Future<Either<Failure, Merchant>> getMerchant(String merchantId);
-  
+
   /// Récupérer le commerçant actuellement connecté
   Future<Either<Failure, Merchant>> getCurrentMerchant();
-  
+
   /// Mettre à jour les informations d'un commerçant
   Future<Either<Failure, Merchant>> updateMerchant({
     required String merchantId,
     required UpdateMerchantRequest request,
   });
-  
+
   /// Mettre à jour les paramètres d'un commerçant
   Future<Either<Failure, Merchant>> updateMerchantSettings({
     required String merchantId,
     required MerchantSettings settings,
   });
-  
+
   /// Mettre à jour les horaires d'ouverture
   Future<Either<Failure, Merchant>> updateOpeningHours({
     required String merchantId,
     required OpeningHours openingHours,
   });
-  
+
   /// Récupérer les statistiques d'un commerçant
   Future<Either<Failure, MerchantStats>> getMerchantStats(String merchantId);
-  
+
   /// Ajouter un membre à l'équipe
   Future<Either<Failure, void>> addTeamMember({
     required String merchantId,
     required String email,
     required TeamRole role,
   });
-  
+
   /// Retirer un membre de l'équipe
   Future<Either<Failure, void>> removeTeamMember({
     required String merchantId,
     required String memberId,
   });
-  
+
   /// Récupérer les membres de l'équipe
   Future<Either<Failure, List<TeamMember>>> getTeamMembers(String merchantId);
-  
+
   /// Vérifier si un commerçant peut créer une offre
   Future<Either<Failure, bool>> canCreateOffer(String merchantId);
-  
+
   /// Mettre en cache un commerçant
   Future<void> cacheMerchant(Merchant merchant);
-  
+
   /// Récupérer un commerçant depuis le cache
   Future<Either<Failure, Merchant>> getCachedMerchant(String merchantId);
-  
+
   /// Vider le cache
   Future<void> clearCache();
 }
@@ -69,7 +69,7 @@ class UpdateMerchantRequest {
   final List<String>? specialties;
   final String? website;
   final List<String>? paymentMethods;
-  
+
   const UpdateMerchantRequest({
     this.name,
     this.phoneNumber,
@@ -79,10 +79,10 @@ class UpdateMerchantRequest {
     this.website,
     this.paymentMethods,
   });
-  
+
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    
+
     if (name != null) data['name'] = name;
     if (phoneNumber != null) data['phone_number'] = phoneNumber;
     if (description != null) data['description'] = description;
@@ -100,17 +100,17 @@ class UpdateMerchantRequest {
     if (specialties != null) data['specialties'] = specialties;
     if (website != null) data['website'] = website;
     if (paymentMethods != null) data['payment_methods'] = paymentMethods;
-    
+
     return data;
   }
 }
 
 /// Rôle d'un membre de l'équipe
 enum TeamRole {
-  owner,      // Propriétaire
-  manager,    // Gérant
-  employee,   // Employé
-  cashier,    // Caissier
+  owner, // Propriétaire
+  manager, // Gérant
+  employee, // Employé
+  cashier, // Caissier
 }
 
 /// Membre de l'équipe
@@ -123,7 +123,7 @@ class TeamMember {
   final bool isActive;
   final String? phoneNumber;
   final String? profileImageUrl;
-  
+
   const TeamMember({
     required this.id,
     required this.email,
@@ -150,7 +150,7 @@ extension TeamRoleExtension on TeamRole {
         return 'Caissier';
     }
   }
-  
+
   /// Permissions du rôle
   Set<MerchantPermission> get permissions {
     switch (this) {

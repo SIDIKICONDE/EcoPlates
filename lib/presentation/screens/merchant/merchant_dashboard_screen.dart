@@ -30,9 +30,9 @@ class MerchantDashboardScreen extends ConsumerWidget {
             // Statistiques du jour
             Text(
               'Aujourd\'hui',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Row(
@@ -82,18 +82,18 @@ class MerchantDashboardScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Actions rapides
             Text(
               'Actions rapides',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
@@ -140,18 +140,18 @@ class MerchantDashboardScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Alertes
             Text(
               'Alertes',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             _AlertCard(
               type: AlertType.warning,
               title: 'Stock faible',
@@ -183,7 +183,7 @@ class _StatCard extends StatelessWidget {
   final IconData icon;
   final Color color;
   final String? trend;
-  
+
   const _StatCard({
     required this.title,
     required this.value,
@@ -191,7 +191,7 @@ class _StatCard extends StatelessWidget {
     required this.color,
     this.trend,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -210,7 +210,10 @@ class _StatCard extends StatelessWidget {
               Icon(icon, color: color, size: 24),
               if (trend != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: trend!.startsWith('+') ? Colors.green : Colors.red,
                     borderRadius: BorderRadius.circular(4),
@@ -230,16 +233,16 @@ class _StatCard extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             title,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
           ),
         ],
       ),
@@ -254,7 +257,7 @@ class _ActionCard extends StatelessWidget {
   final String subtitle;
   final Color color;
   final VoidCallback onTap;
-  
+
   const _ActionCard({
     required this.icon,
     required this.title,
@@ -262,7 +265,7 @@ class _ActionCard extends StatelessWidget {
     required this.color,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -281,17 +284,17 @@ class _ActionCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey),
               textAlign: TextAlign.center,
             ),
           ],
@@ -310,14 +313,14 @@ class _AlertCard extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback? onAction;
-  
+
   const _AlertCard({
     required this.type,
     required this.title,
     required this.message,
     this.onAction,
   });
-  
+
   Color get _color {
     switch (type) {
       case AlertType.info:
@@ -328,7 +331,7 @@ class _AlertCard extends StatelessWidget {
         return Colors.red;
     }
   }
-  
+
   IconData get _icon {
     switch (type) {
       case AlertType.info:
@@ -339,7 +342,7 @@ class _AlertCard extends StatelessWidget {
         return Icons.error_outline;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -359,15 +362,12 @@ class _AlertCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  message,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(message, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),

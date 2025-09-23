@@ -31,7 +31,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mes Réservations'),
@@ -42,23 +42,14 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
           labelColor: theme.primaryColor,
           unselectedLabelColor: Colors.grey,
           tabs: const [
-            Tab(
-              text: 'En cours',
-              icon: Icon(Icons.schedule),
-            ),
-            Tab(
-              text: 'Historique',
-              icon: Icon(Icons.history),
-            ),
+            Tab(text: 'En cours', icon: Icon(Icons.schedule)),
+            Tab(text: 'Historique', icon: Icon(Icons.history)),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildActiveReservations(),
-          _buildReservationHistory(),
-        ],
+        children: [_buildActiveReservations(), _buildReservationHistory()],
       ),
     );
   }
@@ -73,7 +64,8 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
           return _buildEmptyState(
             icon: Icons.shopping_basket_outlined,
             title: 'Aucune réservation active',
-            subtitle: 'Découvrez les offres disponibles\net réservez vos paniers anti-gaspillage',
+            subtitle:
+                'Découvrez les offres disponibles\net réservez vos paniers anti-gaspillage',
             buttonLabel: 'Voir les offres',
             onButtonPressed: () => Navigator.pushNamed(context, '/offers'),
           );
@@ -117,20 +109,17 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
                     ),
                   ),
                 ),
-              
+
               // Liste des réservations actives
               SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final reservation = reservations[index];
-                    return ReservationCard(
-                      reservation: reservation,
-                      onTap: () => _showReservationDetails(reservation),
-                      onCancel: () => _cancelReservation(reservation.id),
-                    );
-                  },
-                  childCount: reservations.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final reservation = reservations[index];
+                  return ReservationCard(
+                    reservation: reservation,
+                    onTap: () => _showReservationDetails(reservation),
+                    onCancel: () => _cancelReservation(reservation.id),
+                  );
+                }, childCount: reservations.length),
               ),
             ],
           ),
@@ -181,7 +170,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
                   noShow: noShow.length,
                 ),
               ),
-              
+
               // Liste par catégorie
               if (collected.isNotEmpty) ...[
                 _buildSectionHeader('Collectées', Colors.green),
@@ -196,7 +185,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
                   ),
                 ),
               ],
-              
+
               if (cancelled.isNotEmpty) ...[
                 _buildSectionHeader('Annulées', Colors.orange),
                 SliverList(
@@ -210,7 +199,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
                   ),
                 ),
               ],
-              
+
               if (noShow.isNotEmpty) ...[
                 _buildSectionHeader('Non récupérées', Colors.red),
                 SliverList(
@@ -322,10 +311,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
                 children: [
                   const Text(
                     'Taux de collecte',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   Text(
                     '${successRate.toStringAsFixed(1)}%',
@@ -345,8 +331,8 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
                   successRate > 80
                       ? Colors.green
                       : successRate > 50
-                          ? Colors.orange
-                          : Colors.red,
+                      ? Colors.orange
+                      : Colors.red,
                 ),
                 minHeight: 8,
               ),
@@ -375,13 +361,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
             color: color,
           ),
         ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
       ],
     );
   }
@@ -399,11 +379,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(icon, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               title,
@@ -417,10 +393,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
             Text(
               subtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             ),
             if (buttonLabel != null && onButtonPressed != null) ...[
               const SizedBox(height: 24),
@@ -443,27 +416,17 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
             const SizedBox(height: 16),
             const Text(
               'Erreur de chargement',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Text(
               error,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -485,9 +448,8 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ReservationDetailsSheet(
-        reservationId: reservation.id,
-      ),
+      builder: (context) =>
+          ReservationDetailsSheet(reservationId: reservation.id),
     );
   }
 
@@ -507,9 +469,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Oui, annuler'),
           ),
         ],
@@ -521,7 +481,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
         await ref
             .read(reservationsStateProvider.notifier)
             .cancelReservation(reservationId);
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -533,10 +493,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Erreur: $e'),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text('Erreur: $e'), backgroundColor: Colors.red),
           );
         }
       }
@@ -548,10 +505,7 @@ class _ReservationsScreenState extends ConsumerState<ReservationsScreen>
 class ReservationDetailsSheet extends ConsumerWidget {
   final String reservationId;
 
-  const ReservationDetailsSheet({
-    super.key,
-    required this.reservationId,
-  });
+  const ReservationDetailsSheet({super.key, required this.reservationId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -587,7 +541,7 @@ class ReservationDetailsSheet extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Titre et statut
                 Row(
                   children: [
@@ -612,7 +566,7 @@ class ReservationDetailsSheet extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Code de confirmation
                 if (data.reservation.status == ReservationStatus.confirmed)
                   Container(
@@ -642,14 +596,15 @@ class ReservationDetailsSheet extends ConsumerWidget {
                         ),
                         const SizedBox(height: 12),
                         ElevatedButton.icon(
-                          onPressed: () => _showQRCode(context, ref, reservationId),
+                          onPressed: () =>
+                              _showQRCode(context, ref, reservationId),
                           icon: const Icon(Icons.qr_code),
                           label: const Text('Afficher QR Code'),
                         ),
                       ],
                     ),
                   ),
-                
+
                 // Plus de détails...
               ],
             ),
@@ -672,7 +627,7 @@ class ReservationDetailsSheet extends ConsumerWidget {
   Widget _buildStatusChip(ReservationStatus status) {
     Color color;
     String label;
-    
+
     switch (status) {
       case ReservationStatus.confirmed:
         color = Colors.blue;
@@ -694,7 +649,7 @@ class ReservationDetailsSheet extends ConsumerWidget {
         color = Colors.grey;
         label = 'En attente';
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(

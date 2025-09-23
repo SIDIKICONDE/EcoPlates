@@ -21,24 +21,24 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _searchController = TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
     _searchController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final offersAsync = ref.watch(merchantOffersProvider);
-    
+
     return AdaptiveScaffold(
       appBar: AppBar(
         title: const Text('Mes Offres'),
@@ -55,14 +55,8 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
                 value: 'bulk_actions',
                 child: Text('Actions groupées'),
               ),
-              const PopupMenuItem(
-                value: 'export',
-                child: Text('Exporter'),
-              ),
-              const PopupMenuItem(
-                value: 'settings',
-                child: Text('Paramètres'),
-              ),
+              const PopupMenuItem(value: 'export', child: Text('Exporter')),
+              const PopupMenuItem(value: 'settings', child: Text('Paramètres')),
             ],
             onSelected: _handleMenuAction,
           ),
@@ -128,12 +122,12 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
       ),
     );
   }
-  
+
   Widget _buildOffersList(List<FoodOffer> offers) {
     if (offers.isEmpty) {
       return _buildEmptyState();
     }
-    
+
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(merchantOffersProvider);
@@ -148,7 +142,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
       ),
     );
   }
-  
+
   Widget _buildOfferCard(FoodOffer offer) {
     return Card(
       margin: EdgeInsets.only(bottom: 12.h),
@@ -177,22 +171,19 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
                   _buildStatusChip(offer.status),
                 ],
               ),
-              
+
               SizedBox(height: 8.h),
-              
+
               // Description
               Text(
                 offer.description,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               // Prix et quantité
               Row(
                 children: [
@@ -214,9 +205,9 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(width: 8.w),
-                  
+
                   if (offer.originalPrice > offer.discountedPrice)
                     Text(
                       '${offer.originalPrice.toStringAsFixed(2)}€',
@@ -226,9 +217,9 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
                         color: Colors.grey[600],
                       ),
                     ),
-                  
+
                   const Spacer(),
-                  
+
                   // Quantité disponible
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -250,29 +241,22 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
                   ),
                 ],
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               // Footer avec dates et actions
               Row(
                 children: [
                   // Date d'expiration
-                  Icon(
-                    Icons.schedule,
-                    size: 16.sp,
-                    color: Colors.grey[600],
-                  ),
+                  Icon(Icons.schedule, size: 16.sp, color: Colors.grey[600]),
                   SizedBox(width: 4.w),
                   Text(
                     'Expire le ${_formatDate(offer.pickupEndTime)}',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
                   ),
-                  
+
                   const Spacer(),
-                  
+
                   // Actions rapides
                   Row(
                     children: [
@@ -280,23 +264,23 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
                       IconButton(
                         icon: Icon(
                           offer.status == OfferStatus.available
-                            ? Icons.pause_circle_outline
-                            : Icons.play_circle_outline,
+                              ? Icons.pause_circle_outline
+                              : Icons.play_circle_outline,
                           size: 20.sp,
                         ),
                         onPressed: () => _toggleOfferStatus(offer),
                         tooltip: offer.status == OfferStatus.available
-                          ? 'Désactiver'
-                          : 'Activer',
+                            ? 'Désactiver'
+                            : 'Activer',
                       ),
-                      
+
                       // Dupliquer
                       IconButton(
                         icon: Icon(Icons.content_copy, size: 20.sp),
                         onPressed: () => _duplicateOffer(offer),
                         tooltip: 'Dupliquer',
                       ),
-                      
+
                       // Menu d'options
                       PopupMenuButton<String>(
                         itemBuilder: (context) => [
@@ -329,7 +313,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
       ),
     );
   }
-  
+
   Widget _buildStatusChip(OfferStatus status) {
     Color color;
     String label;
@@ -360,12 +344,9 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
         label = 'Annulée';
         break;
     }
-    
+
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 8.w,
-        vertical: 4.h,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12.r),
@@ -380,24 +361,24 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
       ),
     );
   }
-  
+
   Color _getStockColor(int stock) {
     if (stock > 10) return Colors.green;
     if (stock > 3) return Colors.orange;
     return Colors.red;
   }
-  
+
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = date.difference(now).inDays;
-    
+
     if (difference == 0) return 'Aujourd\'hui';
     if (difference == 1) return 'Demain';
     if (difference < 7) return '${difference}j';
-    
+
     return '${date.day}/${date.month}';
   }
-  
+
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
@@ -405,11 +386,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.restaurant_menu,
-              size: 64.sp,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.restaurant_menu, size: 64.sp, color: Colors.grey[400]),
             SizedBox(height: 16.h),
             Text(
               'Aucune offre',
@@ -423,10 +400,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
             Text(
               'Créez votre première offre pour commencer à vendre',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(fontSize: 14.sp, color: Colors.grey[500]),
             ),
             SizedBox(height: 24.h),
             ElevatedButton.icon(
@@ -439,7 +413,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
       ),
     );
   }
-  
+
   Widget _buildErrorState(String message) {
     return Center(
       child: Padding(
@@ -447,27 +421,17 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64.sp,
-              color: Colors.red[400],
-            ),
+            Icon(Icons.error_outline, size: 64.sp, color: Colors.red[400]),
             SizedBox(height: 16.h),
             Text(
               'Erreur',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 8.h),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
             ),
             SizedBox(height: 24.h),
             ElevatedButton.icon(
@@ -482,25 +446,33 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
       ),
     );
   }
-  
+
   // Actions
-  
+
   void _performSearch(String query) {
     // TODO: Implémenter la recherche avec filtres
     ref.read(offersFiltersProvider.notifier).updateSearch(query);
   }
-  
+
   void _onTabChanged(int index) {
     OffersViewFilter? status;
     switch (index) {
-      case 0: status = OffersViewFilter.all; break; // Toutes
-      case 1: status = OffersViewFilter.active; break;
-      case 2: status = OffersViewFilter.draft; break;
-      case 3: status = OffersViewFilter.expired; break;
+      case 0:
+        status = OffersViewFilter.all;
+        break; // Toutes
+      case 1:
+        status = OffersViewFilter.active;
+        break;
+      case 2:
+        status = OffersViewFilter.draft;
+        break;
+      case 3:
+        status = OffersViewFilter.expired;
+        break;
     }
     ref.read(offersFiltersProvider.notifier).updateStatus(status);
   }
-  
+
   void _handleMenuAction(String action) {
     switch (action) {
       case 'bulk_actions':
@@ -514,33 +486,35 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
         break;
     }
   }
-  
+
   Future<void> _toggleOfferStatus(FoodOffer offer) async {
     final activate = offer.status != OfferStatus.available;
-    final result = await ref.read(toggleOfferStatusProvider((offerId: offer.id, activate: activate)).future);
+    final result = await ref.read(
+      toggleOfferStatusProvider((offerId: offer.id, activate: activate)).future,
+    );
 
     result.fold(
       (failure) => context.showError(failure),
-      (_) => context.showSuccess(
-        activate
-          ? 'Offre activée'
-          : 'Offre désactivée',
-      ),
+      (_) =>
+          context.showSuccess(activate ? 'Offre activée' : 'Offre désactivée'),
     );
   }
-  
+
   Future<void> _duplicateOffer(FoodOffer offer) async {
-    final result = await ref.read(duplicateOfferProvider((offerId: offer.id, startTime: null, endTime: null)).future);
-
-    result.fold(
-      (failure) => context.showError(failure),
-      (newOffer) {
-        context.showSuccess('Offre dupliquée avec succès');
-        context.push('/merchant/offers/${newOffer.id}/edit');
-      },
+    final result = await ref.read(
+      duplicateOfferProvider((
+        offerId: offer.id,
+        startTime: null,
+        endTime: null,
+      )).future,
     );
+
+    result.fold((failure) => context.showError(failure), (newOffer) {
+      context.showSuccess('Offre dupliquée avec succès');
+      context.push('/merchant/offers/${newOffer.id}/edit');
+    });
   }
-  
+
   void _handleOfferAction(String action, FoodOffer offer) {
     switch (action) {
       case 'edit':
@@ -557,27 +531,27 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
         break;
     }
   }
-  
+
   void _showBulkActionsDialog() {
     // TODO: Implémenter les actions groupées
   }
-  
+
   void _exportOffers() {
     // TODO: Implémenter l'export
   }
-  
+
   void _showSettingsDialog() {
     // TODO: Implémenter les paramètres
   }
-  
+
   void _showOfferAnalytics(FoodOffer offer) {
     // TODO: Afficher les analytics de l'offre
   }
-  
+
   void _shareOffer(FoodOffer offer) {
     // TODO: Implémenter le partage
   }
-  
+
   Future<void> _confirmDeleteOffer(FoodOffer offer) async {
     final confirmed = await context.showConfirmationDialog(
       title: 'Supprimer l\'offre',
@@ -585,9 +559,11 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen>
       confirmText: 'Supprimer',
       isDestructive: true,
     );
-    
+
     if (confirmed == true) {
-      final result = await ref.read(deleteOfferProvider((offerId: offer.id, reason: null)).future);
+      final result = await ref.read(
+        deleteOfferProvider((offerId: offer.id, reason: null)).future,
+      );
 
       result.fold(
         (failure) => context.showError(failure),

@@ -8,10 +8,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('EcoPlates'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('EcoPlates'), centerTitle: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -25,11 +22,7 @@ class HomeScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     children: [
-                      const Icon(
-                        Icons.eco,
-                        size: 48,
-                        color: Colors.green,
-                      ),
+                      const Icon(Icons.eco, size: 48, color: Colors.green),
                       const SizedBox(height: 12),
                       Text(
                         'Votre Score Écologique',
@@ -38,7 +31,8 @@ class HomeScreen extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         '250 points',
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
                             ),
@@ -53,15 +47,14 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Actions rapides
               Text(
                 'Actions rapides',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 16),
-              
-              
+
               // Bouton Voir les réservations
               _ActionCard(
                 icon: Icons.bookmark,
@@ -71,7 +64,7 @@ class HomeScreen extends ConsumerWidget {
                 onTap: () => context.go('/reservations'),
               ),
               const SizedBox(height: 12),
-              
+
               // Bouton Points de collecte
               _ActionCard(
                 icon: Icons.location_on,
@@ -86,9 +79,9 @@ class HomeScreen extends ConsumerWidget {
                   );
                 },
               ),
-              
+
               const Spacer(),
-              
+
               // Message écologique
               Container(
                 padding: const EdgeInsets.all(12),
@@ -98,10 +91,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: Colors.green.shade700,
-                    ),
+                    Icon(Icons.info_outline, color: Colors.green.shade700),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -129,7 +119,7 @@ class _ActionCard extends StatelessWidget {
   final String subtitle;
   final Color color;
   final VoidCallback onTap;
-  
+
   const _ActionCard({
     required this.icon,
     required this.title,
@@ -137,7 +127,7 @@ class _ActionCard extends StatelessWidget {
     required this.color,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -157,27 +147,20 @@ class _ActionCard extends StatelessWidget {
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24,
-              ),
+              child: Icon(icon, color: color, size: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                  Text(title, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                   ),
                 ],
               ),

@@ -13,7 +13,9 @@ abstract class AnalyticsRepository {
   });
 
   /// Récupère le dashboard temps réel
-  Future<Either<Failure, RealtimeDashboard>> getRealtimeDashboard(String merchantId);
+  Future<Either<Failure, RealtimeDashboard>> getRealtimeDashboard(
+    String merchantId,
+  );
 
   /// Récupère les insights et recommandations
   Future<Either<Failure, List<Insight>>> getInsights(String merchantId);
@@ -28,11 +30,7 @@ abstract class AnalyticsRepository {
 }
 
 /// Format du rapport
-enum ReportFormat {
-  pdf,
-  csv,
-  excel,
-}
+enum ReportFormat { pdf, csv, excel }
 
 /// Dashboard temps réel
 class RealtimeDashboard {
@@ -70,20 +68,9 @@ class Insight {
   });
 }
 
-enum InsightType {
-  revenue,
-  customer,
-  inventory,
-  performance,
-  ecological,
-}
+enum InsightType { revenue, customer, inventory, performance, ecological }
 
-enum InsightPriority {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum InsightPriority { low, medium, high, critical }
 
 /// Rapport d'analytics
 class AnalyticsReport {

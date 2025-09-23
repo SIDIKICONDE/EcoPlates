@@ -10,10 +10,12 @@ final reservationServiceProvider = Provider<ReservationService>((ref) {
 });
 
 /// Provider pour le use case de gestion des réservations
-final manageReservationUseCaseProvider = Provider<ManageReservationUseCase>((ref) {
+final manageReservationUseCaseProvider = Provider<ManageReservationUseCase>((
+  ref,
+) {
   final reservationService = ref.watch(reservationServiceProvider);
   final offerService = ref.watch(foodOfferServiceProvider);
-  
+
   return ManageReservationUseCase(
     reservationService: reservationService,
     offerService: offerService,
@@ -26,16 +28,18 @@ final foodOfferServiceProvider = Provider<FoodOfferService>((ref) {
 });
 
 /// Provider simple pour créer une réservation
-final createReservationProvider = FutureProvider.family<Reservation, ({String offerId, int quantity})>(
-  (ref, params) async {
-    final useCase = ref.watch(manageReservationUseCaseProvider);
-    
-    return await useCase.createReservation(
-      offerId: params.offerId,
-      quantity: params.quantity,
-    );
-  },
-);
+final createReservationProvider =
+    FutureProvider.family<Reservation, ({String offerId, int quantity})>((
+      ref,
+      params,
+    ) async {
+      final useCase = ref.watch(manageReservationUseCaseProvider);
+
+      return await useCase.createReservation(
+        offerId: params.offerId,
+        quantity: params.quantity,
+      );
+    });
 
 /// Provider pour les réservations de l'utilisateur connecté
 final userReservationsProvider = FutureProvider<List<Reservation>>((ref) async {
@@ -44,40 +48,56 @@ final userReservationsProvider = FutureProvider<List<Reservation>>((ref) async {
 });
 
 /// Provider pour les réservations actives
-final activeReservationsProvider = FutureProvider<List<Reservation>>((ref) async {
+final activeReservationsProvider = FutureProvider<List<Reservation>>((
+  ref,
+) async {
   final useCase = ref.watch(manageReservationUseCaseProvider);
   return await useCase.getActiveReservations();
 });
 
 /// Provider pour l'historique des réservations
-final reservationHistoryProvider = FutureProvider.family<List<Reservation>, ({int page, int limit})>((ref, params) async {
-  final useCase = ref.watch(manageReservationUseCaseProvider);
-  return await useCase.getReservationHistory(
-    page: params.page,
-    limit: params.limit,
-  );
-});
+final reservationHistoryProvider =
+    FutureProvider.family<List<Reservation>, ({int page, int limit})>((
+      ref,
+      params,
+    ) async {
+      final useCase = ref.watch(manageReservationUseCaseProvider);
+      return await useCase.getReservationHistory(
+        page: params.page,
+        limit: params.limit,
+      );
+    });
 
 /// Provider pour une réservation avec son offre
-final reservationWithOfferProvider = FutureProvider.family<ReservationWithOffer, String>((ref, reservationId) async {
-  final useCase = ref.watch(manageReservationUseCaseProvider);
-  return await useCase.getReservationWithOffer(reservationId);
-});
+final reservationWithOfferProvider =
+    FutureProvider.family<ReservationWithOffer, String>((
+      ref,
+      reservationId,
+    ) async {
+      final useCase = ref.watch(manageReservationUseCaseProvider);
+      return await useCase.getReservationWithOffer(reservationId);
+    });
 
 /// Provider pour le QR code d'une réservation
-final reservationQRCodeProvider = FutureProvider.family<String, String>((ref, reservationId) async {
+final reservationQRCodeProvider = FutureProvider.family<String, String>((
+  ref,
+  reservationId,
+) async {
   final useCase = ref.watch(manageReservationUseCaseProvider);
   return await useCase.getReservationQRCode(reservationId);
 });
 
 /// Provider pour les statistiques utilisateur
-final userReservationStatsProvider = FutureProvider<UserReservationStats>((ref) async {
+final userReservationStatsProvider = FutureProvider<UserReservationStats>((
+  ref,
+) async {
   final useCase = ref.watch(manageReservationUseCaseProvider);
   return await useCase.getUserStats();
 });
 
 /// Notifier pour gérer l'état global des réservations
-class ReservationsStateNotifier extends StateNotifier<AsyncValue<List<Reservation>>> {
+class ReservationsStateNotifier
+    extends StateNotifier<AsyncValue<List<Reservation>>> {
   final ManageReservationUseCase _useCase;
 
   ReservationsStateNotifier(this._useCase) : super(const AsyncValue.loading()) {
@@ -107,7 +127,10 @@ class ReservationsStateNotifier extends StateNotifier<AsyncValue<List<Reservatio
     }
   }
 
-  Future<void> confirmCollection(String reservationId, String confirmationCode) async {
+  Future<void> confirmCollection(
+    String reservationId,
+    String confirmationCode,
+  ) async {
     try {
       await _useCase.confirmCollection(
         reservationId: reservationId,
@@ -130,25 +153,28 @@ class ReservationsStateNotifier extends StateNotifier<AsyncValue<List<Reservatio
 }
 
 /// Provider pour l'état global des réservations
-final reservationsStateProvider = StateNotifierProvider<ReservationsStateNotifier, AsyncValue<List<Reservation>>>((ref) {
-  final useCase = ref.watch(manageReservationUseCaseProvider);
-  return ReservationsStateNotifier(useCase);
-});
-
+final reservationsStateProvider =
+    StateNotifierProvider<
+      ReservationsStateNotifier,
+      AsyncValue<List<Reservation>>
+    >((ref) {
+      final useCase = ref.watch(manageReservationUseCaseProvider);
+      return ReservationsStateNotifier(useCase);
+    });
 
 /// Provider pour vérifier si l'utilisateur a des réservations actives à récupérer bientôt
 final upcomingPickupsProvider = Provider<List<Reservation>>((ref) {
   final reservationsAsync = ref.watch(activeReservationsProvider);
-  
+
   return reservationsAsync.maybeWhen(
     data: (reservations) {
       final now = DateTime.now();
       final in2Hours = now.add(const Duration(hours: 2));
-      
+
       return reservations.where((r) {
-        return r.pickupStartTime.isAfter(now) && 
-               r.pickupStartTime.isBefore(in2Hours) &&
-               r.status == ReservationStatus.confirmed;
+        return r.pickupStartTime.isAfter(now) &&
+            r.pickupStartTime.isBefore(in2Hours) &&
+            r.status == ReservationStatus.confirmed;
       }).toList();
     },
     orElse: () => [],
@@ -158,7 +184,7 @@ final upcomingPickupsProvider = Provider<List<Reservation>>((ref) {
 /// Provider pour compter le nombre de réservations actives
 final activeReservationsCountProvider = Provider<int>((ref) {
   final reservationsAsync = ref.watch(activeReservationsProvider);
-  
+
   return reservationsAsync.maybeWhen(
     data: (reservations) => reservations.length,
     orElse: () => 0,

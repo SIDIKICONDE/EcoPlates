@@ -15,10 +15,10 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
   final searchQuery = ref.watch(searchQueryProvider);
   final selectedCategory = ref.watch(selectedCategoryProvider);
   final filters = ref.watch(activeFiltersProvider);
-  
+
   // Simuler un appel API
   await Future.delayed(const Duration(seconds: 1));
-  
+
   // Données de démonstration
   List<Restaurant> restaurants = [
     Restaurant(
@@ -26,7 +26,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Boulangerie Artisanale',
       cuisineType: 'Pains et viennoiseries',
       category: 'bakery',
-      imageUrl: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400',
       rating: 4.8,
       distanceText: '250m',
       isFavorite: true,
@@ -45,7 +46,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Sushi Master',
       cuisineType: 'Japonais',
       category: 'sushi',
-      imageUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400',
       rating: 4.5,
       distanceText: '1.2km',
       hasActiveOffer: true,
@@ -63,7 +65,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Le Bistrot du Coin',
       cuisineType: 'Français traditionnel',
       category: 'restaurant',
-      imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
       rating: 4.3,
       distanceText: '800m',
       hasActiveOffer: true,
@@ -81,7 +84,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Pizza Express',
       cuisineType: 'Italien',
       category: 'pizza',
-      imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400',
       rating: 4.6,
       distanceText: '500m',
       isFavorite: true,
@@ -100,7 +104,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Café de la Gare',
       cuisineType: 'Café & Snacks',
       category: 'cafe',
-      imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400',
       rating: 4.2,
       distanceText: '350m',
       hasActiveOffer: true,
@@ -118,7 +123,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Épicerie Bio',
       cuisineType: 'Produits bio',
       category: 'grocery',
-      imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400',
       rating: 4.7,
       distanceText: '1.5km',
       hasActiveOffer: true,
@@ -136,7 +142,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Pâtisserie Delice',
       cuisineType: 'Desserts et gâteaux',
       category: 'bakery',
-      imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400',
       rating: 4.9,
       distanceText: '900m',
       isFavorite: true,
@@ -155,7 +162,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Traiteur Asiatique',
       cuisineType: 'Cuisine asiatique',
       category: 'restaurant',
-      imageUrl: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400',
       rating: 4.4,
       distanceText: '1.8km',
       hasActiveOffer: false,
@@ -173,7 +181,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Burger & Co',
       cuisineType: 'Fast food',
       category: 'restaurant',
-      imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
       rating: 4.1,
       distanceText: '600m',
       hasActiveOffer: true,
@@ -191,7 +200,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       name: 'Smoothie Paradise',
       cuisineType: 'Boissons et jus',
       category: 'cafe',
-      imageUrl: 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=400',
       rating: 4.6,
       distanceText: '400m',
       hasActiveOffer: true,
@@ -205,20 +215,25 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       longitude: 2.3510,
     ),
   ];
-  
+
   // Filtrer par catégorie
   if (selectedCategory != 'all') {
-    restaurants = restaurants.where((r) => r.category == selectedCategory).toList();
+    restaurants = restaurants
+        .where((r) => r.category == selectedCategory)
+        .toList();
   }
-  
+
   // Filtrer par recherche
   if (searchQuery.isNotEmpty) {
-    restaurants = restaurants.where((r) => 
-      r.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-      r.cuisineType.toLowerCase().contains(searchQuery.toLowerCase())
-    ).toList();
+    restaurants = restaurants
+        .where(
+          (r) =>
+              r.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              r.cuisineType.toLowerCase().contains(searchQuery.toLowerCase()),
+        )
+        .toList();
   }
-  
+
   // Appliquer les filtres supplémentaires
   if (filters != null) {
     // Filtrer par distance
@@ -227,44 +242,47 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       restaurants = restaurants.where((r) {
         final distanceStr = r.distanceText.replaceAll(RegExp(r'[^0-9.]'), '');
         final distance = double.tryParse(distanceStr) ?? 0;
-        final distanceKm = r.distanceText.contains('m') && !r.distanceText.contains('km') 
-          ? distance / 1000 
-          : distance;
+        final distanceKm =
+            r.distanceText.contains('m') && !r.distanceText.contains('km')
+            ? distance / 1000
+            : distance;
         return distanceKm <= filters['maxDistance'];
       }).toList();
     }
-    
+
     // Filtrer par prix
     if (filters['maxPrice'] != null) {
-      restaurants = restaurants.where((r) => 
-        r.hasActiveOffer 
-          ? r.discountedPrice <= filters['maxPrice']
-          : r.minPrice <= filters['maxPrice']
-      ).toList();
+      restaurants = restaurants
+          .where(
+            (r) => r.hasActiveOffer
+                ? r.discountedPrice <= filters['maxPrice']
+                : r.minPrice <= filters['maxPrice'],
+          )
+          .toList();
     }
-    
+
     // Filtrer par favoris uniquement
     if (filters['favoritesOnly'] == true) {
       restaurants = restaurants.where((r) => r.isFavorite).toList();
     }
   }
-  
+
   // Trier par distance
   restaurants.sort((a, b) {
     final aDistance = _parseDistance(a.distanceText);
     final bDistance = _parseDistance(b.distanceText);
     return aDistance.compareTo(bDistance);
   });
-  
+
   return restaurants;
 });
 
 double _parseDistance(String distanceText) {
   final distanceStr = distanceText.replaceAll(RegExp(r'[^0-9.]'), '');
   final distance = double.tryParse(distanceStr) ?? 0;
-  return distanceText.contains('m') && !distanceText.contains('km') 
-    ? distance / 1000 
-    : distance;
+  return distanceText.contains('m') && !distanceText.contains('km')
+      ? distance / 1000
+      : distance;
 }
 
 /// Provider pour obtenir un restaurant spécifique
@@ -281,7 +299,9 @@ final restaurantByIdProvider = Provider.family<Restaurant?, String>((ref, id) {
 });
 
 /// Provider pour les restaurants favoris
-final favoriteRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
+final favoriteRestaurantsProvider = FutureProvider<List<Restaurant>>((
+  ref,
+) async {
   final allRestaurants = await ref.watch(nearbyRestaurantsProvider.future);
   return allRestaurants.where((r) => r.isFavorite).toList();
 });
@@ -289,15 +309,18 @@ final favoriteRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async
 /// Provider pour les statistiques des restaurants
 final restaurantStatsProvider = Provider<RestaurantStats>((ref) {
   final restaurantsAsync = ref.watch(nearbyRestaurantsProvider);
-  
+
   return restaurantsAsync.when(
     data: (restaurants) {
       final totalRestaurants = restaurants.length;
       final availableOffers = restaurants.where((r) => r.hasActiveOffer).length;
       final totalSavings = restaurants
-        .where((r) => r.hasActiveOffer)
-        .fold<double>(0, (sum, r) => sum + (r.originalPrice - r.discountedPrice));
-      
+          .where((r) => r.hasActiveOffer)
+          .fold<double>(
+            0,
+            (sum, r) => sum + (r.originalPrice - r.discountedPrice),
+          );
+
       return RestaurantStats(
         totalRestaurants: totalRestaurants,
         availableOffers: availableOffers,

@@ -12,21 +12,18 @@ import '../constants/env_config.dart';
 /// Widget adaptatif qui sélectionne automatiquement le bon thème selon la plateforme
 class AdaptiveApp extends StatelessWidget {
   final GoRouter router;
-  
-  const AdaptiveApp({
-    super.key,
-    required this.router,
-  });
-  
+
+  const AdaptiveApp({super.key, required this.router});
+
   /// Détermine si on doit utiliser Cupertino ou Material
   bool get _shouldUseCupertino {
     // Sur le web, toujours utiliser Material
     if (kIsWeb) return false;
-    
+
     // Utiliser Cupertino sur iOS et macOS
     return Platform.isIOS || Platform.isMacOS;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (_shouldUseCupertino) {
@@ -41,10 +38,7 @@ class AdaptiveApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('fr', 'FR'),
-          Locale('en', 'US'),
-        ],
+        supportedLocales: const [Locale('fr', 'FR'), Locale('en', 'US')],
       );
     } else {
       // Application Android/Web/Windows/Linux avec Material
@@ -60,10 +54,7 @@ class AdaptiveApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('fr', 'FR'),
-          Locale('en', 'US'),
-        ],
+        supportedLocales: const [Locale('fr', 'FR'), Locale('en', 'US')],
       );
     }
   }

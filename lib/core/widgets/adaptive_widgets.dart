@@ -11,7 +11,7 @@ class PlatformUtils {
   static bool get isWindows => !kIsWeb && Platform.isWindows;
   static bool get isLinux => !kIsWeb && Platform.isLinux;
   static bool get isWeb => kIsWeb;
-  
+
   /// Retourne true si on doit utiliser Cupertino
   static bool get shouldUseCupertino => isIOS || isMacOS;
 }
@@ -23,7 +23,7 @@ class AdaptiveScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
   final Color? backgroundColor;
-  
+
   const AdaptiveScaffold({
     super.key,
     required this.body,
@@ -32,7 +32,7 @@ class AdaptiveScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     this.backgroundColor,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
@@ -41,16 +41,13 @@ class AdaptiveScaffold extends StatelessWidget {
         navigationBar: appBar is CupertinoNavigationBar
             ? appBar as CupertinoNavigationBar
             : appBar != null
-                ? CupertinoNavigationBar(
-                    middle: (appBar as AppBar).title,
-                    backgroundColor: backgroundColor,
-                  )
-                : null,
+            ? CupertinoNavigationBar(
+                middle: (appBar as AppBar).title,
+                backgroundColor: backgroundColor,
+              )
+            : null,
         backgroundColor: backgroundColor,
-        child: SafeArea(
-          bottom: bottomNavigationBar == null,
-          child: body,
-        ),
+        child: SafeArea(bottom: bottomNavigationBar == null, child: body),
       );
     } else {
       // Autres plateformes: Utiliser Scaffold Material
@@ -81,7 +78,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle = true,
     this.backgroundColor,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
@@ -90,10 +87,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: backgroundColor,
         leading: leading,
         trailing: actions != null && actions!.isNotEmpty
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: actions!,
-              )
+            ? Row(mainAxisSize: MainAxisSize.min, children: actions!)
             : null,
       );
     } else {
@@ -106,7 +100,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
     }
   }
-  
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
@@ -117,7 +111,7 @@ class AdaptiveButton extends StatelessWidget {
   final Widget child;
   final Color? color;
   final EdgeInsetsGeometry? padding;
-  
+
   const AdaptiveButton({
     super.key,
     required this.onPressed,
@@ -125,7 +119,7 @@ class AdaptiveButton extends StatelessWidget {
     this.color,
     this.padding,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
@@ -151,21 +145,18 @@ class AdaptiveButton extends StatelessWidget {
 /// Indicateur de progression adaptatif
 class AdaptiveProgressIndicator extends StatelessWidget {
   final Color? color;
-  
-  const AdaptiveProgressIndicator({
-    super.key,
-    this.color,
-  });
-  
+
+  const AdaptiveProgressIndicator({super.key, this.color});
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
-      return CupertinoActivityIndicator(
-        color: color,
-      );
+      return CupertinoActivityIndicator(color: color);
     } else {
       return CircularProgressIndicator(
-        valueColor: color != null ? AlwaysStoppedAnimation<Color>(color!) : null,
+        valueColor: color != null
+            ? AlwaysStoppedAnimation<Color>(color!)
+            : null,
       );
     }
   }
@@ -176,14 +167,14 @@ class AdaptiveSwitch extends StatelessWidget {
   final bool value;
   final ValueChanged<bool>? onChanged;
   final Color? activeColor;
-  
+
   const AdaptiveSwitch({
     super.key,
     required this.value,
     required this.onChanged,
     this.activeColor,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
@@ -208,14 +199,14 @@ class AdaptiveDialog extends StatelessWidget {
   final String title;
   final String content;
   final List<AdaptiveDialogAction> actions;
-  
+
   const AdaptiveDialog({
     super.key,
     required this.title,
     required this.content,
     required this.actions,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
@@ -248,7 +239,7 @@ class AdaptiveDialog extends StatelessWidget {
       );
     }
   }
-  
+
   /// Méthode statique pour afficher le dialog
   static Future<void> show({
     required BuildContext context,
@@ -258,11 +249,8 @@ class AdaptiveDialog extends StatelessWidget {
   }) {
     return showDialog(
       context: context,
-      builder: (context) => AdaptiveDialog(
-        title: title,
-        content: content,
-        actions: actions,
-      ),
+      builder: (context) =>
+          AdaptiveDialog(title: title, content: content, actions: actions),
     );
   }
 }
@@ -272,7 +260,7 @@ class AdaptiveDialogAction {
   final String text;
   final VoidCallback onPressed;
   final bool isDestructive;
-  
+
   const AdaptiveDialogAction({
     required this.text,
     required this.onPressed,
@@ -288,7 +276,7 @@ class AdaptiveTextField extends StatelessWidget {
   final bool obscureText;
   final ValueChanged<String>? onChanged;
   final InputDecoration? decoration;
-  
+
   const AdaptiveTextField({
     super.key,
     this.controller,
@@ -298,7 +286,7 @@ class AdaptiveTextField extends StatelessWidget {
     this.onChanged,
     this.decoration,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
@@ -317,10 +305,7 @@ class AdaptiveTextField extends StatelessWidget {
     } else {
       return TextField(
         controller: controller,
-        decoration: decoration ??
-            InputDecoration(
-              hintText: placeholder,
-            ),
+        decoration: decoration ?? InputDecoration(hintText: placeholder),
         keyboardType: keyboardType,
         obscureText: obscureText,
         onChanged: onChanged,

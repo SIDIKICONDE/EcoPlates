@@ -10,13 +10,11 @@ import '../providers/consumer/restaurants_provider.dart';
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String restaurantId;
 
-  const RestaurantDetailScreen({
-    super.key,
-    required this.restaurantId,
-  });
+  const RestaurantDetailScreen({super.key, required this.restaurantId});
 
   @override
-  ConsumerState<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
+  ConsumerState<RestaurantDetailScreen> createState() =>
+      _RestaurantDetailScreenState();
 }
 
 class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
@@ -26,7 +24,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
   late AnimationController _slideController;
   late AnimationController _scaleController;
   late TabController _tabController;
-  
+
   double _imageOpacity = 1.0;
   double _imageScale = 1.0;
   bool _showTitle = false;
@@ -37,7 +35,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     super.initState();
     _scrollController = ScrollController();
     _tabController = TabController(length: 3, vsync: this);
-    
+
     // Animations
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 500),
@@ -51,13 +49,13 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    
+
     // Démarrer les animations
     Future.delayed(const Duration(milliseconds: 100), () {
       _fadeController.forward();
       _slideController.forward();
     });
-    
+
     // Effet parallaxe
     _scrollController.addListener(() {
       final offset = _scrollController.offset;
@@ -82,17 +80,13 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
   @override
   Widget build(BuildContext context) {
     final restaurant = ref.watch(restaurantByIdProvider(widget.restaurantId));
-    
+
     if (restaurant == null) {
-      return Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     _isFavorite = restaurant.isFavorite;
-    
+
     return Scaffold(
       body: Stack(
         children: [
@@ -110,10 +104,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                   duration: const Duration(milliseconds: 300),
                   child: Text(restaurant.name),
                 ),
-                actions: [
-                  _buildShareButton(),
-                  _buildFavoriteButton(),
-                ],
+                actions: [_buildShareButton(), _buildFavoriteButton()],
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     fit: StackFit.expand,
@@ -134,14 +125,12 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                   ),
                 ),
               ),
-              
+
               // Corps de la page
-              SliverToBoxAdapter(
-                child: _buildBody(restaurant),
-              ),
+              SliverToBoxAdapter(child: _buildBody(restaurant)),
             ],
           ),
-          
+
           // Bouton flottant pour réserver
           Positioned(
             bottom: 20,
@@ -221,13 +210,11 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
           color: Colors.grey[300],
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
+          child: const Center(child: CircularProgressIndicator()),
         ),
       );
     }
-    
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -251,10 +238,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.transparent,
-            Colors.black.withValues(alpha: 0.7),
-          ],
+          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
           begin: Alignment.center,
           end: Alignment.bottomCenter,
         ),
@@ -270,13 +254,13 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
       child: FadeTransition(
         opacity: _fadeController,
         child: SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 0.3),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(
-            parent: _slideController,
-            curve: Curves.easeOut,
-          )),
+          position: Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
+              .animate(
+                CurvedAnimation(
+                  parent: _slideController,
+                  curve: Curves.easeOut,
+                ),
+              ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -400,7 +384,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
             ],
           ),
         ),
-        
+
         // Contenu des tabs
         SizedBox(
           height: 600,
@@ -447,18 +431,18 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
           _buildSectionTitle('À propos'),
           const SizedBox(height: 8),
           Text(
-            restaurant.description ?? 
-            'Découvrez nos délicieux produits et aidez-nous à réduire le gaspillage alimentaire. Chaque jour, nous proposons des paniers surprises avec nos invendus du jour à prix réduit.',
+            restaurant.description ??
+                'Découvrez nos délicieux produits et aidez-nous à réduire le gaspillage alimentaire. Chaque jour, nous proposons des paniers surprises avec nos invendus du jour à prix réduit.',
             style: TextStyle(fontSize: 14, height: 1.5),
           ),
           const SizedBox(height: 24),
-          
+
           // Horaires
           _buildSectionTitle('Horaires de collecte'),
           const SizedBox(height: 12),
           _buildTimeline(),
           const SizedBox(height: 24),
-          
+
           // Localisation
           _buildSectionTitle('Localisation'),
           const SizedBox(height: 12),
@@ -483,7 +467,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
             ),
           ),
           const SizedBox(height: 24),
-          
+
           // Contact
           _buildSectionTitle('Contact'),
           const SizedBox(height: 12),
@@ -506,7 +490,8 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
         return _ReviewCard(
           userName: 'Utilisateur ${index + 1}',
           rating: 4.0 + (index % 2) * 0.5,
-          comment: 'Excellent restaurant ! Les paniers surprises sont toujours de bonne qualité.',
+          comment:
+              'Excellent restaurant ! Les paniers surprises sont toujours de bonne qualité.',
           date: DateTime.now().subtract(Duration(days: index)),
         );
       },
@@ -516,10 +501,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     );
   }
 
@@ -533,12 +515,12 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
       {'day': 'Samedi', 'hours': '12:00 - 12:30'},
       {'day': 'Dimanche', 'hours': 'Fermé'},
     ];
-    
+
     return Column(
       children: times.map((time) {
         final isToday = time['day'] == 'Lundi'; // À adapter
         final isClosed = time['hours'] == 'Fermé';
-        
+
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.0, end: 1.0),
           duration: Duration(milliseconds: 500 + times.indexOf(time) * 100),
@@ -552,14 +534,14 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                   margin: const EdgeInsets.only(bottom: 8),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isToday 
-                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                      : Colors.grey.withValues(alpha: 0.1),
+                    color: isToday
+                        ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                        : Colors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isToday 
-                        ? Theme.of(context).primaryColor
-                        : Colors.transparent,
+                      color: isToday
+                          ? Theme.of(context).primaryColor
+                          : Colors.transparent,
                     ),
                   ),
                   child: Row(
@@ -568,8 +550,12 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                       Text(
                         time['day']!,
                         style: TextStyle(
-                          fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
-                          color: isToday ? Theme.of(context).primaryColor : null,
+                          fontWeight: isToday
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isToday
+                              ? Theme.of(context).primaryColor
+                              : null,
                         ),
                       ),
                       Text(
@@ -628,10 +614,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.shopping_bag,
-                        color: Colors.white,
-                      ),
+                      const Icon(Icons.shopping_bag, color: Colors.white),
                       const SizedBox(width: 8),
                       const Text(
                         'Voir les offres disponibles',
@@ -719,8 +702,9 @@ class _OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final discount = ((originalPrice - discountedPrice) / originalPrice * 100).round();
-    
+    final discount = ((originalPrice - discountedPrice) / originalPrice * 100)
+        .round();
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Material(
@@ -771,10 +755,7 @@ class _OfferCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         description,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -894,8 +875,8 @@ class _ReviewCard extends StatelessWidget {
                         ...List.generate(5, (index) {
                           return Icon(
                             index < rating.floor()
-                              ? Icons.star
-                              : index < rating
+                                ? Icons.star
+                                : index < rating
                                 ? Icons.star_half
                                 : Icons.star_border,
                             size: 16,

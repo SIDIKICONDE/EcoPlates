@@ -12,10 +12,7 @@ class UserLocation {
   final double latitude;
   final double longitude;
 
-  const UserLocation({
-    required this.latitude,
-    required this.longitude,
-  });
+  const UserLocation({required this.latitude, required this.longitude});
 }
 
 /// Provider pour la position de l'utilisateur
@@ -25,7 +22,7 @@ final userLocationProvider = StateProvider<UserLocation?>((ref) => null);
 final allOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
   final offerService = ref.watch(foodOfferServiceProvider);
   final userLocation = ref.watch(userLocationProvider);
-  
+
   return await offerService.getAvailableOffers(
     latitude: userLocation?.latitude,
     longitude: userLocation?.longitude,
@@ -53,7 +50,7 @@ final nearbyOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
 final freeOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
   final offerService = ref.watch(foodOfferServiceProvider);
   final userLocation = ref.watch(userLocationProvider);
-  
+
   return await offerService.getAvailableOffers(
     latitude: userLocation?.latitude,
     longitude: userLocation?.longitude,
@@ -62,13 +59,19 @@ final freeOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
 });
 
 /// Provider pour une offre spécifique
-final offerByIdProvider = FutureProvider.family<FoodOffer, String>((ref, offerId) async {
+final offerByIdProvider = FutureProvider.family<FoodOffer, String>((
+  ref,
+  offerId,
+) async {
   final offerService = ref.watch(foodOfferServiceProvider);
   return await offerService.getOfferById(offerId);
 });
 
 /// Provider pour les offres d'un commerçant
-final merchantOffersProvider = FutureProvider.family<List<FoodOffer>, String>((ref, merchantId) async {
+final merchantOffersProvider = FutureProvider.family<List<FoodOffer>, String>((
+  ref,
+  merchantId,
+) async {
   final offerService = ref.watch(foodOfferServiceProvider);
   return await offerService.getMerchantOffers(merchantId);
 });
@@ -78,10 +81,7 @@ class CartItem {
   final FoodOffer offer;
   final int quantity;
 
-  const CartItem({
-    required this.offer,
-    required this.quantity,
-  });
+  const CartItem({required this.offer, required this.quantity});
 
   double get totalPrice => offer.discountedPrice * quantity;
 }
@@ -96,7 +96,7 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
 
   void addToCart(FoodOffer offer, {int quantity = 1}) {
     final existingIndex = state.indexWhere((item) => item.offer.id == offer.id);
-    
+
     if (existingIndex != -1) {
       // Augmenter la quantité si l'offre est déjà dans le panier
       final updated = List<CartItem>.from(state);

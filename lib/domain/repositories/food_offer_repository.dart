@@ -132,4 +132,3 @@ class OfferAnalytics {
     required this.co2Saved,
   });
 }
-

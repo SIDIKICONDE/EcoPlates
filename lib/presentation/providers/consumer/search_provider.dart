@@ -42,7 +42,7 @@ class SearchState {
 class SearchNotifier extends StateNotifier<SearchState> {
   final SearchService _searchService;
   final Ref _ref;
-  
+
   SearchNotifier(this._searchService, this._ref) : super(const SearchState()) {
     _initialize();
   }
@@ -66,7 +66,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
       isSearching: query.isNotEmpty,
       showSuggestions: true,
     );
-    
+
     // Générer les suggestions
     _generateSuggestions(query);
   }
@@ -75,24 +75,24 @@ class SearchNotifier extends StateNotifier<SearchState> {
   void _generateSuggestions(String query) async {
     final offers = await _ref.read(nearbyOffersProvider.future);
     final suggestions = _searchService.getSuggestions(query, offers);
-    
+
     state = state.copyWith(suggestions: suggestions);
   }
 
   /// Exécute une recherche avec un terme
   Future<void> search(String searchTerm) async {
     if (searchTerm.trim().isEmpty) return;
-    
+
     // Ajouter à l'historique
     await _searchService.addToHistory(searchTerm);
-    
+
     // Mettre à jour l'état
     state = state.copyWith(
       query: searchTerm,
       isSearching: true,
       showSuggestions: false,
     );
-    
+
     // Recharger l'historique
     _loadSearchHistory();
   }
@@ -101,12 +101,12 @@ class SearchNotifier extends StateNotifier<SearchState> {
   void selectSuggestion(SearchSuggestion suggestion) {
     // Mettre à jour la requête avec la suggestion
     updateQuery(suggestion.text);
-    
+
     // Si c'est un filtre, appliquer le filtre correspondant
     if (suggestion.type == SuggestionType.filter) {
       // TODO: Appliquer le filtre approprié
     }
-    
+
     // Exécuter la recherche
     search(suggestion.text);
   }
@@ -136,7 +136,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
   /// Active/désactive l'affichage des suggestions
   void toggleSuggestions(bool show) {
     state = state.copyWith(showSuggestions: show);
-    
+
     if (show) {
       _generateSuggestions(state.query);
     }
@@ -144,7 +144,9 @@ class SearchNotifier extends StateNotifier<SearchState> {
 }
 
 /// Provider principal pour la recherche
-final searchProvider = StateNotifierProvider<SearchNotifier, SearchState>((ref) {
+final searchProvider = StateNotifierProvider<SearchNotifier, SearchState>((
+  ref,
+) {
   final searchService = ref.watch(searchServiceProvider);
   return SearchNotifier(searchService, ref);
 });
@@ -153,13 +155,13 @@ final searchProvider = StateNotifierProvider<SearchNotifier, SearchState>((ref) 
 final searchResultsProvider = Provider<List<FoodOffer>>((ref) {
   final searchState = ref.watch(searchProvider);
   final offersAsync = ref.watch(nearbyOffersProvider);
-  
+
   return offersAsync.when(
     data: (offers) {
       if (!searchState.isSearching || searchState.query.isEmpty) {
         return offers;
       }
-      
+
       final searchService = ref.read(searchServiceProvider);
       return searchService.searchOffers(offers, searchState.query);
     },

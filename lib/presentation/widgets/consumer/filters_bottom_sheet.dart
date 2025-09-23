@@ -13,7 +13,7 @@ class FiltersBottomSheet extends ConsumerStatefulWidget {
 
 class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
   late TextEditingController _maxPriceController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -22,7 +22,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
       text: filters.maxPrice?.toStringAsFixed(2) ?? '',
     );
   }
-  
+
   @override
   void dispose() {
     _maxPriceController.dispose();
@@ -46,9 +46,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Colors.grey[200]!),
-              ),
+              border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,14 +63,14 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                       children: [
                         Text(
                           'Filtres',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         if (filters.hasActiveFilters)
                           Text(
                             '${filters.activeFiltersCount} filtre(s) actif(s)',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
                                   color: Theme.of(context).primaryColor,
                                 ),
                           ),
@@ -108,25 +106,36 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                         label: 'Gratuit',
                         icon: Icons.money_off,
                         isActive: filters.isFreeOnly,
-                        onTap: () => filtersNotifier.applyPreset(FilterPreset.freeOnly),
+                        onTap: () =>
+                            filtersNotifier.applyPreset(FilterPreset.freeOnly),
                       ),
                       _PresetChip(
                         label: 'Végétarien',
                         icon: Icons.eco,
-                        isActive: filters.dietaryPreferences.contains('vegetarian'),
-                        onTap: () => filtersNotifier.applyPreset(FilterPreset.vegetarian),
+                        isActive: filters.dietaryPreferences.contains(
+                          'vegetarian',
+                        ),
+                        onTap: () => filtersNotifier.applyPreset(
+                          FilterPreset.vegetarian,
+                        ),
                       ),
                       _PresetChip(
                         label: 'Boulangerie',
                         icon: Icons.bakery_dining,
-                        isActive: filters.selectedCategories.contains(FoodCategory.boulangerie),
-                        onTap: () => filtersNotifier.applyPreset(FilterPreset.bakery),
+                        isActive: filters.selectedCategories.contains(
+                          FoodCategory.boulangerie,
+                        ),
+                        onTap: () =>
+                            filtersNotifier.applyPreset(FilterPreset.bakery),
                       ),
                       _PresetChip(
                         label: 'Dîner',
                         icon: Icons.dinner_dining,
-                        isActive: filters.selectedCategories.contains(FoodCategory.diner),
-                        onTap: () => filtersNotifier.applyPreset(FilterPreset.dinner),
+                        isActive: filters.selectedCategories.contains(
+                          FoodCategory.diner,
+                        ),
+                        onTap: () =>
+                            filtersNotifier.applyPreset(FilterPreset.dinner),
                       ),
                     ],
                   ),
@@ -187,7 +196,9 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                   const SizedBox(height: 12),
                   SwitchListTile(
                     title: const Text('À proximité uniquement'),
-                    subtitle: Text('Dans un rayon de ${filters.maxDistance.toStringAsFixed(1)} km'),
+                    subtitle: Text(
+                      'Dans un rayon de ${filters.maxDistance.toStringAsFixed(1)} km',
+                    ),
                     value: filters.isNearbyOnly,
                     activeThumbColor: Theme.of(context).primaryColor,
                     onChanged: (_) => filtersNotifier.toggleNearbyOnly(),
@@ -209,7 +220,8 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                             max: 20.0,
                             divisions: 39,
                             activeColor: Theme.of(context).primaryColor,
-                            label: '${filters.maxDistance.toStringAsFixed(1)} km',
+                            label:
+                                '${filters.maxDistance.toStringAsFixed(1)} km',
                             onChanged: (value) {
                               filtersNotifier.setMaxDistance(value);
                             },
@@ -228,12 +240,17 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                     spacing: 8,
                     runSpacing: 8,
                     children: FoodCategory.values.map((category) {
-                      final isSelected = filters.selectedCategories.contains(category);
+                      final isSelected = filters.selectedCategories.contains(
+                        category,
+                      );
                       return FilterChip(
                         label: Text(_getCategoryLabel(category)),
                         selected: isSelected,
-                        onSelected: (_) => filtersNotifier.toggleCategory(category),
-                        selectedColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                        onSelected: (_) =>
+                            filtersNotifier.toggleCategory(category),
+                        selectedColor: Theme.of(
+                          context,
+                        ).primaryColor.withValues(alpha: 0.2),
                         checkmarkColor: Theme.of(context).primaryColor,
                       );
                     }).toList(),
@@ -248,21 +265,26 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                     children: [
                       CheckboxListTile(
                         title: const Text('Végétarien'),
-                        value: filters.dietaryPreferences.contains('vegetarian'),
+                        value: filters.dietaryPreferences.contains(
+                          'vegetarian',
+                        ),
                         activeColor: Theme.of(context).primaryColor,
-                        onChanged: (_) => filtersNotifier.toggleDietaryPreference('vegetarian'),
+                        onChanged: (_) => filtersNotifier
+                            .toggleDietaryPreference('vegetarian'),
                       ),
                       CheckboxListTile(
                         title: const Text('Vegan'),
                         value: filters.dietaryPreferences.contains('vegan'),
                         activeColor: Theme.of(context).primaryColor,
-                        onChanged: (_) => filtersNotifier.toggleDietaryPreference('vegan'),
+                        onChanged: (_) =>
+                            filtersNotifier.toggleDietaryPreference('vegan'),
                       ),
                       CheckboxListTile(
                         title: const Text('Halal'),
                         value: filters.dietaryPreferences.contains('halal'),
                         activeColor: Theme.of(context).primaryColor,
-                        onChanged: (_) => filtersNotifier.toggleDietaryPreference('halal'),
+                        onChanged: (_) =>
+                            filtersNotifier.toggleDietaryPreference('halal'),
                       ),
                     ],
                   ),
@@ -339,9 +361,9 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+      style: Theme.of(
+        context,
+      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 
@@ -461,10 +483,7 @@ class _TimePickerField extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                   Text(
                     time != null

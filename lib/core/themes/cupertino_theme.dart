@@ -4,7 +4,7 @@ class CupertinoThemeConfig {
   static const Color primaryColor = CupertinoColors.systemGreen;
   static const Color secondaryColor = Color(0xFF8BC34A);
   static const Color errorColor = CupertinoColors.systemRed;
-  
+
   static CupertinoThemeData lightTheme = const CupertinoThemeData(
     brightness: Brightness.light,
     primaryColor: primaryColor,
@@ -41,7 +41,7 @@ class CupertinoThemeConfig {
       ),
     ),
   );
-  
+
   static CupertinoThemeData darkTheme = const CupertinoThemeData(
     brightness: Brightness.dark,
     primaryColor: primaryColor,

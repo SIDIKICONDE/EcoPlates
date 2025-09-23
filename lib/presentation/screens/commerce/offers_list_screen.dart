@@ -57,7 +57,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen> {
               ],
             ),
           ),
-          
+
           // Liste des offres
           Expanded(
             child: offersAsync.when(
@@ -65,7 +65,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen> {
                 if (offers.isEmpty) {
                   return _buildEmptyState();
                 }
-                
+
                 return RefreshIndicator(
                   onRefresh: () async {
                     // Rafraîchir les offres
@@ -85,9 +85,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen> {
                   ),
                 );
               },
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => _buildErrorState(error.toString()),
             ),
           ),
@@ -101,11 +99,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.restaurant_outlined,
-            size: 80,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.restaurant_outlined, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
             'Aucune offre disponible',
@@ -119,10 +113,7 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen> {
           Text(
             'Revenez plus tard pour découvrir\nde nouvelles offres anti-gaspillage',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -145,27 +136,17 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
             const SizedBox(height: 16),
             const Text(
               'Erreur de chargement',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Text(
               error,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -199,11 +180,11 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen> {
       latitude: 48.8566,
       longitude: 2.3522,
     );
-    
+
     // Rafraîchir les offres avec la nouvelle localisation
     ref.invalidate(nearbyOffersProvider);
     ref.invalidate(freeOffersProvider);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Localisation mise à jour'),
@@ -216,21 +197,14 @@ class _OffersListScreenState extends ConsumerState<OffersListScreen> {
 // Placeholder pour l'écran de détail (à créer ensuite)
 class OfferDetailScreen extends StatelessWidget {
   final String offerId;
-  
-  const OfferDetailScreen({
-    super.key,
-    required this.offerId,
-  });
+
+  const OfferDetailScreen({super.key, required this.offerId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Détail de l\'offre'),
-      ),
-      body: Center(
-        child: Text('Offre ID: $offerId'),
-      ),
+      appBar: AppBar(title: const Text('Détail de l\'offre')),
+      body: Center(child: Text('Offre ID: $offerId')),
     );
   }
 }

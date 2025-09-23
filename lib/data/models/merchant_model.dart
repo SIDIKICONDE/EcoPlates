@@ -87,30 +87,47 @@ class MerchantModel {
         description: businessInfo.description,
         specialties: businessInfo.specialties,
         openingHours: OpeningHours(
-          schedule: businessInfo.openingHours.schedule.map((key, value) =>
-            MapEntry(DayOfWeek.values.firstWhere((d) => d.name == key), DayHours(
-              isOpen: value.isOpen,
-              openTime: value.openTime != null
-                  ? TimeOfDay(hour: int.parse(value.openTime!.split(':')[0]), minute: int.parse(value.openTime!.split(':')[1]))
-                  : null,
-              closeTime: value.closeTime != null
-                  ? TimeOfDay(hour: int.parse(value.closeTime!.split(':')[0]), minute: int.parse(value.closeTime!.split(':')[1]))
-                  : null,
-              breakStart: value.breakStart != null
-                  ? TimeOfDay(hour: int.parse(value.breakStart!.split(':')[0]), minute: int.parse(value.breakStart!.split(':')[1]))
-                  : null,
-              breakEnd: value.breakEnd != null
-                  ? TimeOfDay(hour: int.parse(value.breakEnd!.split(':')[0]), minute: int.parse(value.breakEnd!.split(':')[1]))
-                  : null,
-            ))
+          schedule: businessInfo.openingHours.schedule.map(
+            (key, value) => MapEntry(
+              DayOfWeek.values.firstWhere((d) => d.name == key),
+              DayHours(
+                isOpen: value.isOpen,
+                openTime: value.openTime != null
+                    ? TimeOfDay(
+                        hour: int.parse(value.openTime!.split(':')[0]),
+                        minute: int.parse(value.openTime!.split(':')[1]),
+                      )
+                    : null,
+                closeTime: value.closeTime != null
+                    ? TimeOfDay(
+                        hour: int.parse(value.closeTime!.split(':')[0]),
+                        minute: int.parse(value.closeTime!.split(':')[1]),
+                      )
+                    : null,
+                breakStart: value.breakStart != null
+                    ? TimeOfDay(
+                        hour: int.parse(value.breakStart!.split(':')[0]),
+                        minute: int.parse(value.breakStart!.split(':')[1]),
+                      )
+                    : null,
+                breakEnd: value.breakEnd != null
+                    ? TimeOfDay(
+                        hour: int.parse(value.breakEnd!.split(':')[0]),
+                        minute: int.parse(value.breakEnd!.split(':')[1]),
+                      )
+                    : null,
+              ),
+            ),
           ),
-          holidays: businessInfo.openingHours.holidays.map((holiday) =>
-            Holiday(
-              date: holiday.date,
-              name: holiday.name,
-              isClosed: holiday.isClosed,
-            )
-          ).toList(),
+          holidays: businessInfo.openingHours.holidays
+              .map(
+                (holiday) => Holiday(
+                  date: holiday.date,
+                  name: holiday.name,
+                  isClosed: holiday.isClosed,
+                ),
+              )
+              .toList(),
         ),
         paymentMethods: businessInfo.paymentMethods,
       ),
@@ -131,7 +148,13 @@ class MerchantModel {
         notifyOnReservation: settings.notifyOnReservation,
         notifyOnLowStock: settings.notifyOnLowStock,
         lowStockThreshold: settings.lowStockThreshold,
-        enabledChannels: settings.enabledChannels.map((channelName) => NotificationChannel.values.firstWhere((c) => c.name == channelName)).toList(),
+        enabledChannels: settings.enabledChannels
+            .map(
+              (channelName) => NotificationChannel.values.firstWhere(
+                (c) => c.name == channelName,
+              ),
+            )
+            .toList(),
         requireConfirmationCode: settings.requireConfirmationCode,
         defaultPickupDuration: settings.defaultPickupDuration,
       ),
@@ -146,16 +169,21 @@ class MerchantModel {
         totalCo2Saved: stats.totalCo2Saved,
         totalMealsSaved: stats.totalMealsSaved,
         averageRating: stats.averageRating,
-        dailyStats: stats.dailyStats.map((key, value) =>
-          MapEntry(key, DailyStats(
-            date: value.date,
-            offersCreated: value.offersCreated,
-            reservations: value.reservations,
-            completed: value.completed,
-            revenue: value.revenue,
-            co2Saved: value.co2Saved,
-          ))
-        ).cast<DateTime, DailyStats>(),
+        dailyStats: stats.dailyStats
+            .map(
+              (key, value) => MapEntry(
+                key,
+                DailyStats(
+                  date: value.date,
+                  offersCreated: value.offersCreated,
+                  reservations: value.reservations,
+                  completed: value.completed,
+                  revenue: value.revenue,
+                  co2Saved: value.co2Saved,
+                ),
+              ),
+            )
+            .cast<DateTime, DailyStats>(),
       ),
       certifications: certifications,
       rating: rating,
@@ -209,10 +237,7 @@ class OpeningHoursModel {
   final Map<String, DayHoursModel> schedule;
   final List<HolidayModel> holidays;
 
-  const OpeningHoursModel({
-    required this.schedule,
-    this.holidays = const [],
-  });
+  const OpeningHoursModel({required this.schedule, this.holidays = const []});
 
   factory OpeningHoursModel.fromJson(Map<String, dynamic> json) =>
       _$OpeningHoursModelFromJson(json);
@@ -221,12 +246,12 @@ class OpeningHoursModel {
 
   factory OpeningHoursModel.fromEntity(OpeningHours openingHours) {
     return OpeningHoursModel(
-      schedule: openingHours.schedule.map((key, value) =>
-        MapEntry(key.name, DayHoursModel.fromEntity(value))
+      schedule: openingHours.schedule.map(
+        (key, value) => MapEntry(key.name, DayHoursModel.fromEntity(value)),
       ),
-      holidays: openingHours.holidays.map((holiday) =>
-        HolidayModel.fromEntity(holiday)
-      ).toList(),
+      holidays: openingHours.holidays
+          .map((holiday) => HolidayModel.fromEntity(holiday))
+          .toList(),
     );
   }
 }
@@ -376,7 +401,9 @@ class MerchantSettingsModel {
       notifyOnReservation: settings.notifyOnReservation,
       notifyOnLowStock: settings.notifyOnLowStock,
       lowStockThreshold: settings.lowStockThreshold,
-        enabledChannels: settings.enabledChannels.map((channel) => channel.name).toList(),
+      enabledChannels: settings.enabledChannels
+          .map((channel) => channel.name)
+          .toList(),
       requireConfirmationCode: settings.requireConfirmationCode,
       defaultPickupDuration: settings.defaultPickupDuration,
     );
@@ -423,8 +450,11 @@ class MerchantStatsModel {
       totalCo2Saved: stats.totalCo2Saved,
       totalMealsSaved: stats.totalMealsSaved,
       averageRating: stats.averageRating,
-      dailyStats: stats.dailyStats.map((key, value) =>
-        MapEntry(key.toIso8601String().split('T')[0], DailyStatsModel.fromEntity(value))
+      dailyStats: stats.dailyStats.map(
+        (key, value) => MapEntry(
+          key.toIso8601String().split('T')[0],
+          DailyStatsModel.fromEntity(value),
+        ),
       ),
     );
   }

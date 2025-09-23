@@ -8,7 +8,7 @@ class User {
   final UserProfile profile;
   final bool isEmailVerified;
   final bool isActive;
-  
+
   const User({
     required this.id,
     required this.email,
@@ -19,31 +19,31 @@ class User {
     this.isEmailVerified = false,
     this.isActive = true,
   });
-  
+
   /// Vérifie si l'utilisateur est un commerçant
   bool get isMerchant => type == UserType.merchant;
-  
+
   /// Vérifie si l'utilisateur est un consommateur
   bool get isConsumer => type == UserType.consumer;
-  
+
   /// Vérifie si l'utilisateur est un administrateur
   bool get isAdmin => type == UserType.admin;
-  
+
   /// Vérifie si l'utilisateur est une association
   bool get isAssociation => type == UserType.association;
-  
+
   /// Vérifie si l'utilisateur est un bénévole
   bool get isVolunteer => type == UserType.volunteer;
 }
 
 /// Types d'utilisateurs dans le système
 enum UserType {
-  consumer,    // Utilisateur final qui emprunte les assiettes
-  merchant,    // Commerçant/Restaurant qui gère les assiettes
-  admin,       // Administrateur du système
-  staff,       // Personnel du commerçant
+  consumer, // Utilisateur final qui emprunte les assiettes
+  merchant, // Commerçant/Restaurant qui gère les assiettes
+  admin, // Administrateur du système
+  staff, // Personnel du commerçant
   association, // Association caritative
-  volunteer,   // Bénévole d'association
+  volunteer, // Bénévole d'association
 }
 
 /// Profil utilisateur avec informations spécifiques selon le type
@@ -59,7 +59,7 @@ class ConsumerProfile extends UserProfile {
   final DateTime? lastPlateUsedAt;
   final List<String> favoriteLocations;
   final ConsumerTier tier;
-  
+
   const ConsumerProfile({
     this.ecoScore = 0,
     this.totalPlatesUsed = 0,
@@ -72,10 +72,10 @@ class ConsumerProfile extends UserProfile {
 
 /// Niveaux de fidélité pour les consommateurs
 enum ConsumerTier {
-  bronze,    // 0-99 points
-  silver,    // 100-499 points
-  gold,      // 500-999 points
-  platinum,  // 1000+ points
+  bronze, // 0-99 points
+  silver, // 100-499 points
+  gold, // 500-999 points
+  platinum, // 1000+ points
 }
 
 /// Profil pour les commerçants
@@ -89,7 +89,7 @@ class MerchantProfile extends UserProfile {
   final MerchantPlan subscriptionPlan;
   final DateTime? subscriptionExpiresAt;
   final List<String> staffUserIds;
-  
+
   const MerchantProfile({
     required this.businessName,
     required this.businessAddress,
@@ -105,9 +105,9 @@ class MerchantProfile extends UserProfile {
 
 /// Plans d'abonnement pour les commerçants
 enum MerchantPlan {
-  starter,     // Jusqu'à 100 assiettes
-  business,    // Jusqu'à 500 assiettes
-  enterprise,  // Illimité
+  starter, // Jusqu'à 100 assiettes
+  business, // Jusqu'à 500 assiettes
+  enterprise, // Illimité
 }
 
 /// Profil pour le personnel des commerçants
@@ -115,7 +115,7 @@ class StaffProfile extends UserProfile {
   final String merchantId; // ID du commerçant employeur
   final String position;
   final StaffPermissions permissions;
-  
+
   const StaffProfile({
     required this.merchantId,
     required this.position,
@@ -129,14 +129,14 @@ class StaffPermissions {
   final bool canManageInventory;
   final bool canViewReports;
   final bool canManageStaff;
-  
+
   const StaffPermissions({
     this.canScanPlates = true,
     this.canManageInventory = false,
     this.canViewReports = false,
     this.canManageStaff = false,
   });
-  
+
   /// Permissions par défaut pour un caissier
   static const StaffPermissions cashier = StaffPermissions(
     canScanPlates: true,
@@ -144,7 +144,7 @@ class StaffPermissions {
     canViewReports: false,
     canManageStaff: false,
   );
-  
+
   /// Permissions par défaut pour un manager
   static const StaffPermissions manager = StaffPermissions(
     canScanPlates: true,
@@ -158,19 +158,16 @@ class StaffPermissions {
 class AdminProfile extends UserProfile {
   final String department;
   final AdminRole role;
-  
-  const AdminProfile({
-    required this.department,
-    required this.role,
-  });
+
+  const AdminProfile({required this.department, required this.role});
 }
 
 /// Rôles administrateurs
 enum AdminRole {
-  superAdmin,    // Accès total
-  support,       // Support client
-  operations,    // Gestion opérationnelle
-  finance,       // Gestion financière
+  superAdmin, // Accès total
+  support, // Support client
+  operations, // Gestion opérationnelle
+  finance, // Gestion financière
 }
 
 /// Profil pour les associations caritatives
@@ -182,7 +179,7 @@ class AssociationProfile extends UserProfile {
   final int collectionsManaged;
   final int mealsDistributed;
   final DateTime? memberSince;
-  
+
   const AssociationProfile({
     required this.associationId,
     required this.associationName,
@@ -201,7 +198,7 @@ class AssociationPermissions {
   final bool canAccessReports;
   final bool canValidateDistributions;
   final bool canManageAssociation;
-  
+
   const AssociationPermissions({
     this.canManageVolunteers = false,
     this.canScheduleCollections = true,
@@ -209,7 +206,7 @@ class AssociationPermissions {
     this.canValidateDistributions = true,
     this.canManageAssociation = false,
   });
-  
+
   /// Permissions par défaut pour un responsable
   static const AssociationPermissions manager = AssociationPermissions(
     canManageVolunteers: true,
@@ -218,7 +215,7 @@ class AssociationPermissions {
     canValidateDistributions: true,
     canManageAssociation: true,
   );
-  
+
   /// Permissions par défaut pour un bénévole
   static const AssociationPermissions volunteer = AssociationPermissions(
     canManageVolunteers: false,
@@ -240,7 +237,7 @@ class VolunteerProfile extends UserProfile {
   final bool hasVehicle;
   final bool hasColdChainCertification;
   final VolunteerStatus status;
-  
+
   const VolunteerProfile({
     required this.associationId,
     required this.associationName,
@@ -256,8 +253,8 @@ class VolunteerProfile extends UserProfile {
 
 /// Statut d'un bénévole
 enum VolunteerStatus {
-  active,      // Actif et disponible
-  inactive,    // Temporairement indisponible
-  onLeave,     // En congé
-  retired,     // Retraité du bénévolat
+  active, // Actif et disponible
+  inactive, // Temporairement indisponible
+  onLeave, // En congé
+  retired, // Retraité du bénévolat
 }

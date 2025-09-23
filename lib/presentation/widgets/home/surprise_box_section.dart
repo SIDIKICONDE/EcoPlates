@@ -14,7 +14,7 @@ class SurpriseBoxSection extends StatelessWidget {
           // Header de la section
           _buildHeader(context),
           const SizedBox(height: 12),
-          
+
           // Slider horizontal de colis
           _buildSurpriseBoxList(context),
         ],
@@ -50,20 +50,14 @@ class SurpriseBoxSection extends StatelessWidget {
                   const SizedBox(width: 8),
                   const Text(
                     '🎁 Colis anti-gaspi',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               const SizedBox(height: 2),
               Text(
                 'Paniers surprises à prix réduits',
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 13,
-                ),
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
               ),
             ],
           ),
@@ -86,7 +80,7 @@ class SurpriseBoxSection extends StatelessWidget {
 
   Widget _buildSurpriseBoxList(BuildContext context) {
     final surpriseBoxes = _getDemoSurpriseBoxes();
-    
+
     return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -146,11 +140,8 @@ class SurpriseBoxSection extends StatelessWidget {
 /// Carte individuelle pour un colis surprise
 class SurpriseBoxCard extends StatelessWidget {
   final Map<String, dynamic> data;
-  
-  const SurpriseBoxCard({
-    super.key,
-    required this.data,
-  });
+
+  const SurpriseBoxCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +174,7 @@ class SurpriseBoxCard extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Contenu
           Padding(
             padding: const EdgeInsets.all(16),
@@ -208,7 +199,10 @@ class SurpriseBoxCard extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
@@ -223,7 +217,7 @@ class SurpriseBoxCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 // Contenu central
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +242,7 @@ class SurpriseBoxCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 // Prix
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -275,7 +269,10 @@ class SurpriseBoxCard extends StatelessWidget {
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),

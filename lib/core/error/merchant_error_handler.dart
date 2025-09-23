@@ -8,23 +8,23 @@ import 'failures.dart';
 /// Gestionnaire d'erreurs centralisé pour le côté commerçant
 class MerchantErrorHandler {
   static const _tag = 'MerchantErrorHandler';
-  
+
   /// Convertit une exception en Failure approprié
   static Failure handleError(dynamic error, [StackTrace? stackTrace]) {
     debugPrint('$_tag: Error caught - $error');
-    
+
     if (error is Failure) {
       return error;
     }
-    
+
     if (error is DioException) {
       return _handleDioError(error);
     }
-    
+
     if (error is PlatformException) {
       return _handlePlatformError(error);
     }
-    
+
     if (error is SocketException) {
       return NetworkFailure(
         'Erreur de connexion réseau',
@@ -32,7 +32,7 @@ class MerchantErrorHandler {
         details: error.toString(),
       );
     }
-    
+
     if (error is FormatException) {
       return ValidationFailure(
         'Format de données invalide',
@@ -40,7 +40,7 @@ class MerchantErrorHandler {
         details: error.toString(),
       );
     }
-    
+
     if (error is TimeoutException) {
       return TimeoutFailure(
         'Délai d\'attente dépassé',
@@ -48,17 +48,17 @@ class MerchantErrorHandler {
         details: error.toString(),
       );
     }
-    
+
     // Log l'erreur non gérée pour analyse
     _logUnhandledError(error, stackTrace);
-    
+
     return UnexpectedFailure(
       'Une erreur inattendue s\'est produite',
       code: 'UNEXPECTED',
       details: error.toString(),
     );
   }
-  
+
   /// Gère les erreurs Dio/HTTP
   static Failure _handleDioError(DioException error) {
     switch (error.type) {
@@ -70,24 +70,24 @@ class MerchantErrorHandler {
           code: 'TIMEOUT',
           details: error.message,
         );
-        
+
       case DioExceptionType.connectionError:
         return NetworkFailure(
           'Impossible de se connecter au serveur',
           code: 'CONNECTION_ERROR',
           details: error.message,
         );
-        
+
       case DioExceptionType.badResponse:
         return _handleHttpError(error.response);
-        
+
       case DioExceptionType.cancel:
         return UnexpectedFailure(
           'Requête annulée',
           code: 'CANCELLED',
           details: error.message,
         );
-        
+
       default:
         return NetworkFailure(
           'Erreur réseau',
@@ -96,21 +96,18 @@ class MerchantErrorHandler {
         );
     }
   }
-  
+
   /// Gère les erreurs HTTP basées sur les codes de statut
   static Failure _handleHttpError(Response? response) {
     if (response == null) {
-      return ServerFailure(
-        'Aucune réponse du serveur',
-        code: 'NO_RESPONSE',
-      );
+      return ServerFailure('Aucune réponse du serveur', code: 'NO_RESPONSE');
     }
-    
+
     final statusCode = response.statusCode ?? 0;
     final data = response.data;
     final message = _extractErrorMessage(data);
     final code = _extractErrorCode(data);
-    
+
     switch (statusCode) {
       case 400:
         // Vérifier si c'est une erreur de validation
@@ -127,21 +124,21 @@ class MerchantErrorHandler {
           code: code,
           details: data,
         );
-        
+
       case 401:
         return AuthenticationFailure(
           message ?? 'Non authentifié',
           code: code ?? 'UNAUTHENTICATED',
           details: data,
         );
-        
+
       case 403:
         return PermissionFailure(
           message ?? 'Accès refusé',
           code: code ?? 'FORBIDDEN',
           details: data,
         );
-        
+
       case 404:
         return NotFoundFailure(
           message ?? 'Ressource non trouvée',
@@ -150,14 +147,14 @@ class MerchantErrorHandler {
           resourceType: data is Map ? data['resource_type'] : null,
           resourceId: data is Map ? data['resource_id'] : null,
         );
-        
+
       case 409:
         return BusinessFailure(
           message ?? 'Conflit de données',
           code: code ?? 'CONFLICT',
           details: data,
         );
-        
+
       case 422:
         return ValidationFailure(
           message ?? 'Entité non traitable',
@@ -165,7 +162,7 @@ class MerchantErrorHandler {
           fieldErrors: _extractFieldErrors(data),
           details: data,
         );
-        
+
       case 429:
         return QuotaExceededFailure(
           message ?? 'Trop de requêtes',
@@ -174,7 +171,7 @@ class MerchantErrorHandler {
           currentUsage: data is Map ? data['current_usage'] : null,
           limit: data is Map ? data['limit'] : null,
         );
-        
+
       case 500:
       case 502:
       case 503:
@@ -184,7 +181,7 @@ class MerchantErrorHandler {
           code: code ?? 'SERVER_ERROR',
           details: data,
         );
-        
+
       default:
         return ServerFailure(
           message ?? 'Erreur HTTP $statusCode',
@@ -193,7 +190,7 @@ class MerchantErrorHandler {
         );
     }
   }
-  
+
   /// Gère les erreurs de plateforme
   static Failure _handlePlatformError(PlatformException error) {
     switch (error.code) {
@@ -203,14 +200,14 @@ class MerchantErrorHandler {
           code: error.code,
           details: error.details,
         );
-        
+
       case 'NETWORK_ERROR':
         return NetworkFailure(
           error.message ?? 'Erreur réseau',
           code: error.code,
           details: error.details,
         );
-        
+
       default:
         return UnexpectedFailure(
           error.message ?? 'Erreur plateforme',
@@ -219,37 +216,35 @@ class MerchantErrorHandler {
         );
     }
   }
-  
+
   /// Extrait le message d'erreur depuis la réponse
   static String? _extractErrorMessage(dynamic data) {
     if (data is Map) {
-      return data['message'] ?? 
-             data['error'] ?? 
-             data['error_message'] ??
-             data['detail'];
+      return data['message'] ??
+          data['error'] ??
+          data['error_message'] ??
+          data['detail'];
     }
     if (data is String) {
       return data;
     }
     return null;
   }
-  
+
   /// Extrait le code d'erreur depuis la réponse
   static String? _extractErrorCode(dynamic data) {
     if (data is Map) {
-      return data['code'] ?? 
-             data['error_code'] ?? 
-             data['error_type'];
+      return data['code'] ?? data['error_code'] ?? data['error_type'];
     }
     return null;
   }
-  
+
   /// Extrait les erreurs de champs pour la validation
   static Map<String, List<String>>? _extractFieldErrors(dynamic errors) {
     if (errors is! Map) return null;
-    
+
     final fieldErrors = <String, List<String>>{};
-    
+
     errors.forEach((key, value) {
       if (value is List) {
         fieldErrors[key] = value.map((e) => e.toString()).toList();
@@ -257,25 +252,25 @@ class MerchantErrorHandler {
         fieldErrors[key] = [value];
       }
     });
-    
+
     return fieldErrors.isEmpty ? null : fieldErrors;
   }
-  
+
   /// Log les erreurs non gérées pour le monitoring
   static void _logUnhandledError(dynamic error, StackTrace? stackTrace) {
     debugPrint('$_tag: Unhandled error - $error');
     if (stackTrace != null) {
       debugPrint('$_tag: StackTrace - $stackTrace');
     }
-    
+
     // TODO: Envoyer à un service de monitoring (Crashlytics, Sentry, etc.)
   }
-  
+
   /// Affiche une erreur à l'utilisateur de manière appropriée
   static void showError(BuildContext context, Failure failure) {
     final message = failure.userMessage;
     final isRecoverable = failure.isRecoverable;
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -293,7 +288,7 @@ class MerchantErrorHandler {
       ),
     );
   }
-  
+
   /// Affiche une boîte de dialogue d'erreur détaillée
   static Future<void> showErrorDialog(
     BuildContext context,
@@ -303,7 +298,7 @@ class MerchantErrorHandler {
     bool dismissible = true,
   }) async {
     final theme = Theme.of(context);
-    
+
     await showDialog(
       context: context,
       barrierDismissible: dismissible,
@@ -328,26 +323,28 @@ class MerchantErrorHandler {
               const SizedBox(height: 8),
               Text(
                 'Code: ${failure.code}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
+                style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+              ),
+            ],
+            if (failure is ValidationFailure &&
+                failure.fieldErrors != null) ...[
+              const SizedBox(height: 12),
+              ...failure.fieldErrors!.entries.map(
+                (entry) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    '• ${entry.key}: ${entry.value.join(', ')}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
               ),
             ],
-            if (failure is ValidationFailure && failure.fieldErrors != null) ...[
-              const SizedBox(height: 12),
-              ...failure.fieldErrors!.entries.map((entry) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Text(
-                      '• ${entry.key}: ${entry.value.join(', ')}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.red,
-                      ),
-                    ),
-                  )),
-            ],
           ],
         ),
-        actions: actions ??
+        actions:
+            actions ??
             [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -357,7 +354,7 @@ class MerchantErrorHandler {
       ),
     );
   }
-  
+
   /// Retourne l'icône appropriée pour le type d'erreur
   static IconData _getErrorIcon(Failure failure) {
     switch (failure.runtimeType) {
@@ -377,7 +374,7 @@ class MerchantErrorHandler {
         return Icons.error_outline;
     }
   }
-  
+
   /// Retourne la couleur appropriée pour le type d'erreur
   static Color _getErrorColor(Failure failure) {
     switch (failure.runtimeType) {
@@ -395,7 +392,7 @@ class MerchantErrorHandler {
         return Colors.red;
     }
   }
-  
+
   /// Retourne le titre approprié pour le type d'erreur
   static String _getErrorTitle(Failure failure) {
     switch (failure.runtimeType) {
@@ -425,7 +422,7 @@ extension BuildContextErrorHandling on BuildContext {
   void showError(Failure failure) {
     MerchantErrorHandler.showError(this, failure);
   }
-  
+
   /// Affiche une boîte de dialogue d'erreur
   Future<void> showErrorDialog(
     Failure failure, {

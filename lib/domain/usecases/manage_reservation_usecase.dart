@@ -24,7 +24,7 @@ class ManageReservationUseCase {
     try {
       // Vérifier d'abord que l'offre est disponible
       final offer = await _offerService.getOfferById(offerId);
-      
+
       if (!offer.isAvailable) {
         throw Exception('Cette offre n\'est plus disponible');
       }
@@ -38,8 +38,9 @@ class ManageReservationUseCase {
       }
 
       // Déterminer la méthode de paiement
-      final method = paymentMethod ?? 
-                    (offer.isFree ? PaymentMethod.free : PaymentMethod.card);
+      final method =
+          paymentMethod ??
+          (offer.isFree ? PaymentMethod.free : PaymentMethod.card);
 
       // Créer la réservation
       final reservation = await _reservationService.createReservation(
@@ -62,16 +63,22 @@ class ManageReservationUseCase {
   }) async {
     try {
       // Vérifier que la réservation peut être annulée
-      final reservation = await _reservationService.getReservationById(reservationId);
-      
+      final reservation = await _reservationService.getReservationById(
+        reservationId,
+      );
+
       if (reservation.status != ReservationStatus.confirmed) {
         throw Exception('Cette réservation ne peut pas être annulée');
       }
 
       // Vérifier le délai d'annulation (ex: 2h avant collecte)
-      final timeUntilPickup = reservation.pickupStartTime.difference(DateTime.now());
+      final timeUntilPickup = reservation.pickupStartTime.difference(
+        DateTime.now(),
+      );
       if (timeUntilPickup.inHours < 2) {
-        throw Exception('Il est trop tard pour annuler cette réservation (moins de 2h avant collecte)');
+        throw Exception(
+          'Il est trop tard pour annuler cette réservation (moins de 2h avant collecte)',
+        );
       }
 
       await _reservationService.cancelReservation(
@@ -89,8 +96,10 @@ class ManageReservationUseCase {
     required String confirmationCode,
   }) async {
     try {
-      final reservation = await _reservationService.getReservationById(reservationId);
-      
+      final reservation = await _reservationService.getReservationById(
+        reservationId,
+      );
+
       if (!reservation.canCollect) {
         throw Exception('La fenêtre de collecte n\'est pas ouverte');
       }
@@ -112,11 +121,15 @@ class ManageReservationUseCase {
       );
 
       // Trier par heure de collecte
-      reservations.sort((a, b) => a.pickupStartTime.compareTo(b.pickupStartTime));
-      
+      reservations.sort(
+        (a, b) => a.pickupStartTime.compareTo(b.pickupStartTime),
+      );
+
       return reservations;
     } catch (e) {
-      throw Exception('Erreur lors de la récupération des réservations actives: $e');
+      throw Exception(
+        'Erreur lors de la récupération des réservations actives: $e',
+      );
     }
   }
 
@@ -136,15 +149,16 @@ class ManageReservationUseCase {
   }
 
   /// Récupérer une réservation avec les détails de l'offre
-  Future<ReservationWithOffer> getReservationWithOffer(String reservationId) async {
+  Future<ReservationWithOffer> getReservationWithOffer(
+    String reservationId,
+  ) async {
     try {
-      final reservation = await _reservationService.getReservationById(reservationId);
-      final offer = await _offerService.getOfferById(reservation.offerId);
-      
-      return ReservationWithOffer(
-        reservation: reservation,
-        offer: offer,
+      final reservation = await _reservationService.getReservationById(
+        reservationId,
       );
+      final offer = await _offerService.getOfferById(reservation.offerId);
+
+      return ReservationWithOffer(reservation: reservation, offer: offer);
     } catch (e) {
       throw Exception('Erreur lors de la récupération de la réservation: $e');
     }
@@ -172,7 +186,7 @@ class ManageReservationUseCase {
   Future<void> updateExpiredReservations() async {
     try {
       final activeReservations = await getActiveReservations();
-      
+
       for (final reservation in activeReservations) {
         if (reservation.isExpired) {
           // Ici on devrait appeler une API pour marquer comme no-show
@@ -191,7 +205,7 @@ class ManageReservationUseCase {
   Future<UserReservationStats> getUserStats() async {
     try {
       final history = await getReservationHistory(limit: 100);
-      
+
       int totalReservations = history.length;
       int completedReservations = 0;
       int cancelledReservations = 0;
@@ -233,10 +247,7 @@ class ReservationWithOffer {
   final Reservation reservation;
   final FoodOffer offer;
 
-  const ReservationWithOffer({
-    required this.reservation,
-    required this.offer,
-  });
+  const ReservationWithOffer({required this.reservation, required this.offer});
 }
 
 /// Statistiques des réservations de l'utilisateur

@@ -214,10 +214,7 @@ class OpeningHoursModel {
   final Map<DayOfWeek, TimeSlotModel> schedule;
   final String? specialNotes;
 
-  const OpeningHoursModel({
-    required this.schedule,
-    this.specialNotes,
-  });
+  const OpeningHoursModel({required this.schedule, this.specialNotes});
 
   factory OpeningHoursModel.fromJson(Map<String, dynamic> json) =>
       _$OpeningHoursModelFromJson(json);
@@ -242,10 +239,7 @@ class OpeningHoursModel {
       scheduleEntity[day] = slot.toEntity();
     });
 
-    return OpeningHours(
-      schedule: scheduleEntity,
-      specialNotes: specialNotes,
-    );
+    return OpeningHours(schedule: scheduleEntity, specialNotes: specialNotes);
   }
 }
 

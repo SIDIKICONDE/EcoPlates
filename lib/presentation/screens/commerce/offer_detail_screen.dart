@@ -9,10 +9,7 @@ import '../../providers/commerce/reservations_provider.dart';
 class OfferDetailScreen extends ConsumerStatefulWidget {
   final String offerId;
 
-  const OfferDetailScreen({
-    super.key,
-    required this.offerId,
-  });
+  const OfferDetailScreen({super.key, required this.offerId});
 
   @override
   ConsumerState<OfferDetailScreen> createState() => _OfferDetailScreenState();
@@ -21,7 +18,6 @@ class OfferDetailScreen extends ConsumerStatefulWidget {
 class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
   int quantity = 1;
   bool isReserving = false;
-
 
   Widget _buildContent(FoodOffer offer, ThemeData theme) {
     return CustomScrollView(
@@ -49,7 +45,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                             _buildPlaceholderImage(offer),
                       )
                     : _buildPlaceholderImage(offer),
-                
+
                 // Gradient overlay
                 Container(
                   decoration: BoxDecoration(
@@ -63,7 +59,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                     ),
                   ),
                 ),
-                
+
                 // Badges
                 Positioned(
                   bottom: 16,
@@ -140,7 +136,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        
+
         // Contenu
         SliverToBoxAdapter(
           child: Padding(
@@ -192,7 +188,9 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: offer.isFree ? Colors.green : theme.primaryColor,
+                            color: offer.isFree
+                                ? Colors.green
+                                : theme.primaryColor,
                           ),
                         ),
                       ],
@@ -200,7 +198,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Description
                 Text(
                   offer.description,
@@ -211,7 +209,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Informations de collecte
                 _buildInfoSection(
                   icon: Icons.schedule,
@@ -220,34 +218,33 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                   color: Colors.blue,
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Adresse
                 _buildInfoSection(
                   icon: Icons.location_on,
                   title: 'Adresse',
-                  content: '${offer.location.address}\n${offer.location.postalCode} ${offer.location.city}',
+                  content:
+                      '${offer.location.address}\n${offer.location.postalCode} ${offer.location.city}',
                   subtitle: offer.location.additionalInfo,
                   color: Colors.red,
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Quantité disponible
                 _buildInfoSection(
                   icon: Icons.inventory_2,
                   title: 'Disponibilité',
-                  content: '${offer.quantity} panier${offer.quantity > 1 ? 's' : ''} disponible${offer.quantity > 1 ? 's' : ''}',
+                  content:
+                      '${offer.quantity} panier${offer.quantity > 1 ? 's' : ''} disponible${offer.quantity > 1 ? 's' : ''}',
                   color: Colors.orange,
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Badges diététiques
                 if (offer.isVegetarian || offer.isVegan || offer.isHalal) ...[
                   const Text(
                     'Régimes alimentaires',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   Wrap(
@@ -263,15 +260,12 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                   ),
                   const SizedBox(height: 24),
                 ],
-                
+
                 // Allergènes
                 if (offer.allergens.isNotEmpty) ...[
                   const Text(
                     'Allergènes',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   Wrap(
@@ -287,7 +281,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                   ),
                   const SizedBox(height: 24),
                 ],
-                
+
                 // Impact écologique
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -298,11 +292,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.eco,
-                        size: 32,
-                        color: Colors.green[600],
-                      ),
+                      Icon(Icons.eco, size: 32, color: Colors.green[600]),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
@@ -329,7 +319,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
                     ],
                   ),
                 ),
-                
+
                 // Espacement pour le bouton flottant
                 const SizedBox(height: 100),
               ],
@@ -345,7 +335,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final offerAsync = ref.watch(offerByIdProvider(widget.offerId));
-    
+
     return Scaffold(
       body: offerAsync.when(
         data: (offer) => Stack(
@@ -452,7 +442,8 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
               Text('Erreur: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => ref.invalidate(offerByIdProvider(widget.offerId)),
+                onPressed: () =>
+                    ref.invalidate(offerByIdProvider(widget.offerId)),
                 child: const Text('Réessayer'),
               ),
             ],
@@ -487,10 +478,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 4),
               Text(
@@ -541,11 +529,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
     return Container(
       color: Colors.grey[300],
       child: const Center(
-        child: Icon(
-          Icons.restaurant,
-          size: 64,
-          color: Colors.grey,
-        ),
+        child: Icon(Icons.restaurant, size: 64, color: Colors.grey),
       ),
     );
   }
@@ -554,7 +538,7 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
     final start = offer.pickupStartTime;
     final end = offer.pickupEndTime;
     final now = DateTime.now();
-    
+
     String day = '';
     if (start.day == now.day) {
       day = 'Aujourd\'hui';
@@ -563,9 +547,9 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
     } else {
       day = '${start.day}/${start.month}';
     }
-    
+
     return '$day de ${start.hour.toString().padLeft(2, '0')}h${start.minute.toString().padLeft(2, '0')} '
-           'à ${end.hour.toString().padLeft(2, '0')}h${end.minute.toString().padLeft(2, '0')}';
+        'à ${end.hour.toString().padLeft(2, '0')}h${end.minute.toString().padLeft(2, '0')}';
   }
 
   String _formatTimeRemaining(Duration duration) {
@@ -582,36 +566,36 @@ class _OfferDetailScreenState extends ConsumerState<OfferDetailScreen> {
 
   Future<void> _reserveOffer(FoodOffer offer) async {
     setState(() => isReserving = true);
-    
+
     try {
       // Créer la réservation
       await ref.read(
-        createReservationProvider((offerId: widget.offerId, quantity: quantity)).future,
+        createReservationProvider((
+          offerId: widget.offerId,
+          quantity: quantity,
+        )).future,
       );
-      
+
       // Afficher un message de succès
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              offer.isFree 
-                  ? 'Réservation gratuite confirmée !' 
+              offer.isFree
+                  ? 'Réservation gratuite confirmée !'
                   : 'Réservation confirmée pour ${(offer.discountedPrice * quantity).toStringAsFixed(2)}€',
             ),
             backgroundColor: Colors.green,
           ),
         );
-        
+
         // Naviguer vers l'écran de réservations
         Navigator.of(context).pushReplacementNamed('/reservations');
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Erreur: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {

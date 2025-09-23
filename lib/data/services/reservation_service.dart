@@ -9,11 +9,9 @@ class ReservationService {
   final Dio _dio;
   final FlutterSecureStorage _secureStorage;
 
-  ReservationService({
-    Dio? dio,
-    FlutterSecureStorage? storage,
-  }) : _dio = dio ?? Dio(),
-       _secureStorage = storage ?? const FlutterSecureStorage();
+  ReservationService({Dio? dio, FlutterSecureStorage? storage})
+    : _dio = dio ?? Dio(),
+      _secureStorage = storage ?? const FlutterSecureStorage();
 
   /// Créer une nouvelle réservation
   Future<Reservation> createReservation({
@@ -24,7 +22,7 @@ class ReservationService {
   }) async {
     try {
       final token = await _getAuthToken();
-      
+
       final response = await _dio.post(
         '${EnvConfig.apiUrl}/reservations',
         data: {
@@ -33,15 +31,13 @@ class ReservationService {
           'payment_method': paymentMethod.name,
           'payment_token': paymentToken,
         },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 201) {
         return ReservationModel.fromJson(response.data).toEntity();
       }
-      
+
       throw Exception('Erreur lors de la création de la réservation');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -56,16 +52,14 @@ class ReservationService {
     try {
       final token = await _getAuthToken();
       final queryParams = <String, dynamic>{};
-      
+
       if (status != null) queryParams['status'] = status.name;
       if (active != null) queryParams['active'] = active;
-      
+
       final response = await _dio.get(
         '${EnvConfig.apiUrl}/reservations/my',
         queryParameters: queryParams,
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
@@ -74,7 +68,7 @@ class ReservationService {
             .map((json) => ReservationModel.fromJson(json).toEntity())
             .toList();
       }
-      
+
       throw Exception('Erreur lors de la récupération des réservations');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -85,18 +79,16 @@ class ReservationService {
   Future<Reservation> getReservationById(String reservationId) async {
     try {
       final token = await _getAuthToken();
-      
+
       final response = await _dio.get(
         '${EnvConfig.apiUrl}/reservations/$reservationId',
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
         return ReservationModel.fromJson(response.data).toEntity();
       }
-      
+
       throw Exception('Réservation non trouvée');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -104,21 +96,14 @@ class ReservationService {
   }
 
   /// Annuler une réservation
-  Future<void> cancelReservation(
-    String reservationId, {
-    String? reason,
-  }) async {
+  Future<void> cancelReservation(String reservationId, {String? reason}) async {
     try {
       final token = await _getAuthToken();
-      
+
       final response = await _dio.patch(
         '${EnvConfig.apiUrl}/reservations/$reservationId/cancel',
-        data: {
-          'reason': reason,
-        },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        data: {'reason': reason},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode != 200) {
@@ -136,15 +121,11 @@ class ReservationService {
   ) async {
     try {
       final token = await _getAuthToken();
-      
+
       final response = await _dio.patch(
         '${EnvConfig.apiUrl}/reservations/$reservationId/collect',
-        data: {
-          'confirmation_code': confirmationCode,
-        },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        data: {'confirmation_code': confirmationCode},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode != 200) {
@@ -162,16 +143,11 @@ class ReservationService {
   }) async {
     try {
       final token = await _getAuthToken();
-      
+
       final response = await _dio.get(
         '${EnvConfig.apiUrl}/reservations/history',
-        queryParameters: {
-          'page': page,
-          'limit': limit,
-        },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        queryParameters: {'page': page, 'limit': limit},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
@@ -180,7 +156,7 @@ class ReservationService {
             .map((json) => ReservationModel.fromJson(json).toEntity())
             .toList();
       }
-      
+
       throw Exception('Erreur lors de la récupération de l\'historique');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -191,18 +167,16 @@ class ReservationService {
   Future<String> getReservationQRCode(String reservationId) async {
     try {
       final token = await _getAuthToken();
-      
+
       final response = await _dio.get(
         '${EnvConfig.apiUrl}/reservations/$reservationId/qrcode',
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
         return response.data['qr_code'];
       }
-      
+
       throw Exception('Erreur lors de la génération du QR code');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -210,26 +184,20 @@ class ReservationService {
   }
 
   /// Vérifier la validité d'une réservation (pour commerçants)
-  Future<bool> verifyReservation(
-    String confirmationCode,
-  ) async {
+  Future<bool> verifyReservation(String confirmationCode) async {
     try {
       final token = await _getAuthToken();
-      
+
       final response = await _dio.post(
         '${EnvConfig.apiUrl}/reservations/verify',
-        data: {
-          'confirmation_code': confirmationCode,
-        },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        data: {'confirmation_code': confirmationCode},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
         return response.data['valid'] ?? false;
       }
-      
+
       return false;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -261,19 +229,19 @@ class ReservationService {
           return Exception('Erreur: ${error.response?.statusMessage}');
       }
     }
-    
+
     if (error.type == DioExceptionType.connectionTimeout) {
       return Exception('Délai de connexion dépassé');
     }
-    
+
     if (error.type == DioExceptionType.receiveTimeout) {
       return Exception('Délai de réponse dépassé');
     }
-    
+
     if (error.type == DioExceptionType.connectionError) {
       return Exception('Erreur de connexion réseau');
     }
-    
+
     return Exception('Erreur inconnue: ${error.message}');
   }
 }

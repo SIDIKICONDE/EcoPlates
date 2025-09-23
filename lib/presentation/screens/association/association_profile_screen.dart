@@ -12,23 +12,20 @@ import '../../providers/app_mode_provider.dart';
 /// Écran de profil public d'une association
 class AssociationProfileScreen extends ConsumerWidget {
   final String associationId;
-  
-  const AssociationProfileScreen({
-    super.key,
-    required this.associationId,
-  });
-  
+
+  const AssociationProfileScreen({super.key, required this.associationId});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isIOS = ref.watch(isIOSProvider);
-    
+
     final associationAsync = ref.watch(
       FutureProvider<Either<Failure, Association>>((ref) async {
         final useCase = ref.watch(getAssociationByIdUseCaseProvider);
         return await useCase(associationId);
       }),
     );
-    
+
     final impactAsync = ref.watch(
       FutureProvider<Either<Failure, AssociationImpactReport>>((ref) async {
         final useCase = ref.watch(calculateAssociationImpactUseCaseProvider);
@@ -38,7 +35,7 @@ class AssociationProfileScreen extends ConsumerWidget {
         );
       }),
     );
-    
+
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
         title: const Text('Profil Association'),
@@ -57,21 +54,18 @@ class AssociationProfileScreen extends ConsumerWidget {
         ],
       ),
       body: associationAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator.adaptive()),
-        error: (error, stack) => Center(
-          child: Text('Erreur: $error'),
-        ),
+        loading: () =>
+            const Center(child: CircularProgressIndicator.adaptive()),
+        error: (error, stack) => Center(child: Text('Erreur: $error')),
         data: (result) => result.fold(
-          (failure) => Center(
-            child: Text('Erreur: ${failure.message}'),
-          ),
-          (association) => _buildProfile(context, ref, association, impactAsync),
+          (failure) => Center(child: Text('Erreur: ${failure.message}')),
+          (association) =>
+              _buildProfile(context, ref, association, impactAsync),
         ),
       ),
     );
   }
-  
-  
+
   Widget _buildProfile(
     BuildContext context,
     WidgetRef ref,
@@ -79,7 +73,7 @@ class AssociationProfileScreen extends ConsumerWidget {
     AsyncValue<Either<Failure, AssociationImpactReport>> impactAsync,
   ) {
     final theme = Theme.of(context);
-    
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +126,10 @@ class AssociationProfileScreen extends ConsumerWidget {
                   top: 16,
                   right: 16,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.green.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(20),
@@ -156,7 +153,7 @@ class AssociationProfileScreen extends ConsumerWidget {
                 ),
             ],
           ),
-          
+
           // Description et infos
           Padding(
             padding: const EdgeInsets.all(16),
@@ -170,10 +167,7 @@ class AssociationProfileScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'À propos',
-                          style: theme.textTheme.titleLarge,
-                        ),
+                        Text('À propos', style: theme.textTheme.titleLarge),
                         const SizedBox(height: 8),
                         Text(
                           association.details.description,
@@ -186,12 +180,9 @@ class AssociationProfileScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Impact social
-                Text(
-                  'Impact social',
-                  style: theme.textTheme.titleLarge,
-                ),
+                Text('Impact social', style: theme.textTheme.titleLarge),
                 const SizedBox(height: 8),
                 impactAsync.when(
                   loading: () => const Center(
@@ -207,7 +198,7 @@ class AssociationProfileScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Informations pratiques
                 Text(
                   'Informations pratiques',
@@ -222,7 +213,8 @@ class AssociationProfileScreen extends ConsumerWidget {
                         _buildContactInfo(
                           icon: Icons.location_on,
                           title: 'Adresse',
-                          content: '${association.details.address}\n'
+                          content:
+                              '${association.details.address}\n'
                               '${association.details.postalCode} ${association.details.city}',
                         ),
                         const Divider(),
@@ -230,14 +222,16 @@ class AssociationProfileScreen extends ConsumerWidget {
                           icon: Icons.phone,
                           title: 'Téléphone',
                           content: association.details.phone,
-                          onTap: () => _callAssociation(association.details.phone),
+                          onTap: () =>
+                              _callAssociation(association.details.phone),
                         ),
                         const Divider(),
                         _buildContactInfo(
                           icon: Icons.email,
                           title: 'Email',
                           content: association.details.email,
-                          onTap: () => _emailAssociation(association.details.email),
+                          onTap: () =>
+                              _emailAssociation(association.details.email),
                         ),
                         if (association.details.website.isNotEmpty) ...[
                           const Divider(),
@@ -245,7 +239,8 @@ class AssociationProfileScreen extends ConsumerWidget {
                             icon: Icons.language,
                             title: 'Site web',
                             content: association.details.website,
-                            onTap: () => _openWebsite(association.details.website),
+                            onTap: () =>
+                                _openWebsite(association.details.website),
                           ),
                         ],
                       ],
@@ -253,16 +248,13 @@ class AssociationProfileScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Horaires de collecte
-                Text(
-                  'Horaires de collecte',
-                  style: theme.textTheme.titleLarge,
-                ),
+                Text('Horaires de collecte', style: theme.textTheme.titleLarge),
                 const SizedBox(height: 8),
                 _buildOpeningHours(context, association.details.collectHours),
                 const SizedBox(height: 16),
-                
+
                 // Boutons d'action
                 _buildActionButtons(context, ref, association),
                 const SizedBox(height: 32),
@@ -273,7 +265,7 @@ class AssociationProfileScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildInfoChips(BuildContext context, Association association) {
     return Wrap(
       spacing: 8,
@@ -292,20 +284,17 @@ class AssociationProfileScreen extends ConsumerWidget {
           label: '${association.details.activeVolunteers} bénévoles',
         ),
         if (association.details.hasColdChain)
-          const _InfoChip(
-            icon: Icons.ac_unit,
-            label: 'Chaîne du froid',
-          ),
+          const _InfoChip(icon: Icons.ac_unit, label: 'Chaîne du froid'),
         if (association.details.hasVehicles)
-          const _InfoChip(
-            icon: Icons.local_shipping,
-            label: 'Véhicules',
-          ),
+          const _InfoChip(icon: Icons.local_shipping, label: 'Véhicules'),
       ],
     );
   }
-  
-  Widget _buildImpactSection(BuildContext context, AssociationImpactReport report) {
+
+  Widget _buildImpactSection(
+    BuildContext context,
+    AssociationImpactReport report,
+  ) {
     return Column(
       children: [
         GridView.count(
@@ -352,10 +341,7 @@ class AssociationProfileScreen extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.star,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+              Icon(Icons.star, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               Text(
                 'Score d\'impact: ${report.impactScore.toStringAsFixed(0)}',
@@ -370,10 +356,10 @@ class AssociationProfileScreen extends ConsumerWidget {
       ],
     );
   }
-  
+
   Widget _buildOpeningHours(BuildContext context, OpeningHours hours) {
     final isOpen = hours.isOpenNow;
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -429,9 +415,9 @@ class AssociationProfileScreen extends ConsumerWidget {
               const Divider(),
               Text(
                 hours.specialNotes!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
               ),
             ],
           ],
@@ -439,7 +425,7 @@ class AssociationProfileScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildContactInfo({
     required IconData icon,
     required String title,
@@ -460,10 +446,7 @@ class AssociationProfileScreen extends ConsumerWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -486,10 +469,14 @@ class AssociationProfileScreen extends ConsumerWidget {
       ),
     );
   }
-  
-  Widget _buildActionButtons(BuildContext context, WidgetRef ref, Association association) {
+
+  Widget _buildActionButtons(
+    BuildContext context,
+    WidgetRef ref,
+    Association association,
+  ) {
     final isIOS = ref.watch(isIOSProvider);
-    
+
     return Column(
       children: [
         if (association.isActive)
@@ -529,7 +516,7 @@ class AssociationProfileScreen extends ConsumerWidget {
       ],
     );
   }
-  
+
   // Méthodes utilitaires
   String _getAssociationTypeLabel(AssociationType type) {
     switch (type) {
@@ -549,7 +536,7 @@ class AssociationProfileScreen extends ConsumerWidget {
         return 'Autre';
     }
   }
-  
+
   String _getDayLabel(DayOfWeek day) {
     switch (day) {
       case DayOfWeek.monday:
@@ -568,27 +555,27 @@ class AssociationProfileScreen extends ConsumerWidget {
         return 'Dimanche';
     }
   }
-  
+
   void _shareAssociation(BuildContext context, String associationId) {
     // TODO: Implémenter le partage
   }
-  
+
   void _callAssociation(String phone) {
     // TODO: Lancer l'appel
   }
-  
+
   void _emailAssociation(String email) {
     // TODO: Ouvrir l'email
   }
-  
+
   void _openWebsite(String website) {
     // TODO: Ouvrir le site web
   }
-  
+
   void _contactAssociation(BuildContext context, Association association) {
     // TODO: Ouvrir le formulaire de contact
   }
-  
+
   void _becomeVolunteer(BuildContext context, Association association) {
     // TODO: Ouvrir le formulaire pour devenir bénévole
   }
@@ -598,12 +585,9 @@ class AssociationProfileScreen extends ConsumerWidget {
 class _InfoChip extends StatelessWidget {
   final IconData icon;
   final String label;
-  
-  const _InfoChip({
-    required this.icon,
-    required this.label,
-  });
-  
+
+  const _InfoChip({required this.icon, required this.label});
+
   @override
   Widget build(BuildContext context) {
     return Chip(
@@ -619,14 +603,14 @@ class _ImpactCard extends StatelessWidget {
   final String value;
   final String label;
   final Color color;
-  
+
   const _ImpactCard({
     required this.icon,
     required this.value,
     required this.label,
     required this.color,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -640,9 +624,9 @@ class _ImpactCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(
               label,

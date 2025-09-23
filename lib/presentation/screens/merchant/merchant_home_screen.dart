@@ -26,18 +26,9 @@ class MerchantHomeScreen extends ConsumerWidget {
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'settings',
-                child: Text('Paramètres'),
-              ),
-              const PopupMenuItem(
-                value: 'help',
-                child: Text('Aide'),
-              ),
-              const PopupMenuItem(
-                value: 'logout',
-                child: Text('Déconnexion'),
-              ),
+              const PopupMenuItem(value: 'settings', child: Text('Paramètres')),
+              const PopupMenuItem(value: 'help', child: Text('Aide')),
+              const PopupMenuItem(value: 'logout', child: Text('Déconnexion')),
             ],
             onSelected: (value) {
               if (value == 'logout') {
@@ -56,20 +47,20 @@ class MerchantHomeScreen extends ConsumerWidget {
               // Carte de bienvenue commerçant
               _buildMerchantWelcomeCard(context),
               const SizedBox(height: 20),
-              
+
               // Statistiques du jour
               _buildTodayStats(context),
               const SizedBox(height: 24),
-              
+
               // Actions principales pour commerçant
               Text(
                 'Gestion de votre commerce',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              
+
               // Grille d'actions pour commerçant
               GridView.count(
                 shrinkWrap: true,
@@ -112,7 +103,7 @@ class MerchantHomeScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               // Réservations à traiter aujourd'hui
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,11 +121,11 @@ class MerchantHomeScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              
+
               // Liste des réservations du jour
               _buildTodayReservations(context),
               const SizedBox(height: 24),
-              
+
               // Performance écologique
               _buildEcoPerformance(context),
             ],
@@ -155,10 +146,7 @@ class MerchantHomeScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.indigo,
-            Colors.indigo.withValues(alpha: 0.7),
-          ],
+          colors: [Colors.indigo, Colors.indigo.withValues(alpha: 0.7)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -197,10 +185,7 @@ class MerchantHomeScreen extends ConsumerWidget {
                     SizedBox(height: 4),
                     Text(
                       'Commerce vérifié ✓',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                   ],
                 ),
@@ -211,11 +196,7 @@ class MerchantHomeScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildQuickStat(
-                icon: Icons.star,
-                value: '4.8',
-                label: 'Note',
-              ),
+              _buildQuickStat(icon: Icons.star, value: '4.8', label: 'Note'),
               _buildQuickStat(
                 icon: Icons.people,
                 value: '324',
@@ -252,10 +233,7 @@ class MerchantHomeScreen extends ConsumerWidget {
         ),
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
-          ),
+          style: const TextStyle(color: Colors.white70, fontSize: 12),
         ),
       ],
     );
@@ -413,10 +391,7 @@ class _MerchantActionTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withValues(alpha: 0.3),
-            width: 1.5,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
           boxShadow: [
             BoxShadow(
               color: color.withValues(alpha: 0.1),
@@ -444,10 +419,7 @@ class _MerchantActionTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -555,10 +527,7 @@ class _DailyStatCard extends StatelessWidget {
           ),
           Text(
             subtitle,
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 11, color: Colors.grey[600]),
           ),
         ],
       ),
@@ -601,11 +570,7 @@ class _ReservationItem extends StatelessWidget {
               color: _getStatusColor().withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              _getStatusIcon(),
-              color: _getStatusColor(),
-              size: 24,
-            ),
+            child: Icon(_getStatusIcon(), color: _getStatusColor(), size: 24),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -644,10 +609,7 @@ class _ReservationItem extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   offerTitle,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -664,10 +626,7 @@ class _ReservationItem extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: _getStatusColor().withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -748,13 +707,7 @@ class _EcoMetric extends StatelessWidget {
             color: Colors.green[700],
           ),
         ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.green[600],
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 11, color: Colors.green[600])),
       ],
     );
   }

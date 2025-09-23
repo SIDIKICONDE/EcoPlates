@@ -29,7 +29,8 @@ class FavoritesScreen extends ConsumerWidget {
               ),
               Tab(
                 icon: const Icon(Icons.store),
-                text: 'Commerçants (${favoritesState.favoriteMerchantIds.length})',
+                text:
+                    'Commerçants (${favoritesState.favoriteMerchantIds.length})',
               ),
             ],
           ),
@@ -63,7 +64,7 @@ class FavoritesScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             // Onglet Commerçants favoris
             _buildMerchantsTab(context, ref),
           ],
@@ -78,24 +79,20 @@ class FavoritesScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.favorite_border,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.favorite_border, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'Aucune offre favorite',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Ajoutez des offres à vos favoris\npour les retrouver facilement',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[500],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -129,30 +126,26 @@ class FavoritesScreen extends ConsumerWidget {
 
   Widget _buildMerchantsTab(BuildContext context, WidgetRef ref) {
     final favoritesState = ref.watch(favoritesProvider);
-    
+
     if (favoritesState.favoriteMerchantIds.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.store_outlined,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.store_outlined, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'Aucun commerçant favori',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Suivez vos commerçants préférés\npour ne rien manquer',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[500],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -168,15 +161,15 @@ class FavoritesScreen extends ConsumerWidget {
         final merchantId = favoritesState.favoriteMerchantIds.elementAt(index);
         return Card(
           child: ListTile(
-            leading: const CircleAvatar(
-              child: Icon(Icons.store),
-            ),
+            leading: const CircleAvatar(child: Icon(Icons.store)),
             title: Text('Commerçant $merchantId'),
             subtitle: const Text('Détails à implémenter'),
             trailing: IconButton(
               icon: const Icon(Icons.favorite, color: Colors.red),
               onPressed: () {
-                ref.read(favoritesProvider.notifier).toggleMerchantFavorite(merchantId);
+                ref
+                    .read(favoritesProvider.notifier)
+                    .toggleMerchantFavorite(merchantId);
               },
             ),
           ),
@@ -208,9 +201,7 @@ class FavoritesScreen extends ConsumerWidget {
                 ),
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Supprimer'),
           ),
         ],
@@ -224,16 +215,13 @@ class _FavoriteOfferCard extends ConsumerWidget {
   final FoodOffer offer;
   final VoidCallback onTap;
 
-  const _FavoriteOfferCard({
-    required this.offer,
-    required this.onTap,
-  });
+  const _FavoriteOfferCard({required this.offer, required this.onTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userLocation = ref.watch(userLocationProvider);
     String distance = 'Distance inconnue';
-    
+
     if (userLocation != null) {
       final distanceKm = offer.location.distanceFrom(
         userLocation.latitude,
@@ -244,9 +232,7 @@ class _FavoriteOfferCard extends ConsumerWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -321,7 +307,7 @@ class _FavoriteOfferCard extends ConsumerWidget {
                         await ref
                             .read(favoritesProvider.notifier)
                             .toggleOfferFavorite(offer.id);
-                        
+
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -352,31 +338,32 @@ class _FavoriteOfferCard extends ConsumerWidget {
                           children: [
                             Text(
                               offer.title,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 4),
                             Text(
                               offer.merchantName,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey[600]),
                             ),
                           ],
                         ),
                       ),
                       Row(
                         children: [
-                          Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                          Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: Colors.grey[600],
+                          ),
                           const SizedBox(width: 2),
                           Text(
                             distance,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ),

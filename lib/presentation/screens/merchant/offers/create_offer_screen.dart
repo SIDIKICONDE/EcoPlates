@@ -26,7 +26,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
   final _originalPriceController = TextEditingController();
   final _discountedPriceController = TextEditingController();
   final _quantityController = TextEditingController();
-  
+
   // États du formulaire
   OfferType _selectedType = OfferType.panier;
   FoodCategory _selectedCategory = FoodCategory.autre;
@@ -39,9 +39,9 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
   bool _isHalal = false;
   bool _isFree = false;
   bool _isSubmitting = false;
-  
+
   final _imagePicker = ImagePicker();
-  
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -51,11 +51,11 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
     _quantityController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
         title: const Text('Créer une offre'),
@@ -82,27 +82,27 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
               // Images
               _buildImageSection(),
               SizedBox(height: 24.h),
-              
+
               // Informations de base
               _buildBasicInfoSection(),
               SizedBox(height: 24.h),
-              
+
               // Prix et quantité
               _buildPricingSection(),
               SizedBox(height: 24.h),
-              
+
               // Horaires de collecte
               _buildPickupTimeSection(),
               SizedBox(height: 24.h),
-              
+
               // Options diététiques
               _buildDietarySection(),
               SizedBox(height: 24.h),
-              
+
               // Allergènes
               _buildAllergensSection(),
               SizedBox(height: 32.h),
-              
+
               // Bouton de soumission
               _buildSubmitButton(),
               SizedBox(height: 32.h),
@@ -112,23 +112,23 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       ),
     );
   }
-  
+
   Widget _buildImageSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Photos du produit',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8.h),
         Text(
           'Ajoutez jusqu\'à 4 photos pour attirer plus de clients',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.grey,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
         SizedBox(height: 16.h),
         SizedBox(
@@ -144,7 +144,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       ],
     );
   }
-  
+
   Widget _buildImageTile(File image) {
     return Padding(
       padding: EdgeInsets.only(right: 8.w),
@@ -176,11 +176,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
                   color: Colors.black54,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 16,
-                ),
+                child: const Icon(Icons.close, color: Colors.white, size: 16),
               ),
             ),
           ),
@@ -188,7 +184,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       ),
     );
   }
-  
+
   Widget _buildAddImageTile() {
     return GestureDetector(
       onTap: _pickImage,
@@ -197,45 +193,35 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
         height: 100.w,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: Colors.grey.shade300,
-            width: 2,
-          ),
+          border: Border.all(color: Colors.grey.shade300, width: 2),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.add_a_photo,
-              size: 32.sp,
-              color: Colors.grey,
-            ),
+            Icon(Icons.add_a_photo, size: 32.sp, color: Colors.grey),
             SizedBox(height: 4.h),
             Text(
               'Ajouter',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey),
             ),
           ],
         ),
       ),
     );
   }
-  
+
   Widget _buildBasicInfoSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Informations de base',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 16.h),
-        
+
         // Titre
         TextFormField(
           controller: _titleController,
@@ -255,7 +241,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
           },
         ),
         SizedBox(height: 16.h),
-        
+
         // Description
         TextFormField(
           controller: _descriptionController,
@@ -273,7 +259,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
           },
         ),
         SizedBox(height: 16.h),
-        
+
         // Type d'offre
         Row(
           children: [
@@ -353,7 +339,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       ],
     );
   }
-  
+
   Widget _buildPricingSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,9 +349,9 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
           children: [
             Text(
               'Prix et quantité',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             // Switch offre gratuite
             Row(
@@ -391,14 +377,16 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
           ],
         ),
         SizedBox(height: 16.h),
-        
+
         Row(
           children: [
             // Prix original
             Expanded(
               child: TextFormField(
                 controller: _originalPriceController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Prix original',
                   prefixText: '€ ',
@@ -424,7 +412,9 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
             Expanded(
               child: TextFormField(
                 controller: _discountedPriceController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Prix réduit',
                   prefixText: '€ ',
@@ -437,7 +427,9 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
                       return 'Requis';
                     }
                     final discounted = double.tryParse(value);
-                    final original = double.tryParse(_originalPriceController.text);
+                    final original = double.tryParse(
+                      _originalPriceController.text,
+                    );
                     if (discounted == null || discounted < 0) {
                       return 'Prix invalide';
                     }
@@ -452,7 +444,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
           ],
         ),
         SizedBox(height: 16.h),
-        
+
         // Quantité
         TextFormField(
           controller: _quantityController,
@@ -476,26 +468,26 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       ],
     );
   }
-  
+
   Widget _buildPickupTimeSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Horaires de collecte',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8.h),
         Text(
           'Définissez la fenêtre de temps pour récupérer l\'offre',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.grey,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
         SizedBox(height: 16.h),
-        
+
         Row(
           children: [
             Expanded(
@@ -518,7 +510,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       ],
     );
   }
-  
+
   Widget _buildTimePickerField({
     required String label,
     required DateTime? time,
@@ -527,7 +519,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
     final displayTime = time != null
         ? '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
         : 'Sélectionner';
-    
+
     return GestureDetector(
       onTap: onTap,
       child: InputDecorator(
@@ -536,26 +528,23 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
           border: const OutlineInputBorder(),
           suffixIcon: const Icon(Icons.access_time),
         ),
-        child: Text(
-          displayTime,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        child: Text(displayTime, style: Theme.of(context).textTheme.bodyLarge),
       ),
     );
   }
-  
+
   Widget _buildDietarySection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Options diététiques',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 16.h),
-        
+
         // Options diététiques
         CheckboxListTile(
           title: const Text('Végétarien'),
@@ -599,7 +588,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       ],
     );
   }
-  
+
   Widget _buildAllergensSection() {
     final commonAllergens = [
       'Gluten',
@@ -617,25 +606,25 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       'Lupin',
       'Mollusques',
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Allergènes',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8.h),
         Text(
           'Sélectionnez les allergènes présents',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.grey,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
         SizedBox(height: 16.h),
-        
+
         Wrap(
           spacing: 8.w,
           runSpacing: 8.h,
@@ -659,7 +648,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       ],
     );
   }
-  
+
   Widget _buildSubmitButton() {
     return SizedBox(
       height: 48.h,
@@ -674,17 +663,14 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
             ? const CircularProgressIndicator(color: Colors.white)
             : const Text(
                 'Publier l\'offre',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
       ),
     );
   }
-  
+
   // Méthodes utilitaires
-  
+
   Future<void> _pickImage() async {
     final ImageSource? source = await showModalBottomSheet<ImageSource>(
       context: context,
@@ -705,13 +691,13 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
         ),
       ),
     );
-    
+
     if (source != null) {
       final XFile? pickedFile = await _imagePicker.pickImage(
         source: source,
         imageQuality: 80,
       );
-      
+
       if (pickedFile != null) {
         setState(() {
           _images.add(File(pickedFile.path));
@@ -719,20 +705,20 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       }
     }
   }
-  
+
   Future<void> _selectTime(bool isStartTime) async {
     final now = DateTime.now();
     final initialTime = TimeOfDay.fromDateTime(
-      isStartTime 
+      isStartTime
           ? (_pickupStartTime ?? now.add(const Duration(hours: 1)))
-          : (_pickupEndTime ?? now.add(const Duration(hours: 2)))
+          : (_pickupEndTime ?? now.add(const Duration(hours: 2))),
     );
-    
+
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: initialTime,
     );
-    
+
     if (picked != null) {
       final selectedDateTime = DateTime(
         now.year,
@@ -741,12 +727,13 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
         picked.hour,
         picked.minute,
       );
-      
+
       setState(() {
         if (isStartTime) {
           _pickupStartTime = selectedDateTime;
           // Ajuster automatiquement l'heure de fin si nécessaire
-          if (_pickupEndTime == null || _pickupEndTime!.isBefore(selectedDateTime)) {
+          if (_pickupEndTime == null ||
+              _pickupEndTime!.isBefore(selectedDateTime)) {
             _pickupEndTime = selectedDateTime.add(const Duration(hours: 1));
           }
         } else {
@@ -755,13 +742,13 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       });
     }
   }
-  
+
   Future<void> _handleSubmit() async {
     // Validation du formulaire
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    
+
     // Validation des horaires
     if (_pickupStartTime == null || _pickupEndTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -772,7 +759,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       );
       return;
     }
-    
+
     // Validation au moins une image
     if (_images.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -783,11 +770,11 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       );
       return;
     }
-    
+
     setState(() {
       _isSubmitting = true;
     });
-    
+
     try {
       // TODO: Upload des images et création de l'offre
       final request = CreateOfferRequest(
@@ -795,8 +782,12 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
         description: _descriptionController.text.trim(),
         type: _selectedType,
         category: _selectedCategory,
-        originalPrice: _isFree ? 0 : double.parse(_originalPriceController.text),
-        discountedPrice: _isFree ? 0 : double.parse(_discountedPriceController.text),
+        originalPrice: _isFree
+            ? 0
+            : double.parse(_originalPriceController.text),
+        discountedPrice: _isFree
+            ? 0
+            : double.parse(_discountedPriceController.text),
         quantity: int.parse(_quantityController.text),
         pickupStartTime: _pickupStartTime!,
         pickupEndTime: _pickupEndTime!,
@@ -806,26 +797,21 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
         isVegan: _isVegan,
         isHalal: _isHalal,
       );
-      
+
       final result = await ref.read(createOfferProvider(request).future);
-      
-      result.fold(
-        (failure) => context.showError(failure),
-        (offer) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Offre créée avec succès !'),
-              backgroundColor: Colors.green,
-            ),
-          );
-          context.pop(true);
-        },
-      );
+
+      result.fold((failure) => context.showError(failure), (offer) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Offre créée avec succès !'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        context.pop(true);
+      });
     } catch (e) {
       if (mounted) {
-        context.showError(
-          MerchantErrorHandler.handleError(e),
-        );
+        context.showError(MerchantErrorHandler.handleError(e));
       }
     } finally {
       if (mounted) {
@@ -835,7 +821,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
       }
     }
   }
-  
+
   String _getOfferTypeLabel(OfferType type) {
     switch (type) {
       case OfferType.panier:
@@ -852,7 +838,7 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
         return 'Autre';
     }
   }
-  
+
   String _getCategoryLabel(FoodCategory category) {
     switch (category) {
       case FoodCategory.petitDejeuner:

@@ -12,11 +12,8 @@ import '../../../widgets/create_offer_form.dart';
 /// Écran d'édition d'une offre existante
 class EditOfferScreen extends ConsumerStatefulWidget {
   final String offerId;
-  
-  const EditOfferScreen({
-    super.key,
-    required this.offerId,
-  });
+
+  const EditOfferScreen({super.key, required this.offerId});
 
   @override
   ConsumerState<EditOfferScreen> createState() => _EditOfferScreenState();
@@ -24,11 +21,11 @@ class EditOfferScreen extends ConsumerStatefulWidget {
 
 class _EditOfferScreenState extends ConsumerState<EditOfferScreen> {
   bool _hasUnsavedChanges = false;
-  
+
   @override
   Widget build(BuildContext context) {
     final offerAsync = ref.watch(offerByIdProvider(widget.offerId));
-    
+
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
         title: const Text('Modifier l\'offre'),
@@ -38,10 +35,7 @@ class _EditOfferScreenState extends ConsumerState<EditOfferScreen> {
         ),
         actions: [
           // Bouton de sauvegarde rapide
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _quickSave,
-          ),
+          IconButton(icon: const Icon(Icons.save), onPressed: _quickSave),
         ],
       ),
       body: offerAsync.when(
@@ -54,7 +48,7 @@ class _EditOfferScreenState extends ConsumerState<EditOfferScreen> {
       ),
     );
   }
-  
+
   Widget _buildEditForm(FoodOffer offer) {
     return CreateOfferForm(
       initialOffer: offer,
@@ -73,7 +67,7 @@ class _EditOfferScreenState extends ConsumerState<EditOfferScreen> {
       },
     );
   }
-  
+
   Widget _buildErrorState(String message) {
     return Center(
       child: Padding(
@@ -81,27 +75,17 @@ class _EditOfferScreenState extends ConsumerState<EditOfferScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             const Text(
               'Erreur de chargement',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -116,19 +100,20 @@ class _EditOfferScreenState extends ConsumerState<EditOfferScreen> {
       ),
     );
   }
-  
+
   // Actions
-  
+
   Future<void> _handleBackPress() async {
     if (_hasUnsavedChanges) {
       final shouldDiscard = await context.showConfirmationDialog(
         title: 'Modifications non sauvegardées',
-        message: 'Vous avez des modifications non sauvegardées. Voulez-vous les abandonner ?',
+        message:
+            'Vous avez des modifications non sauvegardées. Voulez-vous les abandonner ?',
         confirmText: 'Abandonner',
         cancelText: 'Continuer l\'édition',
         isDestructive: true,
       );
-      
+
       if (shouldDiscard == true && mounted) {
         context.pop();
       }
@@ -138,7 +123,7 @@ class _EditOfferScreenState extends ConsumerState<EditOfferScreen> {
       }
     }
   }
-  
+
   Future<void> _quickSave() async {
     // TODO: Implémenter la sauvegarde rapide
     context.showInfo('Sauvegarde rapide à implémenter');

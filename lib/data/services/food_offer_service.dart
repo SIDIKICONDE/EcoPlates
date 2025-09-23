@@ -21,7 +21,7 @@ class FoodOfferService {
   }) async {
     try {
       final queryParams = <String, dynamic>{};
-      
+
       if (latitude != null) queryParams['lat'] = latitude;
       if (longitude != null) queryParams['lng'] = longitude;
       if (radius != null) queryParams['radius'] = radius;
@@ -45,7 +45,7 @@ class FoodOfferService {
             .map((json) => FoodOfferModel.fromJson(json).toEntity())
             .toList();
       }
-      
+
       throw Exception('Erreur lors de la récupération des offres');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -55,14 +55,12 @@ class FoodOfferService {
   /// Récupérer une offre par son ID
   Future<FoodOffer> getOfferById(String offerId) async {
     try {
-      final response = await _dio.get(
-        '${EnvConfig.apiUrl}/offers/$offerId',
-      );
+      final response = await _dio.get('${EnvConfig.apiUrl}/offers/$offerId');
 
       if (response.statusCode == 200) {
         return FoodOfferModel.fromJson(response.data).toEntity();
       }
-      
+
       throw Exception('Offre non trouvée');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -83,7 +81,7 @@ class FoodOfferService {
             .map((json) => FoodOfferModel.fromJson(json).toEntity())
             .toList();
       }
-      
+
       throw Exception('Erreur lors de la recherche');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -103,8 +101,10 @@ class FoodOfferService {
             .map((json) => FoodOfferModel.fromJson(json).toEntity())
             .toList();
       }
-      
-      throw Exception('Erreur lors de la récupération des offres du commerçant');
+
+      throw Exception(
+        'Erreur lors de la récupération des offres du commerçant',
+      );
     } on DioException catch (e) {
       throw _handleError(e);
     }
@@ -119,11 +119,7 @@ class FoodOfferService {
     try {
       final response = await _dio.get(
         '${EnvConfig.apiUrl}/offers/nearby',
-        queryParameters: {
-          'lat': latitude,
-          'lng': longitude,
-          'radius': radius,
-        },
+        queryParameters: {'lat': latitude, 'lng': longitude, 'radius': radius},
       );
 
       if (response.statusCode == 200) {
@@ -132,7 +128,7 @@ class FoodOfferService {
             .map((json) => FoodOfferModel.fromJson(json).toEntity())
             .toList();
       }
-      
+
       throw Exception('Erreur lors de la récupération des offres à proximité');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -142,9 +138,7 @@ class FoodOfferService {
   /// Récupérer les offres populaires
   Future<List<FoodOffer>> getPopularOffers() async {
     try {
-      final response = await _dio.get(
-        '${EnvConfig.apiUrl}/offers/popular',
-      );
+      final response = await _dio.get('${EnvConfig.apiUrl}/offers/popular');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data['offers'];
@@ -152,7 +146,7 @@ class FoodOfferService {
             .map((json) => FoodOfferModel.fromJson(json).toEntity())
             .toList();
       }
-      
+
       throw Exception('Erreur lors de la récupération des offres populaires');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -162,9 +156,7 @@ class FoodOfferService {
   /// Récupérer les offres qui expirent bientôt
   Future<List<FoodOffer>> getExpiringOffers() async {
     try {
-      final response = await _dio.get(
-        '${EnvConfig.apiUrl}/offers/expiring',
-      );
+      final response = await _dio.get('${EnvConfig.apiUrl}/offers/expiring');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data['offers'];
@@ -172,7 +164,7 @@ class FoodOfferService {
             .map((json) => FoodOfferModel.fromJson(json).toEntity())
             .toList();
       }
-      
+
       throw Exception('Erreur lors de la récupération des offres qui expirent');
     } on DioException catch (e) {
       throw _handleError(e);
@@ -197,19 +189,19 @@ class FoodOfferService {
           return Exception('Erreur: ${error.response?.statusMessage}');
       }
     }
-    
+
     if (error.type == DioExceptionType.connectionTimeout) {
       return Exception('Délai de connexion dépassé');
     }
-    
+
     if (error.type == DioExceptionType.receiveTimeout) {
       return Exception('Délai de réponse dépassé');
     }
-    
+
     if (error.type == DioExceptionType.connectionError) {
       return Exception('Erreur de connexion réseau');
     }
-    
+
     return Exception('Erreur inconnue: ${error.message}');
   }
 }

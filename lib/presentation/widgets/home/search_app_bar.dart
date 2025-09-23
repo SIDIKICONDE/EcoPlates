@@ -32,7 +32,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               // Header avec localisation et notifications
               _buildHeader(context),
               const SizedBox(height: 12),
-              
+
               // Barre de recherche
               _buildSearchBar(context),
             ],
@@ -51,11 +51,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           onTap: onLocationTap,
           child: Row(
             children: [
-              const Icon(
-                Icons.location_on,
-                color: Colors.white,
-                size: 20,
-              ),
+              const Icon(Icons.location_on, color: Colors.white, size: 20),
               const SizedBox(width: 4),
               Text(
                 location,
@@ -65,15 +61,11 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.white,
-                size: 20,
-              ),
+              const Icon(Icons.arrow_drop_down, color: Colors.white, size: 20),
             ],
           ),
         ),
-        
+
         // Notifications
         IconButton(
           onPressed: onNotificationTap,
@@ -114,20 +106,10 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         onChanged: onSearch,
         decoration: const InputDecoration(
           hintText: 'Rechercher des commerces, plats...',
-          hintStyle: TextStyle(
-            color: Colors.grey,
-            fontSize: 14,
-          ),
-          prefixIcon: Icon(
-            Icons.search,
-            color: Colors.grey,
-            size: 20,
-          ),
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+          prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),
     );

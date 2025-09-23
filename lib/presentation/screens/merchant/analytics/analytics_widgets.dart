@@ -3,29 +3,32 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
 
-import '../../../../domain/entities/analytics.dart' show
-  PerformanceMetrics,
-  CustomerSegment,
-  Analytics;
+import '../../../../domain/entities/analytics.dart'
+    show PerformanceMetrics, CustomerSegment, Analytics;
 
 /// Widget pour le funnel de conversion
 class ConversionFunnelWidget extends StatelessWidget {
   final Analytics analytics;
-  
-  const ConversionFunnelWidget({
-    super.key,
-    required this.analytics,
-  });
-  
+
+  const ConversionFunnelWidget({super.key, required this.analytics});
+
   @override
   Widget build(BuildContext context) {
     final performance = analytics.performance;
     final stages = [
       FunnelStage('Vues', performance.totalViews.toDouble(), Colors.blue[300]!),
-      FunnelStage('Réservations', performance.totalReservations.toDouble(), Colors.orange[300]!),
-      FunnelStage('Collectes', performance.completedPickups.toDouble(), Colors.green[300]!),
+      FunnelStage(
+        'Réservations',
+        performance.totalReservations.toDouble(),
+        Colors.orange[300]!,
+      ),
+      FunnelStage(
+        'Collectes',
+        performance.completedPickups.toDouble(),
+        Colors.green[300]!,
+      ),
     ];
-    
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(16.w),
@@ -34,10 +37,7 @@ class ConversionFunnelWidget extends StatelessWidget {
           children: [
             Text(
               'Funnel de conversion',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
             SizedBox(
@@ -54,29 +54,31 @@ class ConversionFunnelWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildConversionRates(PerformanceMetrics performance) {
     return Column(
       children: [
         _buildRateRow(
           'Taux de réservation',
-          performance.totalViews > 0 
-            ? (performance.totalReservations / performance.totalViews * 100)
-            : 0,
+          performance.totalViews > 0
+              ? (performance.totalReservations / performance.totalViews * 100)
+              : 0,
           Colors.orange,
         ),
         SizedBox(height: 8.h),
         _buildRateRow(
           'Taux de collecte',
-          performance.totalReservations > 0 
-            ? (performance.completedPickups / performance.totalReservations * 100)
-            : 0,
+          performance.totalReservations > 0
+              ? (performance.completedPickups /
+                    performance.totalReservations *
+                    100)
+              : 0,
           Colors.green,
         ),
       ],
     );
   }
-  
+
   Widget _buildRateRow(String label, double rate, Color color) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,16 +107,13 @@ class ConversionFunnelWidget extends StatelessWidget {
 /// Widget pour la distribution horaire des offres
 class OffersByHourChart extends StatelessWidget {
   final Map<int, int> offersByHour;
-  
-  const OffersByHourChart({
-    super.key,
-    required this.offersByHour,
-  });
-  
+
+  const OffersByHourChart({super.key, required this.offersByHour});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(16.w),
@@ -123,10 +122,7 @@ class OffersByHourChart extends StatelessWidget {
           children: [
             Text(
               'Distribution des offres par heure',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
             SizedBox(
@@ -211,19 +207,14 @@ class OffersByHourChart extends StatelessWidget {
 /// Widget pour le score de durabilité
 class SustainabilityScoreWidget extends StatelessWidget {
   final double score;
-  
-  const SustainabilityScoreWidget({
-    super.key,
-    required this.score,
-  });
-  
+
+  const SustainabilityScoreWidget({super.key, required this.score});
+
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
@@ -256,10 +247,7 @@ class SustainabilityScoreWidget extends StatelessWidget {
                   SizedBox(height: 8.h),
                   Text(
                     _getSustainabilityLabel(score),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
                   ),
                   SizedBox(height: 16.h),
                   LinearProgressIndicator(
@@ -295,10 +283,7 @@ class SustainabilityScoreWidget extends StatelessWidget {
                     ),
                     Text(
                       '/100',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 14.sp, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -309,14 +294,14 @@ class SustainabilityScoreWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   String _getSustainabilityLabel(double score) {
     if (score >= 80) return 'Impact écologique excellent';
     if (score >= 60) return 'Bonne performance environnementale';
     if (score >= 40) return 'Des améliorations sont possibles';
     return 'Actions urgentes recommandées';
   }
-  
+
   Color _getSustainabilityColor(double score) {
     if (score >= 80) return Colors.green[700]!;
     if (score >= 60) return Colors.green;
@@ -328,12 +313,9 @@ class SustainabilityScoreWidget extends StatelessWidget {
 /// Widget pour les métriques écologiques
 class EcoMetricsGrid extends StatelessWidget {
   final Map<String, dynamic> metrics;
-  
-  const EcoMetricsGrid({
-    super.key,
-    required this.metrics,
-  });
-  
+
+  const EcoMetricsGrid({super.key, required this.metrics});
+
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -371,8 +353,13 @@ class EcoMetricsGrid extends StatelessWidget {
       ],
     );
   }
-  
-  Widget _buildMetricCard(String title, String value, IconData icon, Color color) {
+
+  Widget _buildMetricCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -398,10 +385,7 @@ class EcoMetricsGrid extends StatelessWidget {
               ),
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey[700]),
               ),
             ],
           ),
@@ -414,17 +398,14 @@ class EcoMetricsGrid extends StatelessWidget {
 /// Widget pour les équivalences écologiques
 class EcoEquivalencesWidget extends StatelessWidget {
   final Map<String, dynamic> metrics;
-  
-  const EcoEquivalencesWidget({
-    super.key,
-    required this.metrics,
-  });
-  
+
+  const EcoEquivalencesWidget({super.key, required this.metrics});
+
   @override
   Widget build(BuildContext context) {
     final co2Saved = metrics['co2Saved'] ?? 0;
     final equivalences = _calculateEquivalences(co2Saved);
-    
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(16.w),
@@ -433,10 +414,7 @@ class EcoEquivalencesWidget extends StatelessWidget {
           children: [
             Text(
               'Équivalences',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
             ...equivalences.map((equiv) => _buildEquivalenceRow(equiv)),
@@ -445,7 +423,7 @@ class EcoEquivalencesWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildEquivalenceRow(Equivalence equiv) {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
@@ -474,10 +452,7 @@ class EcoEquivalencesWidget extends StatelessWidget {
                 ),
                 Text(
                   equiv.description,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -486,7 +461,7 @@ class EcoEquivalencesWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   List<Equivalence> _calculateEquivalences(double co2Kg) {
     return [
       Equivalence(
@@ -514,16 +489,16 @@ class EcoEquivalencesWidget extends StatelessWidget {
 /// Widget pour la distribution des notes clients
 class RatingDistributionChart extends StatelessWidget {
   final Map<int, int> distribution;
-  
-  const RatingDistributionChart({
-    super.key,
-    required this.distribution,
-  });
-  
+
+  const RatingDistributionChart({super.key, required this.distribution});
+
   @override
   Widget build(BuildContext context) {
-    final totalRatings = distribution.values.fold(0, (sum, count) => sum + count);
-    
+    final totalRatings = distribution.values.fold(
+      0,
+      (sum, count) => sum + count,
+    );
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(16.w),
@@ -554,8 +529,10 @@ class RatingDistributionChart extends StatelessWidget {
             ...List.generate(5, (index) {
               final rating = 5 - index;
               final count = distribution[rating] ?? 0;
-              final percentage = totalRatings > 0 ? (count / totalRatings * 100).toDouble() : 0.0;
-              
+              final percentage = totalRatings > 0
+                  ? (count / totalRatings * 100).toDouble()
+                  : 0.0;
+
               return _buildRatingRow(rating, count, percentage);
             }),
           ],
@@ -563,7 +540,7 @@ class RatingDistributionChart extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildRatingRow(int rating, int count, double percentage) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
@@ -615,19 +592,19 @@ class RatingDistributionChart extends StatelessWidget {
       ),
     );
   }
-  
+
   double _calculateAverageRating(Map<int, int> distribution) {
     int totalRatings = 0;
     int weightedSum = 0;
-    
+
     distribution.forEach((rating, count) {
       totalRatings += count;
       weightedSum += rating * count;
     });
-    
+
     return totalRatings > 0 ? weightedSum / totalRatings : 0;
   }
-  
+
   Color _getRatingColor(int rating) {
     if (rating >= 4) return Colors.green;
     if (rating >= 3) return Colors.orange;
@@ -638,12 +615,9 @@ class RatingDistributionChart extends StatelessWidget {
 /// Widget pour les segments clients
 class CustomerSegmentsWidget extends StatelessWidget {
   final List<CustomerSegment> segments;
-  
-  const CustomerSegmentsWidget({
-    super.key,
-    required this.segments,
-  });
-  
+
+  const CustomerSegmentsWidget({super.key, required this.segments});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -654,10 +628,7 @@ class CustomerSegmentsWidget extends StatelessWidget {
           children: [
             Text(
               'Segments clients',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
             SizedBox(
@@ -689,7 +660,7 @@ class CustomerSegmentsWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildSegmentLegend(CustomerSegment segment) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
@@ -708,26 +679,17 @@ class CustomerSegmentsWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  segment.name,
-                  style: TextStyle(fontSize: 14.sp),
-                ),
+                Text(segment.name, style: TextStyle(fontSize: 14.sp)),
                 Text(
                   '${segment.averageSpend.toStringAsFixed(0)}€ panier moyen',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
                 ),
               ],
             ),
           ),
           Text(
             '${segment.count} clients',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
           ),
         ],
       ),
@@ -755,28 +717,28 @@ class FunnelStage {
   final String name;
   final double value;
   final Color color;
-  
+
   FunnelStage(this.name, this.value, this.color);
 }
 
 class FunnelPainter extends CustomPainter {
   final List<FunnelStage> stages;
-  
+
   FunnelPainter({required this.stages});
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
     final textPainter = TextPainter(textDirection: TextDirection.ltr);
-    
+
     final maxValue = stages.map((s) => s.value).reduce(math.max);
     final stageHeight = size.height / stages.length;
-    
+
     for (int i = 0; i < stages.length; i++) {
       final stage = stages[i];
       final width = (stage.value / maxValue) * size.width;
       final top = i * stageHeight;
-      
+
       // Dessiner le rectangle
       paint.color = stage.color;
       final rect = RRect.fromRectAndRadius(
@@ -784,7 +746,7 @@ class FunnelPainter extends CustomPainter {
         Radius.circular(8),
       );
       canvas.drawRRect(rect, paint);
-      
+
       // Dessiner le texte
       textPainter.text = TextSpan(
         text: '${stage.name}\n${stage.value.toInt()}',
@@ -802,7 +764,7 @@ class FunnelPainter extends CustomPainter {
       textPainter.paint(canvas, textOffset);
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
@@ -812,7 +774,7 @@ class Equivalence {
   final String value;
   final String description;
   final Color color;
-  
+
   Equivalence({
     required this.icon,
     required this.value,

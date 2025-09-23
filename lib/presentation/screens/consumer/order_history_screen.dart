@@ -21,10 +21,7 @@ class OrderHistoryScreen extends ConsumerWidget {
           ),
         ),
         body: const TabBarView(
-          children: [
-            _ActiveOrdersTab(),
-            _CompletedOrdersTab(),
-          ],
+          children: [_ActiveOrdersTab(), _CompletedOrdersTab()],
         ),
       ),
     );
@@ -49,9 +46,9 @@ class _ActiveOrdersTab extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Aucune commande en cours',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: Colors.grey),
           ),
           const SizedBox(height: 8),
           const Text(
@@ -85,14 +82,13 @@ class _CompletedOrdersTab extends StatelessWidget {
   }
 }
 
-
 class _OrderHistoryCard extends StatelessWidget {
   final String orderId;
   final String merchantName;
   final DateTime orderedAt;
   final DateTime collectedAt;
   final int ecoPoints;
-  
+
   const _OrderHistoryCard({
     required this.orderId,
     required this.merchantName,
@@ -100,11 +96,11 @@ class _OrderHistoryCard extends StatelessWidget {
     required this.collectedAt,
     required this.ecoPoints,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     final duration = collectedAt.difference(orderedAt);
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
@@ -115,10 +111,7 @@ class _OrderHistoryCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  orderId,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(orderId, style: Theme.of(context).textTheme.titleMedium),
                 Row(
                   children: [
                     Icon(Icons.eco, size: 16, color: Colors.green.shade700),
@@ -142,24 +135,22 @@ class _OrderHistoryCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.calendar_today, size: 14, color: Colors.grey.shade600),
+                Icon(
+                  Icons.calendar_today,
+                  size: 14,
+                  color: Colors.grey.shade600,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   '${orderedAt.day}/${orderedAt.month}/${orderedAt.year}',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                 ),
                 const SizedBox(width: 16),
                 Icon(Icons.timer, size: 14, color: Colors.grey.shade600),
                 const SizedBox(width: 4),
                 Text(
                   'Récupérée en ${duration.inHours}h ${duration.inMinutes % 60}min',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                 ),
               ],
             ),

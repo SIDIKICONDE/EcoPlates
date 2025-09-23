@@ -8,7 +8,7 @@ class SmartSearchBar extends ConsumerStatefulWidget {
   final VoidCallback? onTap;
   final bool autofocus;
   final bool showBackButton;
-  
+
   const SmartSearchBar({
     super.key,
     this.onTap,
@@ -31,7 +31,7 @@ class _SmartSearchBarState extends ConsumerState<SmartSearchBar> {
     super.initState();
     _controller = TextEditingController();
     _focusNode = FocusNode();
-    
+
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         _showSuggestions();
@@ -52,7 +52,7 @@ class _SmartSearchBarState extends ConsumerState<SmartSearchBar> {
   void _showSuggestions() {
     final searchNotifier = ref.read(searchProvider.notifier);
     searchNotifier.toggleSuggestions(true);
-    
+
     _overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(_overlayEntry!);
   }
@@ -60,13 +60,14 @@ class _SmartSearchBarState extends ConsumerState<SmartSearchBar> {
   void _hideSuggestions() {
     _overlayEntry?.remove();
     _overlayEntry = null;
-    
+
     final searchNotifier = ref.read(searchProvider.notifier);
     searchNotifier.toggleSuggestions(false);
   }
 
   OverlayEntry _createOverlayEntry() {
-    final RenderBox renderBox = _searchBarKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox renderBox =
+        _searchBarKey.currentContext!.findRenderObject() as RenderBox;
     final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
 
@@ -82,7 +83,7 @@ class _SmartSearchBarState extends ConsumerState<SmartSearchBar> {
             onSuggestionTap: (suggestion) {
               _controller.text = suggestion.text;
               _focusNode.unfocus();
-              
+
               final searchNotifier = ref.read(searchProvider.notifier);
               searchNotifier.selectSuggestion(suggestion);
             },
@@ -103,13 +104,15 @@ class _SmartSearchBarState extends ConsumerState<SmartSearchBar> {
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(24),
-        boxShadow: widget.showBackButton ? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ] : null,
+        boxShadow: widget.showBackButton
+            ? [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Row(
         children: [
@@ -123,7 +126,7 @@ class _SmartSearchBarState extends ConsumerState<SmartSearchBar> {
               padding: EdgeInsets.only(left: 16),
               child: Icon(Icons.search, color: Colors.grey),
             ),
-          
+
           Expanded(
             child: TextField(
               controller: _controller,
@@ -150,7 +153,7 @@ class _SmartSearchBarState extends ConsumerState<SmartSearchBar> {
               ),
             ),
           ),
-          
+
           if (searchState.query.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.clear),
@@ -170,30 +173,30 @@ class _SmartSearchBarState extends ConsumerState<SmartSearchBar> {
 class _SuggestionsOverlay extends ConsumerWidget {
   final Function(SearchSuggestion) onSuggestionTap;
 
-  const _SuggestionsOverlay({
-    required this.onSuggestionTap,
-  });
+  const _SuggestionsOverlay({required this.onSuggestionTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchState = ref.watch(searchProvider);
-    
+
     if (!searchState.showSuggestions) {
       return const SizedBox.shrink();
     }
 
     final items = <Widget>[];
-    
+
     // Suggestions
     if (searchState.suggestions.isNotEmpty) {
       for (final suggestion in searchState.suggestions) {
-        items.add(_SuggestionTile(
-          suggestion: suggestion,
-          onTap: () => onSuggestionTap(suggestion),
-        ));
+        items.add(
+          _SuggestionTile(
+            suggestion: suggestion,
+            onTap: () => onSuggestionTap(suggestion),
+          ),
+        );
       }
     }
-    
+
     // Historique si pas de recherche active
     if (searchState.query.isEmpty && searchState.searchHistory.isNotEmpty) {
       items.add(
@@ -226,22 +229,24 @@ class _SuggestionsOverlay extends ConsumerWidget {
           ),
         ),
       );
-      
+
       for (final term in searchState.searchHistory.take(5)) {
-        items.add(_HistoryTile(
-          term: term,
-          onTap: () {
-            final suggestion = SearchSuggestion(
-              text: term,
-              type: SuggestionType.history,
-              icon: SearchSuggestionIcon.history,
-            );
-            onSuggestionTap(suggestion);
-          },
-          onDelete: () {
-            ref.read(searchProvider.notifier).removeFromHistory(term);
-          },
-        ));
+        items.add(
+          _HistoryTile(
+            term: term,
+            onTap: () {
+              final suggestion = SearchSuggestion(
+                text: term,
+                type: SuggestionType.history,
+                icon: SearchSuggestionIcon.history,
+              );
+              onSuggestionTap(suggestion);
+            },
+            onDelete: () {
+              ref.read(searchProvider.notifier).removeFromHistory(term);
+            },
+          ),
+        );
       }
     }
 
@@ -252,10 +257,7 @@ class _SuggestionsOverlay extends ConsumerWidget {
     return Container(
       constraints: const BoxConstraints(maxHeight: 400),
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: items,
-        ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: items),
       ),
     );
   }
@@ -266,16 +268,13 @@ class _SuggestionTile extends StatelessWidget {
   final SearchSuggestion suggestion;
   final VoidCallback onTap;
 
-  const _SuggestionTile({
-    required this.suggestion,
-    required this.onTap,
-  });
+  const _SuggestionTile({required this.suggestion, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     IconData iconData;
     Color iconColor;
-    
+
     switch (suggestion.icon) {
       case SearchSuggestionIcon.history:
         iconData = Icons.history;
@@ -358,12 +357,7 @@ class _HistoryTile extends StatelessWidget {
           children: [
             const Icon(Icons.history, size: 20, color: Colors.grey),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                term,
-                style: const TextStyle(fontSize: 14),
-              ),
-            ),
+            Expanded(child: Text(term, style: const TextStyle(fontSize: 14))),
             IconButton(
               icon: const Icon(Icons.close, size: 18),
               onPressed: onDelete,

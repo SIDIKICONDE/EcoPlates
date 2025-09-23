@@ -28,7 +28,7 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
   late Animation<double> _scaleAnimation;
   late Animation<double> _favoriteAnimation;
   late Animation<double> _pulseAnimation;
-  
+
   bool _isPressed = false;
   bool _isFavorite = false;
 
@@ -36,48 +36,37 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
   void initState() {
     super.initState();
     _isFavorite = widget.restaurant.isFavorite;
-    
+
     // Animation d'échelle pour le tap
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.easeInOut,
-    ));
-    
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeInOut),
+    );
+
     // Animation pour le favori
     _favoriteController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    _favoriteAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.4,
-    ).animate(CurvedAnimation(
-      parent: _favoriteController,
-      curve: Curves.elasticOut,
-    ));
-    
+    _favoriteAnimation = Tween<double>(begin: 1.0, end: 1.4).animate(
+      CurvedAnimation(parent: _favoriteController, curve: Curves.elasticOut),
+    );
+
     // Animation de pulsation pour les offres limitées
     _pulseController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
-    
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
     // Démarrer la pulsation si peu d'offres
-    if (widget.restaurant.availableOffers > 0 && widget.restaurant.availableOffers <= 3) {
+    if (widget.restaurant.availableOffers > 0 &&
+        widget.restaurant.availableOffers <= 3) {
       _pulseController.repeat(reverse: true);
     }
   }
@@ -104,7 +93,7 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     return GestureDetector(
       onTapDown: (_) {
         setState(() => _isPressed = true);
@@ -131,9 +120,9 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: _isPressed 
-                      ? Colors.black.withValues(alpha: 0.2)
-                      : Colors.black.withValues(alpha: 0.1),
+                    color: _isPressed
+                        ? Colors.black.withValues(alpha: 0.2)
+                        : Colors.black.withValues(alpha: 0.1),
                     blurRadius: _isPressed ? 20 : 15,
                     offset: Offset(0, _isPressed ? 8 : 6),
                     spreadRadius: _isPressed ? 2 : 0,
@@ -190,7 +179,9 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
                   gradient: LinearGradient(
                     colors: [
                       _getCategoryColor(widget.restaurant.category),
-                      _getCategoryColor(widget.restaurant.category).withValues(alpha: 0.7),
+                      _getCategoryColor(
+                        widget.restaurant.category,
+                      ).withValues(alpha: 0.7),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -211,10 +202,7 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Colors.transparent,
-              Colors.black.withValues(alpha: 0.3),
-            ],
+            colors: [Colors.transparent, Colors.black.withValues(alpha: 0.3)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -331,10 +319,7 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
         children: [
           // Badge de distance
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 6,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(20),
@@ -342,11 +327,7 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.near_me,
-                  color: Colors.white,
-                  size: 14,
-                ),
+                const Icon(Icons.near_me, color: Colors.white, size: 14),
                 const SizedBox(width: 6),
                 Text(
                   widget.restaurant.distanceText,
@@ -365,9 +346,9 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
               animation: _pulseAnimation,
               builder: (context, child) {
                 return Transform.scale(
-                  scale: widget.restaurant.availableOffers <= 3 
-                    ? _pulseAnimation.value 
-                    : 1.0,
+                  scale: widget.restaurant.availableOffers <= 3
+                      ? _pulseAnimation.value
+                      : 1.0,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
@@ -376,15 +357,17 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: widget.restaurant.availableOffers <= 3
-                          ? [Colors.orange, Colors.deepOrange]
-                          : [Colors.green, Colors.lightGreen],
+                            ? [Colors.orange, Colors.deepOrange]
+                            : [Colors.green, Colors.lightGreen],
                       ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: (widget.restaurant.availableOffers <= 3
-                            ? Colors.orange
-                            : Colors.green).withValues(alpha: 0.4),
+                          color:
+                              (widget.restaurant.availableOffers <= 3
+                                      ? Colors.orange
+                                      : Colors.green)
+                                  .withValues(alpha: 0.4),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -395,16 +378,16 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
                       children: [
                         Icon(
                           widget.restaurant.availableOffers <= 3
-                            ? Icons.timer
-                            : Icons.shopping_bag,
+                              ? Icons.timer
+                              : Icons.shopping_bag,
                           color: Colors.white,
                           size: 14,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           widget.restaurant.availableOffers <= 3
-                            ? 'Plus que ${widget.restaurant.availableOffers}!'
-                            : '${widget.restaurant.availableOffers} dispos',
+                              ? 'Plus que ${widget.restaurant.availableOffers}!'
+                              : '${widget.restaurant.availableOffers} dispos',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -481,10 +464,7 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
           // Type de cuisine
           Text(
             widget.restaurant.cuisineType,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -514,18 +494,12 @@ class _AnimatedRestaurantCardState extends State<AnimatedRestaurantCard>
               ] else
                 Text(
                   'À partir de ${widget.restaurant.minPrice.toStringAsFixed(2)}€',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                 ),
               const Spacer(),
               // Horaire
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: theme.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),

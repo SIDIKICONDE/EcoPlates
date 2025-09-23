@@ -11,10 +11,12 @@ abstract class AnalyticsRepository {
     required String merchantId,
     required DateRange period,
   });
-  
+
   /// Récupérer le dashboard temps réel
-  Future<Either<Failure, RealtimeDashboard>> getRealtimeDashboard(String merchantId);
-  
+  Future<Either<Failure, RealtimeDashboard>> getRealtimeDashboard(
+    String merchantId,
+  );
+
   /// Générer un rapport
   Future<Either<Failure, AnalyticsReport>> generateReport({
     required Analytics analytics,
@@ -22,7 +24,7 @@ abstract class AnalyticsRepository {
     required ReportFormat format,
     required Merchant merchant,
   });
-  
+
   /// Exporter les données
   Future<Either<Failure, String>> exportData({
     required String merchantId,
@@ -31,67 +33,67 @@ abstract class AnalyticsRepository {
     required ExportFormat format,
     required List<ExportDataType> dataTypes,
   });
-  
+
   /// Générer des insights
   Future<Either<Failure, List<Insight>>> generateInsights({
     required Analytics analytics,
     InsightType? type,
   });
-  
+
   /// Générer des prédictions
   Future<Either<Failure, Predictions>> generatePredictions({
     required Analytics historicalData,
     required int daysAhead,
   });
-  
+
   /// Récupérer les benchmarks du secteur
   Future<Either<Failure, SectorBenchmark>> getSectorBenchmark({
     required MerchantType merchantType,
     required String location,
   });
-  
+
   /// Récupérer les métriques de performance
   Future<Either<Failure, PerformanceMetrics>> getPerformanceMetrics({
     required String merchantId,
     required DateRange period,
   });
-  
+
   /// Récupérer les métriques de ventes
   Future<Either<Failure, SalesMetrics>> getSalesMetrics({
     required String merchantId,
     required DateRange period,
   });
-  
+
   /// Récupérer les métriques écologiques
   Future<Either<Failure, EcologicalMetrics>> getEcologicalMetrics({
     required String merchantId,
     required DateRange period,
   });
-  
+
   /// Récupérer les métriques clients
   Future<Either<Failure, CustomerMetrics>> getCustomerMetrics({
     required String merchantId,
     required DateRange period,
   });
-  
+
   /// Récupérer les métriques d'inventaire
   Future<Either<Failure, InventoryMetrics>> getInventoryMetrics({
     required String merchantId,
   });
-  
+
   /// Enregistrer un événement analytique
   Future<Either<Failure, void>> trackEvent({
     required String merchantId,
     required AnalyticsEvent event,
   });
-  
+
   /// Enregistrer une vue de page
   Future<Either<Failure, void>> trackPageView({
     required String merchantId,
     required String pageName,
     Map<String, dynamic>? properties,
   });
-  
+
   /// Enregistrer une conversion
   Future<Either<Failure, void>> trackConversion({
     required String merchantId,
@@ -99,13 +101,13 @@ abstract class AnalyticsRepository {
     required double value,
     Map<String, dynamic>? properties,
   });
-  
+
   /// Récupérer les KPIs principaux
   Future<Either<Failure, Map<String, dynamic>>> getKeyMetrics({
     required String merchantId,
     required DateTime date,
   });
-  
+
   /// Récupérer l'historique d'un métrique spécifique
   Future<Either<Failure, List<MetricDataPoint>>> getMetricHistory({
     required String merchantId,
@@ -113,20 +115,20 @@ abstract class AnalyticsRepository {
     required DateRange period,
     required MetricGranularity granularity,
   });
-  
+
   /// Mettre en cache les analytics
   Future<void> cacheAnalytics({
     required String merchantId,
     required Analytics analytics,
     required DateRange period,
   });
-  
+
   /// Récupérer les analytics depuis le cache
   Future<Either<Failure, Analytics>> getCachedAnalytics({
     required String merchantId,
     required DateRange period,
   });
-  
+
   /// Vider le cache
   Future<void> clearCache({String? merchantId});
 }
@@ -137,14 +139,14 @@ class AnalyticsEvent {
   final String category;
   final Map<String, dynamic> properties;
   final DateTime timestamp;
-  
+
   const AnalyticsEvent({
     required this.name,
     required this.category,
     required this.properties,
     required this.timestamp,
   });
-  
+
   Map<String, dynamic> toJson() => {
     'name': name,
     'category': category,
@@ -155,29 +157,22 @@ class AnalyticsEvent {
 
 /// Types de conversion
 enum ConversionType {
-  reservation,      // Réservation créée
-  collection,       // Collecte effectuée
-  signup,          // Inscription
-  firstOrder,      // Première commande
-  referral,        // Parrainage
+  reservation, // Réservation créée
+  collection, // Collecte effectuée
+  signup, // Inscription
+  firstOrder, // Première commande
+  referral, // Parrainage
 }
 
 /// Granularité des métriques
-enum MetricGranularity {
-  hour,
-  day,
-  week,
-  month,
-  quarter,
-  year,
-}
+enum MetricGranularity { hour, day, week, month, quarter, year }
 
 /// Point de données pour un métrique
 class MetricDataPoint {
   final DateTime timestamp;
   final double value;
   final Map<String, dynamic>? metadata;
-  
+
   const MetricDataPoint({
     required this.timestamp,
     required this.value,
@@ -194,7 +189,7 @@ class AlertConfiguration {
   final double threshold;
   final List<NotificationChannel> channels;
   final bool isActive;
-  
+
   const AlertConfiguration({
     required this.id,
     required this.name,
@@ -208,20 +203,15 @@ class AlertConfiguration {
 
 /// Conditions d'alerte
 enum AlertCondition {
-  above,        // Au-dessus du seuil
-  below,        // En dessous du seuil
-  equals,       // Égal au seuil
-  increases,    // Augmente de X%
-  decreases,    // Diminue de X%
+  above, // Au-dessus du seuil
+  below, // En dessous du seuil
+  equals, // Égal au seuil
+  increases, // Augmente de X%
+  decreases, // Diminue de X%
 }
 
 /// Canaux de notification pour les alertes
-enum NotificationChannel {
-  email,
-  push,
-  sms,
-  inApp,
-}
+enum NotificationChannel { email, push, sms, inApp }
 
 /// Extension pour la granularité
 extension MetricGranularityExtension on MetricGranularity {
@@ -241,7 +231,7 @@ extension MetricGranularityExtension on MetricGranularity {
         return 'Année';
     }
   }
-  
+
   Duration get duration {
     switch (this) {
       case MetricGranularity.hour:

@@ -251,7 +251,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
-                    height: 100,
+                    height: 80,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -428,17 +428,17 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
         ref.read(selectedCategoryProvider.notifier).state = category.id;
       },
       child: Container(
-        width: 80,
-        margin: const EdgeInsets.only(right: 12),
+        width: 65,
+        margin: const EdgeInsets.only(right: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 60,
-              height: 60,
+              width: 45,
+              height: 45,
               decoration: BoxDecoration(
                 color: category.color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: category.color.withValues(alpha: 0.3),
                   width: 1,
@@ -447,14 +447,14 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
               child: Icon(
                 category.icon,
                 color: category.color,
-                size: 30,
+                size: 24,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               category.name,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../presentation/screens/main_home_screen.dart';
+import '../../presentation/screens/restaurant_detail_screen.dart';
 import '../../presentation/screens/consumer/consumer_home_screen.dart';
 import '../../presentation/screens/merchant/merchant_home_screen.dart';
 import '../../presentation/screens/scan_screen.dart';
@@ -72,6 +73,18 @@ class AppRouter {
           pageBuilder: (context, state) {
             return const MaterialPage(
               child: MainHomeScreen(),
+            );
+          },
+        ),
+        
+        // Page de détail d'un restaurant
+        GoRoute(
+          path: '/restaurant/:id',
+          name: 'restaurant-detail',
+          pageBuilder: (context, state) {
+            final restaurantId = state.pathParameters['id']!;
+            return MaterialPage(
+              child: RestaurantDetailScreen(restaurantId: restaurantId),
             );
           },
         ),

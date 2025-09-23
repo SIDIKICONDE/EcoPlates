@@ -5,48 +5,57 @@ import 'offer_discount_badge.dart';
 import 'offer_time_badge.dart';
 import 'offer_quantity_badge.dart';
 
-/// Widget pour afficher l'image de l'offre avec ses badges
+/// Widget spécialisé pour afficher l'image principale d'une carte d'offre
+/// Inclut tous les badges informatifs (réduction, temps restant, quantité)
+/// Utilise CachedNetworkImage pour optimiser les performances réseau
+/// Respecte les standards EcoPlates avec une mise en page moderne et accessible
 class OfferCardImage extends StatelessWidget {
+  /// L'offre alimentaire dont on affiche l'image et les badges
   final FoodOffer offer;
-  
+
   const OfferCardImage({
     super.key,
     required this.offer,
   });
 
+  /// Construit le widget avec une mise en page en stack pour superposer les badges
+  /// Utilise un système de padding cohérent avec les autres composants de carte
+  /// Optimise les performances avec CachedNetworkImage et gestion d'erreur
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
         children: [
-          // Image principale
+          // Section image principale avec coins arrondis
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Stack(
               children: [
-                // Image
+                // Image principale avec ratio 16:9 optimisé pour mobile
                 AspectRatio(
                   aspectRatio: 16 / 9,
                   child: offer.images.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: offer.images.first,
                           fit: BoxFit.cover,
+                          // Placeholder pendant le chargement
                           placeholder: (context, url) => const _ImagePlaceholder(
                             child: CircularProgressIndicator(),
                           ),
+                          // Widget d'erreur avec icône contextuelle
                           errorWidget: (context, url, error) =>
                               _OfferPlaceholderImage(type: offer.type),
                         )
                       : _OfferPlaceholderImage(type: offer.type),
                 ),
-                // Bordure interne
+                // Bordure interne subtile pour améliorer la définition visuelle
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         width: 0.25,
                       ),
                     ),
@@ -56,7 +65,7 @@ class OfferCardImage extends StatelessWidget {
             ),
           ),
 
-          // Badge de réduction en haut à gauche
+          // Badge promotionnel en haut à gauche (priorité haute visibilité)
           Positioned(
             top: 16,
             left: 16,
@@ -66,7 +75,7 @@ class OfferCardImage extends StatelessWidget {
             ),
           ),
 
-          // Badge de temps restant en haut à droite
+          // Badge temporel en haut à droite (urgence pour dernières minutes)
           if (offer.canPickup)
             Positioned(
               top: 16,
@@ -76,7 +85,7 @@ class OfferCardImage extends StatelessWidget {
               ),
             ),
 
-          // Quantité disponible
+          // Indicateur de stock en bas à droite (quantité restante)
           if (offer.quantity > 0)
             Positioned(
               bottom: 16,
@@ -91,14 +100,18 @@ class OfferCardImage extends StatelessWidget {
   }
 }
 
-/// Placeholder pour les images
+/// Widget placeholder générique pour afficher pendant le chargement d'images
+/// Utilise une couleur de fond neutre et centre le contenu enfant
+/// Peut contenir un CircularProgressIndicator ou autre indicateur de chargement
 class _ImagePlaceholder extends StatelessWidget {
+  /// Le widget enfant à afficher au centre (typiquement un indicateur de chargement)
   final Widget child;
-  
+
   const _ImagePlaceholder({
     required this.child,
   });
 
+  /// Construit un container avec couleur de fond et centrage du contenu
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -108,14 +121,19 @@ class _ImagePlaceholder extends StatelessWidget {
   }
 }
 
-/// Image par défaut selon le type d'offre
+/// Widget d'image par défaut contextuel selon le type d'offre alimentaire
+/// Affiche une icône représentative du type de nourriture pour améliorer l'identification
+/// Utilisé quand l'image réseau n'est pas disponible ou en cas d'erreur de chargement
+/// Respecte le design system avec des icônes Material Design cohérentes
 class _OfferPlaceholderImage extends StatelessWidget {
+  /// Le type d'offre pour déterminer l'icône appropriée
   final OfferType type;
-  
+
   const _OfferPlaceholderImage({
     required this.type,
   });
 
+  /// Construit un container avec icône centrée et stylisée
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -130,20 +148,23 @@ class _OfferPlaceholderImage extends StatelessWidget {
     );
   }
 
+  /// Sélectionne l'icône Material Design appropriée selon le type d'offre
+  /// Utilise des icônes évocatrices pour faciliter la reconnaissance visuelle
+  /// Retourne une icône par défaut si le type n'est pas reconnu
   IconData _getIconForType(OfferType type) {
     switch (type) {
       case OfferType.panier:
-        return Icons.shopping_basket;
+        return Icons.shopping_basket; // Panier complet
       case OfferType.plat:
-        return Icons.restaurant;
+        return Icons.restaurant; // Repas préparé
       case OfferType.boulangerie:
-        return Icons.bakery_dining;
+        return Icons.bakery_dining; // Produits de boulangerie
       case OfferType.fruits:
-        return Icons.apple;
+        return Icons.apple; // Fruits et légumes
       case OfferType.epicerie:
-        return Icons.storefront;
+        return Icons.storefront; // Épicerie générale
       default:
-        return Icons.fastfood;
+        return Icons.fastfood; // Nourriture générique par défaut
     }
   }
 }

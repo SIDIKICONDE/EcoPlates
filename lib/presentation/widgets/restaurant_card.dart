@@ -43,7 +43,7 @@ class RestaurantCard extends StatelessWidget {
                     top: Radius.circular(16),
                   ),
                   child: AspectRatio(
-                    aspectRatio: 1.3,
+                    aspectRatio: 2.0,
                     child: restaurant.imageUrl != null
                         ? CachedNetworkImage(
                             imageUrl: restaurant.imageUrl!,

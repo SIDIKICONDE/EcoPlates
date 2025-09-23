@@ -450,8 +450,8 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
                       itemBuilder: (context, index) {
                         final restaurant = filteredRestaurants[index];
                         return Container(
-                          width: 200,
-                          margin: const EdgeInsets.only(right: 12),
+                          width: 340,
+                          margin: const EdgeInsets.only(right: 16),
                           child: RestaurantCard(
                             restaurant: restaurant,
                             onTap: () {
@@ -471,8 +471,8 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
                     itemCount: 3,
                     itemBuilder: (context, index) {
                       return Container(
-                        width: 200,
-                        margin: const EdgeInsets.only(right: 12),
+                        width: 340,
+                        margin: const EdgeInsets.only(right: 16),
                         child: _buildShimmerCard(),
                       );
                     },
@@ -538,7 +538,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
         children: [
           // Image placeholder
           Container(
-            height: 140,
+            height: 120,
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
@@ -546,7 +546,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
             child: Center(
               child: Icon(
                 Icons.image,
-                size: 50,
+                size: 60,
                 color: Colors.grey.shade400,
               ),
             ),

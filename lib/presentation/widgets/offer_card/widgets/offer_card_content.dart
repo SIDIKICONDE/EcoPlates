@@ -42,7 +42,17 @@ class OfferCardContent extends StatelessWidget {
 
           // Section date de récupération
           _buildPickupDate(),
-          const SizedBox(height: 16.5),
+          const SizedBox(height: 6),
+          
+          // Ligne de séparation en pointillés
+          SizedBox(
+            height: 0.5,
+            child: CustomPaint(
+              size: const Size(double.infinity, 1),
+              painter: _DottedLinePainter(),
+            ),
+          ),
+          const SizedBox(height: 6),
           
           // Section prix
           _buildPriceOnly(theme),
@@ -145,5 +155,31 @@ class OfferCardContent extends StatelessWidget {
       return 'Horaire à définir';
     }
   }
+}
 
+/// Painter pour dessiner une ligne en pointillés
+class _DottedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.grey.withValues(alpha: 0.3)
+      ..strokeWidth = 1;
+
+    const double dashWidth = 5;
+    const double dashSpace = 5;
+    double startX = 0;
+    
+    // Dessiner les pointillés
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, 0),
+        Offset(startX + dashWidth, 0),
+        paint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

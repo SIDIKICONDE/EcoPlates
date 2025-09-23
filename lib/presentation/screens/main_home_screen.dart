@@ -305,6 +305,9 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
                   onActionTap: () => context.go('/closing-soon'),
                   isUrgent: true,
                 ),
+                
+                // Section "Colis anti-gaspi"
+                _buildSurpriseBoxSection(),
               ],
             ),
           ),
@@ -604,6 +607,354 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
     );
   }
 
+  Widget _buildSurpriseBoxSection() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header de la section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Colors.purple, Colors.deepPurple],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            'NOUVEAU',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          '🎁 Colis anti-gaspi',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Paniers surprises à prix mini',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+                TextButton(
+                  onPressed: () => context.go('/surprise-boxes'),
+                  child: Text(
+                    'Voir tout',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          
+          // Slider horizontal de colis
+          SizedBox(
+            height: 240,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: 6,
+              itemBuilder: (context, index) {
+                return _buildSurpriseBoxCard(
+                  index: index,
+                  onTap: () {
+                    // Naviguer vers le détail du colis
+                    context.go('/surprise-box/${index}');
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildSurpriseBoxCard({
+    required int index,
+    required VoidCallback onTap,
+  }) {
+    // Données de démo pour les colis
+    final boxes = [
+      {
+        'title': 'Panier Gourmand',
+        'subtitle': 'Mélange sucré/salé',
+        'price': 4.99,
+        'originalPrice': 15.0,
+        'items': '3-5 articles',
+        'color': Colors.orange,
+        'icon': Icons.fastfood,
+        'badge': 'TOP VENTE',
+      },
+      {
+        'title': 'Box Végétarienne',
+        'subtitle': '100% végétal',
+        'price': 5.99,
+        'originalPrice': 18.0,
+        'items': '4-6 articles',
+        'color': Colors.green,
+        'icon': Icons.eco,
+        'badge': 'BIO',
+      },
+      {
+        'title': 'Panier Boulangerie',
+        'subtitle': 'Pains et viennoiseries',
+        'price': 3.99,
+        'originalPrice': 12.0,
+        'items': '5-7 articles',
+        'color': Colors.brown,
+        'icon': Icons.bakery_dining,
+        'badge': 'POPULAIRE',
+      },
+      {
+        'title': 'Box Fruits & Légumes',
+        'subtitle': 'Produits frais du jour',
+        'price': 6.99,
+        'originalPrice': 20.0,
+        'items': '2kg minimum',
+        'color': Colors.lightGreen,
+        'icon': Icons.apple,
+        'badge': 'FRAIS',
+      },
+      {
+        'title': 'Panier Mystère',
+        'subtitle': 'Surprise totale !',
+        'price': 7.99,
+        'originalPrice': 25.0,
+        'items': '6-8 articles',
+        'color': Colors.purple,
+        'icon': Icons.help_outline,
+        'badge': 'SURPRISE',
+      },
+      {
+        'title': 'Box Petit-déjeuner',
+        'subtitle': 'Pour bien démarrer',
+        'price': 4.49,
+        'originalPrice': 13.0,
+        'items': '4-5 articles',
+        'color': Colors.amber,
+        'icon': Icons.free_breakfast,
+        'badge': 'MATIN',
+      },
+    ];
+    
+    final box = boxes[index % boxes.length];
+    final discount = (((box['originalPrice'] as double) - (box['price'] as double)) / 
+                     (box['originalPrice'] as double) * 100).round();
+    
+    return Container(
+      width: 200,
+      margin: const EdgeInsets.only(right: 12),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                (box['color'] as Color),
+                (box['color'] as Color).withValues(alpha: 0.7),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: (box['color'] as Color).withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              // Pattern de fond
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: CustomPaint(
+                    painter: _PatternPainter(
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
+                  ),
+                ),
+              ),
+              // Contenu
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Badge et réduction
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            box['badge'] as String,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.red.withValues(alpha: 0.4),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            '-$discount%',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    // Icône centrale
+                    Center(
+                      child: Icon(
+                        box['icon'] as IconData,
+                        size: 50,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const Spacer(),
+                    // Titre et sous-titre
+                    Text(
+                      box['title'] as String,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      box['subtitle'] as String,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Nombre d'articles
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.shopping_bag,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            box['items'] as String,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Prix
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${(box['price'] as double).toStringAsFixed(2)}€',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${(box['originalPrice'] as double).toStringAsFixed(2)}€',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.7),
+                            fontSize: 14,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCategoryCard(RestaurantCategory category) {
     return GestureDetector(
       onTap: () {
@@ -727,4 +1078,30 @@ class RestaurantCategory {
     required this.icon,
     required this.color,
   });
+}
+
+/// Painter pour créer un pattern de fond
+class _PatternPainter extends CustomPainter {
+  final Color color;
+
+  _PatternPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    const double spacing = 30;
+    const double radius = 3;
+
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_PatternPainter oldDelegate) => color != oldDelegate.color;
 }

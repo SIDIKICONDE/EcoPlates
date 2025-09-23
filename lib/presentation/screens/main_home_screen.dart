@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../domain/entities/restaurant.dart';
 import '../providers/consumer/search_provider.dart';
 import '../providers/consumer/restaurants_provider.dart';
 import '../widgets/restaurant_card.dart';
@@ -249,9 +250,9 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   SizedBox(
-                    height: 80,
+                    height: 65,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -267,143 +268,47 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
             ),
           ),
 
-          // Section "Près de vous"
+          // Sections multiples de restaurants
           SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        '🔥 Près de vous',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Afficher sur la carte
-                          context.go('/map');
-                        },
-                        child: const Text('Voir sur la carte'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Sauvez de la nourriture à proximité',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Section "Près de vous"
+                _buildRestaurantSection(
+                  title: '🔥 Près de vous',
+                  subtitle: 'Restaurants à moins de 1km',
+                  actionText: 'Voir tout',
+                  onActionTap: () => context.go('/nearby'),
+                ),
+                
+                // Section "Nouveautés"
+                _buildRestaurantSection(
+                  title: '✨ Nouveautés',
+                  subtitle: 'Découvrez les derniers arrivés',
+                  actionText: 'Voir tout',
+                  onActionTap: () => context.go('/new'),
+                ),
+                
+                // Section "Meilleures offres"
+                _buildRestaurantSection(
+                  title: '💎 Meilleures offres',
+                  subtitle: 'Les plus grandes réductions',
+                  actionText: 'Voir tout',
+                  onActionTap: () => context.go('/best-deals'),
+                ),
+                
+                // Section "Ferment bientôt"
+                _buildRestaurantSection(
+                  title: '⏰ Dernière chance',
+                  subtitle: 'À récupérer avant fermeture',
+                  actionText: 'Voir tout',
+                  onActionTap: () => context.go('/closing-soon'),
+                  isUrgent: true,
+                ),
+              ],
             ),
           ),
 
-          // Liste des restaurants avec leurs offres
-          Consumer(
-            builder: (context, ref, child) {
-              final restaurantsAsync = ref.watch(nearbyRestaurantsProvider);
-              
-              return restaurantsAsync.when(
-                data: (restaurants) {
-                  if (restaurants.isEmpty) {
-                    return SliverFillRemaining(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.restaurant_menu,
-                              size: 80,
-                              color: Colors.grey.shade400,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Aucun restaurant disponible',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Revenez plus tard pour découvrir des offres',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  return SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverGrid(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final restaurant = restaurants[index];
-                          return RestaurantCard(
-                            restaurant: restaurant,
-                            onTap: () {
-                              context.go('/restaurant/${restaurant.id}');
-                            },
-                          );
-                        },
-                        childCount: restaurants.length,
-                      ),
-                    ),
-                  );
-                },
-                loading: () => const SliverFillRemaining(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                error: (error, stack) => SliverFillRemaining(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          size: 60,
-                          color: Colors.red,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Erreur de chargement',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref.invalidate(nearbyRestaurantsProvider);
-                          },
-                          child: const Text('Réessayer'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
 
           // Espacement en bas
           const SliverToBoxAdapter(
@@ -422,39 +327,316 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
     );
   }
 
+  Widget _buildRestaurantSection({
+    required String title,
+    required String subtitle,
+    required String actionText,
+    required VoidCallback onActionTap,
+    bool isUrgent = false,
+  }) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final restaurantsAsync = ref.watch(nearbyRestaurantsProvider);
+        
+        return Container(
+          margin: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header de la section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: isUrgent ? Colors.orange : null,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: onActionTap,
+                      child: Text(
+                        actionText,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              
+              // Slider horizontal de restaurants
+              restaurantsAsync.when(
+                data: (restaurants) {
+                  if (restaurants.isEmpty) {
+                    return Container(
+                      height: 200,
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.restaurant_menu,
+                              size: 50,
+                              color: Colors.grey.shade400,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Pas d\'offres disponibles',
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  
+                  // Filtrer selon le type de section
+                  List<Restaurant> filteredRestaurants = restaurants;
+                  if (title.contains('Nouveautés')) {
+                    // Prendre les 5 derniers ajoutés
+                    filteredRestaurants = restaurants.take(5).toList();
+                  } else if (title.contains('Meilleures offres')) {
+                    // Trier par réduction et prendre les 5 premiers
+                    filteredRestaurants = restaurants
+                      .where((r) => r.hasActiveOffer)
+                      .toList()
+                      ..sort((a, b) => b.discountPercentage.compareTo(a.discountPercentage));
+                    filteredRestaurants = filteredRestaurants.take(5).toList();
+                  } else if (title.contains('Dernière chance')) {
+                    // Filtrer ceux qui ferment bientôt
+                    filteredRestaurants = restaurants
+                      .where((r) => r.availableOffers > 0 && r.availableOffers <= 3)
+                      .take(5)
+                      .toList();
+                  } else {
+                    // Près de vous - prendre les 10 premiers
+                    filteredRestaurants = restaurants.take(10).toList();
+                  }
+                  
+                  return SizedBox(
+                    height: 280,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: filteredRestaurants.length,
+                      itemBuilder: (context, index) {
+                        final restaurant = filteredRestaurants[index];
+                        return Container(
+                          width: 200,
+                          margin: const EdgeInsets.only(right: 12),
+                          child: RestaurantCard(
+                            restaurant: restaurant,
+                            onTap: () {
+                              context.go('/restaurant/${restaurant.id}');
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                loading: () => SizedBox(
+                  height: 280,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        width: 200,
+                        margin: const EdgeInsets.only(right: 12),
+                        child: _buildShimmerCard(),
+                      );
+                    },
+                  ),
+                ),
+                error: (error, stack) => Container(
+                  height: 200,
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 50,
+                          color: Colors.red.shade400,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Erreur de chargement',
+                          style: TextStyle(
+                            color: Colors.red.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextButton(
+                          onPressed: () {
+                            ref.invalidate(nearbyRestaurantsProvider);
+                          },
+                          child: const Text('Réessayer'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  
+  Widget _buildShimmerCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image placeholder
+          Container(
+            height: 140,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.image,
+                size: 50,
+                color: Colors.grey.shade400,
+              ),
+            ),
+          ),
+          // Content placeholder
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 14,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  height: 12,
+                  width: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 16,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    Container(
+                      height: 24,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCategoryCard(RestaurantCategory category) {
     return GestureDetector(
       onTap: () {
         ref.read(selectedCategoryProvider.notifier).state = category.id;
       },
       child: Container(
-        width: 65,
-        margin: const EdgeInsets.only(right: 10),
+        width: 55,
+        margin: const EdgeInsets.only(right: 8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 45,
-              height: 45,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: category.color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: category.color.withValues(alpha: 0.3),
-                  width: 1,
+                  width: 0.5,
                 ),
               ),
               child: Icon(
                 category.icon,
                 color: category.color,
-                size: 24,
+                size: 20,
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Text(
               category.name,
               style: const TextStyle(
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,

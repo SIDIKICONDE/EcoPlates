@@ -175,13 +175,14 @@ class _RestaurantCardState extends State<RestaurantCard>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.black.withValues(alpha: 0.7),
-            Colors.black.withValues(alpha: 0.3),
+            Colors.black.withValues(alpha: 0.65), // Réduit de 0.7 à 0.65
+            Colors.black.withValues(alpha: 0.25), // Réduit de 0.3 à 0.25
             Colors.transparent,
             Colors.transparent,
-            Colors.black.withValues(alpha: 0.8),
+            Colors.transparent, // Plus de transparence au milieu
+            Colors.black.withValues(alpha: 0.7), // Réduit de 0.8 à 0.7
           ],
-          stops: const [0.0, 0.3, 0.5, 0.7, 1.0],
+          stops: const [0.0, 0.2, 0.4, 0.6, 0.8, 1.0], // Ajusté les stops
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
         ),
@@ -191,7 +192,7 @@ class _RestaurantCardState extends State<RestaurantCard>
 
   Widget _buildContent(BuildContext context, bool isDarkMode) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12), // Réduit de 16 à 12
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +207,7 @@ class _RestaurantCardState extends State<RestaurantCard>
                   // Toggle favoris avec animation
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6), // Réduit de 8 à 6
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.9),
                     shape: BoxShape.circle,
@@ -228,7 +229,7 @@ class _RestaurantCardState extends State<RestaurantCard>
                       color: widget.restaurant.isFavorite
                           ? Colors.red
                           : Colors.grey.shade600,
-                      size: 20,
+                      size: 18, // Réduit de 20 à 18
                     ),
                   ),
                 ),
@@ -250,14 +251,14 @@ class _RestaurantCardState extends State<RestaurantCard>
                       .map((tag) => _buildTag(tag))
                       .toList(),
                 ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4), // Réduit de 8 à 4
               
               // Nom du restaurant
               Text(
                 widget.restaurant.name,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 16, // Réduit de 18 à 16
                   fontWeight: FontWeight.bold,
                   shadows: [
                     Shadow(
@@ -270,14 +271,14 @@ class _RestaurantCardState extends State<RestaurantCard>
                 overflow: TextOverflow.ellipsis,
               ),
               
-              const SizedBox(height: 4),
+              const SizedBox(height: 2), // Réduit de 4 à 2
               
               // Type de cuisine
               Text(
                 widget.restaurant.cuisineType,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.9),
-                  fontSize: 13,
+                  fontSize: 12, // Réduit de 13 à 12
                   shadows: const [
                     Shadow(
                       color: Colors.black,
@@ -289,7 +290,7 @@ class _RestaurantCardState extends State<RestaurantCard>
                 overflow: TextOverflow.ellipsis,
               ),
               
-              const SizedBox(height: 8),
+              const SizedBox(height: 4), // Réduit de 8 à 4
               
               // Ligne d'infos
               Row(
@@ -302,8 +303,8 @@ class _RestaurantCardState extends State<RestaurantCard>
                           final filled = index < widget.restaurant.rating!.floor();
                           return Icon(
                             filled ? Icons.star : Icons.star_border,
-                            size: 14,
-                            color: Colors.amber,
+                        size: 12, // Réduit de 14 à 12
+                        color: Colors.amber,
                           );
                         }),
                         const SizedBox(width: 4),
@@ -311,20 +312,20 @@ class _RestaurantCardState extends State<RestaurantCard>
                           widget.restaurant.rating!.toStringAsFixed(1),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: 11, // Réduit de 12 à 11
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8), // Réduit de 12 à 8
                   ],
                   
                   // Distance
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
+                      horizontal: 6, // Réduit de 8 à 6
+                      vertical: 2, // Réduit de 3 à 2
                     ),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.5),
@@ -369,7 +370,7 @@ class _RestaurantCardState extends State<RestaurantCard>
                           '${widget.restaurant.discountedPrice}€',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 15, // Réduit de 16 à 15
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -378,7 +379,7 @@ class _RestaurantCardState extends State<RestaurantCard>
                           'Dès ${widget.restaurant.minPrice}€',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 13, // Réduit de 14 à 13
                           ),
                         ),
                     ],
@@ -386,13 +387,11 @@ class _RestaurantCardState extends State<RestaurantCard>
                 ],
               ),
               
-              const SizedBox(height: 8),
-              
-              // Horaire de collecte
+              const SizedBox(height: 4), // Réduit de 8               // Horaire de collecte
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
+                  horizontal: 8, // Réduit de 10 à 8
+                  vertical: 3, // Réduit de 5 à 3
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.2),
@@ -415,7 +414,7 @@ class _RestaurantCardState extends State<RestaurantCard>
                       'Collecte : ${widget.restaurant.pickupTime}',
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 11, // Réduit de 12 à 11
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -432,8 +431,8 @@ class _RestaurantCardState extends State<RestaurantCard>
   // Nouveaux badges alignés horizontalement en haut
   Widget _buildTopBadges(BuildContext context) {
     return Positioned(
-      top: 16,
-      left: 16,
+      top: 12, // Réduit de 16 à 12
+      left: 12, // Réduit de 16 à 12
       right: 60, // Laisser de la place pour le bouton favori
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -449,8 +448,8 @@ class _RestaurantCardState extends State<RestaurantCard>
                   scale: value,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                      horizontal: 10, // Réduit de 12 à 10
+                      vertical: 4, // Réduit de 6 à 4
                     ),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
@@ -478,7 +477,7 @@ class _RestaurantCardState extends State<RestaurantCard>
                           '-${widget.restaurant.discountPercentage}%',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 13, // Réduit de 14 à 13
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -498,8 +497,8 @@ class _RestaurantCardState extends State<RestaurantCard>
           if (widget.restaurant.rating != null && widget.restaurant.rating! >= 4.5)
             Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 6,
+                horizontal: 8, // Réduit de 10 à 8
+                vertical: 4, // Réduit de 6 à 4
               ),
               decoration: BoxDecoration(
                 color: Colors.amber,
@@ -521,7 +520,7 @@ class _RestaurantCardState extends State<RestaurantCard>
                     'POPULAIRE',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontSize: 11, // Réduit de 12 à 11
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -535,8 +534,8 @@ class _RestaurantCardState extends State<RestaurantCard>
 
   Widget _buildFloatingBadges(BuildContext context) {
     return Positioned(
-      top: 56, // Décalé en dessous des badges horizontaux
-      left: 16,
+      top: 46, // Réduit de 56 à 46
+      left: 12, // Réduit de 16 à 12
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -668,7 +667,7 @@ class _RestaurantCardState extends State<RestaurantCard>
     }
     
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1), // Réduit encore
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),

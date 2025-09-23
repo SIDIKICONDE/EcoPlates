@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+
+/// Widget affichant la distance et l'horaire de collecte
+class OfferLocationInfo extends StatelessWidget {
+  final bool showDistance;
+  final double? distance;
+  final DateTime pickupStartTime;
+  final DateTime pickupEndTime;
+  
+  const OfferLocationInfo({
+    super.key,
+    required this.showDistance,
+    required this.pickupStartTime,
+    required this.pickupEndTime,
+    this.distance,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        if (showDistance && distance != null) ...[
+          Icon(
+            Icons.location_on,
+            size: 16,
+            color: Colors.grey[600],
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${distance!.toStringAsFixed(1)} km',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(width: 12),
+        ],
+        Icon(
+          Icons.schedule,
+          size: 16,
+          color: Colors.grey[600],
+        ),
+        const SizedBox(width: 4),
+        Text(
+          _formatPickupTime(),
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatPickupTime() {
+    final start = pickupStartTime;
+    final end = pickupEndTime;
+    return '${start.hour.toString().padLeft(2, '0')}h${start.minute.toString().padLeft(2, '0')} - '
+        '${end.hour.toString().padLeft(2, '0')}h${end.minute.toString().padLeft(2, '0')}';
+  }
+}

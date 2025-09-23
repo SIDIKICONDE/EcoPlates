@@ -24,12 +24,12 @@ class OfferCardImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       child: Stack(
         children: [
           // Section image principale avec coins arrondis
           ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             child: Stack(
               children: [
                 // Image principale avec ratio 16:9 optimisé pour mobile
@@ -53,7 +53,7 @@ class OfferCardImage extends StatelessWidget {
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.2),
                         width: 0.25,

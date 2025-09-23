@@ -19,7 +19,7 @@ final currentUserProvider = StateProvider<User?>((ref) => null);
 
 /// Notifier pour gérer le mode de l'application
 class AppModeNotifier extends StateNotifier<AppMode> {
-  AppModeNotifier() : super(AppMode.onboarding);
+  AppModeNotifier() : super(AppMode.consumer); // Démarrage direct en mode consommateur
 
   /// Change le mode de l'application selon le type d'utilisateur
   void setModeFromUser(User user) {

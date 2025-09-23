@@ -34,18 +34,14 @@ class OfferCardContent extends StatelessWidget {
         children: [
           // Section nom du commerçant avec style distinctif
           _buildMerchantName(theme),
-          const SizedBox(height: 8),
+          const SizedBox(height: 2),
 
           // Section description du produit (tronquée si trop longue)
           _buildDescription(),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
 
-          // Section horaires de récupération
-          _buildPickupDate(),
-          const SizedBox(height: 12),
-
-          // Section prix avec réduction si applicable
-          _buildPriceOnly(theme),
+          // Section date et prix alignés horizontalement
+          _buildDateAndPriceRow(theme),
         ],
       ),
     );
@@ -58,9 +54,10 @@ class OfferCardContent extends StatelessWidget {
     return Text(
       offer.merchantName,
       style: TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         color: theme.primaryColor,
         fontWeight: FontWeight.w600,
+        height: 1.0,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
@@ -80,53 +77,59 @@ class OfferCardContent extends StatelessWidget {
       style: TextStyle(
         fontSize: 14,
         color: Colors.grey[600],
-        height: 1.3,
+        height: 1.0,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  /// Construit le widget pour afficher les horaires de récupération
-  /// Utilise un format standardisé pour les créneaux horaires
-  /// Style discret pour ne pas distraire de l'information principale
-  Widget _buildPickupDate() {
-    return Text(
-      'Récupération: ${_formatPickupTime()}',
-      style: TextStyle(
-        fontSize: 13,
-        color: Colors.grey[700],
-        fontWeight: FontWeight.w500,
-      ),
-    );
-  }
 
-  /// Construit le widget pour afficher les informations de prix
-  /// Affiche le prix barré original + prix réduit, ou "Gratuit" si applicable
-  /// Utilise la couleur verte pour les offres gratuites, couleur primaire sinon
-  Widget _buildPriceOnly(ThemeData theme) {
+  /// Construit une ligne horizontale avec date et prix alignés
+  Widget _buildDateAndPriceRow(ThemeData theme) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (!offer.isFree) ...[
-          // Prix original barré pour montrer la réduction
-          Text(
-            '€${offer.originalPrice.toStringAsFixed(2)}',
+        // Date de récupération à gauche
+        Expanded(
+          child: Text(
+            'Récupération: ${_formatPickupTime()}',
             style: TextStyle(
-              fontSize: 14,
-              decoration: TextDecoration.lineThrough,
-              color: Colors.grey[500],
+              fontSize: 13,
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+              height: 1.0,
             ),
           ),
-          const SizedBox(width: 8),
-        ],
-        // Prix final (réduit ou gratuit)
-        Text(
-          offer.priceText,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: offer.isFree ? const Color.fromARGB(255, 4, 8, 5) : theme.primaryColor,
-          ),
+        ),
+        const SizedBox(width: 8),
+        // Prix à droite
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (!offer.isFree) ...[
+              Text(
+                '€${offer.originalPrice.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 14,
+                  decoration: TextDecoration.lineThrough,
+                  color: Colors.grey[500],
+                  height: 1.0,
+                ),
+              ),
+              const SizedBox(width: 6),
+            ],
+            Text(
+              offer.priceText,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: offer.isFree ? Colors.green : theme.primaryColor,
+                height: 1.0,
+              ),
+            ),
+          ],
         ),
       ],
     );

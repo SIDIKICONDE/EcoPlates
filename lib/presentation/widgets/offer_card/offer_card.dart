@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import '../../../domain/entities/food_offer.dart';
 import 'widgets/offer_card_image.dart';
 import 'widgets/offer_card_content.dart';

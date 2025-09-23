@@ -28,7 +28,7 @@ class OfferCardContent extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,8 +40,12 @@ class OfferCardContent extends StatelessWidget {
           _buildDescription(),
           const SizedBox(height: 4),
 
-          // Section date et prix alignés horizontalement
-          _buildDateAndPriceRow(theme),
+          // Section date de récupération
+          _buildPickupDate(),
+          const SizedBox(height: 16.5),
+          
+          // Section prix
+          _buildPriceOnly(theme),
         ],
       ),
     );
@@ -85,55 +89,49 @@ class OfferCardContent extends StatelessWidget {
   }
 
 
-  /// Construit une ligne horizontale avec date et prix alignés
-  Widget _buildDateAndPriceRow(ThemeData theme) {
+  /// Construit le widget pour afficher la date de récupération
+  Widget _buildPickupDate() {
+    return Text(
+      'Récupération: ${_formatPickupTime()}',
+      style: TextStyle(
+        fontSize: 13,
+        color: Colors.grey[700],
+        fontWeight: FontWeight.w500,
+        height: 1.0,
+      ),
+    );
+  }
+
+  /// Construit le widget pour afficher le prix
+  Widget _buildPriceOnly(ThemeData theme) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // Date de récupération à gauche
-        Expanded(
-          child: Text(
-            'Récupération: ${_formatPickupTime()}',
+        if (!offer.isFree) ...[
+          Text(
+            '€${offer.originalPrice.toStringAsFixed(2)}',
             style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
+              fontSize: 12,
+              decoration: TextDecoration.lineThrough,
+              color: Colors.grey[500],
               height: 1.0,
             ),
           ),
-        ),
-        const SizedBox(width: 8),
-        // Prix à droite
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (!offer.isFree) ...[
-              Text(
-                '€${offer.originalPrice.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 14,
-                  decoration: TextDecoration.lineThrough,
-                  color: Colors.grey[500],
-                  height: 1.0,
-                ),
-              ),
-              const SizedBox(width: 6),
-            ],
-            Text(
-              offer.priceText,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: offer.isFree ? Colors.green : theme.primaryColor,
-                height: 1.0,
-              ),
-            ),
-          ],
+          const SizedBox(width: 8),
+        ],
+        Text(
+          offer.priceText,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: offer.isFree ? Colors.green : theme.primaryColor,
+            height: 1.0,
+          ),
         ),
       ],
     );
   }
+
 
   /// Formate les horaires de récupération au format HH:MM - HH:MM
   /// Gère les erreurs en retournant un message par défaut si nécessaire

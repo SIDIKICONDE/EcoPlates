@@ -6,25 +6,53 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:ecoplates/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  setUpAll(() async {
+    // Charger les variables d'environnement pour les tests
+    await dotenv.load(fileName: 'environments/.env.dev');
+  });
+  
+  testWidgets('Home screen displays EcoPlates title', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: EcoPlatesApp(),
+      ),
+    );
+    
+    // Attendre que l'écran se charge
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Vérifier que le titre EcoPlates est affiché
+    expect(find.text('EcoPlates'), findsOneWidget);
+    
+    // Vérifier la présence du score écologique
+    expect(find.text('Votre Score Écologique'), findsOneWidget);
+  });
+  
+  testWidgets('Bottom navigation works', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: EcoPlatesApp(),
+      ),
+    );
+    
+    await tester.pumpAndSettle();
+    
+    // Vérifier que nous sommes sur l'écran d'accueil
+    expect(find.text('Actions rapides'), findsOneWidget);
+    
+    // Naviguer vers l'écran Scanner
+    await tester.tap(find.byIcon(Icons.qr_code_scanner));
+    await tester.pumpAndSettle();
+    
+    // Vérifier que nous sommes sur l'écran Scanner
+    expect(find.text('Scanner une assiette'), findsOneWidget);
   });
 }

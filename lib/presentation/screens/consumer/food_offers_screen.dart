@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../domain/entities/food_offer.dart';
-import '../../providers/commerce/offers_provider.dart';
+import '../../providers/merchant/offers_provider.dart';
 import '../../providers/consumer/filters_provider.dart';
 import '../../providers/consumer/search_provider.dart';
 import '../../providers/consumer/statistics_provider.dart';

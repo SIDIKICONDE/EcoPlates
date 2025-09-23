@@ -54,7 +54,7 @@ class MerchantHomeScreen extends ConsumerWidget {
 
               // Actions principales pour commerçant
               Text(
-                'Gestion de votre commerce',
+                'Gestion de votre marchand',
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

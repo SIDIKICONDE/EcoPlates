@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../domain/entities/restaurant.dart';
-import '../../providers/consumer/restaurants_provider.dart';
-import '../restaurant_card.dart';
+import '../../../domain/entities/merchant.dart';
+import '../../providers/consumer/merchants_provider.dart';
+import '../merchant_card.dart';
 
 /// Widget pour une section de restaurants avec slider horizontal
-class RestaurantSliderSection extends ConsumerWidget {
+class MerchantSliderSection extends ConsumerWidget {
   final String title;
   final String subtitle;
   final String actionText;
@@ -14,7 +14,7 @@ class RestaurantSliderSection extends ConsumerWidget {
   final bool isUrgent;
   final String filterType;
 
-  const RestaurantSliderSection({
+  const MerchantSliderSection({
     super.key,
     required this.title,
     required this.subtitle,
@@ -26,7 +26,7 @@ class RestaurantSliderSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final restaurantsAsync = ref.watch(nearbyRestaurantsProvider);
+    final restaurantsAsync = ref.watch(nearbyMerchantsProvider);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
@@ -39,7 +39,7 @@ class RestaurantSliderSection extends ConsumerWidget {
 
           // Slider horizontal de restaurants
           restaurantsAsync.when(
-            data: (restaurants) => _buildRestaurantList(context, restaurants),
+            data: (merchants) => _buildMerchantList(context, merchants),
             loading: () => _buildLoadingState(),
             error: (error, stack) => _buildErrorState(ref),
           ),
@@ -87,18 +87,18 @@ class RestaurantSliderSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildRestaurantList(
+  Widget _buildMerchantList(
     BuildContext context,
-    List<Restaurant> restaurants,
+    List<Merchant> merchants,
   ) {
-    if (restaurants.isEmpty) {
+    if (merchants.isEmpty) {
       return _buildEmptyState();
     }
 
     // Filtrer selon le type de section
-    List<Restaurant> filteredRestaurants = _filterRestaurants(restaurants);
+    List<Merchant> filteredMerchants = _filterMerchants(merchants);
 
-    if (filteredRestaurants.isEmpty) {
+    if (filteredMerchants.isEmpty) {
       return _buildEmptyState();
     }
 
@@ -107,16 +107,16 @@ class RestaurantSliderSection extends ConsumerWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: filteredRestaurants.length,
+        itemCount: filteredMerchants.length,
         itemBuilder: (context, index) {
-          final restaurant = filteredRestaurants[index];
+          final merchant = filteredMerchants[index];
           return Container(
             width: 340,
             margin: const EdgeInsets.only(right: 16),
-            child: RestaurantCard(
-              restaurant: restaurant,
+            child: MerchantCard(
+              merchant: merchant,
               onTap: () {
-                context.go('/restaurant/${restaurant.id}');
+                context.go('/merchant/${merchant.id}');
               },
             ),
           );
@@ -125,15 +125,15 @@ class RestaurantSliderSection extends ConsumerWidget {
     );
   }
 
-  List<Restaurant> _filterRestaurants(List<Restaurant> restaurants) {
+  List<Merchant> _filterMerchants(List<Merchant> merchants) {
     switch (filterType) {
       case 'new':
         // Prendre les 5 derniers ajoutés
-        return restaurants.take(5).toList();
+        return merchants.take(5).toList();
 
       case 'best-deals':
         // Trier par réduction et prendre les 5 premiers
-        final filtered = restaurants.where((r) => r.hasActiveOffer).toList()
+        final filtered = merchants.where((r) => r.hasActiveOffer).toList()
           ..sort(
             (a, b) => b.discountPercentage.compareTo(a.discountPercentage),
           );
@@ -141,7 +141,7 @@ class RestaurantSliderSection extends ConsumerWidget {
 
       case 'closing-soon':
         // Filtrer ceux qui ferment bientôt
-        return restaurants
+        return merchants
             .where((r) => r.availableOffers > 0 && r.availableOffers <= 3)
             .take(5)
             .toList();
@@ -150,7 +150,7 @@ class RestaurantSliderSection extends ConsumerWidget {
         // Filtrer les offres qui expirent dans moins de 2h
         // En production, utiliser de vraies dates d'expiration
         // Simuler des offres urgentes
-        final urgentOffers = restaurants
+        final urgentOffers = merchants
             .where((r) => r.hasActiveOffer && r.availableOffers <= 2)
             .toList()
           ..sort((a, b) => a.availableOffers.compareTo(b.availableOffers));
@@ -160,7 +160,7 @@ class RestaurantSliderSection extends ConsumerWidget {
       case 'vegetarian':
         // Filtrer les restaurants végétariens/vegan
         // En production, utiliser les tags du restaurant
-        final vegetarianRestaurants = restaurants.where((r) {
+        final vegetarianMerchants = merchants.where((r) {
           // Simuler en utilisant le nom et la catégorie
           final name = r.name.toLowerCase();
           final cuisine = r.cuisineType.toLowerCase();
@@ -172,11 +172,11 @@ class RestaurantSliderSection extends ConsumerWidget {
                  r.category == 'grocery'; // Les épiceries ont souvent du bio
         }).toList();
         
-        return vegetarianRestaurants.take(6).toList();
+        return vegetarianMerchants.take(6).toList();
         
       case 'budget':
         // Filtrer les offres à moins de 5€
-        final budgetOffers = restaurants
+        final budgetOffers = merchants
             .where((r) => r.hasActiveOffer && r.discountedPrice <= 5.0)
             .toList()
           ..sort((a, b) => a.discountedPrice.compareTo(b.discountedPrice));
@@ -185,16 +185,16 @@ class RestaurantSliderSection extends ConsumerWidget {
       
       case 'recommended':
         // Recommandations basées sur les favoris et les offres actives
-        final recommendedList = <Restaurant>[];
+        final recommendedList = <Merchant>[];
         
         // D'abord les favoris avec offres
-        final favoritesWithOffers = restaurants
+        final favoritesWithOffers = merchants
             .where((r) => r.isFavorite && r.hasActiveOffer)
             .toList();
         recommendedList.addAll(favoritesWithOffers);
         
         // Ensuite les restaurants avec les meilleures notes
-        final highRated = restaurants
+        final highRated = merchants
             .where((r) => !r.isFavorite && r.rating != null && r.rating! >= 4.5)
             .toList()
           ..sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
@@ -203,7 +203,7 @@ class RestaurantSliderSection extends ConsumerWidget {
         
         // Si pas assez, compléter avec des restaurants proches
         if (recommendedList.length < 5) {
-          final nearby = restaurants
+          final nearby = merchants
               .where((r) => !recommendedList.contains(r))
               .take(5 - recommendedList.length);
           recommendedList.addAll(nearby);
@@ -214,7 +214,7 @@ class RestaurantSliderSection extends ConsumerWidget {
       case 'nearby':
       default:
         // Près de vous - prendre les 10 premiers
-        return restaurants.take(10).toList();
+        return merchants.take(10).toList();
     }
   }
 
@@ -281,7 +281,7 @@ class RestaurantSliderSection extends ConsumerWidget {
             const SizedBox(height: 8),
             TextButton(
               onPressed: () {
-                ref.invalidate(nearbyRestaurantsProvider);
+                ref.invalidate(nearbyMerchantsProvider);
               },
               child: const Text('Réessayer'),
             ),
@@ -379,3 +379,4 @@ class ShimmerCard extends StatelessWidget {
     );
   }
 }
+

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/entities/restaurant.dart';
+import '../../../domain/entities/merchant.dart';
+import '../../../domain/entities/merchant_factory.dart';
 import 'filters_provider.dart';
 import 'search_provider.dart';
 
@@ -9,8 +10,8 @@ final cartCountProvider = StateProvider<int>((ref) => 0);
 /// Provider pour la catégorie sélectionnée
 final selectedCategoryProvider = StateProvider<String>((ref) => 'all');
 
-/// Provider pour récupérer les restaurants à proximité
-final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
+/// Provider pour récupérer les merchants à proximité
+final nearbyMerchantsProvider = FutureProvider<List<Merchant>>((ref) async {
   // final userLocation = ref.watch(userLocationProvider); // Pour utilisation future avec la géolocalisation
   final searchQuery = ref.watch(searchQueryProvider);
   final selectedCategory = ref.watch(selectedCategoryProvider);
@@ -20,8 +21,8 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
   await Future.delayed(const Duration(seconds: 1));
 
   // Données de démonstration
-  List<Restaurant> restaurants = [
-    Restaurant(
+  List<Merchant> merchants = [
+    MerchantFactory.createSimple(
       id: '1',
       name: 'Boulangerie Artisanale',
       cuisineType: 'Pains et viennoiseries',
@@ -41,7 +42,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8566,
       longitude: 2.3522,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '2',
       name: 'Sushi Master',
       cuisineType: 'Japonais',
@@ -60,11 +61,11 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8606,
       longitude: 2.3376,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '3',
       name: 'Le Bistrot du Coin',
       cuisineType: 'Français traditionnel',
-      category: 'restaurant',
+      category: 'Merchant',
       imageUrl:
           'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
       rating: 4.3,
@@ -79,7 +80,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8584,
       longitude: 2.3417,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '4',
       name: 'Pizza Express',
       cuisineType: 'Italien',
@@ -99,7 +100,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8530,
       longitude: 2.3499,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '5',
       name: 'Café de la Gare',
       cuisineType: 'Café & Snacks',
@@ -118,7 +119,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8549,
       longitude: 2.3488,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '6',
       name: 'Épicerie Bio',
       cuisineType: 'Produits bio',
@@ -137,7 +138,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8620,
       longitude: 2.3333,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '7',
       name: 'Pâtisserie Delice',
       cuisineType: 'Desserts et gâteaux',
@@ -157,11 +158,11 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8590,
       longitude: 2.3470,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '8',
       name: 'Traiteur Asiatique',
       cuisineType: 'Cuisine asiatique',
-      category: 'restaurant',
+      category: 'Merchant',
       imageUrl:
           'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400',
       rating: 4.4,
@@ -176,11 +177,11 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8635,
       longitude: 2.3290,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '9',
       name: 'Burger & Co',
       cuisineType: 'Fast food',
-      category: 'restaurant',
+      category: 'Merchant',
       imageUrl:
           'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
       rating: 4.1,
@@ -195,7 +196,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8570,
       longitude: 2.3456,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '10',
       name: 'Smoothie Paradise',
       cuisineType: 'Boissons et jus',
@@ -213,11 +214,11 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8555,
       longitude: 2.3510,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '11',
       name: 'Green Garden Végé',
       cuisineType: 'Végétarien bio',
-      category: 'restaurant',
+      category: 'Merchant',
       imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400',
       rating: 4.8,
       distanceText: '550m',
@@ -232,7 +233,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8560,
       longitude: 2.3500,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '12',
       name: 'Bio Market',
       cuisineType: 'Produits bio et vegan',
@@ -250,11 +251,11 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8575,
       longitude: 2.3485,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '13',
       name: 'Quick Bite',
       cuisineType: 'Sandwichs économiques',
-      category: 'restaurant',
+      category: 'Merchant',
       imageUrl: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400',
       rating: 4.0,
       distanceText: '300m',
@@ -268,11 +269,11 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8540,
       longitude: 2.3520,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '14',
       name: 'Veggie Delight',
       cuisineType: 'Cuisine végétale',
-      category: 'restaurant',
+      category: 'Merchant',
       imageUrl: 'https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=400',
       rating: 4.9,
       distanceText: '450m',
@@ -287,11 +288,11 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
       latitude: 48.8565,
       longitude: 2.3495,
     ),
-    Restaurant(
+    MerchantFactory.createSimple(
       id: '15',
       name: 'Budget Meal',
       cuisineType: 'Plats du jour',
-      category: 'restaurant',
+      category: 'Merchant',
       imageUrl: 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400',
       rating: 3.9,
       distanceText: '800m',
@@ -309,14 +310,14 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
 
   // Filtrer par catégorie
   if (selectedCategory != 'all') {
-    restaurants = restaurants
+    merchants = merchants
         .where((r) => r.category == selectedCategory)
         .toList();
   }
 
   // Filtrer par recherche
   if (searchQuery.isNotEmpty) {
-    restaurants = restaurants
+    merchants = merchants
         .where(
           (r) =>
               r.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
@@ -330,7 +331,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
     // Filtrer par distance
     if (filters['maxDistance'] != null) {
       // Convertir la distance text en nombre pour le filtre
-      restaurants = restaurants.where((r) {
+      merchants = merchants.where((r) {
         final distanceStr = r.distanceText.replaceAll(RegExp(r'[^0-9.]'), '');
         final distance = double.tryParse(distanceStr) ?? 0;
         final distanceKm =
@@ -343,7 +344,7 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
 
     // Filtrer par prix
     if (filters['maxPrice'] != null) {
-      restaurants = restaurants
+      merchants = merchants
           .where(
             (r) => r.hasActiveOffer
                 ? r.discountedPrice <= filters['maxPrice']
@@ -354,18 +355,18 @@ final nearbyRestaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
 
     // Filtrer par favoris uniquement
     if (filters['favoritesOnly'] == true) {
-      restaurants = restaurants.where((r) => r.isFavorite).toList();
+      merchants = merchants.where((r) => r.isFavorite).toList();
     }
   }
 
   // Trier par distance
-  restaurants.sort((a, b) {
+  merchants.sort((a, b) {
     final aDistance = _parseDistance(a.distanceText);
     final bDistance = _parseDistance(b.distanceText);
     return aDistance.compareTo(bDistance);
   });
 
-  return restaurants;
+  return merchants;
 });
 
 double _parseDistance(String distanceText) {
@@ -376,69 +377,70 @@ double _parseDistance(String distanceText) {
       : distance;
 }
 
-/// Provider pour obtenir un restaurant spécifique
-final restaurantByIdProvider = Provider.family<Restaurant?, String>((ref, id) {
-  final restaurantsAsync = ref.watch(nearbyRestaurantsProvider);
-  return restaurantsAsync.when(
-    data: (restaurants) => restaurants.firstWhere(
+/// Provider pour obtenir un Merchant spécifique
+final merchantByIdProvider = Provider.family<Merchant?, String>((ref, id) {
+  final merchantsAsync = ref.watch(nearbyMerchantsProvider);
+  return merchantsAsync.when(
+    data: (merchants) => merchants.firstWhere(
       (r) => r.id == id,
-      orElse: () => throw Exception('Restaurant non trouvé'),
+      orElse: () => throw Exception('Merchant non trouvé'),
     ),
     loading: () => null,
     error: (_, __) => null,
   );
 });
 
-/// Provider pour les restaurants favoris
-final favoriteRestaurantsProvider = FutureProvider<List<Restaurant>>((
+/// Provider pour les Merchants favoris
+final favoriteMerchantsProvider = FutureProvider<List<Merchant>>((
   ref,
 ) async {
-  final allRestaurants = await ref.watch(nearbyRestaurantsProvider.future);
-  return allRestaurants.where((r) => r.isFavorite).toList();
+  final allMerchants = await ref.watch(nearbyMerchantsProvider.future);
+  return allMerchants.where((r) => r.isFavorite).toList();
 });
 
-/// Provider pour les statistiques des restaurants
-final restaurantStatsProvider = Provider<RestaurantStats>((ref) {
-  final restaurantsAsync = ref.watch(nearbyRestaurantsProvider);
+/// Provider pour les statistiques des Merchants
+final merchantStatsProvider = Provider<MerchantStats>((ref) {
+  final merchantsAsync = ref.watch(nearbyMerchantsProvider);
 
-  return restaurantsAsync.when(
-    data: (restaurants) {
-      final totalRestaurants = restaurants.length;
-      final availableOffers = restaurants.where((r) => r.hasActiveOffer).length;
-      final totalSavings = restaurants
+  return merchantsAsync.when(
+    data: (merchants) {
+      final totalMerchants = merchants.length;
+      final availableOffers = merchants.where((r) => r.hasActiveOffer).length;
+      final totalSavings = merchants
           .where((r) => r.hasActiveOffer)
           .fold<double>(
             0,
             (sum, r) => sum + (r.originalPrice - r.discountedPrice),
           );
 
-      return RestaurantStats(
-        totalRestaurants: totalRestaurants,
+      return MerchantStats(
+        totalMerchants: totalMerchants,
         availableOffers: availableOffers,
         totalSavings: totalSavings,
       );
     },
-    loading: () => RestaurantStats(
-      totalRestaurants: 0,
+    loading: () => MerchantStats(
+      totalMerchants: 0,
       availableOffers: 0,
       totalSavings: 0,
     ),
-    error: (_, __) => RestaurantStats(
-      totalRestaurants: 0,
+    error: (_, __) => MerchantStats(
+      totalMerchants: 0,
       availableOffers: 0,
       totalSavings: 0,
     ),
   );
 });
 
-class RestaurantStats {
-  final int totalRestaurants;
+class MerchantStats {
+  final int totalMerchants;
   final int availableOffers;
   final double totalSavings;
 
-  RestaurantStats({
-    required this.totalRestaurants,
+  MerchantStats({
+    required this.totalMerchants,
     required this.availableOffers,
     required this.totalSavings,
   });
 }
+

@@ -105,7 +105,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: TextField(
         onChanged: onSearch,
         decoration: const InputDecoration(
-          hintText: 'Rechercher des commerces, plats...',
+          hintText: 'Rechercher des marchands, plats...',
           hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
           prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
           border: InputBorder.none,

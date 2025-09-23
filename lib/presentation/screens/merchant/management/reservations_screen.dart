@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/entities/reservation.dart';
-import '../../providers/commerce/reservations_provider.dart';
-import '../../widgets/commerce/reservation_card.dart';
+import '../../../../domain/entities/reservation.dart';
+import '../../../providers/merchant/reservations_provider.dart';
+import '../../../widgets/cards/reservation_card.dart';
 
 /// Écran de gestion des réservations
 class ReservationsScreen extends ConsumerStatefulWidget {

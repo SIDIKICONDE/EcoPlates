@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/consumer/favorites_provider.dart';
-import '../../providers/commerce/offers_provider.dart';
+import '../../providers/merchant/offers_provider.dart';
 
 /// Écran pour afficher et gérer les favoris
 class FavoritesScreen extends ConsumerWidget {

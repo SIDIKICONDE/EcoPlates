@@ -207,13 +207,16 @@ class OfferFilters {
     if (isVegan != null) params['is_vegan'] = isVegan;
     if (isHalal != null) params['is_halal'] = isHalal;
     if (freeOnly != null) params['free_only'] = freeOnly;
-    if (availableFrom != null)
+    if (availableFrom != null) {
       params['available_from'] = availableFrom!.toIso8601String();
-    if (availableUntil != null)
+    }
+    if (availableUntil != null) {
       params['available_until'] = availableUntil!.toIso8601String();
+    }
     if (maxDistance != null) params['max_distance'] = maxDistance;
-    if (searchQuery != null && searchQuery!.isNotEmpty)
+    if (searchQuery != null && searchQuery!.isNotEmpty) {
       params['q'] = searchQuery;
+    }
 
     return params;
   }

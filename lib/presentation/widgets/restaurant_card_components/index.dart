@@ -1,5 +1,5 @@
-/// Export de tous les composants de la carte restaurant
-/// Pour une importation simplifiée dans d'autres fichiers
+// Export de tous les composants de la carte restaurant
+// Pour une importation simplifiée dans d'autres fichiers
 
 export 'card_background.dart';
 export 'category_helper.dart';

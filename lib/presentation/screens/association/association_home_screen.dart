@@ -503,7 +503,7 @@ class AssociationHomeScreen extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        '5 commerces • 12.3 km • ~45 min',
+                        '5 marchands • 12.3 km • ~45 min',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onPrimaryContainer
                               .withValues(alpha: 0.7),
@@ -611,7 +611,7 @@ class AssociationHomeScreen extends ConsumerWidget {
       children: [
         _CollectionTile(
           title: 'Collecte programmée',
-          subtitle: 'Aujourd\'hui 14h30 - 5 commerces',
+          subtitle: 'Aujourd\'hui 14h30 - 5 marchands',
           status: _CollectionStatus.upcoming,
           onTap: () {},
         ),

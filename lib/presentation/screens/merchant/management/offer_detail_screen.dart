@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../domain/entities/food_offer.dart';
-import '../../providers/commerce/offers_provider.dart';
-import '../../providers/commerce/reservations_provider.dart';
+import '../../../../domain/entities/food_offer.dart';
+import '../../../providers/merchant/offers_provider.dart';
+import '../../../providers/merchant/reservations_provider.dart';
 
 /// Écran de détail d'une offre anti-gaspillage
 class OfferDetailScreen extends ConsumerStatefulWidget {

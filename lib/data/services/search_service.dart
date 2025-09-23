@@ -112,10 +112,12 @@ class SearchService {
       if (lowerQuery.contains('halal') && offer.isHalal) score += 60;
 
       // Prix
-      if (lowerQuery.contains('pas cher') && offer.discountedPrice < 5)
+      if (lowerQuery.contains('pas cher') && offer.discountedPrice < 5) {
         score += 50;
-      if (lowerQuery.contains('économie') && offer.discountPercentage > 50)
+      }
+      if (lowerQuery.contains('économie') && offer.discountPercentage > 50) {
         score += 50;
+      }
 
       return score > 0;
     }).toList()..sort((a, b) {

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../widgets/home/brand_slider_section.dart';
 import '../widgets/home/categories_section.dart';
-import '../widgets/home/restaurant_slider_section.dart';
+import '../widgets/home/merchant_slider_section.dart';
 import '../widgets/home/surprise_box_section.dart';
 
 /// Page d'accueil principale type Too Good To Go
@@ -77,7 +77,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             const BrandSliderSection(),
             
             // Section "Dernières Minutes" - URGENCE MAXIMALE
-            RestaurantSliderSection(
+            MerchantSliderSection(
               title: '🔥 Dernières Minutes',
               subtitle: 'À sauver dans moins de 2h !',
               actionText: 'Voir tout',
@@ -90,7 +90,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             const CategoriesSection(),
 
             // Section "Recommandé pour vous"
-            RestaurantSliderSection(
+            MerchantSliderSection(
               title: '🎯 Recommandé pour vous',
               subtitle: 'Sélection personnalisée selon vos goûts',
               actionText: 'Voir tout',
@@ -99,7 +99,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             ),
             
             // Section "Végétarien & Vegan"
-            RestaurantSliderSection(
+            MerchantSliderSection(
               title: '💚 Végétarien & Vegan',
               subtitle: 'Options végétales et bio',
               actionText: 'Voir tout',
@@ -108,7 +108,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             ),
             
             // Section "Petit Budget"
-            RestaurantSliderSection(
+            MerchantSliderSection(
               title: '💰 Petit Budget',
               subtitle: 'Moins de 5€ seulement !',
               actionText: 'Voir tout',
@@ -117,7 +117,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             ),
 
             // Section "Près de vous"
-            RestaurantSliderSection(
+            MerchantSliderSection(
               title: '🔥 Près de vous',
               subtitle: 'Restaurants à moins de 1km',
               actionText: 'Voir tout',
@@ -126,7 +126,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             ),
 
             // Section "Nouveautés"
-            RestaurantSliderSection(
+            MerchantSliderSection(
               title: '✨ Nouveautés',
               subtitle: 'Découvrez les derniers arrivés',
               actionText: 'Voir tout',
@@ -135,7 +135,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             ),
 
             // Section "Meilleures offres"
-            RestaurantSliderSection(
+            MerchantSliderSection(
               title: '💎 Meilleures offres',
               subtitle: 'Les plus grandes réductions',
               actionText: 'Voir tout',
@@ -144,7 +144,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
             ),
 
             // Section "Dernière chance"
-            RestaurantSliderSection(
+            MerchantSliderSection(
               title: '⏰ Dernière chance',
               subtitle: 'À récupérer avant fermeture',
               actionText: 'Voir tout',

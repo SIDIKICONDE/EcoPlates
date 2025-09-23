@@ -45,7 +45,7 @@ class MerchantService {
     }
   }
 
-  /// Met à jour le statut du commerce (ouvert/fermé)
+  /// Met à jour le statut du marchand (ouvert/fermé)
   Future<Either<Failure, void>> updateBusinessStatus({
     required String merchantId,
     required bool isOpen,

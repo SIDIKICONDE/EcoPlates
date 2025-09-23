@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../presentation/screens/main_home_screen.dart';
-import '../../presentation/screens/restaurant_detail_screen.dart';
+import '../../presentation/screens/merchant_detail_screen.dart';
 import '../../presentation/screens/consumer/consumer_home_screen.dart';
 import '../../presentation/screens/merchant/merchant_home_screen.dart';
 import '../../presentation/screens/scan_screen.dart';
@@ -13,7 +13,7 @@ import '../../presentation/screens/onboarding/user_type_selection_screen.dart';
 import '../../presentation/screens/consumer/food_offers_screen.dart';
 import '../../presentation/screens/consumer/offer_detail_screen.dart';
 import '../../presentation/screens/consumer/favorites_screen.dart';
-import '../../presentation/screens/commerce/reservations_screen.dart';
+import '../../presentation/screens/merchant/management/reservations_screen.dart';
 import '../../presentation/screens/merchant/analytics/analytics_dashboard_screen.dart';
 import '../../presentation/screens/merchant/offers/offers_list_screen.dart';
 import '../../presentation/screens/merchant/offers/create_offer_screen.dart';
@@ -73,14 +73,14 @@ class AppRouter {
           },
         ),
 
-        // Page de détail d'un restaurant
+        // Page de détail d'un merchant
         GoRoute(
-          path: '/restaurant/:id',
-          name: 'restaurant-detail',
+          path: '/merchant/:id',
+          name: 'merchant-detail',
           pageBuilder: (context, state) {
-            final restaurantId = state.pathParameters['id']!;
+            final merchantId = state.pathParameters['id']!;
             return MaterialPage(
-              child: RestaurantDetailScreen(restaurantId: restaurantId),
+              child: MerchantDetailScreen(merchantId: merchantId),
             );
           },
         ),

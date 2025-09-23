@@ -62,18 +62,18 @@ Map<String, dynamic> _$MerchantModelToJson(MerchantModel instance) =>
 
 const _$MerchantTypeEnumMap = {
   MerchantType.restaurant: 'restaurant',
-  MerchantType.boulangerie: 'boulangerie',
-  MerchantType.supermarche: 'supermarche',
-  MerchantType.epicerie: 'epicerie',
-  MerchantType.traiteur: 'traiteur',
-  MerchantType.cafeteria: 'cafeteria',
+  MerchantType.bakery: 'boulangerie',
+  MerchantType.cafe: 'cafeteria',
+  MerchantType.supermarket: 'supermarche',
+  MerchantType.grocery: 'epicerie',
   MerchantType.hotel: 'hotel',
-  MerchantType.autre: 'autre',
+  MerchantType.butcher: 'traiteur',
+  MerchantType.other: 'autre',
 };
 
 const _$MerchantStatusEnumMap = {
   MerchantStatus.pending: 'pending',
-  MerchantStatus.verified: 'verified',
+  MerchantStatus.active: 'verified',
   MerchantStatus.suspended: 'suspended',
   MerchantStatus.inactive: 'inactive',
 };

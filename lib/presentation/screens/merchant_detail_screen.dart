@@ -3,21 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
-import '../../domain/entities/restaurant.dart';
-import '../providers/consumer/restaurants_provider.dart';
+import '../../domain/entities/merchant.dart';
+import '../providers/consumer/merchants_provider.dart';
 
-/// Page de détail d'un restaurant avec effet parallaxe
-class RestaurantDetailScreen extends ConsumerStatefulWidget {
-  final String restaurantId;
+/// Page de détail d'un merchant avec effet parallaxe
+class MerchantDetailScreen extends ConsumerStatefulWidget {
+  final String merchantId;
 
-  const RestaurantDetailScreen({super.key, required this.restaurantId});
+  const MerchantDetailScreen({super.key, required this.merchantId});
 
   @override
-  ConsumerState<RestaurantDetailScreen> createState() =>
-      _RestaurantDetailScreenState();
+  ConsumerState<MerchantDetailScreen> createState() =>
+      _MerchantDetailScreenState();
 }
 
-class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
+class _MerchantDetailScreenState extends ConsumerState<MerchantDetailScreen>
     with TickerProviderStateMixin {
   late ScrollController _scrollController;
   late AnimationController _fadeController;
@@ -79,13 +79,13 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final restaurant = ref.watch(restaurantByIdProvider(widget.restaurantId));
+    final merchant = ref.watch(merchantByIdProvider(widget.merchantId));
 
-    if (restaurant == null) {
+    if (merchant == null) {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    _isFavorite = restaurant.isFavorite;
+    _isFavorite = merchant.isFavorite;
 
     return Scaffold(
       body: Stack(
@@ -102,7 +102,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                 title: AnimatedOpacity(
                   opacity: _showTitle ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 300),
-                  child: Text(restaurant.name),
+                  child: Text(merchant.name),
                 ),
                 actions: [_buildShareButton(), _buildFavoriteButton()],
                 flexibleSpace: FlexibleSpaceBar(
@@ -114,20 +114,20 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                         scale: _imageScale,
                         child: Opacity(
                           opacity: _imageOpacity,
-                          child: _buildHeaderImage(restaurant),
+                          child: _buildHeaderImage(merchant),
                         ),
                       ),
                       // Gradient overlay
                       _buildGradientOverlay(),
-                      // Informations du restaurant
-                      _buildRestaurantInfo(restaurant),
+                      // Informations du merchant
+                      _buildmerchantInfo(merchant),
                     ],
                   ),
                 ),
               ),
 
               // Corps de la page
-              SliverToBoxAdapter(child: _buildBody(restaurant)),
+              SliverToBoxAdapter(child: _buildBody(merchant)),
             ],
           ),
 
@@ -136,7 +136,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
             bottom: 20,
             left: 20,
             right: 20,
-            child: _buildFloatingActionButton(restaurant),
+            child: _buildFloatingActionButton(merchant),
           ),
         ],
       ),
@@ -203,10 +203,10 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     );
   }
 
-  Widget _buildHeaderImage(Restaurant restaurant) {
-    if (restaurant.imageUrl != null) {
+  Widget _buildHeaderImage(Merchant merchant) {
+    if (merchant.imageUrl != null) {
       return CachedNetworkImage(
-        imageUrl: restaurant.imageUrl!,
+        imageUrl: merchant.imageUrl!,
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
           color: Colors.grey[300],
@@ -219,15 +219,15 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            _getCategoryColor(restaurant.category),
-            _getCategoryColor(restaurant.category).withValues(alpha: 0.7),
+            _getCategoryColor(merchant.category),
+            _getCategoryColor(merchant.category).withValues(alpha: 0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
       ),
       child: Icon(
-        _getCategoryIcon(restaurant.category),
+        _getCategoryIcon(merchant.category),
         size: 100,
         color: Colors.white.withValues(alpha: 0.5),
       ),
@@ -246,7 +246,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     );
   }
 
-  Widget _buildRestaurantInfo(Restaurant restaurant) {
+  Widget _buildmerchantInfo(Merchant merchant) {
     return Positioned(
       bottom: 20,
       left: 20,
@@ -267,23 +267,23 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
               // Badges
               Row(
                 children: [
-                  if (restaurant.hasActiveOffer)
+                  if (merchant.hasActiveOffer)
                     _buildBadge(
                       Icons.local_fire_department,
-                      '-${restaurant.discountPercentage}%',
+                      '-${merchant.discountPercentage}%',
                       Colors.red,
                     ),
                   const SizedBox(width: 8),
-                  if (restaurant.availableOffers > 0)
+                  if (merchant.availableOffers > 0)
                     _buildBadge(
                       Icons.shopping_bag,
-                      '${restaurant.availableOffers} offres',
+                      '${merchant.availableOffers} offres',
                       Colors.green,
                     ),
                   const SizedBox(width: 8),
                   _buildBadge(
                     Icons.near_me,
-                    restaurant.distanceText,
+                    merchant.distanceText,
                     Colors.blue,
                   ),
                 ],
@@ -291,7 +291,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
               const SizedBox(height: 12),
               // Nom
               Text(
-                restaurant.name,
+                merchant.name,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -301,7 +301,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
               const SizedBox(height: 4),
               // Type de cuisine
               Text(
-                restaurant.cuisineType,
+                merchant.cuisineType,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.9),
                   fontSize: 16,
@@ -311,11 +311,11 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
               // Note et avis
               Row(
                 children: [
-                  if (restaurant.rating != null) ...[
+                  if (merchant.rating != null) ...[
                     Icon(Icons.star, color: Colors.amber, size: 20),
                     const SizedBox(width: 4),
                     Text(
-                      restaurant.rating!.toStringAsFixed(1),
+                      merchant.rating!.toStringAsFixed(1),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -366,7 +366,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     );
   }
 
-  Widget _buildBody(Restaurant restaurant) {
+  Widget _buildBody(Merchant merchant) {
     return Column(
       children: [
         // Tabs
@@ -391,8 +391,8 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
           child: TabBarView(
             controller: _tabController,
             children: [
-              _buildOffersTab(restaurant),
-              _buildInfoTab(restaurant),
+              _buildOffersTab(merchant),
+              _buildInfoTab(merchant),
               _buildReviewsTab(),
             ],
           ),
@@ -401,7 +401,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     );
   }
 
-  Widget _buildOffersTab(Restaurant restaurant) {
+  Widget _buildOffersTab(Merchant merchant) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: 5,
@@ -421,7 +421,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     );
   }
 
-  Widget _buildInfoTab(Restaurant restaurant) {
+  Widget _buildInfoTab(Merchant merchant) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -431,7 +431,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
           _buildSectionTitle('À propos'),
           const SizedBox(height: 8),
           Text(
-            restaurant.description ??
+            merchant.description ??
                 'Découvrez nos délicieux produits et aidez-nous à réduire le gaspillage alimentaire. Chaque jour, nous proposons des paniers surprises avec nos invendus du jour à prix réduit.',
             style: TextStyle(fontSize: 14, height: 1.5),
           ),
@@ -459,7 +459,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                   Icon(Icons.map, size: 50, color: Colors.grey[600]),
                   const SizedBox(height: 8),
                   Text(
-                    restaurant.address ?? '123 Rue de la Paix, 75001 Paris',
+                    merchant.address.fullAddress,
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 ],
@@ -473,7 +473,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
           const SizedBox(height: 12),
           ListTile(
             leading: Icon(Icons.phone),
-            title: Text(restaurant.phone ?? '01 23 45 67 89'),
+            title: Text(merchant.phone ?? '01 23 45 67 89'),
             trailing: Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {},
           ),
@@ -491,7 +491,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
           userName: 'Utilisateur ${index + 1}',
           rating: 4.0 + (index % 2) * 0.5,
           comment:
-              'Excellent restaurant ! Les paniers surprises sont toujours de bonne qualité.',
+              'Excellent merchant ! Les paniers surprises sont toujours de bonne qualité.',
           date: DateTime.now().subtract(Duration(days: index)),
         );
       },
@@ -576,7 +576,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     );
   }
 
-  Widget _buildFloatingActionButton(Restaurant restaurant) {
+  Widget _buildFloatingActionButton(Merchant merchant) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
       duration: const Duration(milliseconds: 800),
@@ -640,7 +640,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
       case 'bakery':
       case 'boulangerie':
         return Colors.brown;
-      case 'restaurant':
+      case 'merchant':
         return Colors.orange;
       case 'grocery':
       case 'épicerie':
@@ -662,8 +662,8 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
       case 'bakery':
       case 'boulangerie':
         return Icons.bakery_dining;
-      case 'restaurant':
-        return Icons.restaurant;
+      case 'merchant':
+        return Icons.store;
       case 'grocery':
       case 'épicerie':
         return Icons.shopping_basket;
@@ -905,3 +905,4 @@ class _ReviewCard extends StatelessWidget {
     );
   }
 }
+

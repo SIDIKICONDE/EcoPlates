@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/entities/food_offer.dart';
-import '../../providers/commerce/offers_provider.dart';
-import '../../widgets/commerce/offer_card.dart';
+import '../../../../domain/entities/food_offer.dart';
+import '../../../providers/merchant/offers_provider.dart';
+import '../../../widgets/cards/offer_card.dart';
 
 /// Écran principal affichant la liste des offres anti-gaspillage
 class OffersListScreen extends ConsumerStatefulWidget {

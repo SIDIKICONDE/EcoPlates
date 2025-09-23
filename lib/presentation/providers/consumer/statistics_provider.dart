@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/services/statistics_service.dart';
-import '../commerce/reservations_provider.dart';
+import '../merchant/reservations_provider.dart';
 
 /// Provider pour les statistiques utilisateur
 final userStatisticsProvider = FutureProvider<UserStatistics>((ref) async {

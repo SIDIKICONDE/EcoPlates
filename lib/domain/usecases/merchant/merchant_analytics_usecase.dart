@@ -1,5 +1,7 @@
 import '../../entities/analytics.dart';
 import '../../entities/merchant.dart';
+import '../../entities/merchant_types.dart';
+import '../../entities/merchant_details.dart';
 import '../../../data/repositories/merchant_repository.dart';
 import '../../../data/repositories/analytics_repository.dart';
 import '../../../core/error/failures.dart';
@@ -27,8 +29,8 @@ class MerchantAnalyticsUseCase {
       final merchantResult = await merchantRepository.getMerchant(merchantId);
 
       return merchantResult.fold((failure) => Left(failure), (merchant) async {
-        if (merchant.status != MerchantStatus.verified) {
-          return Left(BusinessFailure('Compte non vérifié'));
+        if (merchant.status != MerchantStatus.active) {
+          return Left(BusinessFailure('Compte non actif'));
         }
 
         // Validation des dates
@@ -69,8 +71,8 @@ class MerchantAnalyticsUseCase {
       final merchantResult = await merchantRepository.getMerchant(merchantId);
 
       return merchantResult.fold((failure) => Left(failure), (merchant) async {
-        if (merchant.status != MerchantStatus.verified) {
-          return Left(BusinessFailure('Compte non vérifié'));
+        if (merchant.status != MerchantStatus.active) {
+          return Left(BusinessFailure('Compte non actif'));
         }
 
         return await analyticsRepository.getRealtimeDashboard(merchantId);

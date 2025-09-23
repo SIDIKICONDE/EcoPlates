@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/restaurant.dart';
+import '../../domain/entities/merchant.dart';
 import '../../core/utils/animation_manager.dart';
 import '../../core/utils/accessibility_helper.dart';
 import 'restaurant_card_components/card_background.dart';
@@ -11,22 +11,22 @@ import 'restaurant_card_components/restaurant_tag.dart';
 import 'restaurant_card_components/price_info.dart';
 import 'restaurant_card_components/rating_display.dart';
 
-/// Carte de restaurant moderne et modulaire
-class RestaurantCard extends StatefulWidget {
-  final Restaurant restaurant;
+/// Carte de merchant moderne et modulaire
+class MerchantCard extends StatefulWidget {
+  final Merchant merchant;
   final VoidCallback? onTap;
 
-  const RestaurantCard({
+  const MerchantCard({
     super.key,
-    required this.restaurant,
+    required this.merchant,
     this.onTap,
   });
 
   @override
-  State<RestaurantCard> createState() => _RestaurantCardState();
+  State<MerchantCard> createState() => _MerchantCardState();
 }
 
-class _RestaurantCardState extends State<RestaurantCard>
+class _MerchantCardState extends State<MerchantCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -45,7 +45,7 @@ class _RestaurantCardState extends State<RestaurantCard>
     
     // Enregistrer l'animation dans le gestionnaire pour éviter les collisions
     _animationManager.registerAnimation(
-      id: 'restaurant_card_${widget.restaurant.id}',
+      id: 'restaurant_card_${widget.merchant.id}',
       controller: _controller,
       priority: true,
     );
@@ -69,7 +69,7 @@ class _RestaurantCardState extends State<RestaurantCard>
 
   @override
   void dispose() {
-    _animationManager.cancelAnimation('restaurant_card_${widget.restaurant.id}');
+    _animationManager.cancelAnimation('restaurant_card_${widget.merchant.id}');
     _controller.dispose();
     super.dispose();
   }
@@ -81,7 +81,7 @@ class _RestaurantCardState extends State<RestaurantCard>
 
     return Semantics(
       button: true,
-      label: 'Restaurant ${widget.restaurant.name}',
+      label: 'Commerçant ${widget.merchant.name}',
       hint: 'Toucher pour voir les détails',
       child: GestureDetector(
         onTapDown: (_) => _onTapDown(),
@@ -141,8 +141,8 @@ class _RestaurantCardState extends State<RestaurantCard>
           children: [
             // Background avec image et gradient
             CardBackground(
-              imageUrl: widget.restaurant.imageUrl,
-              category: widget.restaurant.category,
+              imageUrl: widget.merchant.imageUrl,
+              category: widget.merchant.category,
               isDarkMode: isDarkMode,
             ),
             
@@ -156,8 +156,8 @@ class _RestaurantCardState extends State<RestaurantCard>
             if (_isNewRestaurant) _buildNewBadge(),
             
             // Indicateur de temps
-            if (widget.restaurant.availableOffers <= 3)
-              TimeIndicator(availableOffers: widget.restaurant.availableOffers),
+            if (widget.merchant.availableOffers <= 3)
+              TimeIndicator(availableOffers: widget.merchant.availableOffers),
           ],
         ),
       ),
@@ -176,7 +176,7 @@ class _RestaurantCardState extends State<RestaurantCard>
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FavoriteButton(
-                isFavorite: widget.restaurant.isFavorite,
+                isFavorite: widget.merchant.isFavorite,
                 onTap: () {
                   // TODO: Implémenter la logique de favoris
                 },
@@ -196,10 +196,10 @@ class _RestaurantCardState extends State<RestaurantCard>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Tags
-        if (widget.restaurant.tags?.isNotEmpty ?? false) ...[
+        if (widget.merchant.tags?.isNotEmpty ?? false) ...[
           Wrap(
             spacing: 6,
-            children: widget.restaurant.tags!
+            children: widget.merchant.tags!
                 .take(3)
                 .map((tag) => RestaurantTag(tag: tag))
                 .toList(),
@@ -207,9 +207,9 @@ class _RestaurantCardState extends State<RestaurantCard>
           const SizedBox(height: 4),
         ],
         
-        // Nom du restaurant
+        // Nom du commerçant
         Text(
-          widget.restaurant.name,
+          widget.merchant.name,
           style: TextStyle(
             color: Colors.white,
             fontSize: AccessibleFontSizes.medium,
@@ -219,14 +219,14 @@ class _RestaurantCardState extends State<RestaurantCard>
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          semanticsLabel: widget.restaurant.name,
+          semanticsLabel: widget.merchant.name,
         ),
         
         const SizedBox(height: 2),
         
         // Type de cuisine
         Text(
-          widget.restaurant.cuisineType,
+          widget.merchant.cuisineType,
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.9),
             fontSize: 12,
@@ -253,8 +253,8 @@ class _RestaurantCardState extends State<RestaurantCard>
     return Row(
       children: [
         // Note
-        if (widget.restaurant.rating != null) ...[
-          RatingDisplay(rating: widget.restaurant.rating!),
+        if (widget.merchant.rating != null) ...[
+          RatingDisplay(rating: widget.merchant.rating!),
           const SizedBox(width: 8),
         ],
         
@@ -265,10 +265,10 @@ class _RestaurantCardState extends State<RestaurantCard>
         
         // Prix
         PriceInfo(
-          hasActiveOffer: widget.restaurant.hasActiveOffer,
-          originalPrice: widget.restaurant.originalPrice,
-          discountedPrice: widget.restaurant.discountedPrice,
-          minPrice: widget.restaurant.minPrice,
+          hasActiveOffer: widget.merchant.hasActiveOffer,
+          originalPrice: widget.merchant.originalPrice,
+          discountedPrice: widget.merchant.discountedPrice,
+          minPrice: widget.merchant.minPrice,
         ),
       ],
     );
@@ -287,7 +287,7 @@ class _RestaurantCardState extends State<RestaurantCard>
           const Icon(Icons.location_on, size: 12, color: Colors.white),
           const SizedBox(width: 3),
           Text(
-            widget.restaurant.distanceText,
+            widget.merchant.distanceText,
             style: const TextStyle(color: Colors.white, fontSize: 11),
           ),
         ],
@@ -312,7 +312,7 @@ class _RestaurantCardState extends State<RestaurantCard>
           const Icon(Icons.access_time, size: 14, color: Colors.white),
           const SizedBox(width: 6),
           Text(
-            'Collecte : ${widget.restaurant.pickupTime}',
+            'Collecte : ${widget.merchant.pickupTime}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 11,
@@ -333,9 +333,9 @@ class _RestaurantCardState extends State<RestaurantCard>
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
             // Badge de réduction
-          if (widget.restaurant.hasActiveOffer) ...[
+          if (widget.merchant.hasActiveOffer) ...[
             DiscountBadge(
-              discountPercentage: widget.restaurant.discountPercentage,
+              discountPercentage: widget.merchant.discountPercentage,
               animationsEnabled: _animationsEnabled,
             ),
             if (_isPopular) const SizedBox(width: 8),
@@ -385,9 +385,9 @@ class _RestaurantCardState extends State<RestaurantCard>
 
   // Getters helper
   bool get _isPopular =>
-      widget.restaurant.rating != null && widget.restaurant.rating! >= 4.5;
+      widget.merchant.rating != null && widget.merchant.rating! >= 4.5;
       
   bool get _isNewRestaurant =>
-      widget.restaurant.createdAt != null &&
-      DateTime.now().difference(widget.restaurant.createdAt!).inDays < 7;
+      widget.merchant.createdAt != null &&
+      DateTime.now().difference(widget.merchant.createdAt!).inDays < 7;
 }

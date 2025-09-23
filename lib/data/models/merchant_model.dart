@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../domain/entities/merchant.dart';
+import '../../domain/entities/merchant_types.dart';
+import '../../domain/entities/merchant_details.dart';
 
 part 'merchant_model.g.dart';
 
@@ -76,6 +79,12 @@ class MerchantModel {
     return Merchant(
       id: id,
       name: name,
+      cuisineType: businessInfo.specialties.isNotEmpty ? businessInfo.specialties.first : type.displayName,
+      category: type.displayName,
+      distanceText: '0 km', // Valeur par défaut
+      pickupTime: '15-30 min', // Valeur par défaut
+      latitude: address.latitude,
+      longitude: address.longitude,
       email: email,
       phoneNumber: phoneNumber,
       type: type,

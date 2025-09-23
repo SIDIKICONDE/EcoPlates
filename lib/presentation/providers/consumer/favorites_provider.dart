@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/services/favorites_service.dart';
 import '../../../domain/entities/food_offer.dart';
-import '../commerce/offers_provider.dart';
+import '../merchant/offers_provider.dart';
 
 /// État des favoris
 @immutable

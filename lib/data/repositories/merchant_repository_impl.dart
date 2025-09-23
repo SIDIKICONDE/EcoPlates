@@ -5,6 +5,8 @@ import 'package:injectable/injectable.dart';
 import '../../core/error/failures.dart';
 import '../../core/network/api_client.dart';
 import '../../domain/entities/merchant.dart';
+import '../../domain/entities/merchant_details.dart';
+import '../../domain/entities/merchant_types.dart';
 import '../../domain/repositories/merchant_repository.dart';
 import '../models/merchant_model.dart';
 

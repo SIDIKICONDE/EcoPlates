@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failures.dart';
 import '../entities/merchant.dart';
+import '../entities/merchant_types.dart';
+import '../entities/merchant_details.dart';
+import '../../core/error/failures.dart';
 
 /// Interface du repository pour les commerçants
 abstract class MerchantRepository {

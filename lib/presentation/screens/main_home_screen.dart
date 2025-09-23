@@ -75,6 +75,16 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
           children: [
             // Section des grandes enseignes (en premier, position premium)
             const BrandSliderSection(),
+            
+            // Section "Dernières Minutes" - URGENCE MAXIMALE
+            RestaurantSliderSection(
+              title: '🔥 Dernières Minutes',
+              subtitle: 'À sauver dans moins de 2h !',
+              actionText: 'Voir tout',
+              onActionTap: () => context.go('/last-minute'),
+              filterType: 'last-minute',
+              isUrgent: true,
+            ),
 
             // Section des catégories
             const CategoriesSection(),
@@ -86,6 +96,24 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
               actionText: 'Voir tout',
               onActionTap: () => context.go('/recommended'),
               filterType: 'recommended',
+            ),
+            
+            // Section "Végétarien & Vegan"
+            RestaurantSliderSection(
+              title: '💚 Végétarien & Vegan',
+              subtitle: 'Options végétales et bio',
+              actionText: 'Voir tout',
+              onActionTap: () => context.go('/vegetarian'),
+              filterType: 'vegetarian',
+            ),
+            
+            // Section "Petit Budget"
+            RestaurantSliderSection(
+              title: '💰 Petit Budget',
+              subtitle: 'Moins de 5€ seulement !',
+              actionText: 'Voir tout',
+              onActionTap: () => context.go('/budget'),
+              filterType: 'budget',
             ),
 
             // Section "Près de vous"

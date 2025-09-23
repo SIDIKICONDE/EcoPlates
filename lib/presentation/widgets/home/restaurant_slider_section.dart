@@ -146,6 +146,43 @@ class RestaurantSliderSection extends ConsumerWidget {
             .take(5)
             .toList();
             
+      case 'last-minute':
+        // Filtrer les offres qui expirent dans moins de 2h
+        // En production, utiliser de vraies dates d'expiration
+        // Simuler des offres urgentes
+        final urgentOffers = restaurants
+            .where((r) => r.hasActiveOffer && r.availableOffers <= 2)
+            .toList()
+          ..sort((a, b) => a.availableOffers.compareTo(b.availableOffers));
+        
+        return urgentOffers.take(8).toList();
+        
+      case 'vegetarian':
+        // Filtrer les restaurants végétariens/vegan
+        // En production, utiliser les tags du restaurant
+        final vegetarianRestaurants = restaurants.where((r) {
+          // Simuler en utilisant le nom et la catégorie
+          final name = r.name.toLowerCase();
+          final cuisine = r.cuisineType.toLowerCase();
+          return name.contains('bio') || 
+                 name.contains('vég') ||
+                 cuisine.contains('vég') ||
+                 cuisine.contains('bio') ||
+                 cuisine.contains('salad') ||
+                 r.category == 'grocery'; // Les épiceries ont souvent du bio
+        }).toList();
+        
+        return vegetarianRestaurants.take(6).toList();
+        
+      case 'budget':
+        // Filtrer les offres à moins de 5€
+        final budgetOffers = restaurants
+            .where((r) => r.hasActiveOffer && r.discountedPrice <= 5.0)
+            .toList()
+          ..sort((a, b) => a.discountedPrice.compareTo(b.discountedPrice));
+        
+        return budgetOffers.take(10).toList();
+      
       case 'recommended':
         // Recommandations basées sur les favoris et les offres actives
         final recommendedList = <Restaurant>[];

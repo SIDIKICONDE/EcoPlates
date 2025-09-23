@@ -1,7 +1,5 @@
 import '../../entities/analytics.dart';
-import '../../entities/merchant.dart';
 import '../../entities/merchant_types.dart';
-import '../../entities/merchant_details.dart';
 import '../../../data/repositories/merchant_repository.dart';
 import '../../../data/repositories/analytics_repository.dart';
 import '../../../core/error/failures.dart';

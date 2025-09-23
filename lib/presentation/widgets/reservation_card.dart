@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../domain/entities/reservation.dart';
+import '../../domain/entities/reservation.dart';
 
 /// Widget de carte pour afficher une réservation
 class ReservationCard extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/consumer/merchants_provider.dart';
+import '../../providers/category_provider.dart';
+
 
 /// Section horizontale des catégories de restaurants
 class CategoriesSection extends ConsumerWidget {

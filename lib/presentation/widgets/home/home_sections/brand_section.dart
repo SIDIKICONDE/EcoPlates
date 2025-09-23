@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../domain/entities/brand.dart';
-import '../../providers/consumer/brands_provider.dart';
-import '../brand_card.dart';
+import '../../../../domain/entities/brand.dart';
+import '../../brand_card.dart';
+import '../../../../presentation/providers/brand_provider.dart';
 
-/// Widget moderne pour la section des grandes enseignes partenaires
-class BrandSliderSection extends ConsumerWidget {
-  const BrandSliderSection({super.key});
+/// Section "Grandes Enseignes" - slider des marques partenaires
+class BrandSection extends ConsumerWidget {
+  const BrandSection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final brandsAsync = ref.watch(brandsProvider);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -21,7 +21,7 @@ class BrandSliderSection extends ConsumerWidget {
           // Header
           _buildHeader(context),
           const SizedBox(height: 6),
-          
+
           // Contenu
           brandsAsync.when(
             data: (brands) => _buildBrandsList(context, brands),
@@ -36,7 +36,7 @@ class BrandSliderSection extends ConsumerWidget {
   Widget _buildHeader(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -56,7 +56,7 @@ class BrandSliderSection extends ConsumerWidget {
               ),
             ],
           ),
-          
+
           // Bouton voir tout
           TextButton(
             onPressed: () => context.go('/brands'),
@@ -92,12 +92,12 @@ class BrandSliderSection extends ConsumerWidget {
     if (brands.isEmpty) {
       return _buildEmptyState(context);
     }
-    
+
     // Trier par popularité
     final topBrands = List<Brand>.from(brands)
       ..sort((a, b) => b.popularityScore.compareTo(a.popularityScore));
     final displayBrands = topBrands.take(10).toList();
-    
+
     return SizedBox(
       height: 120,
       child: ListView.builder(
@@ -142,7 +142,7 @@ class BrandSliderSection extends ConsumerWidget {
 
   Widget _buildEmptyState(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       height: 150,
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -217,7 +217,7 @@ class _ShimmerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: isDarkMode ? Colors.grey.shade900 : Colors.white,
@@ -243,9 +243,9 @@ class _ShimmerCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            
+
             const SizedBox(width: 12),
-            
+
             // Info placeholders
             Expanded(
               child: Column(
@@ -262,7 +262,7 @@ class _ShimmerCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  
+
                   // Category placeholder
                   Container(
                     height: 10,
@@ -272,9 +272,9 @@ class _ShimmerCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Stats placeholder
                   Row(
                     children: [

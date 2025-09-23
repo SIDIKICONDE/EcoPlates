@@ -152,9 +152,6 @@ class _MerchantCardState extends State<MerchantCard>
             // Badges supérieurs
             _buildTopBadges(),
             
-            // Badge nouveau
-            if (_isNewRestaurant) _buildNewBadge(),
-            
             // Indicateur de temps
             if (widget.merchant.availableOffers <= 3)
               TimeIndicator(availableOffers: widget.merchant.availableOffers),
@@ -253,10 +250,8 @@ class _MerchantCardState extends State<MerchantCard>
     return Row(
       children: [
         // Note
-        if (widget.merchant.rating != null) ...[
-          RatingDisplay(rating: widget.merchant.rating!),
-          const SizedBox(width: 8),
-        ],
+        RatingDisplay(rating: widget.merchant.rating),
+        const SizedBox(width: 8),
         
         // Distance
         _buildDistanceBadge(),
@@ -348,46 +343,6 @@ class _MerchantCardState extends State<MerchantCard>
     );
   }
 
-  Widget _buildNewBadge() {
-    return Positioned(
-      top: 46,
-      left: 12,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.green,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.green.withValues(alpha: 0.4),
-              blurRadius: 6,
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.new_releases, size: 12, color: Colors.white),
-            SizedBox(width: 4),
-            Text(
-              'NOUVEAU',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   // Getters helper
-  bool get _isPopular =>
-      widget.merchant.rating != null && widget.merchant.rating! >= 4.5;
-      
-  bool get _isNewRestaurant =>
-      widget.merchant.createdAt != null &&
-      DateTime.now().difference(widget.merchant.createdAt!).inDays < 7;
+  bool get _isPopular => widget.merchant.rating >= 4.5;
 }

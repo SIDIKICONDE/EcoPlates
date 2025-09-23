@@ -2,8 +2,216 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../domain/entities/merchant.dart';
-import '../../providers/consumer/merchants_provider.dart';
+import '../../../domain/entities/merchant_details.dart';
+import '../../../domain/entities/merchant_types.dart';
 import '../merchant_card.dart';
+
+/// Provider temporaire pour les marchands proches
+final nearbyMerchantsProvider = Provider<AsyncValue<List<Merchant>>>((ref) {
+  // Données de test temporaires
+  return AsyncValue.data([
+    Merchant(
+      id: 'merchant-1',
+      name: 'Chez Marie',
+      description: 'Restaurant traditionnel français avec des plats faits maison',
+      address: Address(
+        street: '15 Rue des Roses',
+        city: 'Paris',
+        postalCode: '75001',
+        country: 'France',
+        latitude: 48.8566,
+        longitude: 2.3522,
+      ),
+      phone: '01 42 33 44 55',
+      email: 'contact@chezmarie.fr',
+      category: 'restaurant',
+      cuisineType: 'Française',
+      rating: 4.7,
+      totalReviews: 234,
+      imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop',
+      status: MerchantStatus.active,
+      verifiedAt: DateTime.now().subtract(const Duration(days: 30)),
+      hasActiveOffer: true,
+      availableOffers: 5,
+      discountPercentage: 25,
+      discountedPrice: 12.50,
+      distanceText: '300m',
+      isFavorite: false,
+      pickupTime: '11:30-13:30',
+      latitude: 48.8566,
+      longitude: 2.3522,
+      createdAt: DateTime.now().subtract(const Duration(days: 45)),
+      phoneNumber: '01 42 33 44 55',
+      type: MerchantType.restaurant,
+      businessInfo: BusinessInfo(
+        registrationNumber: '987654321',
+        vatNumber: 'FR987654321',
+        openingHours: OpeningHours(schedule: {}),
+      ),
+      settings: MerchantSettings(),
+      stats: MerchantStats(
+        totalOffers: 15,
+        activeOffers: 5,
+        totalReservations: 45,
+        completedReservations: 42,
+        totalRevenue: 750.0,
+        totalCo2Saved: 75.0,
+        totalMealsSaved: 150,
+        averageRating: 4.7,
+      ),
+    ),
+    Merchant(
+      id: 'merchant-2',
+      name: 'Boulangerie Bio',
+      description: 'Boulangerie artisanale avec produits biologiques',
+      address: Address(
+        street: '28 Avenue des Champs',
+        city: 'Paris',
+        postalCode: '75008',
+        country: 'France',
+        latitude: 48.8606,
+        longitude: 2.3376,
+      ),
+      phone: '01 45 67 89 01',
+      email: 'contact@boulangerie-bio.fr',
+      category: 'bakery',
+      cuisineType: 'Boulangerie Bio',
+      rating: 4.5,
+      totalReviews: 156,
+      imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&h=600&fit=crop',
+      status: MerchantStatus.active,
+      verifiedAt: DateTime.now().subtract(const Duration(days: 60)),
+      hasActiveOffer: true,
+      availableOffers: 8,
+      discountPercentage: 30,
+      discountedPrice: 3.50,
+      distanceText: '500m',
+      isFavorite: true,
+      pickupTime: '08:00-18:00',
+      latitude: 48.8606,
+      longitude: 2.3376,
+      createdAt: DateTime.now().subtract(const Duration(days: 30)),
+      phoneNumber: '01 45 67 89 01',
+      type: MerchantType.bakery,
+      businessInfo: BusinessInfo(
+        registrationNumber: '456789123',
+        vatNumber: 'FR456789123',
+        openingHours: OpeningHours(schedule: {}),
+      ),
+      settings: MerchantSettings(),
+      stats: MerchantStats(
+        totalOffers: 20,
+        activeOffers: 8,
+        totalReservations: 32,
+        completedReservations: 30,
+        totalRevenue: 450.0,
+        totalCo2Saved: 45.0,
+        totalMealsSaved: 90,
+        averageRating: 4.5,
+      ),
+    ),
+    Merchant(
+      id: 'merchant-3',
+      name: 'Épicerie du Coin',
+      description: 'Épicerie locale avec produits frais et de saison',
+      address: Address(
+        street: '7 Place de la Gare',
+        city: 'Paris',
+        postalCode: '75013',
+        country: 'France',
+        latitude: 48.8365,
+        longitude: 2.3770,
+      ),
+      phone: '01 53 24 68 97',
+      email: 'contact@epicerie-coin.fr',
+      category: 'grocery',
+      cuisineType: 'Épicerie',
+      rating: 4.3,
+      totalReviews: 89,
+      imageUrl: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop',
+      status: MerchantStatus.active,
+      verifiedAt: DateTime.now().subtract(const Duration(days: 90)),
+      hasActiveOffer: true,
+      availableOffers: 12,
+      discountPercentage: 20,
+      discountedPrice: 8.90,
+      distanceText: '800m',
+      isFavorite: false,
+      pickupTime: '09:00-19:00',
+      latitude: 48.8365,
+      longitude: 2.3770,
+      createdAt: DateTime.now().subtract(const Duration(days: 15)),
+      phoneNumber: '01 53 24 68 97',
+      type: MerchantType.grocery,
+      businessInfo: BusinessInfo(
+        registrationNumber: '789123456',
+        vatNumber: 'FR789123456',
+        openingHours: OpeningHours(schedule: {}),
+      ),
+      settings: MerchantSettings(),
+      stats: MerchantStats(
+        totalOffers: 25,
+        activeOffers: 12,
+        totalReservations: 28,
+        completedReservations: 25,
+        totalRevenue: 320.0,
+        totalCo2Saved: 32.0,
+        totalMealsSaved: 64,
+        averageRating: 4.3,
+      ),
+    ),
+    Merchant(
+      id: 'merchant-4',
+      name: 'Au Pain Doré',
+      description: 'Boulangerie artisanale avec pains bio et viennoiseries',
+      address: Address(
+        street: '42 Rue Saint-Honoré',
+        city: 'Paris',
+        postalCode: '75001',
+        country: 'France',
+        latitude: 48.8606,
+        longitude: 2.3376,
+      ),
+      phone: '01 42 60 22 33',
+      email: 'contact@aupaindore.fr',
+      category: 'bakery',
+      cuisineType: 'Boulangerie Artisanale',
+      rating: 4.8,
+      totalReviews: 245,
+      imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
+      status: MerchantStatus.active,
+      verifiedAt: DateTime.now().subtract(const Duration(days: 120)),
+      hasActiveOffer: true,
+      availableOffers: 6,
+      discountPercentage: 35,
+      discountedPrice: 2.50,
+      distanceText: '600m',
+      isFavorite: true,
+      pickupTime: '06:30-19:30',
+      latitude: 48.8606,
+      longitude: 2.3376,
+      createdAt: DateTime.now().subtract(const Duration(days: 25)),
+      phoneNumber: '01 42 60 22 33',
+      type: MerchantType.bakery,
+      businessInfo: BusinessInfo(
+        registrationNumber: '321654987',
+        vatNumber: 'FR321654987',
+        openingHours: OpeningHours(schedule: {}),
+      ),
+      settings: MerchantSettings(),
+      stats: MerchantStats(
+        totalOffers: 30,
+        activeOffers: 6,
+        totalReservations: 67,
+        completedReservations: 65,
+        totalRevenue: 580.0,
+        totalCo2Saved: 58.0,
+        totalMealsSaved: 116,
+        averageRating: 4.8,
+      ),
+    ),
+  ]);
+});
 
 /// Widget pour une section de restaurants avec slider horizontal
 class MerchantSliderSection extends ConsumerWidget {
@@ -26,6 +234,7 @@ class MerchantSliderSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Utiliser le provider des marchands proches
     final restaurantsAsync = ref.watch(nearbyMerchantsProvider);
 
     return Container(
@@ -180,9 +389,18 @@ class MerchantSliderSection extends ConsumerWidget {
             .where((r) => r.hasActiveOffer && r.discountedPrice <= 5.0)
             .toList()
           ..sort((a, b) => a.discountedPrice.compareTo(b.discountedPrice));
-        
+
         return budgetOffers.take(10).toList();
-      
+
+      case 'bakery':
+        // Filtrer les boulangeries et pâtisseries
+        final bakeries = merchants
+            .where((r) => r.category == 'bakery' || r.type == MerchantType.bakery)
+            .toList()
+          ..sort((a, b) => b.rating.compareTo(a.rating));
+
+        return bakeries.take(8).toList();
+
       case 'recommended':
         // Recommandations basées sur les favoris et les offres actives
         final recommendedList = <Merchant>[];
@@ -195,9 +413,9 @@ class MerchantSliderSection extends ConsumerWidget {
         
         // Ensuite les restaurants avec les meilleures notes
         final highRated = merchants
-            .where((r) => !r.isFavorite && r.rating != null && r.rating! >= 4.5)
+            .where((r) => !r.isFavorite && r.rating >= 4.5)
             .toList()
-          ..sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
+          ..sort((a, b) => b.rating.compareTo(a.rating));
         
         recommendedList.addAll(highRated.take(5 - recommendedList.length));
         
@@ -281,7 +499,8 @@ class MerchantSliderSection extends ConsumerWidget {
             const SizedBox(height: 8),
             TextButton(
               onPressed: () {
-                ref.invalidate(nearbyMerchantsProvider);
+                // TODO: Implement provider invalidation when nearbyMerchantsProvider is available
+                // ref.invalidate(nearbyMerchantsProvider);
               },
               child: const Text('Réessayer'),
             ),

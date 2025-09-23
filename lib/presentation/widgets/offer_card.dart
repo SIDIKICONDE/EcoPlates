@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../domain/entities/food_offer.dart';
+import '../../domain/entities/food_offer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// Widget de carte pour afficher une offre anti-gaspillage

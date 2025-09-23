@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/entities/merchant.dart';
-import '../providers/consumer/merchants_provider.dart';
+import '../providers/merchant_provider.dart';
 
 /// Page de détail d'un merchant avec effet parallaxe
 class MerchantDetailScreen extends ConsumerStatefulWidget {
@@ -311,26 +311,24 @@ class _MerchantDetailScreenState extends ConsumerState<MerchantDetailScreen>
               // Note et avis
               Row(
                 children: [
-                  if (merchant.rating != null) ...[
-                    Icon(Icons.star, color: Colors.amber, size: 20),
-                    const SizedBox(width: 4),
-                    Text(
-                      merchant.rating!.toStringAsFixed(1),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Icon(Icons.star, color: Colors.amber, size: 20),
+                  const SizedBox(width: 4),
+                  Text(
+                    merchant.rating.toStringAsFixed(1),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '(127 avis)',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.8),
-                        fontSize: 14,
-                      ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '(127 avis)',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.8),
+                      fontSize: 14,
                     ),
-                  ],
+                  ),
                 ],
               ),
             ],

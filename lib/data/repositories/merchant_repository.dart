@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import '../../domain/entities/merchant.dart';
-import '../../domain/entities/merchant_types.dart';
 import '../../domain/entities/merchant_details.dart';
 import '../../core/error/failures.dart';
 

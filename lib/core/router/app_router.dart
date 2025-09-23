@@ -4,15 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../presentation/screens/main_home_screen.dart';
 import '../../presentation/screens/merchant_detail_screen.dart';
-import '../../presentation/screens/consumer/consumer_home_screen.dart';
 import '../../presentation/screens/merchant/merchant_home_screen.dart';
 import '../../presentation/screens/scan_screen.dart';
-import '../../presentation/screens/consumer/order_history_screen.dart';
 import '../../presentation/screens/profile_screen.dart';
 import '../../presentation/screens/onboarding/user_type_selection_screen.dart';
-import '../../presentation/screens/consumer/food_offers_screen.dart';
-import '../../presentation/screens/consumer/offer_detail_screen.dart';
-import '../../presentation/screens/consumer/favorites_screen.dart';
 import '../../presentation/screens/merchant/management/reservations_screen.dart';
 import '../../presentation/screens/merchant/analytics/analytics_dashboard_screen.dart';
 import '../../presentation/screens/merchant/offers/offers_list_screen.dart';
@@ -93,20 +88,6 @@ class AppRouter {
           },
           routes: [
             GoRoute(
-              path: '/home',
-              name: 'home',
-              pageBuilder: (context, state) {
-                return const MaterialPage(child: ConsumerHomeScreen());
-              },
-            ),
-            GoRoute(
-              path: '/history',
-              name: 'history',
-              pageBuilder: (context, state) {
-                return const MaterialPage(child: OrderHistoryScreen());
-              },
-            ),
-            GoRoute(
               path: '/profile',
               name: 'profile',
               pageBuilder: (context, state) {
@@ -114,32 +95,10 @@ class AppRouter {
               },
             ),
             GoRoute(
-              path: '/offers',
-              name: 'offers',
-              pageBuilder: (context, state) {
-                return const MaterialPage(child: FoodOffersScreen());
-              },
-            ),
-            GoRoute(
               path: '/reservations',
               name: 'reservations',
               pageBuilder: (context, state) {
                 return const MaterialPage(child: ReservationsScreen());
-              },
-            ),
-            GoRoute(
-              path: '/favorites',
-              name: 'favorites',
-              pageBuilder: (context, state) {
-                return const MaterialPage(child: FavoritesScreen());
-              },
-            ),
-            GoRoute(
-              path: '/offer/:id',
-              name: 'offer-detail',
-              pageBuilder: (context, state) {
-                final offerId = state.pathParameters['id']!;
-                return MaterialPage(child: OfferDetailScreen(offerId: offerId));
               },
             ),
           ],

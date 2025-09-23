@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/home/brand_slider_section.dart';
 import '../widgets/home/categories_section.dart';
-import '../widgets/home/merchant_slider_section.dart';
+import '../widgets/home/home_sections/index.dart';
 import '../widgets/home/surprise_box_section.dart';
 
 /// Page d'accueil principale type Too Good To Go
@@ -74,84 +73,53 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Section des grandes enseignes (en premier, position premium)
-            const BrandSliderSection(),
+            const BrandSection(),
             
             // Section "Dernières Minutes" - URGENCE MAXIMALE
-            MerchantSliderSection(
-              title: '🔥 Dernières Minutes',
-              subtitle: 'À sauver dans moins de 2h !',
-              actionText: 'Voir tout',
-              onActionTap: () => context.go('/last-minute'),
-              filterType: 'last-minute',
-              isUrgent: true,
-            ),
+            const LastMinuteSection(),
 
             // Section des catégories
             const CategoriesSection(),
 
             // Section "Recommandé pour vous"
-            MerchantSliderSection(
-              title: '🎯 Recommandé pour vous',
-              subtitle: 'Sélection personnalisée selon vos goûts',
-              actionText: 'Voir tout',
-              onActionTap: () => context.go('/recommended'),
-              filterType: 'recommended',
-            ),
+            const RecommendedSection(),
             
             // Section "Végétarien & Vegan"
-            MerchantSliderSection(
-              title: '💚 Végétarien & Vegan',
-              subtitle: 'Options végétales et bio',
-              actionText: 'Voir tout',
-              onActionTap: () => context.go('/vegetarian'),
-              filterType: 'vegetarian',
-            ),
-            
-            // Section "Petit Budget"
-            MerchantSliderSection(
+            const VegetarianSection(),
+
+            // Section "🍞 Boulangeries & Pâtisseries"
+            const BakerySection(),
+
+            // Section "Petit Budget - Offres"
+            const OffersSection(
               title: '💰 Petit Budget',
-              subtitle: 'Moins de 5€ seulement !',
-              actionText: 'Voir tout',
-              onActionTap: () => context.go('/budget'),
-              filterType: 'budget',
+              subtitle: 'Offres à moins de 5€ !',
+              route: '/budget-offers',
             ),
 
-            // Section "Près de vous"
-            MerchantSliderSection(
+            // Section "Près de vous - Offres"
+            const OffersSection(
               title: '🔥 Près de vous',
-              subtitle: 'Restaurants à moins de 1km',
-              actionText: 'Voir tout',
-              onActionTap: () => context.go('/nearby'),
-              filterType: 'nearby',
+              subtitle: 'Offres à proximité immédiate',
+              route: '/nearby-offers',
             ),
 
-            // Section "Nouveautés"
-            MerchantSliderSection(
+            // Section "Nouveautés - Offres"
+            const OffersSection(
               title: '✨ Nouveautés',
-              subtitle: 'Découvrez les derniers arrivés',
-              actionText: 'Voir tout',
-              onActionTap: () => context.go('/new'),
-              filterType: 'new',
+              subtitle: 'Découvrez les dernières offres',
+              route: '/new-offers',
             ),
 
             // Section "Meilleures offres"
-            MerchantSliderSection(
+            const OffersSection(
               title: '💎 Meilleures offres',
               subtitle: 'Les plus grandes réductions',
-              actionText: 'Voir tout',
-              onActionTap: () => context.go('/best-deals'),
-              filterType: 'best-deals',
+              route: '/best-offers',
             ),
 
             // Section "Dernière chance"
-            MerchantSliderSection(
-              title: '⏰ Dernière chance',
-              subtitle: 'À récupérer avant fermeture',
-              actionText: 'Voir tout',
-              onActionTap: () => context.go('/closing-soon'),
-              isUrgent: true,
-              filterType: 'closing-soon',
-            ),
+            const ClosingSoonSection(),
 
             // Section "Colis anti-gaspi"
             const SurpriseBoxSection(),

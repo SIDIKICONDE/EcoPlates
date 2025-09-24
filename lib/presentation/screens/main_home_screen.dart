@@ -18,8 +18,6 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: const MinimalHeader(
         title: 'EcoPlates',

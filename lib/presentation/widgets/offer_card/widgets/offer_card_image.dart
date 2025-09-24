@@ -12,10 +12,13 @@ import 'offer_quantity_badge.dart';
 class OfferCardImage extends StatelessWidget {
   /// L'offre alimentaire dont on affiche l'image et les badges
   final FoodOffer offer;
+  /// Mode compact pour réduire la hauteur de l'image
+  final bool compact;
 
   const OfferCardImage({
     super.key,
     required this.offer,
+    this.compact = false,
   });
 
   /// Construit le widget avec une mise en page en stack pour superposer les badges
@@ -24,7 +27,7 @@ class OfferCardImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(3.0),
       child: Stack(
         children: [
           // Section image principale avec coins arrondis
@@ -32,9 +35,9 @@ class OfferCardImage extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             child: Stack(
               children: [
-                // Image principale avec ratio 16:9 optimisé pour mobile
+                // Image principale avec ratio adaptatif (compact: 3:1, normal: 16:9)
                 AspectRatio(
-                  aspectRatio: 16 / 9,
+                  aspectRatio: compact ? 3 / 1 : 16 / 9,
                   child: offer.images.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: offer.images.first,

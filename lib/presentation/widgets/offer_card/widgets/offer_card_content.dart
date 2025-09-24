@@ -14,11 +14,15 @@ class OfferCardContent extends StatelessWidget {
   /// Distance calculée depuis la position utilisateur (non utilisé dans ce widget)
   final double? distance;
 
+  /// Mode compact pour réduire l'espacement
+  final bool compact;
+
   const OfferCardContent({
     super.key,
     required this.offer,
     required this.showDistance,
     this.distance,
+    this.compact = false,
   });
 
   /// Construit le widget avec la mise en page du contenu
@@ -28,22 +32,24 @@ class OfferCardContent extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: compact 
+        ? const EdgeInsets.fromLTRB(12, 6, 12, 8) 
+        : const EdgeInsets.fromLTRB(16, 8, 16, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section nom du commerçant avec style distinctif
           _buildMerchantName(theme),
-          const SizedBox(height: 2),
+          SizedBox(height: compact ? 1 : 2),
 
           // Section description du produit (tronquée si trop longue)
-          _buildDescription(),
-          const SizedBox(height: 4),
+          if (!compact) _buildDescription(),
+          if (!compact) const SizedBox(height: 4),
 
           // Section date de récupération
           _buildPickupDate(),
-          const SizedBox(height: 6),
-          
+          SizedBox(height: compact ? 4 : 6),
+
           // Ligne de séparation en pointillés (couleur selon fraîcheur)
           SizedBox(
             height: 1,
@@ -52,8 +58,8 @@ class OfferCardContent extends StatelessWidget {
               painter: _DottedLinePainter(color: _getLineColor()),
             ),
           ),
-          const SizedBox(height: 6),
-          
+          SizedBox(height: compact ? 4 : 6),
+
           // Section prix
           _buildPriceOnly(theme),
         ],
@@ -114,31 +120,35 @@ class OfferCardContent extends StatelessWidget {
 
   /// Construit le widget pour afficher le prix
   Widget _buildPriceOnly(ThemeData theme) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        if (!offer.isFree) ...[
+    return SizedBox(
+      height: 24, // Hauteur fixe pour éviter l'espace blanc
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (!offer.isFree) ...[
+            Text(
+              '€${offer.originalPrice.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: 12,
+                decoration: TextDecoration.lineThrough,
+                color: Colors.grey[500],
+                height: 1.0,
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
           Text(
-            '€${offer.originalPrice.toStringAsFixed(2)}',
+            offer.priceText,
             style: TextStyle(
-              fontSize: 12,
-              decoration: TextDecoration.lineThrough,
-              color: Colors.grey[500],
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: offer.isFree ? Colors.green : theme.primaryColor,
               height: 1.0,
             ),
           ),
-          const SizedBox(width: 8),
         ],
-        Text(
-          offer.priceText,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: offer.isFree ? Colors.green : theme.primaryColor,
-            height: 1.0,
-          ),
-        ),
-      ],
+      ),
     );
   }
 

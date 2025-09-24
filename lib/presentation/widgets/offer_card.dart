@@ -10,6 +10,7 @@ class OfferCard extends StatefulWidget {
   final VoidCallback? onTap;
   final bool showDistance;
   final double? distance; // en km
+  final bool compact; // Mode compact pour réduire la hauteur
 
   const OfferCard({
     super.key,
@@ -17,6 +18,7 @@ class OfferCard extends StatefulWidget {
     this.onTap,
     this.showDistance = true,
     this.distance,
+    this.compact = false,
   });
 
   @override
@@ -82,13 +84,14 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Image avec badges
-                OfferCardImage(offer: widget.offer),
+                OfferCardImage(offer: widget.offer, compact: widget.compact),
                 
                 // Contenu de la carte
                 OfferCardContent(
                   offer: widget.offer,
                   showDistance: widget.showDistance,
                   distance: widget.distance,
+                  compact: widget.compact,
                 ),
               ],
             ),

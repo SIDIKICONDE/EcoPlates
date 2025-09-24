@@ -33,7 +33,7 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bg = backgroundColor ?? theme.colorScheme.surface;
-    final dividerColor = theme.dividerColor.withOpacity(0.08);
+    final dividerColor = theme.dividerColor.withValues(alpha: 0.08);
 
     // Si aucune action n'est fournie, on réserve l'espace pour éviter les "sauts"
     final right = actions == null || actions!.isEmpty

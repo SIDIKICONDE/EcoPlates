@@ -298,7 +298,7 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
     bool recommended = false,
   }) {
     final now = DateTime.now();
-    final merchants = ['Carrefour', 'Auchan', 'Leclerc', 'Intermarché', 'Casino'];
+    final merchants = ['Carrefour', 'Auchan', 'Leclerc', 'Intermarché', 'Casino', "McDonald's", 'Starbucks', 'Burger King', 'Subway', 'KFC'];
     final categories = [
       FoodCategory.boulangerie,
       FoodCategory.fruitLegume,

@@ -65,6 +65,9 @@ class AnimationManager {
   
   /// Démarre une animation
   void _startAnimation(_AnimationTask task) {
+    // Vérifier que le controller n'est pas déjà disposé
+    if (task.controller.isDismissed) return;
+
     _activeAnimations[task.id] = task.controller
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
@@ -72,8 +75,16 @@ class AnimationManager {
         }
       });
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (task.controller.isAnimating) return;
-      task.controller.forward();
+      // Vérifications de sécurité avant de démarrer l'animation
+      if (task.controller.isDismissed || task.controller.isAnimating) return;
+
+      try {
+        task.controller.forward();
+      } catch (e) {
+        // L'animation a été disposée entre-temps, la retirer des actives
+        _activeAnimations.remove(task.id);
+        _processQueue();
+      }
     });
   }
   
@@ -95,12 +106,16 @@ class AnimationManager {
   /// Annule une animation
   Future<void> cancelAnimation(String id) async {
     final controller = _activeAnimations[id];
-    if (controller != null) {
-      controller.stop();
+    if (controller != null && !controller.isDismissed) {
+      try {
+        controller.stop();
+      } catch (e) {
+        // Controller déjà disposé, continuer
+      }
       _activeAnimations.remove(id);
       _processQueue();
     }
-    
+
     // Retirer aussi de la file d'attente si présent
     _animationQueue.removeWhere((task) => task.id == id);
   }
@@ -113,7 +128,13 @@ class AnimationManager {
   /// Nettoie toutes les animations
   void dispose() {
     for (final controller in _activeAnimations.values) {
-      controller.dispose();
+      try {
+        if (!controller.isDismissed) {
+          controller.dispose();
+        }
+      } catch (e) {
+        // Controller déjà disposé, continuer
+      }
     }
     _activeAnimations.clear();
     _animationQueue.clear();

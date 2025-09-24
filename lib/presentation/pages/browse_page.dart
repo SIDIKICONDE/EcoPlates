@@ -19,7 +19,7 @@ class BrowsePage extends ConsumerWidget {
     final allOffersAsync = ref.watch(allOffersProvider);
     
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: viewMode == BrowseViewMode.map ? Colors.transparent : Colors.grey[50],
       body: SafeArea(
         child: Column(
           children: [
@@ -195,17 +195,13 @@ class BrowsePage extends ConsumerWidget {
   
   void _toggleLocation(BuildContext context, WidgetRef ref) {
     final isActive = ref.read(isLocationActiveProvider);
-    ref.read(isLocationActiveProvider.notifier).state = !isActive;
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          !isActive 
-              ? '📍 Localisation activée' 
-              : '📍 Localisation désactivée',
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    final newState = !isActive;
+
+    ref.read(isLocationActiveProvider.notifier).state = newState;
+
+    // Si la localisation est activée et qu'on est en mode carte, centrer sur l'utilisateur
+    if (newState && ref.read(browseViewModeProvider) == BrowseViewMode.map) {
+      ref.invalidate(centerMapOnUserProvider); // Déclenche le centrage
+    }
   }
 }

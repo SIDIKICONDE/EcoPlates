@@ -1,126 +1,152 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../core/services/map_service.dart';
 import '../../../domain/entities/food_offer.dart';
+import '../../providers/browse_search_provider.dart';
 
 /// Vue carte des offres pour la page Parcourir
-class BrowseMapView extends ConsumerWidget {
+class BrowseMapView extends ConsumerStatefulWidget {
   const BrowseMapView({
-    super.key,
     required this.offers,
+    super.key,
   });
 
   final List<FoodOffer> offers;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BrowseMapView> createState() => _BrowseMapViewState();
+}
+
+class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
+  // Utiliser l'instance singleton pour éviter les reconstructions infinies
+  MapService get _mapService => MapService.instance;
+
+  // Position initiale (Paris centre par défaut)
+  static const LatLng _initialPosition = LatLng(48.8566, 2.3522);
+
+  @override
+  void initState() {
+    super.initState();
+    _mapService.initialize();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateMarkers();
+    });
+  }
+
+  @override
+  void didUpdateWidget(BrowseMapView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.offers != widget.offers) {
+      _updateMarkers();
+    }
+  }
+
+  void _updateMarkers() {
+    _mapService.updateMarkers(widget.offers);
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapService.mapController = controller;
+
+    // Essayer de centrer sur la position utilisateur en priorité
+    _tryCenterOnUserLocation();
+  }
+
+  Future<void> _tryCenterOnUserLocation() async {
+    try {
+      final position = await _mapService.getCurrentPosition();
+      if (position != null) {
+        // Centrer sur la position utilisateur
+        await _mapService.centerOnUserLocation();
+      } else {
+        // Fallback : montrer toutes les offres si disponibles
+        if (widget.offers.isNotEmpty) {
+          _mapService.showAllOffers(widget.offers);
+        }
+      }
+    } catch (e) {
+      // En cas d'erreur, montrer les offres si disponibles
+      if (widget.offers.isNotEmpty) {
+        _mapService.showAllOffers(widget.offers);
+      }
+    }
+  }
+
+  Future<void> _centerOnUserLocation() async {
+    try {
+      // Activer automatiquement la localisation si elle n'est pas activée
+      final isLocationActive = ref.read(isLocationActiveProvider);
+      if (!isLocationActive) {
+        ref.read(isLocationActiveProvider.notifier).state = true;
+      }
+
+      // Utiliser le provider pour centrer la carte et attendre le résultat
+      await ref.read(centerMapOnUserProvider.future);
+    } catch (e) {
+      // Ne rien afficher en cas d'erreur de localisation
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Placeholder de la carte
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.map,
-                  size: 80,
-                  color: Colors.grey[400],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Carte interactive',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Google Maps / Mapbox à intégrer',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[500],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  '${offers.length} offres disponibles',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        // Carte Google Maps avec StreamBuilder pour les marqueurs
+        StreamBuilder<Set<Marker>>(
+          stream: _mapService.markersStream,
+          initialData: _mapService.markers,
+          builder: (context, snapshot) {
+            final markers = snapshot.data ?? {};
+            return GoogleMap(
+              initialCameraPosition: const CameraPosition(
+                target: _initialPosition,
+                zoom: 12,
+              ),
+              onMapCreated: _onMapCreated,
+              markers: markers,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false, // Nous utilisons notre propre bouton
+              zoomControlsEnabled: false,
+              mapToolbarEnabled: false,
+              compassEnabled: true,
+              buildingsEnabled: false,
+              mapType: MapType.normal,
+            );
+          },
         ),
         
         // Bouton de recentrage
         Positioned(
           bottom: 16,
           right: 16,
-          child: FloatingActionButton(
-            mini: true,
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Recentrage sur votre position'),
-                  duration: Duration(seconds: 1),
+          child: Consumer(
+            builder: (context, ref, child) {
+              final isLocationActive = ref.watch(isLocationActiveProvider);
+              return FloatingActionButton(
+                mini: true,
+                onPressed: _centerOnUserLocation,
+                backgroundColor: Colors.white,
+                shape: const CircleBorder(),
+                child: Icon(
+                  isLocationActive ? Icons.near_me : Icons.near_me_outlined,
+                  color: isLocationActive
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[700],
                 ),
               );
             },
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.my_location,
-              color: Theme.of(context).primaryColor,
-            ),
           ),
         ),
-        
-        // Badge compteur d'offres visibles
-        Positioned(
-          top: 16,
-          left: 16,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.local_offer,
-                  size: 16,
-                  color: Theme.of(context).primaryColor,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  '${offers.length} offres',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    // Ne pas disposer le singleton ici car il peut être utilisé ailleurs
+    super.dispose();
   }
 }

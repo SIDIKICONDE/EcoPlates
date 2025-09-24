@@ -4,7 +4,7 @@ import '../../domain/entities/food_offer.dart';
 /// Provider pour les offres recommandées
 final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
   // Simuler un appel API
-  await Future.delayed(const Duration(milliseconds: 500));
+  await Future<void>.delayed(const Duration(milliseconds: 500));
   
   // Données mockées pour la démo
   final now = DateTime.now();
@@ -45,8 +45,8 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       images: ['https://images.unsplash.com/photo-1543168256-418811576931?w=400'],
       type: OfferType.fruits,
       category: FoodCategory.fruitLegume,
-      originalPrice: 15.00,
-      discountedPrice: 5.00,
+      originalPrice: 15,
+      discountedPrice: 5,
       merchantAddress: '23 avenue de la République, 75011 Paris',
       quantity: 8,
       pickupStartTime: now.add(const Duration(hours: 2)),
@@ -68,7 +68,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
     FoodOffer(
       id: '3',
       merchantId: 'm3',
-      merchantName: 'McDonald\'s',
+      merchantName: 'McDonalds',
       title: 'Menu Surprise du soir',
       description: 'Un menu complet avec burger, frites et boisson',
       images: ['https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400'],
@@ -102,7 +102,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       images: ['https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400'],
       type: OfferType.panier,
       category: FoodCategory.autre,
-      originalPrice: 20.00,
+      originalPrice: 20,
       discountedPrice: 6.99,
       merchantAddress: '89 boulevard Voltaire, 75011 Paris',
       quantity: 10,
@@ -129,8 +129,8 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       images: ['https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400'],
       type: OfferType.panier,
       category: FoodCategory.snack,
-      originalPrice: 12.00,
-      discountedPrice: 0.00, // Gratuit !
+      originalPrice: 12,
+      discountedPrice: 0, // Gratuit !
       merchantAddress: '5 place de la Bastille, 75011 Paris',
       quantity: 3,
       pickupStartTime: now.add(const Duration(hours: 1)),

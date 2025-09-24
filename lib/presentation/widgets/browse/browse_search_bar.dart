@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/services/map_service.dart';
 import '../../providers/browse_search_provider.dart';
 
 /// Barre de recherche pour la page Parcourir
@@ -41,33 +42,22 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
     final isLocationActive = ref.watch(isLocationActiveProvider);
 
     return Container(
-      height: 56,
-      margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(8),
       child: Row(
-        children: [
-          // Icône de recherche
-          const Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: Icon(
-              Icons.search,
-              color: Colors.grey,
-              size: 24,
+      children: [
+        // Champ de recherche
+        Expanded(
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.8),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.grey[300]!.withValues(alpha: 0.5),
+  
+              ),
             ),
-          ),
-          
-          // Champ de recherche
-          Expanded(
             child: TextField(
               controller: _searchController,
               onChanged: (value) {
@@ -77,89 +67,133 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                 hintText: 'Rechercher une offre...',
                 hintStyle: TextStyle(color: Colors.grey),
                 border: InputBorder.none,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                  size: 20,
+                ),
+                prefixIconConstraints: BoxConstraints(
+                  minWidth: 40,
+                  minHeight: 20,
+                ),
                 contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 16,
+                  horizontal: 8,
+                  vertical: 4,
                 ),
               ),
             ),
           ),
-          
-          // Bouton GPS
-          Material(
+        ),
+        
+        const SizedBox(width: 8),
+        
+        // Bouton GPS
+        Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.grey[300]!,
+            ),
+          ),
+          child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: widget.onLocationTap,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                child: Icon(
-                  isLocationActive ? Icons.location_on : Icons.location_on_outlined,
-                  color: isLocationActive 
-                      ? Theme.of(context).primaryColor 
-                      : Colors.grey[700],
-                  size: 24,
-                ),
+              borderRadius: BorderRadius.circular(16),
+              onTap: () async {
+                FocusScope.of(context).unfocus();
+
+                // Activer automatiquement la localisation si elle n'est pas activée
+                final isLocationActive = ref.read(isLocationActiveProvider);
+                if (!isLocationActive) {
+                  ref.read(isLocationActiveProvider.notifier).state = true;
+                }
+
+                try {
+                  // Centrer automatiquement sur la position utilisateur
+                  await MapService.instance.centerOnUserLocation();
+                } catch (e) {
+                  // Ne rien afficher en cas d'erreur de localisation
+                }
+
+                widget.onLocationTap?.call();
+              },
+              child: Icon(
+                isLocationActive ? Icons.near_me : Icons.near_me_outlined,
+                color: isLocationActive
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[700],
+                size: 20,
               ),
             ),
           ),
-          
-          // Séparateur vertical
-          Container(
-            width: 1,
-            height: 24,
-            color: Colors.grey[300],
+        ),
+        
+        const SizedBox(width: 8),
+        
+        // Bouton Filtres avec badge
+        Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.grey[300]!,
+            ),
           ),
-          
-          // Bouton Filtres avec badge
-          Material(
+          child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: widget.onFilterTap,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                child: Stack(
-                  children: [
-                    Icon(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                widget.onFilterTap?.call();
+              },
+              child: Stack(
+                children: [
+                  Center(
+                    child: Icon(
                       filters.hasActiveFilters 
-                          ? Icons.filter_alt 
-                          : Icons.filter_alt_outlined,
+                          ? Icons.tune 
+                          : Icons.tune_outlined,
                       color: filters.hasActiveFilters 
                           ? Theme.of(context).primaryColor 
                           : Colors.grey[700],
-                      size: 24,
+                      size: 20,
                     ),
-                    if (filters.activeFiltersCount > 0)
-                      Positioned(
-                        top: -2,
-                        right: -2,
-                        child: Container(
-                          width: 16,
-                          height: 16,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${filters.activeFiltersCount}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  ),
+                  if (filters.activeFiltersCount > 0)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${filters.activeFiltersCount}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
           ),
-          const SizedBox(width: 4),
-        ],
+        ),
+      ],
       ),
     );
   }

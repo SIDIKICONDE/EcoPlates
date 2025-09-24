@@ -4,7 +4,7 @@ import '../../domain/entities/food_offer.dart';
 /// Provider pour les offres de repas complets
 final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
   // Simuler un appel API
-  await Future.delayed(const Duration(milliseconds: 500));
+  await Future<void>.delayed(const Duration(milliseconds: 500));
   
   // Données mockées d'offres de repas
   final now = DateTime.now();
@@ -33,7 +33,6 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
         city: 'Paris',
         postalCode: '75003',
       ),
-      isVegetarian: false,
       allergens: ['gluten'],
       co2Saved: 1200,
       updatedAt: now.subtract(const Duration(hours: 1)),
@@ -76,7 +75,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       images: ['https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400'],
       type: OfferType.plat,
       category: FoodCategory.diner,
-      originalPrice: 18.00,
+      originalPrice: 18,
       discountedPrice: 7.99,
       merchantAddress: '33 rue des Pizzas, 75004 Paris',
       quantity: 10,
@@ -91,7 +90,6 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
         city: 'Paris',
         postalCode: '75004',
       ),
-      isVegetarian: false,
       allergens: ['gluten', 'lactose'],
       co2Saved: 1000,
       updatedAt: now.subtract(const Duration(minutes: 30)),
@@ -120,7 +118,6 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
         city: 'Paris',
         postalCode: '75001',
       ),
-      isVegetarian: false,
       allergens: ['poisson', 'soja', 'sésame'],
       co2Saved: 900,
       updatedAt: now.subtract(const Duration(hours: 1, minutes: 30)),
@@ -134,7 +131,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       images: ['https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=400'],
       type: OfferType.plat,
       category: FoodCategory.dejeuner,
-      originalPrice: 16.00,
+      originalPrice: 16,
       discountedPrice: 6.50,
       merchantAddress: '41 rue des Épices, 75006 Paris',
       quantity: 7,
@@ -178,7 +175,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
         city: 'Paris',
         postalCode: '75011',
       ),
-      isVegetarian: false,
+     
       allergens: ['gluten', 'lactose', 'moutarde'],
       co2Saved: 1100,
       updatedAt: now.subtract(const Duration(minutes: 45)),

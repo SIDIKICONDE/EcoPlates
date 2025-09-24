@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/browse_view_provider.dart';
+import '../sort_section.dart';
 
 /// Segment de navigation pour basculer entre vue Liste et Carte
 class BrowseViewSegment extends ConsumerWidget {
@@ -11,17 +12,34 @@ class BrowseViewSegment extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentMode = ref.watch(browseViewModeProvider);
     
-    return Container(
+    return Column(
+      children: [
+        Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white.withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey[300]!.withValues(alpha: 0.5),
+          width: 0.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: BrowseViewMode.values.map((mode) {
+        children: BrowseViewMode.values.asMap().entries.map((entry) {
+          final index = entry.key;
+          final mode = entry.value;
           final isSelected = currentMode == mode;
+          final isFirst = index == 0;
+          final isLast = index == BrowseViewMode.values.length - 1;
           
           return Expanded(
             child: GestureDetector(
@@ -29,44 +47,48 @@ class BrowseViewSegment extends ConsumerWidget {
                 ref.read(browseViewModeProvider.notifier).state = mode;
               },
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: isSelected ? Colors.white : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : null,
-                ),
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                height: 40,
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                  decoration: BoxDecoration(
+                    color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+                    borderRadius: BorderRadius.only(
+                      topLeft: isFirst ? const Radius.circular(14) : Radius.zero,
+                      bottomLeft: isFirst ? const Radius.circular(14) : Radius.zero,
+                      topRight: isLast ? const Radius.circular(14) : Radius.zero,
+                      bottomRight: isLast ? const Radius.circular(14) : Radius.zero,
+                    ),
+                    gradient: isSelected ? null : LinearGradient(
+                      colors: [Colors.white.withValues(alpha: 0.8), Colors.white.withValues(alpha: 0.4)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       mode == BrowseViewMode.list 
-                          ? Icons.list_rounded 
+                          ? Icons.view_list_rounded 
                           : Icons.map_rounded,
                       color: isSelected 
-                          ? Theme.of(context).primaryColor 
+                          ? Colors.white 
                           : Colors.grey[600],
-                      size: 20,
+                      size: 18,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     Text(
                       mode.label,
                       style: TextStyle(
                         color: isSelected 
-                            ? Theme.of(context).primaryColor 
-                            : Colors.grey[600],
+                            ? Colors.white 
+                            : Colors.grey[700],
                         fontWeight: isSelected 
-                            ? FontWeight.bold 
-                            : FontWeight.normal,
-                        fontSize: 14,
+                            ? FontWeight.w600 
+                            : FontWeight.w500,
+                        fontSize: 15,
+                        letterSpacing: 0.2,
                       ),
                     ),
                   ],
@@ -75,7 +97,12 @@ class BrowseViewSegment extends ConsumerWidget {
             ),
           );
         }).toList(),
-      ),
+          ),
+        ),
+        
+        // Sous-section de tri
+        const SortSection(),
+      ],
     );
   }
 }

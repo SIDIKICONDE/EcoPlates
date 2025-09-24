@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/browse_search_provider.dart';
-import '../offer_card.dart';
+import '../list_offer_card.dart';
 
 /// Vue liste des offres pour la page Parcourir
 class BrowseListView extends ConsumerWidget {
   const BrowseListView({
-    super.key,
     required this.offers,
+    super.key,
   });
 
   final List<FoodOffer> offers;
@@ -65,22 +65,18 @@ class BrowseListView extends ConsumerWidget {
       itemBuilder: (context, index) {
         final offer = filteredOffers[index];
         
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: OfferCard(
-            offer: offer,
-            showDistance: true,
-            distance: offer.distanceKm ?? 0.5,
-            onTap: () {
-              // TODO(browse): Navigation vers le détail de l'offre
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Détails de: ${offer.title}'),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-            },
-          ),
+        return ListOfferCard(
+          offer: offer,
+          distance: offer.distanceKm ?? 0.5,
+          onTap: () {
+            // TODO(browse): Navigation vers le détail de l'offre
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Détails de: ${offer.title}'),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          },
         );
       },
     );
@@ -119,7 +115,7 @@ class BrowseListView extends ConsumerWidget {
       
       // Filtre par préférences alimentaires
       if (filters.dietaryPreferences.isNotEmpty) {
-        bool matchesDiet = false;
+        var matchesDiet = false;
         if (filters.dietaryPreferences.contains('vegetarian') && offer.isVegetarian) {
           matchesDiet = true;
         }

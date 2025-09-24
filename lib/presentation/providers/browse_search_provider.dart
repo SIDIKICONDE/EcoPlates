@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/services/map_service.dart';
 
 /// Provider pour gérer le texte de recherche
 final searchQueryProvider = StateProvider<String>((ref) => '');
@@ -74,4 +75,9 @@ class BrowseFilters {
 /// Provider pour gérer les filtres de recherche
 final browseFiltersProvider = StateProvider<BrowseFilters>((ref) {
   return const BrowseFilters();
+});
+
+/// Provider pour centrer la carte sur la position utilisateur
+final centerMapOnUserProvider = FutureProvider<void>((ref) async {
+  await MapService.instance.centerOnUserLocation();
 });

@@ -27,6 +27,10 @@ class EnvConfig {
   static String get appVersion => dotenv.env['APP_VERSION'] ?? '1.0.0';
   static String get buildNumber => dotenv.env['BUILD_NUMBER'] ?? '1';
 
+  // APIs externes
+  static String get googleMapsApiKey =>
+      dotenv.env['GOOGLE_MAPS_API_KEY'] ?? 'AIzaSyCt57yjJiwlrr81dQQusoPVwmKFTWWhR_k';
+
   static bool get isDevelopment => environment == 'development';
   static bool get isStaging => environment == 'staging';
   static bool get isProduction => environment == 'production';

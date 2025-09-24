@@ -149,9 +149,9 @@ extension FailureExtension on Failure {
       case ServerFailure _:
         return 'Erreur serveur. Veuillez réessayer plus tard.';
       case AuthenticationFailure _:
-        return 'Erreur d\'authentification. Veuillez vous reconnecter.';
+        return "Erreur d'authentification. Veuillez vous reconnecter.";
       case PermissionFailure _:
-        return 'Vous n\'avez pas les permissions nécessaires.';
+        return "Vous n'avez pas les permissions nécessaires.";
       case ValidationFailure _:
         return message;
       case TimeoutFailure _:
@@ -163,7 +163,7 @@ extension FailureExtension on Failure {
       case PaymentFailure _:
         return 'Erreur de paiement. $message';
       default:
-        return 'Une erreur inattendue s\'est produite.';
+        return "Une erreur inattendue s'est produite.";
     }
   }
 

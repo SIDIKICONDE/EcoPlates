@@ -243,7 +243,7 @@ class RecommendedSection extends ConsumerWidget {
   }
 
   void _showOfferDetailModal(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

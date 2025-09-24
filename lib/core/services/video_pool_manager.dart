@@ -1,15 +1,16 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:video_player/video_player.dart';
 /// Gestionnaire optimisé des vidéos avec pool de contrôleurs
 /// 
 /// Permet de réutiliser les contrôleurs vidéo et d'optimiser
 /// les performances selon les directives EcoPlates
 class VideoPoolManager {
-  static final VideoPoolManager _instance = VideoPoolManager._internal();
   factory VideoPoolManager() => _instance;
   VideoPoolManager._internal();
+  static final VideoPoolManager _instance = VideoPoolManager._internal();
 
   final Map<String, VideoPlayerController> _controllers = {};
   final Map<String, DateTime> _lastUsed = {};
@@ -100,11 +101,11 @@ class VideoPoolManager {
 /// Widget optimisé pour lire des vidéos avec gestion de pool
 class OptimizedVideoPlayer extends StatefulWidget {
   const OptimizedVideoPlayer({
-    super.key,
     required this.videoUrl,
     required this.thumbnailUrl,
     required this.play,
     required this.builder,
+    super.key,
   });
 
   final String videoUrl;
@@ -124,7 +125,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
   void initState() {
     super.initState();
     if (widget.play) {
-      _initializeController();
+      unawaited(_initializeController());
     }
   }
 
@@ -134,7 +135,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
     
     if (widget.play != oldWidget.play) {
       if (widget.play) {
-        _initializeController();
+        unawaited(_initializeController());
       } else {
         _pauseController();
       }
@@ -162,7 +163,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
         }
       }
     } catch (e) {
-      debugPrint('Erreur lors de l\'initialisation de la vidéo: $e');
+      debugPrint("Erreur lors de l'initialisation de la vidéo: $e");
       // Nettoie en cas d'erreur selon les directives EcoPlates
       _controller?.dispose();
       _controller = null;

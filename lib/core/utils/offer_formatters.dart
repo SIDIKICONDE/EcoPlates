@@ -90,9 +90,9 @@ class OfferFormatters {
     final end = offer.pickupEndTime;
     final now = DateTime.now();
 
-    String day = '';
+    var day = '';
     if (start.day == now.day) {
-      day = 'Aujourd\'hui';
+      day = "Aujourd'hui";
     } else if (start.day == now.day + 1) {
       day = 'Demain';
     } else {

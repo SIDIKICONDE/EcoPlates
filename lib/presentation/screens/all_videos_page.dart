@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/entities/video_preview.dart';
-import '../../providers/videos_provider.dart';
-import '../../widgets/video_card/video_card.dart';
-import '../../widgets/video_player/floating_video_modal.dart';
+import '../../domain/entities/video_preview.dart';
+import '../providers/videos_provider.dart';
+import '../widgets/video_card/video_card.dart';
+import '../widgets/video_player/floating_video_modal.dart';
 
 /// Page affichant toutes les vidéos disponibles
 class AllVideosPage extends ConsumerStatefulWidget {

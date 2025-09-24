@@ -4,6 +4,6 @@
 /// selon les directives EcoPlates
 library;
 
-export 'route_constants.dart';
 export 'public_routes.dart';
+export 'route_constants.dart';
 

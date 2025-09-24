@@ -13,7 +13,6 @@ class AppTheme {
     brightness: Brightness.light,
     colorScheme: ColorScheme.fromSeed(
       seedColor: _primaryColor,
-      brightness: Brightness.light,
       primary: _primaryColor,
       secondary: _secondaryColor,
       error: _errorColor,
@@ -51,7 +50,7 @@ class AppTheme {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: _errorColor, width: 1),
+        borderSide: const BorderSide(color: _errorColor),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),
@@ -100,7 +99,7 @@ class AppTheme {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: _errorColor, width: 1),
+        borderSide: const BorderSide(color: _errorColor),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),

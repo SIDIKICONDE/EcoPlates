@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 
+import '../constants/env_config.dart';
 import '../themes/app_theme.dart';
 import '../themes/cupertino_theme.dart';
-import '../constants/env_config.dart';
 
 /// Widget adaptatif qui sélectionne automatiquement le bon thème selon la plateforme
 class AdaptiveApp extends StatelessWidget {
-  final GoRouter router;
+  const AdaptiveApp({required this.router, super.key});
 
-  const AdaptiveApp({super.key, required this.router});
+  final GoRouter router;
 
   /// Détermine si on doit utiliser Cupertino ou Material
   bool get _shouldUseCupertino {
@@ -47,7 +47,6 @@ class AdaptiveApp extends StatelessWidget {
         debugShowCheckedModeBanner: !EnvConfig.isProduction,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
         routerConfig: router,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

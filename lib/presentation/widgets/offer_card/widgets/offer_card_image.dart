@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import '../../../../core/services/image_cache_service.dart';
+import '../../../../core/widgets/eco_cached_image.dart';
 import '../../../../domain/entities/food_offer.dart';
 import 'offer_quantity_badge.dart';
 import 'offer_rating_badge.dart';
@@ -9,16 +11,16 @@ import 'offer_rating_badge.dart';
 /// Utilise CachedNetworkImage pour optimiser les performances réseau
 /// Respecte les standards EcoPlates avec une mise en page moderne et accessible
 class OfferCardImage extends StatelessWidget {
+  const OfferCardImage({
+    required this.offer,
+    super.key,
+    this.compact = false,
+  });
+  
   /// L'offre alimentaire dont on affiche l'image et les badges
   final FoodOffer offer;
   /// Mode compact pour réduire la hauteur de l'image
   final bool compact;
-
-  const OfferCardImage({
-    super.key,
-    required this.offer,
-    this.compact = false,
-  });
 
   /// Construit le widget avec une mise en page en stack pour superposer les badges
   /// Utilise un système de padding cohérent avec les autres composants de carte
@@ -38,16 +40,14 @@ class OfferCardImage extends StatelessWidget {
                 AspectRatio(
                   aspectRatio: compact ? 2 / 1 : 16 / 9,
                   child: offer.images.isNotEmpty
-                      ? CachedNetworkImage(
+                      ? EcoCachedImage(
                           imageUrl: offer.images.first,
                           fit: BoxFit.cover,
-                          // Placeholder pendant le chargement
-                          placeholder: (context, url) => const _ImagePlaceholder(
-                            child: CircularProgressIndicator(),
-                          ),
-                          // Widget d'erreur avec icône contextuelle
-                          errorWidget: (context, url, error) =>
-                              _OfferPlaceholderImage(type: offer.type),
+                          size: compact ? ImageSize.small : ImageSize.medium,
+                          priority: Priority.high, // Haute priorité pour les images d'offres
+                          borderRadius: BorderRadius.circular(12),
+                          // Placeholder optimisé inclus
+                          errorWidget: _OfferPlaceholderImage(type: offer.type),
                         )
                       : _OfferPlaceholderImage(type: offer.type),
                 ),
@@ -127,7 +127,7 @@ class OfferCardImage extends StatelessWidget {
     
     // URLs des vrais logos des enseignes
     String? logoUrl;
-    Color backgroundColor = Colors.white;
+    var backgroundColor = Colors.white;
     
     if (merchantName.contains('mcdonald')) {
       logoUrl = 'https://logos-world.net/wp-content/uploads/2020/04/McDonalds-Logo.png';
@@ -152,25 +152,12 @@ class OfferCardImage extends StatelessWidget {
     
     // Si on a une URL de logo, on l'affiche
     if (logoUrl != null) {
-      return Container(
+      return ColoredBox(
         color: backgroundColor,
-        child: CachedNetworkImage(
+        child: EcoCachedImage(
           imageUrl: logoUrl,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => Container(
-            color: backgroundColor,
-            child: Center(
-              child: SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.grey[400],
-                ),
-              ),
-            ),
-          ),
-          errorWidget: (context, url, error) => _getFallbackLogo(merchantName),
+          size: ImageSize.thumbnail, // Logos sont petits
+          errorWidget: _getFallbackLogo(merchantName),
         ),
       );
     }
@@ -227,37 +214,17 @@ class OfferCardImage extends StatelessWidget {
   }
 }
 
-/// Widget placeholder générique pour afficher pendant le chargement d'images
-/// Utilise une couleur de fond neutre et centre le contenu enfant
-/// Peut contenir un CircularProgressIndicator ou autre indicateur de chargement
-class _ImagePlaceholder extends StatelessWidget {
-  /// Le widget enfant à afficher au centre (typiquement un indicateur de chargement)
-  final Widget child;
-
-  const _ImagePlaceholder({
-    required this.child,
-  });
-
-  /// Construit un container avec couleur de fond et centrage du contenu
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[300],
-      child: Center(child: child),
-    );
-  }
-}
 /// Widget d'image par défaut contextuel selon le type d'offre alimentaire
 /// Affiche une icône représentative du type de nourriture pour améliorer l'identification
 /// Utilisé quand l'image réseau n'est pas disponible ou en cas d'erreur de chargement
 /// Respecte le design system avec des icônes Material Design cohérentes
 class _OfferPlaceholderImage extends StatelessWidget {
-  /// Le type d'offre pour déterminer l'icône appropriée
-  final OfferType type;
-
   const _OfferPlaceholderImage({
     required this.type,
   });
+  
+  /// Le type d'offre pour déterminer l'icône appropriée
+  final OfferType type;
 
   /// Construit un container avec icône centrée et stylisée
   @override
@@ -289,7 +256,7 @@ class _OfferPlaceholderImage extends StatelessWidget {
         return Icons.apple; // Fruits et légumes
       case OfferType.epicerie:
         return Icons.storefront; // Épicerie générale
-      default:
+      case OfferType.autre:
         return Icons.fastfood; // Nourriture générique par défaut
     }
   }

@@ -3,32 +3,37 @@ import '../constants/env_config.dart';
 
 /// Client API pour les appels HTTP
 class ApiClient {
+  factory ApiClient({Dio? dio})
+  {
+    return ApiClient._internal(
+      dio ??
+      Dio(
+        BaseOptions(
+          baseUrl: EnvConfig.apiBaseUrl,
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      ),
+    );
+  }
+
+  const ApiClient._internal(this._dio);
+
   final Dio _dio;
 
-  ApiClient({Dio? dio})
-    : _dio =
-          dio ??
-          Dio(
-            BaseOptions(
-              baseUrl: EnvConfig.apiBaseUrl,
-              connectTimeout: const Duration(seconds: 30),
-              receiveTimeout: const Duration(seconds: 30),
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-              },
-            ),
-          );
-
   /// Méthode GET
-  Future<Response> get(
+  Future<Response<dynamic>> get(
     String path, {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final response = await _dio.get(
+    final response = await _dio.get<dynamic>(
       path,
       queryParameters: queryParameters,
       options: options,
@@ -39,7 +44,7 @@ class ApiClient {
   }
 
   /// Méthode POST
-  Future<Response> post(
+  Future<Response<dynamic>> post(
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
@@ -48,7 +53,7 @@ class ApiClient {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final response = await _dio.post(
+    final response = await _dio.post<dynamic>(
       path,
       data: data,
       queryParameters: queryParameters,
@@ -61,7 +66,7 @@ class ApiClient {
   }
 
   /// Méthode PUT
-  Future<Response> put(
+  Future<Response<dynamic>> put(
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
@@ -70,7 +75,7 @@ class ApiClient {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final response = await _dio.put(
+    final response = await _dio.put<dynamic>(
       path,
       data: data,
       queryParameters: queryParameters,
@@ -83,7 +88,7 @@ class ApiClient {
   }
 
   /// Méthode PATCH
-  Future<Response> patch(
+  Future<Response<dynamic>> patch(
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
@@ -92,7 +97,7 @@ class ApiClient {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final response = await _dio.patch(
+    final response = await _dio.patch<dynamic>(
       path,
       data: data,
       queryParameters: queryParameters,
@@ -105,14 +110,14 @@ class ApiClient {
   }
 
   /// Méthode DELETE
-  Future<Response> delete(
+  Future<Response<dynamic>> delete(
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
   }) async {
-    final response = await _dio.delete(
+    final response = await _dio.delete<dynamic>(
       path,
       data: data,
       queryParameters: queryParameters,
@@ -123,13 +128,13 @@ class ApiClient {
   }
 
   /// Méthode HEAD
-  Future<Response> head(
+  Future<Response<dynamic>> head(
     String path, {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
   }) async {
-    final response = await _dio.head(
+    final response = await _dio.head<dynamic>(
       path,
       queryParameters: queryParameters,
       options: options,
@@ -156,6 +161,22 @@ class ApiClient {
   /// Configure les headers personnalisés
   void setHeaders(Map<String, dynamic> headers) {
     _dio.options.headers.addAll(headers);
+  }
+
+  /// Vérifie la connectivité réseau
+  Future<bool> hasConnectivity() async {
+    try {
+      final response = await _dio.head<dynamic>('/health');
+      return response.statusCode == 200;
+    } catch (e) {
+      // En cas d'erreur, on peut aussi essayer avec un endpoint simple
+      try {
+        final response = await _dio.get<dynamic>('/ping');
+        return response.statusCode == 200;
+      } catch (e) {
+        return false;
+      }
+    }
   }
 
   /// Accès direct à l'instance Dio pour des configurations avancées

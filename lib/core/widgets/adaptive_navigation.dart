@@ -7,14 +7,14 @@ import 'adaptive_widgets.dart';
 /// Navigation adaptative qui utilise CupertinoTabBar sur iOS/macOS
 /// et BottomNavigationBar sur les autres plateformes
 class AdaptiveBottomNavigation extends StatelessWidget {
-  final int currentIndex;
-  final List<AdaptiveNavItem> items;
-
   const AdaptiveBottomNavigation({
-    super.key,
     required this.currentIndex,
     required this.items,
+    super.key,
   });
+
+  final int currentIndex;
+  final List<AdaptiveNavItem> items;
 
   void _onItemTapped(BuildContext context, int index) {
     if (index == currentIndex) return;
@@ -22,13 +22,10 @@ class AdaptiveBottomNavigation extends StatelessWidget {
     switch (index) {
       case 0:
         context.go('/');
-        break;
       case 1:
         context.go('/reservations');
-        break;
       case 2:
         context.go('/profile');
-        break;
     }
   }
 
@@ -67,25 +64,25 @@ class AdaptiveBottomNavigation extends StatelessWidget {
 
 /// Item de navigation adaptatif
 class AdaptiveNavItem {
+  const AdaptiveNavItem({
+    required this.icon,
+    required this.label,
+    this.activeIcon,
+  });
+
   final IconData icon;
   final IconData? activeIcon;
   final String label;
-
-  const AdaptiveNavItem({
-    required this.icon,
-    this.activeIcon,
-    required this.label,
-  });
 }
 
 /// Scaffold avec navigation adaptative intégrée
 class AdaptiveNavigationScaffold extends StatelessWidget {
+  const AdaptiveNavigationScaffold({required this.child, super.key});
+
   final Widget child;
 
-  const AdaptiveNavigationScaffold({super.key, required this.child});
-
   int _calculateSelectedIndex(BuildContext context) {
-    final String location = GoRouterState.of(context).uri.toString();
+    final location = GoRouterState.of(context).uri.toString();
     if (location == '/') return 0;
     if (location.startsWith('/reservations')) return 1;
     if (location.startsWith('/profile')) return 2;
@@ -105,13 +102,10 @@ class AdaptiveNavigationScaffold extends StatelessWidget {
             switch (index) {
               case 0:
                 context.go('/');
-                break;
               case 1:
                 context.go('/reservations');
-                break;
               case 2:
                 context.go('/profile');
-                break;
             }
           },
           items: const [

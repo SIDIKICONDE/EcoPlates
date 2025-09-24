@@ -686,7 +686,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
   }
 
   void _showFilterBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

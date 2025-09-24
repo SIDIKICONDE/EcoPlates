@@ -43,7 +43,7 @@ class MerchantErrorHandler {
 
     if (error is TimeoutException) {
       return TimeoutFailure(
-        'Délai d\'attente dépassé',
+        "Délai d'attente dépassé",
         code: 'TIMEOUT',
         details: error.toString(),
       );
@@ -53,7 +53,7 @@ class MerchantErrorHandler {
     _logUnhandledError(error, stackTrace);
 
     return UnexpectedFailure(
-      'Une erreur inattendue s\'est produite',
+      "Une erreur inattendue s'est produite",
       code: 'UNEXPECTED',
       details: error.toString(),
     );
@@ -78,6 +78,13 @@ class MerchantErrorHandler {
           details: error.message,
         );
 
+      case DioExceptionType.badCertificate:
+        return NetworkFailure(
+          'Certificat SSL invalide',
+          code: 'BAD_CERTIFICATE',
+          details: error.message,
+        );
+
       case DioExceptionType.badResponse:
         return _handleHttpError(error.response);
 
@@ -87,8 +94,7 @@ class MerchantErrorHandler {
           code: 'CANCELLED',
           details: error.message,
         );
-
-      default:
+      case DioExceptionType.unknown:
         return NetworkFailure(
           'Erreur réseau',
           code: 'NETWORK_ERROR',
@@ -98,9 +104,9 @@ class MerchantErrorHandler {
   }
 
   /// Gère les erreurs HTTP basées sur les codes de statut
-  static Failure _handleHttpError(Response? response) {
+  static Failure _handleHttpError(Response<dynamic>? response) {
     if (response == null) {
-      return ServerFailure('Aucune réponse du serveur', code: 'NO_RESPONSE');
+      return const ServerFailure('Aucune réponse du serveur', code: 'NO_RESPONSE');
     }
 
     final statusCode = response.statusCode ?? 0;
@@ -144,8 +150,8 @@ class MerchantErrorHandler {
           message ?? 'Ressource non trouvée',
           code: code ?? 'NOT_FOUND',
           details: data,
-          resourceType: data is Map ? data['resource_type'] : null,
-          resourceId: data is Map ? data['resource_id'] : null,
+          resourceType: data is Map ? data['resource_type'] as String? : null,
+          resourceId: data is Map ? data['resource_id'] as String? : null,
         );
 
       case 409:
@@ -168,8 +174,8 @@ class MerchantErrorHandler {
           message ?? 'Trop de requêtes',
           code: code ?? 'RATE_LIMITED',
           details: data,
-          currentUsage: data is Map ? data['current_usage'] : null,
-          limit: data is Map ? data['limit'] : null,
+          currentUsage: data is Map ? data['current_usage'] as int? : null,
+          limit: data is Map ? data['limit'] as int? : null,
         );
 
       case 500:
@@ -220,10 +226,10 @@ class MerchantErrorHandler {
   /// Extrait le message d'erreur depuis la réponse
   static String? _extractErrorMessage(dynamic data) {
     if (data is Map) {
-      return data['message'] ??
-          data['error'] ??
-          data['error_message'] ??
-          data['detail'];
+      return data['message'] as String? ??
+          data['error'] as String? ??
+          data['error_message'] as String? ??
+          data['detail'] as String?;
     }
     if (data is String) {
       return data;
@@ -234,7 +240,7 @@ class MerchantErrorHandler {
   /// Extrait le code d'erreur depuis la réponse
   static String? _extractErrorCode(dynamic data) {
     if (data is Map) {
-      return data['code'] ?? data['error_code'] ?? data['error_type'];
+      return data['code'] as String? ?? data['error_code'] as String? ?? data['error_type'] as String?;
     }
     return null;
   }
@@ -247,9 +253,9 @@ class MerchantErrorHandler {
 
     errors.forEach((key, value) {
       if (value is List) {
-        fieldErrors[key] = value.map((e) => e.toString()).toList();
+        fieldErrors[key as String] = value.map((e) => e.toString()).toList();
       } else if (value is String) {
-        fieldErrors[key] = [value];
+        fieldErrors[key as String] = [value];
       }
     });
 
@@ -275,7 +281,6 @@ class MerchantErrorHandler {
       SnackBar(
         content: Text(message),
         backgroundColor: isRecoverable ? Colors.orange : Colors.red,
-        duration: const Duration(seconds: 4),
         action: isRecoverable
             ? SnackBarAction(
                 label: 'Réessayer',
@@ -299,7 +304,7 @@ class MerchantErrorHandler {
   }) async {
     final theme = Theme.of(context);
 
-    await showDialog(
+    await showDialog<void>(
       context: context,
       barrierDismissible: dismissible,
       builder: (context) => AlertDialog(
@@ -399,7 +404,7 @@ class MerchantErrorHandler {
       case NetworkFailure _:
         return 'Erreur de connexion';
       case AuthenticationFailure _:
-        return 'Erreur d\'authentification';
+        return "Erreur d'authentification";
       case PermissionFailure _:
         return 'Accès refusé';
       case ValidationFailure _:

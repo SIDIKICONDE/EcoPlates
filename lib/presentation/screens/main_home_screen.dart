@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../widgets/minimal_header.dart';
-import '../widgets/home/sections/urgent_section.dart';
-import '../widgets/home/sections/merchant_section.dart';
-import '../widgets/home/sections/meals_section.dart';
-import '../widgets/home/sections/videos_section.dart';
+
 import '../widgets/home/sections/brand_section.dart';
 import '../widgets/home/sections/categories_section.dart';
+import '../widgets/home/sections/meals_section.dart';
+import '../widgets/home/sections/merchant_section.dart';
+import '../widgets/home/sections/nearby_section.dart';
 import '../widgets/home/sections/recommended_section.dart';
+import '../widgets/home/sections/urgent_section.dart';
+import '../widgets/home/sections/videos_section.dart';
+import '../widgets/minimal_header.dart';
 
 /// Page d'accueil principale type Too Good To Go
 /// Affiche tous les restaurants et leurs offres anti-gaspi
@@ -26,17 +28,20 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
       appBar: const MinimalHeader(
         title: 'EcoPlates',
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             
             // Section des grandes enseignes (toujours en premier)
             const BrandSection(),
             
             // Section des catégories
             const CategoriesSection(),
+            
+            // Section Près de chez vous (nouvelle)
+            const NearbySection(),
             
             // Section des offres urgentes
             const UrgentSection(),

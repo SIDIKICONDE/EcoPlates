@@ -20,6 +20,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.boulangerie,
       originalPrice: 12.50,
       discountedPrice: 4.99,
+      merchantAddress: '12 rue de la Boulangerie, 75001 Paris',
       quantity: 5,
       pickupStartTime: now.add(const Duration(hours: 1)),
       pickupEndTime: now.add(const Duration(hours: 3)),
@@ -33,6 +34,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
         postalCode: '75015',
       ),
       co2Saved: 750,
+      updatedAt: now.subtract(const Duration(hours: 2)),
     ),
     FoodOffer(
       id: '2',
@@ -45,6 +47,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.fruitLegume,
       originalPrice: 15.00,
       discountedPrice: 5.00,
+      merchantAddress: '23 avenue de la République, 75011 Paris',
       quantity: 8,
       pickupStartTime: now.add(const Duration(hours: 2)),
       pickupEndTime: now.add(const Duration(hours: 4)),
@@ -60,6 +63,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: true,
       isVegan: true,
       co2Saved: 1200,
+      updatedAt: now.subtract(const Duration(hours: 1)),
     ),
     FoodOffer(
       id: '3',
@@ -72,6 +76,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.diner,
       originalPrice: 9.90,
       discountedPrice: 3.99,
+      merchantAddress: '67 rue de la Paix, 75002 Paris',
       quantity: 12,
       pickupStartTime: now.add(const Duration(hours: 3)),
       pickupEndTime: now.add(const Duration(hours: 5)),
@@ -86,6 +91,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       ),
       allergens: ['gluten', 'lactose'],
       co2Saved: 600,
+      updatedAt: now.subtract(const Duration(minutes: 30)),
     ),
     FoodOffer(
       id: '4',
@@ -98,6 +104,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.autre,
       originalPrice: 20.00,
       discountedPrice: 6.99,
+      merchantAddress: '89 boulevard Voltaire, 75011 Paris',
       quantity: 10,
       pickupStartTime: now.add(const Duration(hours: 2)),
       pickupEndTime: now.add(const Duration(hours: 4)),
@@ -111,6 +118,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
         postalCode: '75004',
       ),
       co2Saved: 1500,
+      updatedAt: now.subtract(const Duration(hours: 3)),
     ),
     FoodOffer(
       id: '5',
@@ -123,6 +131,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.snack,
       originalPrice: 12.00,
       discountedPrice: 0.00, // Gratuit !
+      merchantAddress: '5 place de la Bastille, 75011 Paris',
       quantity: 3,
       pickupStartTime: now.add(const Duration(hours: 1)),
       pickupEndTime: now.add(const Duration(hours: 2)),
@@ -138,6 +147,7 @@ final recommendedOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: true,
       allergens: ['gluten', 'fruits à coque'],
       co2Saved: 400,
+      updatedAt: now.subtract(const Duration(minutes: 45)),
     ),
   ];
 });

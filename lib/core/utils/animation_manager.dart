@@ -4,10 +4,10 @@ import 'package:flutter/scheduler.dart';
 /// Gestionnaire centralisé des animations pour éviter les collisions
 /// et optimiser les performances
 class AnimationManager {
+  AnimationManager._internal();
   static final AnimationManager _instance = AnimationManager._internal();
   factory AnimationManager() => _instance;
-  AnimationManager._internal();
-  
+
   // Map pour tracker les animations actives
   final Map<String, AnimationController> _activeAnimations = {};
   
@@ -21,13 +21,12 @@ class AnimationManager {
   bool _animationsEnabled = true;
   
   /// Active ou désactive toutes les animations (pour l'accessibilité)
-  void setAnimationsEnabled(bool enabled) {
+  void setAnimationsEnabled({required bool enabled}) {
     _animationsEnabled = enabled;
     if (!enabled) {
-      // Arrêter toutes les animations en cours
-      _activeAnimations.forEach((key, controller) {
-        controller.stop();
-      });
+      for (final entry in _activeAnimations.entries) {
+        entry.value.stop();
+      }
       _activeAnimations.clear();
       _animationQueue.clear();
     }
@@ -66,16 +65,12 @@ class AnimationManager {
   
   /// Démarre une animation
   void _startAnimation(_AnimationTask task) {
-    _activeAnimations[task.id] = task.controller;
-    
-    task.controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed ||
-          status == AnimationStatus.dismissed) {
-        _onAnimationComplete(task.id);
-      }
-    });
-    
-    // Utiliser le scheduler pour optimiser le timing
+    _activeAnimations[task.id] = task.controller
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+          _onAnimationComplete(task.id);
+        }
+      });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (task.controller.isAnimating) return;
       task.controller.forward();
@@ -117,9 +112,9 @@ class AnimationManager {
   
   /// Nettoie toutes les animations
   void dispose() {
-    _activeAnimations.forEach((key, controller) {
+    for (final controller in _activeAnimations.values) {
       controller.dispose();
-    });
+    }
     _activeAnimations.clear();
     _animationQueue.clear();
   }
@@ -127,13 +122,12 @@ class AnimationManager {
 
 /// Classe pour représenter une tâche d'animation
 class _AnimationTask {
-  final String id;
-  final AnimationController controller;
-  
   _AnimationTask({
     required this.id,
     required this.controller,
   });
+  final String id;
+  final AnimationController controller;
 }
 
 /// Mixin pour simplifier l'utilisation du gestionnaire d'animations
@@ -174,12 +168,11 @@ mixin ManagedAnimationMixin on TickerProviderStateMixin {
 
 /// Widget pour désactiver les animations selon les préférences système
 class AnimationPreferenceBuilder extends StatefulWidget {
-  final Widget Function(BuildContext context, bool animationsEnabled) builder;
-  
   const AnimationPreferenceBuilder({
-    super.key,
     required this.builder,
+    super.key,
   });
+  final Widget Function(BuildContext context, {required bool animationsEnabled}) builder;
   
   @override
   State<AnimationPreferenceBuilder> createState() => _AnimationPreferenceBuilderState();
@@ -194,11 +187,11 @@ class _AnimationPreferenceBuilderState extends State<AnimationPreferenceBuilder>
     // Vérifier les préférences d'accessibilité du système
     final mediaQuery = MediaQuery.of(context);
     _animationsEnabled = !mediaQuery.disableAnimations;
-    AnimationManager().setAnimationsEnabled(_animationsEnabled);
+    AnimationManager().setAnimationsEnabled(enabled: _animationsEnabled);
   }
   
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, _animationsEnabled);
+    return widget.builder(context, animationsEnabled: _animationsEnabled);
   }
 }

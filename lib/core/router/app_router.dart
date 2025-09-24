@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:go_router/go_router.dart';
 import '../../presentation/providers/app_mode_provider.dart';
-import 'routes/public_routes.dart';
-import 'routes/route_constants.dart';
-import 'error_page.dart';
-import '../../presentation/screens/main_home_screen.dart';
-import '../../presentation/screens/welcome_screen.dart';
+import '../../presentation/pages/browse_page.dart';
 import '../../presentation/screens/all_brands_screen.dart';
 import '../../presentation/screens/all_urgent_offers_screen.dart';
-import '../../presentation/widgets/merchant_shell.dart';
+import '../../presentation/screens/main_home_screen.dart';
+import '../../presentation/screens/welcome_screen.dart';
 import '../../presentation/widgets/consumer_shell.dart';
+import '../../presentation/widgets/merchant_shell.dart';
+import 'error_page.dart';
+import 'routes/public_routes.dart';
+import 'routes/route_constants.dart';
+import '../constants/env_config.dart';
 
 /// Provider pour le router de l'application EcoPlates
 /// 
@@ -159,7 +160,7 @@ class AppRouter {
             path: RouteConstants.consumerBrowse,
             name: RouteConstants.consumerBrowseName,
             pageBuilder: (context, state) {
-              return const MaterialPage(child: MainHomeScreen());
+              return const MaterialPage(child: BrowsePage());
             },
           ),
           GoRoute(
@@ -199,8 +200,8 @@ class AppRouter {
   /// 
   /// Retourne true en mode debug, false en production
   static bool _isDebugMode() {
-    // TODO: Utiliser une configuration d'environnement
-    return true; // Temporaire pour le développement
+    // Activer les logs de debug uniquement si autorisés et hors production
+    return EnvConfig.enableDebugLogs && !EnvConfig.isProduction;
   }
 
   /// Clés de navigation pour l'accès externe

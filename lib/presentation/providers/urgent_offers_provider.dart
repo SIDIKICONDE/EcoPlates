@@ -20,6 +20,7 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.boulangerie,
       originalPrice: 8.50,
       discountedPrice: 2.99,
+      merchantAddress: '78 rue de la Boulangerie, 75012 Paris',
       quantity: 2, // Presque épuisé !
       pickupStartTime: now.add(const Duration(minutes: 30)),
       pickupEndTime: now.add(const Duration(hours: 1, minutes: 30)), // Expire très bientôt !
@@ -33,6 +34,7 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
         postalCode: '75002',
       ),
       co2Saved: 450,
+      updatedAt: now.subtract(const Duration(hours: 4)),
     ),
     FoodOffer(
       id: 'urgent-2',
@@ -45,6 +47,7 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.dejeuner,
       originalPrice: 24.90,
       discountedPrice: 9.99,
+      merchantAddress: '34 rue du Restaurant, 75013 Paris',
       quantity: 1, // Dernier disponible !
       pickupStartTime: now,
       pickupEndTime: now.add(const Duration(minutes: 45)), // Urgent !
@@ -60,6 +63,7 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: false,
       allergens: ['poisson', 'soja'],
       co2Saved: 800,
+      updatedAt: now.subtract(const Duration(hours: 2)),
     ),
     FoodOffer(
       id: 'urgent-3',
@@ -72,6 +76,7 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.diner,
       originalPrice: 18.00,
       discountedPrice: 5.50,
+      merchantAddress: '56 avenue du Marché, 75014 Paris',
       quantity: 3,
       pickupStartTime: now.add(const Duration(minutes: 15)),
       pickupEndTime: now.add(const Duration(hours: 1, minutes: 15)),
@@ -85,6 +90,7 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
         postalCode: '75011',
       ),
       co2Saved: 1000,
+      updatedAt: now.subtract(const Duration(hours: 1)),
     ),
     FoodOffer(
       id: 'urgent-4',
@@ -97,6 +103,7 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.dejeuner,
       originalPrice: 12.50,
       discountedPrice: 4.00,
+      merchantAddress: '12 rue de la Gare, 75015 Paris',
       quantity: 4,
       pickupStartTime: now,
       pickupEndTime: now.add(const Duration(hours: 2)),
@@ -110,6 +117,7 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
         postalCode: '75006',
       ),
       co2Saved: 350,
+      updatedAt: now.subtract(const Duration(hours: 3)),
     ),
   ];
 });

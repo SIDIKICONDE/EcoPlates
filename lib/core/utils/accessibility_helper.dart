@@ -7,8 +7,8 @@ class AccessibilityHelper {
   /// Calcule le ratio de contraste entre deux couleurs
   /// Selon les standards WCAG 2.1
   static double calculateContrastRatio(Color foreground, Color background) {
-    final double luminance1 = foreground.computeLuminance();
-    final double luminance2 = background.computeLuminance();
+    final luminance1 = foreground.computeLuminance();
+    final luminance2 = background.computeLuminance();
     
     final double brightest = math.max(luminance1, luminance2);
     final double darkest = math.min(luminance1, luminance2);
@@ -18,13 +18,13 @@ class AccessibilityHelper {
   
   /// Vérifie si le contraste respecte le niveau WCAG AA (4.5:1 pour texte normal)
   static bool meetsWCAGAA(Color foreground, Color background, {bool isLargeText = false}) {
-    final double ratio = calculateContrastRatio(foreground, background);
+    final ratio = calculateContrastRatio(foreground, background);
     return isLargeText ? ratio >= 3.0 : ratio >= 4.5;
   }
   
   /// Vérifie si le contraste respecte le niveau WCAG AAA (7:1 pour texte normal)
   static bool meetsWCAGAAA(Color foreground, Color background, {bool isLargeText = false}) {
-    final double ratio = calculateContrastRatio(foreground, background);
+    final ratio = calculateContrastRatio(foreground, background);
     return isLargeText ? ratio >= 4.5 : ratio >= 7.0;
   }
   
@@ -40,9 +40,9 @@ class AccessibilityHelper {
     }
     
     // Ajuster la luminosité progressivement
-    Color adjustedColor = foreground;
-    int iterations = 0;
-    const int maxIterations = 100;
+    var adjustedColor = foreground;
+    var iterations = 0;
+    const maxIterations = 100;
     
     while (calculateContrastRatio(adjustedColor, background) < minRatio && 
            iterations < maxIterations) {
@@ -56,8 +56,8 @@ class AccessibilityHelper {
     
     // Si on ne peut pas atteindre le ratio, utiliser noir ou blanc
     if (iterations >= maxIterations) {
-      final double blackRatio = calculateContrastRatio(Colors.black, background);
-      final double whiteRatio = calculateContrastRatio(Colors.white, background);
+      final blackRatio = calculateContrastRatio(Colors.black, background);
+      final whiteRatio = calculateContrastRatio(Colors.white, background);
       return whiteRatio > blackRatio ? Colors.white : Colors.black;
     }
     
@@ -68,7 +68,7 @@ class AccessibilityHelper {
   static Color _lighten(Color color, double amount) {
     final hsl = HSLColor.fromColor(color);
     return hsl.withLightness(
-      math.min(1.0, hsl.lightness + amount)
+      math.min(1, hsl.lightness + amount)
     ).toColor();
   }
   
@@ -76,7 +76,7 @@ class AccessibilityHelper {
   static Color _darken(Color color, double amount) {
     final hsl = HSLColor.fromColor(color);
     return hsl.withLightness(
-      math.max(0.0, hsl.lightness - amount)
+      math.max(0, hsl.lightness - amount)
     ).toColor();
   }
   
@@ -124,9 +124,9 @@ class AccessibleColors {
 class AccessibleFontSizes {
   AccessibleFontSizes._();
   
-  static const double small = 12.0;  // Minimum recommandé
-  static const double normal = 14.0;
-  static const double medium = 16.0;
-  static const double large = 18.0;  // Considéré comme "large text" WCAG
-  static const double xlarge = 24.0;
+  static const double small = 12;  // Minimum recommandé
+  static const double normal = 14;
+  static const double medium = 16;
+  static const double large = 18;  // Considéré comme "large text" WCAG
+  static const double xlarge = 24;
 }

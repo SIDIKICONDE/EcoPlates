@@ -146,7 +146,7 @@ class MealsSection extends ConsumerWidget {
   }
 
   void _showMealDetailModal(BuildContext context, FoodOffer meal) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

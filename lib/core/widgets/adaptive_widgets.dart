@@ -18,20 +18,20 @@ class PlatformUtils {
 
 /// Scaffold adaptatif qui utilise CupertinoPageScaffold sur iOS/macOS
 class AdaptiveScaffold extends StatelessWidget {
-  final Widget body;
-  final PreferredSizeWidget? appBar;
-  final Widget? floatingActionButton;
-  final Widget? bottomNavigationBar;
-  final Color? backgroundColor;
-
   const AdaptiveScaffold({
-    super.key,
     required this.body,
+    super.key,
     this.appBar,
     this.floatingActionButton,
     this.bottomNavigationBar,
     this.backgroundColor,
   });
+
+  final Widget body;
+  final PreferredSizeWidget? appBar;
+  final Widget? floatingActionButton;
+  final Widget? bottomNavigationBar;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +39,12 @@ class AdaptiveScaffold extends StatelessWidget {
       // iOS/macOS: Utiliser CupertinoPageScaffold
       return CupertinoPageScaffold(
         navigationBar: appBar is CupertinoNavigationBar
-            ? appBar as CupertinoNavigationBar
+            ? appBar! as ObstructingPreferredSizeWidget
             : appBar != null
             ? CupertinoNavigationBar(
-                middle: (appBar as AppBar).title,
+                middle: (appBar! as AppBar).title,
                 backgroundColor: backgroundColor,
-              )
+              ) as ObstructingPreferredSizeWidget
             : null,
         backgroundColor: backgroundColor,
         child: SafeArea(bottom: bottomNavigationBar == null, child: body),
@@ -64,22 +64,22 @@ class AdaptiveScaffold extends StatelessWidget {
 
 /// AppBar adaptatif
 class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Widget title;
-  final Widget? leading;
-  final List<Widget>? actions;
-  final bool centerTitle;
-  final Color? backgroundColor;
-  final PreferredSizeWidget? bottom;
-
   const AdaptiveAppBar({
-    super.key,
     required this.title,
+    super.key,
     this.leading,
     this.actions,
     this.centerTitle = true,
     this.backgroundColor,
     this.bottom,
   });
+
+  final Widget title;
+  final Widget? leading;
+  final List<Widget>? actions;
+  final bool centerTitle;
+  final Color? backgroundColor;
+  final PreferredSizeWidget? bottom;
 
   @override
   Widget build(BuildContext context) {
@@ -111,18 +111,18 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 /// Bouton adaptatif
 class AdaptiveButton extends StatelessWidget {
+  const AdaptiveButton({
+    required this.onPressed,
+    required this.child,
+    super.key,
+    this.color,
+    this.padding,
+  });
+
   final VoidCallback? onPressed;
   final Widget child;
   final Color? color;
   final EdgeInsetsGeometry? padding;
-
-  const AdaptiveButton({
-    super.key,
-    required this.onPressed,
-    required this.child,
-    this.color,
-    this.padding,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -148,9 +148,9 @@ class AdaptiveButton extends StatelessWidget {
 
 /// Indicateur de progression adaptatif
 class AdaptiveProgressIndicator extends StatelessWidget {
-  final Color? color;
-
   const AdaptiveProgressIndicator({super.key, this.color});
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -168,16 +168,16 @@ class AdaptiveProgressIndicator extends StatelessWidget {
 
 /// Switch adaptatif
 class AdaptiveSwitch extends StatelessWidget {
+  const AdaptiveSwitch({
+    required this.value,
+    required this.onChanged,
+    super.key,
+    this.activeColor,
+  });
+
   final bool value;
   final ValueChanged<bool>? onChanged;
   final Color? activeColor;
-
-  const AdaptiveSwitch({
-    super.key,
-    required this.value,
-    required this.onChanged,
-    this.activeColor,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -200,16 +200,16 @@ class AdaptiveSwitch extends StatelessWidget {
 
 /// Dialog adaptatif
 class AdaptiveDialog extends StatelessWidget {
-  final String title;
-  final String content;
-  final List<AdaptiveDialogAction> actions;
-
   const AdaptiveDialog({
-    super.key,
     required this.title,
     required this.content,
     required this.actions,
+    super.key,
   });
+
+  final String title;
+  final String content;
+  final List<AdaptiveDialogAction> actions;
 
   @override
   Widget build(BuildContext context) {
@@ -261,26 +261,19 @@ class AdaptiveDialog extends StatelessWidget {
 
 /// Action pour AdaptiveDialog
 class AdaptiveDialogAction {
-  final String text;
-  final VoidCallback onPressed;
-  final bool isDestructive;
-
   const AdaptiveDialogAction({
     required this.text,
     required this.onPressed,
     this.isDestructive = false,
   });
+
+  final String text;
+  final VoidCallback onPressed;
+  final bool isDestructive;
 }
 
 /// TextField adaptatif
 class AdaptiveTextField extends StatelessWidget {
-  final TextEditingController? controller;
-  final String? placeholder;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final ValueChanged<String>? onChanged;
-  final InputDecoration? decoration;
-
   const AdaptiveTextField({
     super.key,
     this.controller,
@@ -290,6 +283,13 @@ class AdaptiveTextField extends StatelessWidget {
     this.onChanged,
     this.decoration,
   });
+
+  final TextEditingController? controller;
+  final String? placeholder;
+  final TextInputType? keyboardType;
+  final bool obscureText;
+  final ValueChanged<String>? onChanged;
+  final InputDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -320,20 +320,20 @@ class AdaptiveTextField extends StatelessWidget {
 
 /// Bouton d'icône adaptatif
 class AdaptiveIconButton extends StatelessWidget {
+  const AdaptiveIconButton({
+    required this.icon,
+    required this.onPressed,
+    super.key,
+    this.cupertinoIcon,
+    this.tooltip,
+    this.color,
+  });
+
   final Widget icon;
   final IconData? cupertinoIcon;
   final VoidCallback? onPressed;
   final String? tooltip;
   final Color? color;
-  
-  const AdaptiveIconButton({
-    super.key,
-    required this.icon,
-    this.cupertinoIcon,
-    required this.onPressed,
-    this.tooltip,
-    this.color,
-  });
   
   @override
   Widget build(BuildContext context) {

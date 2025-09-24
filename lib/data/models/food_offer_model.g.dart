@@ -26,6 +26,7 @@ FoodOfferModel _$FoodOfferModelFromJson(Map<String, dynamic> json) =>
       status: $enumDecode(_$OfferStatusEnumMap, json['status']),
       location:
           LocationModel.fromJson(json['location'] as Map<String, dynamic>),
+      merchantAddress: json['merchantAddress'] as String,
       allergens: (json['allergens'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -34,6 +35,22 @@ FoodOfferModel _$FoodOfferModelFromJson(Map<String, dynamic> json) =>
       isVegan: json['isVegan'] as bool? ?? false,
       isHalal: json['isHalal'] as bool? ?? false,
       co2Saved: (json['co2Saved'] as num?)?.toInt() ?? 500,
+      merchantLogo: json['merchantLogo'] as String?,
+      availableQuantity: (json['availableQuantity'] as num?)?.toInt() ?? 0,
+      totalQuantity: (json['totalQuantity'] as num?)?.toInt() ?? 0,
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
+      nutritionalInfo: json['nutritionalInfo'] as Map<String, dynamic>?,
+      ecoImpact: json['ecoImpact'] as Map<String, dynamic>?,
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      ratingsCount: (json['ratingsCount'] as num?)?.toInt() ?? 0,
+      distanceKm: (json['distanceKm'] as num?)?.toDouble(),
+      preparationTime: (json['preparationTime'] as num?)?.toInt() ?? 30,
+      isFavorite: json['isFavorite'] as bool? ?? false,
+      viewCount: (json['viewCount'] as num?)?.toInt() ?? 0,
+      soldCount: (json['soldCount'] as num?)?.toInt() ?? 0,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$FoodOfferModelToJson(FoodOfferModel instance) =>
@@ -59,6 +76,21 @@ Map<String, dynamic> _$FoodOfferModelToJson(FoodOfferModel instance) =>
       'isVegan': instance.isVegan,
       'isHalal': instance.isHalal,
       'co2Saved': instance.co2Saved,
+      'merchantAddress': instance.merchantAddress,
+      'merchantLogo': instance.merchantLogo,
+      'availableQuantity': instance.availableQuantity,
+      'totalQuantity': instance.totalQuantity,
+      'tags': instance.tags,
+      'nutritionalInfo': instance.nutritionalInfo,
+      'ecoImpact': instance.ecoImpact,
+      'rating': instance.rating,
+      'ratingsCount': instance.ratingsCount,
+      'distanceKm': instance.distanceKm,
+      'preparationTime': instance.preparationTime,
+      'isFavorite': instance.isFavorite,
+      'viewCount': instance.viewCount,
+      'soldCount': instance.soldCount,
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 const _$OfferTypeEnumMap = {

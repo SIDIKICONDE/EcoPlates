@@ -9,13 +9,12 @@ extension ContextExtensions on BuildContext {
   /// Affiche une erreur sous forme de SnackBar
   void showError(Failure failure) {
     if (this is! Element || !(this as Element).mounted) return;
-    final messenger = ScaffoldMessenger.of(this);
 
-    messenger.showSnackBar(
+    ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.error_outline, color: Colors.white, size: 20),
+            const Icon(Icons.error_outline, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -300,15 +299,15 @@ extension ContextExtensions on BuildContext {
 
 /// Option pour les bottom sheets
 class BottomSheetOption<T> {
-  final String title;
-  final String? subtitle;
-  final IconData? icon;
-  final T value;
-
   const BottomSheetOption({
     required this.title,
     this.subtitle,
     this.icon,
     required this.value,
   });
+
+  final String title;
+  final String? subtitle;
+  final IconData? icon;
+  final T value;
 }

@@ -4,11 +4,11 @@ import '../../domain/entities/merchant.dart';
 /// Provider pour la liste des marchands partenaires
 final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
   // Simuler un appel API
-  await Future.delayed(const Duration(milliseconds: 500));
+  await Future<void>.delayed(const Duration(milliseconds: 500));
   
   // Données mockées de marchands
   return [
-    Merchant(
+    const Merchant(
       id: 'm1',
       name: 'Boulangerie Paul',
       category: 'Boulangerie',
@@ -18,7 +18,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '0.5 km',
       availableOffers: 4,
       hasActiveOffer: true,
-      originalPrice: 12.00,
+      originalPrice: 12,
       discountedPrice: 4.99,
       discountPercentage: 58,
       minPrice: 3.99,
@@ -26,7 +26,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       isFavorite: true,
       tags: ['Bio', 'Local', '⚡ Rapide'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm2',
       name: 'Sushi Shop',
       category: 'Japonais',
@@ -36,15 +36,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '1.2 km',
       availableOffers: 2,
       hasActiveOffer: true,
-      originalPrice: 25.00,
+      originalPrice: 25,
       discountedPrice: 9.99,
       discountPercentage: 60,
       minPrice: 8.99,
       pickupTime: '19:30 - 20:00',
-      isFavorite: false,
       tags: ['Premium', 'Halal'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm3',
       name: 'Le Bistrot du Coin',
       category: 'Français',
@@ -54,15 +53,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '800 m',
       availableOffers: 3,
       hasActiveOffer: true,
-      originalPrice: 18.00,
+      originalPrice: 18,
       discountedPrice: 6.99,
       discountPercentage: 61,
       minPrice: 5.99,
       pickupTime: '21:00 - 21:30',
-      isFavorite: false,
       tags: ['Terrasse', 'Wi-Fi'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm4',
       name: 'Pizza Express',
       category: 'Italien',
@@ -72,7 +70,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '2.1 km',
       availableOffers: 5,
       hasActiveOffer: true,
-      originalPrice: 15.00,
+      originalPrice: 15,
       discountedPrice: 5.99,
       discountPercentage: 60,
       minPrice: 4.99,
@@ -80,7 +78,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       isFavorite: true,
       tags: ['Livraison', 'Végétarien'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm5',
       name: 'Green Bowl',
       category: 'Healthy',
@@ -90,15 +88,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '1.5 km',
       availableOffers: 3,
       hasActiveOffer: true,
-      originalPrice: 14.00,
+      originalPrice: 14,
       discountedPrice: 5.50,
       discountPercentage: 61,
       minPrice: 4.50,
       pickupTime: '19:00 - 19:30',
-      isFavorite: false,
       tags: ['Vegan', 'Sans gluten', 'Bio'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm6',
       name: 'Café de la Gare',
       category: 'Café',
@@ -108,15 +105,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '300 m',
       availableOffers: 2,
       hasActiveOffer: true,
-      originalPrice: 8.00,
+      originalPrice: 8,
       discountedPrice: 2.99,
       discountPercentage: 63,
       minPrice: 2.50,
       pickupTime: '17:30 - 18:00',
-      isFavorite: false,
       tags: ['☕ Café', 'Wi-Fi'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm7',
       name: 'Traiteur Libanais',
       category: 'Oriental',
@@ -126,7 +122,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '1.8 km',
       availableOffers: 6,
       hasActiveOffer: true,
-      originalPrice: 22.00,
+      originalPrice: 22,
       discountedPrice: 8.99,
       discountPercentage: 59,
       minPrice: 7.99,
@@ -134,7 +130,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       isFavorite: true,
       tags: ['Halal', 'Végétarien', 'Fait maison'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm8',
       name: 'Fromagerie du Marché',
       category: 'Fromagerie',
@@ -144,15 +140,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '650 m',
       availableOffers: 3,
       hasActiveOffer: true,
-      originalPrice: 16.00,
+      originalPrice: 16,
       discountedPrice: 6.50,
       discountPercentage: 59,
       minPrice: 5.50,
       pickupTime: '18:30 - 19:00',
-      isFavorite: false,
       tags: ['Local', 'Artisanal'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm9',
       name: 'Thai Express',
       category: 'Asiatique',
@@ -162,15 +157,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '2.3 km',
       availableOffers: 4,
       hasActiveOffer: true,
-      originalPrice: 19.00,
+      originalPrice: 19,
       discountedPrice: 7.50,
       discountPercentage: 61,
       minPrice: 6.50,
       pickupTime: '21:00 - 21:30',
-      isFavorite: false,
       tags: ['🌶 Picé', 'Sans gluten disponible'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm10',
       name: 'Burger Factory',
       category: 'Américain',
@@ -180,7 +174,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '1.1 km',
       availableOffers: 5,
       hasActiveOffer: true,
-      originalPrice: 17.00,
+      originalPrice: 17,
       discountedPrice: 6.99,
       discountPercentage: 59,
       minPrice: 5.99,
@@ -188,7 +182,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       isFavorite: true,
       tags: ['Late night', '🍔 Burger'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm11',
       name: 'Pâtisserie Royale',
       category: 'Pâtisserie',
@@ -198,15 +192,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '900 m',
       availableOffers: 2,
       hasActiveOffer: true,
-      originalPrice: 20.00,
+      originalPrice: 20,
       discountedPrice: 7.99,
       discountPercentage: 60,
       minPrice: 6.99,
       pickupTime: '17:00 - 17:30',
-      isFavorite: false,
       tags: ['Premium', 'Artisanal', '🍰 Desserts'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm12',
       name: 'Kebab Palace',
       category: 'Turc',
@@ -216,15 +209,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '1.4 km',
       availableOffers: 7,
       hasActiveOffer: true,
-      originalPrice: 12.00,
+      originalPrice: 12,
       discountedPrice: 4.50,
       discountPercentage: 63,
       minPrice: 3.99,
       pickupTime: '23:00 - 23:30',
-      isFavorite: false,
       tags: ['Halal', 'Late night', 'Rapide'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm13',
       name: 'Smoothie Bar',
       category: 'Jus & Smoothies',
@@ -234,7 +226,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '400 m',
       availableOffers: 4,
       hasActiveOffer: true,
-      originalPrice: 9.00,
+      originalPrice: 9,
       discountedPrice: 3.50,
       discountPercentage: 61,
       minPrice: 2.99,
@@ -242,7 +234,7 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       isFavorite: true,
       tags: ['Healthy', 'Vegan', '🥤 Smoothies'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm14',
       name: 'Crêperie Bretonne',
       category: 'Crêperie',
@@ -252,15 +244,14 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '1.6 km',
       availableOffers: 3,
       hasActiveOffer: true,
-      originalPrice: 14.00,
+      originalPrice: 14,
       discountedPrice: 5.50,
       discountPercentage: 61,
       minPrice: 4.50,
       pickupTime: '19:00 - 19:30',
-      isFavorite: false,
       tags: ['Traditionnel', 'Fait maison'],
     ),
-    Merchant(
+    const Merchant(
       id: 'm15',
       name: 'Poke Bowl Paradise',
       category: 'Hawaïen',
@@ -270,12 +261,11 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
       distanceText: '2.0 km',
       availableOffers: 4,
       hasActiveOffer: true,
-      originalPrice: 18.00,
+      originalPrice: 18,
       discountedPrice: 7.99,
       discountPercentage: 56,
       minPrice: 6.99,
       pickupTime: '20:30 - 21:00',
-      isFavorite: false,
       tags: ['Healthy', 'Sans gluten', '🌺 Exotique'],
     ),
   ];
@@ -291,4 +281,3 @@ final favoriteMerchantsProvider = Provider<List<Merchant>>((ref) {
     error: (_, __) => [],
   );
 });
-

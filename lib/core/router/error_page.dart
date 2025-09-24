@@ -9,8 +9,8 @@ import 'routes/route_constants.dart';
 /// selon les directives EcoPlates
 class EcoPlatesErrorPage extends StatelessWidget {
   const EcoPlatesErrorPage({
-    super.key,
     required this.state,
+    super.key,
   });
 
   final GoRouterState state;
@@ -22,14 +22,14 @@ class EcoPlatesErrorPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Icône d'erreur avec animation
               TweenAnimationBuilder<double>(
                 duration: const Duration(milliseconds: 800),
-                tween: Tween(begin: 0.0, end: 1.0),
+                tween: Tween(begin: 0, end: 1),
                 builder: (context, value, child) {
                   return Transform.scale(
                     scale: value,
@@ -109,11 +109,11 @@ class EcoPlatesErrorPage extends StatelessWidget {
   /// Détermine la description selon le type d'erreur
   String _getErrorDescription() {
     if (state.uri.toString().contains('merchant')) {
-      return 'Le marchand que vous recherchez n\'existe pas ou n\'est plus disponible.';
+      return "Le marchand que vous recherchez n'existe pas ou n'est plus disponible.";
     } else if (state.uri.toString().contains('offer')) {
-      return 'Cette offre n\'est plus disponible ou a été supprimée.';
+      return "Cette offre n'est plus disponible ou a été supprimée.";
     } else {
-      return 'La page que vous recherchez n\'existe pas ou a été déplacée.';
+      return "La page que vous recherchez n'existe pas ou a été déplacée.";
     }
   }
 
@@ -127,7 +127,7 @@ class EcoPlatesErrorPage extends StatelessWidget {
           child: ElevatedButton.icon(
             onPressed: () => context.go(RouteConstants.mainHome),
             icon: const Icon(Icons.home_rounded),
-            label: const Text('Retour à l\'accueil'),
+            label: const Text("Retour à l'accueil"),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),

@@ -4,7 +4,7 @@ import '../../../providers/videos_provider.dart';
 import '../../../../domain/entities/video_preview.dart';
 import '../../video_card/video_card.dart';
 import '../../video_player/floating_video_modal.dart';
-import '../../../pages/videos/all_videos_page.dart';
+import '../../../screens/all_videos_page.dart';
 /// Section affichant les vidéos de recettes et conseils anti-gaspi
 class VideosSection extends ConsumerWidget {
   const VideosSection({super.key});

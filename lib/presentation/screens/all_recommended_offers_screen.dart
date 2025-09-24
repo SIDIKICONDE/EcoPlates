@@ -144,7 +144,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
   }
 
   void _navigateToOfferDetail(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -237,7 +237,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
   }
 
   void _showFilterBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

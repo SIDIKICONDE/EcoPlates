@@ -20,6 +20,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.dejeuner,
       originalPrice: 15.90,
       discountedPrice: 6.99,
+      merchantAddress: '15 rue des Restaurants, 75001 Paris',
       quantity: 8,
       pickupStartTime: now.add(const Duration(hours: 2)),
       pickupEndTime: now.add(const Duration(hours: 3)),
@@ -35,6 +36,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: false,
       allergens: ['gluten'],
       co2Saved: 1200,
+      updatedAt: now.subtract(const Duration(hours: 1)),
     ),
     FoodOffer(
       id: 'meal-2',
@@ -47,6 +49,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.dejeuner,
       originalPrice: 13.50,
       discountedPrice: 5.50,
+      merchantAddress: '22 rue des Végétaux, 75002 Paris',
       quantity: 6,
       pickupStartTime: now.add(const Duration(hours: 1)),
       pickupEndTime: now.add(const Duration(hours: 2)),
@@ -62,6 +65,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: true,
       allergens: ['soja', 'sésame'],
       co2Saved: 800,
+      updatedAt: now.subtract(const Duration(hours: 2)),
     ),
     FoodOffer(
       id: 'meal-3',
@@ -74,6 +78,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.diner,
       originalPrice: 18.00,
       discountedPrice: 7.99,
+      merchantAddress: '33 rue des Pizzas, 75004 Paris',
       quantity: 10,
       pickupStartTime: now.add(const Duration(hours: 4)),
       pickupEndTime: now.add(const Duration(hours: 5)),
@@ -89,6 +94,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: false,
       allergens: ['gluten', 'lactose'],
       co2Saved: 1000,
+      updatedAt: now.subtract(const Duration(minutes: 30)),
     ),
     FoodOffer(
       id: 'meal-4',
@@ -101,6 +107,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.diner,
       originalPrice: 22.90,
       discountedPrice: 9.99,
+      merchantAddress: '8 rue des Sushis, 75005 Paris',
       quantity: 5,
       pickupStartTime: now.add(const Duration(hours: 3)),
       pickupEndTime: now.add(const Duration(hours: 4)),
@@ -116,6 +123,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: false,
       allergens: ['poisson', 'soja', 'sésame'],
       co2Saved: 900,
+      updatedAt: now.subtract(const Duration(hours: 1, minutes: 30)),
     ),
     FoodOffer(
       id: 'meal-5',
@@ -128,6 +136,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.dejeuner,
       originalPrice: 16.00,
       discountedPrice: 6.50,
+      merchantAddress: '41 rue des Épices, 75006 Paris',
       quantity: 7,
       pickupStartTime: now.add(const Duration(hours: 2, minutes: 30)),
       pickupEndTime: now.add(const Duration(hours: 3, minutes: 30)),
@@ -143,6 +152,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: true,
       allergens: ['gluten', 'sésame'],
       co2Saved: 700,
+      updatedAt: now.subtract(const Duration(hours: 3)),
     ),
     FoodOffer(
       id: 'meal-6',
@@ -155,6 +165,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       category: FoodCategory.diner,
       originalPrice: 14.90,
       discountedPrice: 5.99,
+      merchantAddress: '55 avenue des Burgers, 75007 Paris',
       quantity: 12,
       pickupStartTime: now.add(const Duration(hours: 5)),
       pickupEndTime: now.add(const Duration(hours: 6)),
@@ -170,6 +181,7 @@ final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
       isVegetarian: false,
       allergens: ['gluten', 'lactose', 'moutarde'],
       co2Saved: 1100,
+      updatedAt: now.subtract(const Duration(minutes: 45)),
     ),
   ];
 });

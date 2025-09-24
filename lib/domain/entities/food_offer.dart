@@ -23,6 +23,22 @@ class FoodOffer {
   final bool isVegan;
   final bool isHalal;
   final int co2Saved; // en grammes
+  // Propriétés étendues
+  final String merchantAddress;
+  final String? merchantLogo;
+  final int availableQuantity;
+  final int totalQuantity;
+  final List<String> tags;
+  final Map<String, dynamic>? nutritionalInfo;
+  final Map<String, dynamic>? ecoImpact;
+  final double rating;
+  final int ratingsCount;
+  final double? distanceKm; // Distance calculée depuis l'utilisateur
+  final int preparationTime; // en minutes
+  final bool isFavorite;
+  final int viewCount;
+  final int soldCount;
+  final DateTime updatedAt;
 
   const FoodOffer({
     required this.id,
@@ -41,11 +57,26 @@ class FoodOffer {
     required this.createdAt,
     required this.status,
     required this.location,
+    required this.merchantAddress,
     this.allergens = const [],
     this.isVegetarian = false,
     this.isVegan = false,
     this.isHalal = false,
     this.co2Saved = 500, // 500g par défaut
+    this.merchantLogo,
+    this.availableQuantity = 0,
+    this.totalQuantity = 0,
+    this.tags = const [],
+    this.nutritionalInfo,
+    this.ecoImpact,
+    this.rating = 0.0,
+    this.ratingsCount = 0,
+    this.distanceKm,
+    this.preparationTime = 30,
+    this.isFavorite = false,
+    this.viewCount = 0,
+    this.soldCount = 0,
+    required this.updatedAt,
   });
 
   /// Calcule le pourcentage de réduction

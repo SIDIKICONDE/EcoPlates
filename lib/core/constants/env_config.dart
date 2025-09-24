@@ -42,7 +42,7 @@ class EnvConfig {
   static void printConfig() {
     if (enableDebugLogs) {
       final config =
-          '''  
+          '''
 ====== ENV CONFIG ======
 Environment: $environment
 API Base URL: $apiBaseUrl

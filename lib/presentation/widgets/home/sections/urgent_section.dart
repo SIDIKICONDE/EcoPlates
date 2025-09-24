@@ -1,17 +1,54 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers/urgent_offers_provider.dart';
-import '../../offer_card.dart';
-import '../../../screens/all_urgent_offers_screen.dart';
-import '../../offer_detail/index.dart';
+
+import '../../../../core/providers/image_preload_provider.dart';
+import '../../../../core/services/image_cache_service.dart';
 import '../../../../domain/entities/food_offer.dart';
+import '../../../providers/urgent_offers_provider.dart';
+import '../../../screens/all_urgent_offers_screen.dart';
+import '../../offer_card.dart';
+import '../../offer_detail/index.dart';
 
 /// Section des offres urgentes à sauver avant qu'il soit trop tard
-class UrgentSection extends ConsumerWidget {
+class UrgentSection extends ConsumerStatefulWidget {
   const UrgentSection({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UrgentSection> createState() => _UrgentSectionState();
+}
+
+class _UrgentSectionState extends ConsumerState<UrgentSection> 
+    with AutoPreloadImages {
+  final ScrollController _scrollController = ScrollController();
+  
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+  
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+  
+  void _onScroll() {
+    // Déterminer l'index visible pour le préchargement
+    if (_scrollController.hasClients) {
+      const itemWidth = 340.0 + 8.0; // largeur + padding
+      final scrollOffset = _scrollController.offset;
+      final visibleIndexValue = (scrollOffset / itemWidth).round();
+      visibleIndex = visibleIndexValue;
+    }
+  }
+  
+  @override
+  Widget build(BuildContext context) {
     final urgentOffersAsync = ref.watch(urgentOffersProvider);
     
     return Column(
@@ -122,7 +159,16 @@ class UrgentSection extends ConsumerWidget {
                 );
               }
               
+              // Précharger les images des offres urgentes
+              final imageUrls = offers.map((o) => o.images.first).toList();
+              startAutoPreload(
+                imageUrls: imageUrls,
+                ref: ref,
+                size: ImageSize.small,
+              );
+              
               return ListView.builder(
+                controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 physics: const BouncingScrollPhysics(),
@@ -136,7 +182,6 @@ class UrgentSection extends ConsumerWidget {
                       child: OfferCard(
                         offer: offer,
                         compact: true,
-                        showDistance: true,
                         distance: 0.5 + (index * 0.2), // Distance plus proche pour l'urgence
                         onTap: () {
                           _showOfferDetailModal(context, offer);
@@ -185,7 +230,7 @@ class UrgentSection extends ConsumerWidget {
 
 
   void _showOfferDetailModal(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

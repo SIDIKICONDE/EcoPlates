@@ -1,23 +1,37 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import '../../../core/services/video_pool_manager.dart';
+import '../../../core/services/video_background_service.dart';
 import '../../../domain/entities/video_preview.dart';
 
 /// API simple pour afficher/masquer le lecteur flottant via OverlayEntry
 class FloatingVideoOverlay {
   static final Map<String, OverlayEntry> _entries = {};
+  static String? _currentVideoId;
+  static bool _isTransitioning = false;
 
   static bool isShowing(String id) => _entries.containsKey(id);
+  static bool get hasActiveVideo => _entries.isNotEmpty;
+  static String? get currentVideoId => _currentVideoId;
 
   static Future<void> show(BuildContext context, VideoPreview video) async {
+    // Empêcher les ouvertures multiples pendant une transition
+    if (_isTransitioning) return;
+    
     final overlay = Overlay.of(context);
+    _isTransitioning = true;
 
-    if (_entries.containsKey(video.id)) return; // Déjà affiché pour cette vidéo
+    try {
+      // Fermer toutes les vidéos ouvertes avant d'en ouvrir une nouvelle
+      if (_entries.isNotEmpty) {
+        hideAll();
+        // Attendre un peu pour que la fermeture soit complète
+        await Future<void>.delayed(const Duration(milliseconds: 150));
+      }
+
+      if (_entries.containsKey(video.id)) return; // Déjà affiché pour cette vidéo
 
     late final OverlayEntry entry;
     entry = OverlayEntry(
@@ -29,13 +43,23 @@ class FloatingVideoOverlay {
       ),
     );
 
-    _entries[video.id] = entry;
-    overlay.insert(entry);
+      _entries[video.id] = entry;
+      _currentVideoId = video.id;
+      overlay.insert(entry);
+    } finally {
+      // Débloquer après un court délai
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _isTransitioning = false;
+      });
+    }
   }
 
   static void hide(String id) {
     _entries[id]?.remove();
     _entries.remove(id);
+    if (_currentVideoId == id) {
+      _currentVideoId = null;
+    }
   }
 
   static void hideAll() {
@@ -43,6 +67,7 @@ class FloatingVideoOverlay {
       e.remove();
     }
     _entries.clear();
+    _currentVideoId = null;
   }
 }
 
@@ -61,7 +86,7 @@ class _FloatingVideoOverlay extends StatefulWidget {
   State<_FloatingVideoOverlay> createState() => _FloatingVideoOverlayState();
 }
 
-class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with TickerProviderStateMixin {
+class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with TickerProviderStateMixin, WidgetsBindingObserver {
   final VideoPoolManager _pool = VideoPoolManager();
   VideoPlayerController? _controller;
 
@@ -85,11 +110,11 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
   bool _showControls = true;
   Timer? _hideTimer;
 
-  static const MethodChannel _pipChannel = MethodChannel('app.ecoplates/pip');
   
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _entryController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
@@ -167,11 +192,33 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _hideTimer?.cancel();
     _entryController.dispose();
     // Ne pas disposer: le pool gère la mémoire. Mettre en pause suffit.
     _controller?.pause();
     super.dispose();
+  }
+  
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // L'app passe en arrière-plan
+      _showBackgroundNotification();
+    } else if (state == AppLifecycleState.resumed) {
+      // L'app revient au premier plan
+      VideoBackgroundService().hideVideoNotification();
+    }
+  }
+  
+  void _showBackgroundNotification() {
+    if (_controller != null) {
+      VideoBackgroundService().showVideoNotification(
+        title: widget.video.title,
+        merchant: widget.video.merchantName,
+        isPlaying: _controller!.value.isPlaying,
+      );
+    }
   }
 
   void _togglePlayPause() {
@@ -274,20 +321,6 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
     });
   }
 
-  Future<void> _enterSystemPiP() async {
-    if (kIsWeb) return;
-    if (Platform.isAndroid) {
-      try {
-        await _pipChannel.invokeMethod('enterPictureInPicture', {
-          'width': 16,
-          'height': 9,
-        });
-      } catch (e) {
-        debugPrint('PiP Android non disponible: $e');
-      }
-    }
-    // iOS: non pris en charge ici (requiert AVPictureInPictureController via plugin natif)
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -298,23 +331,31 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
     final isReady = _controller != null && _controller!.value.isInitialized;
 
     return Stack(children: [
-      // Overlay avec effet de flou
-      Positioned.fill(
-        child: IgnorePointer(
-          ignoring: _isMini, // Pas de flou en mode mini
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            color: Colors.black.withValues(alpha: _isMini ? 0 : 0.3),
-            child: BackdropFilter(
-              filter: _isMini 
-                ? ImageFilter.blur(sigmaX: 0, sigmaY: 0)
-                : ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-              child: Container(
-                color: Colors.transparent,
+      // Overlay avec effet de flou animé
+      AnimatedBuilder(
+        animation: _fadeAnimation,
+        builder: (context, child) {
+          return Positioned.fill(
+            child: IgnorePointer(
+              ignoring: _isMini, // Pas de flou en mode mini
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                color: Colors.black.withValues(alpha: _isMini ? 0 : 0.5 * _fadeAnimation.value),
+                child: BackdropFilter(
+                  filter: _isMini 
+                    ? ImageFilter.blur(sigmaX: 0, sigmaY: 0)
+                    : ImageFilter.blur(
+                        sigmaX: 15 * _fadeAnimation.value, 
+                        sigmaY: 15 * _fadeAnimation.value
+                      ),
+                  child: Container(
+                    color: Colors.transparent,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
       
       // Zone tactile pour fermer le modal (seulement si pas mini)
@@ -328,14 +369,23 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
         ),
 
       // Lecteur flottant positionné avec animation
-      AnimatedPositioned(
-          duration: const Duration(milliseconds: 180),
-          curve: Curves.easeOut,
-          left: _position!.dx,
-          top: _position!.dy,
-          width: _currentWidth,
-          height: _currentHeight,
-          child: GestureDetector(
+      AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return AnimatedPositioned(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            left: _position!.dx,
+            top: _position!.dy,
+            width: _currentWidth,
+            height: _currentHeight,
+            child: Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Opacity(
+                opacity: _fadeAnimation.value,
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.move,
+                  child: GestureDetector(
             onPanUpdate: _onDrag,
             onPanEnd: _onDragEnd,
             onTap: () {
@@ -370,7 +420,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
                   ),
 
                   // Top bar
-                  if (_showControls)
+                  if (_showControls) ...[
                     Positioned(
                       left: 0,
                       right: 0,
@@ -400,16 +450,6 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
                             iconSize: 18,
                             padding: EdgeInsets.zero,
                           ),
-                          const SizedBox(width: 4),
-                          if (!kIsWeb && Platform.isAndroid)
-                            IconButton(
-                              tooltip: 'Picture‑in‑Picture',
-                              onPressed: _enterSystemPiP,
-                              icon: const Icon(Icons.picture_in_picture_alt_rounded, color: Colors.white),
-                              iconSize: 18,
-                              padding: EdgeInsets.zero,
-                            ),
-                          if (!kIsWeb && Platform.isAndroid) const SizedBox(width: 4),
                           IconButton(
                             tooltip: _muted ? 'Activer le son' : 'Couper le son',
                             onPressed: _toggleMute,
@@ -428,9 +468,10 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
                         ]),
                       ),
                     ),
+                  ],
 
                   // Centre: Play/Pause
-                  if (_showControls)
+                  if (_showControls) ...[
                     Center(
                       child: Container(
                         decoration: BoxDecoration(color: Colors.black45, borderRadius: BorderRadius.circular(28)),
@@ -442,22 +483,28 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Ticke
                         ),
                       ),
                     ),
+                  ],
 
                   // Bas: timeline (compacte)
-                  if (_showControls)
+                  if (_showControls) ...[
                     Positioned(
                       left: 6,
                       right: 6,
                       bottom: 4,
                       child: _buildTimeline(),
                     ),
+                  ],
                 ]),
               ),
             ),
           ),
-        ),
-      ]),
-    );
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ]);
   }
 
   Widget _buildLoading() {

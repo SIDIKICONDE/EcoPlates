@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
 import '../entities/food_offer.dart';
+import '../entities/offer_stats.dart';
+import '../entities/offer_requests.dart';
 
 /// Interface du repository pour les offres alimentaires
 abstract class FoodOfferRepository {
@@ -93,6 +95,77 @@ abstract class FoodOfferRepository {
   Future<Either<Failure, void>> bulkUpdateOffers({
     required List<String> offerIds,
     required Map<String, dynamic> updates,
+  });
+
+  /// Méthodes additionnelles pour les use cases merchant
+  
+  /// Récupère une offre (alias pour getOfferById)
+  Future<Either<Failure, FoodOffer>> getOffer(String id) => getOfferById(id);
+
+  /// Crée une offre avec une requête structurée
+  Future<Either<Failure, FoodOffer>> createOfferFromRequest({
+    required String merchantId,
+    required CreateOfferRequest request,
+  });
+
+  /// Met à jour une offre avec une requête structurée
+  Future<Either<Failure, FoodOffer>> updateOfferFromRequest({
+    required String offerId,
+    required UpdateOfferRequest request,
+  });
+
+  /// Supprime une offre avec une raison
+  Future<Either<Failure, void>> deleteOfferWithReason({
+    required String offerId,
+    String? reason,
+  });
+
+  /// Récupère les offres d'un marchand avec filtres avancés
+  Future<Either<Failure, List<FoodOffer>>> getMerchantOffersAdvanced({
+    required String merchantId,
+    OfferStatus? status,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? limit,
+    int? offset,
+  });
+
+  /// Alias pour getMerchantOffersAdvanced
+  Future<Either<Failure, List<FoodOffer>>> getMerchantOffers({
+    required String merchantId,
+    OfferStatus? status,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? limit,
+    int? offset,
+  }) => getMerchantOffersAdvanced(
+    merchantId: merchantId,
+    status: status,
+    startDate: startDate,
+    endDate: endDate,
+    limit: limit,
+    offset: offset,
+  );
+
+  /// Récupère les statistiques d'une offre
+  Future<Either<Failure, OfferStats>> getOfferStats(String offerId);
+
+  /// Met à jour le statut d'une offre
+  Future<Either<Failure, FoodOffer>> updateOfferStatus({
+    required String offerId,
+    required OfferStatus status,
+  });
+
+  /// Vérifie s'il y a des réservations actives pour une offre
+  Future<bool> hasActiveReservations(String offerId);
+
+  /// Récupère le nombre de réservations actives pour une offre
+  Future<int> getActiveReservationsCount(String offerId);
+
+  /// Met à jour le stock d'une offre (surcharge avec quantité)
+  Future<Either<Failure, FoodOffer>> updateOfferStockQuantity({
+    required String offerId,
+    required int quantity,
   });
 }
 

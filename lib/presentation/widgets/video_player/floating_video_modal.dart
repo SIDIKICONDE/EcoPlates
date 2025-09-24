@@ -1,36 +1,47 @@
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import '../../../core/services/video_pool_manager.dart';
 import '../../../domain/entities/video_preview.dart';
 
 /// API simple pour afficher/masquer le lecteur flottant via OverlayEntry
 class FloatingVideoOverlay {
-  static OverlayEntry? _entry;
+  static final Map<String, OverlayEntry> _entries = {};
 
-  static bool get isShowing => _entry != null;
+  static bool isShowing(String id) => _entries.containsKey(id);
 
   static Future<void> show(BuildContext context, VideoPreview video) async {
-    if (_entry != null) return; // Déjà affiché
     final overlay = Overlay.of(context);
+
+    if (_entries.containsKey(video.id)) return; // Déjà affiché pour cette vidéo
 
     late final OverlayEntry entry;
     entry = OverlayEntry(
       builder: (ctx) => _FloatingVideoOverlay(
         video: video,
-        onClose: hide,
+        onClose: () => hide(video.id),
         // Permet de forcer rebuild si nécessaire
         requestRebuild: () => entry.markNeedsBuild(),
       ),
     );
 
-    _entry = entry;
+    _entries[video.id] = entry;
     overlay.insert(entry);
   }
 
-  static void hide() {
-    _entry?.remove();
-    _entry = null;
+  static void hide(String id) {
+    _entries[id]?.remove();
+    _entries.remove(id);
+  }
+
+  static void hideAll() {
+    for (final e in _entries.values) {
+      e.remove();
+    }
+    _entries.clear();
   }
 }
 
@@ -67,6 +78,8 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Singl
   bool _muted = true;
   bool _showControls = true;
   Timer? _hideTimer;
+
+  static const MethodChannel _pipChannel = MethodChannel('app.ecoplates/pip');
 
   @override
   void didChangeDependencies() {
@@ -170,17 +183,38 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Singl
     final size = MediaQuery.of(context).size;
     const margin = 16.0;
 
-    final corners = <Offset>[
-      Offset(margin, margin), // top-left
-      Offset(size.width - _currentWidth - margin, margin), // top-right
-      Offset(margin, size.height - _currentHeight - margin), // bottom-left
-      Offset(size.width - _currentWidth - margin, size.height - _currentHeight - margin), // bottom-right
+    // Hauteur approximative d'une bottom bar pour "dock" au-dessus
+    const bottomDock = 72.0; // ~56 (nav) + marge
+
+    final candidates = <Offset>[
+      // Coins
+      Offset(margin, margin),
+      Offset(size.width - _currentWidth - margin, margin),
+      Offset(margin, size.height - _currentHeight - margin - bottomDock),
+      Offset(size.width - _currentWidth - margin, size.height - _currentHeight - margin - bottomDock),
+      // Bords (centres)
+      Offset(margin, (size.height - _currentHeight) / 2), // gauche
+      Offset(size.width - _currentWidth - margin, (size.height - _currentHeight) / 2), // droite
+      Offset((size.width - _currentWidth) / 2, margin), // haut
+      Offset((size.width - _currentWidth) / 2, size.height - _currentHeight - margin - bottomDock), // bas docké
     ];
 
-    // Choisir le coin le plus proche
-    Offset best = corners.first;
+    // Conserver dans l'écran
+    Offset clampInBounds(Offset o) {
+      final maxX = size.width - _currentWidth - margin;
+      final maxY = size.height - _currentHeight - margin;
+      return Offset(
+        o.dx.clamp(margin, maxX),
+        o.dy.clamp(margin, maxY),
+      );
+    }
+
+    final clamped = candidates.map(clampInBounds).toList();
+
+    // Choisir la position la plus proche
+    Offset best = clamped.first;
     double bestDist = (best - _position!).distanceSquared;
-    for (final c in corners.skip(1)) {
+    for (final c in clamped.skip(1)) {
       final d = (c - _position!).distanceSquared;
       if (d < bestDist) {
         best = c;
@@ -204,6 +238,21 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Singl
         _position!.dy.clamp(margin, maxY),
       );
     });
+  }
+
+  Future<void> _enterSystemPiP() async {
+    if (kIsWeb) return;
+    if (Platform.isAndroid) {
+      try {
+        await _pipChannel.invokeMethod('enterPictureInPicture', {
+          'width': 16,
+          'height': 9,
+        });
+      } catch (e) {
+        debugPrint('PiP Android non disponible: $e');
+      }
+    }
+    // iOS: non pris en charge ici (requiert AVPictureInPictureController via plugin natif)
   }
 
   @override
@@ -293,6 +342,15 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Singl
                             padding: EdgeInsets.zero,
                           ),
                           const SizedBox(width: 4),
+                          if (!kIsWeb && Platform.isAndroid)
+                            IconButton(
+                              tooltip: 'Picture‑in‑Picture',
+                              onPressed: _enterSystemPiP,
+                              icon: const Icon(Icons.picture_in_picture_alt_rounded, color: Colors.white),
+                              iconSize: 18,
+                              padding: EdgeInsets.zero,
+                            ),
+                          if (!kIsWeb && Platform.isAndroid) const SizedBox(width: 4),
                           IconButton(
                             tooltip: _muted ? 'Activer le son' : 'Couper le son',
                             onPressed: _toggleMute,

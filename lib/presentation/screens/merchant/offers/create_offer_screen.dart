@@ -783,10 +783,10 @@ class _CreateOfferScreenState extends ConsumerState<CreateOfferScreen> {
         type: _selectedType,
         category: _selectedCategory,
         originalPrice: _isFree
-            ? 0
+            ? 0.0
             : double.parse(_originalPriceController.text),
         discountedPrice: _isFree
-            ? 0
+            ? 0.0
             : double.parse(_discountedPriceController.text),
         quantity: int.parse(_quantityController.text),
         pickupStartTime: _pickupStartTime!,

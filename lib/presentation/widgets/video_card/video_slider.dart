@@ -29,15 +29,24 @@ class VideoSlider extends StatefulWidget {
 class _VideoSliderState extends State<VideoSlider>
     with SingleTickerProviderStateMixin {
   late final ScrollController _scrollController = ScrollController()..addListener(_onScroll);
-  late final AnimationController _animationController = AnimationController(duration: const Duration(milliseconds: VideoSliderConstants.sliderAnimationDuration), vsync: this);
+  AnimationController? _animationController;
   double _scrollOffset = 0;
   double _viewportWidth = 0;
   int _activeIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: VideoSliderConstants.sliderAnimationDuration), 
+      vsync: this
+    );
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
-    _animationController.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// Enumération des onglets disponibles pour l'interface marchand
 enum MerchantTab {
   dashboard,
-  stock,
+  offers,
   sales,
   store,
   analytics,
@@ -15,8 +15,8 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return 'Tableau de bord';
-      case MerchantTab.stock:
-        return 'Stock';
+      case MerchantTab.offers:
+        return 'Offres';
       case MerchantTab.sales:
         return 'Ventes';
       case MerchantTab.store:
@@ -33,8 +33,8 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return 'Dashboard';
-      case MerchantTab.stock:
-        return 'Stock';
+      case MerchantTab.offers:
+        return 'Offres';
       case MerchantTab.sales:
         return 'Ventes';
       case MerchantTab.store:
@@ -51,8 +51,8 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return '📊';
-      case MerchantTab.stock:
-        return '📦';
+      case MerchantTab.offers:
+        return '🥗';
       case MerchantTab.sales:
         return '💰';
       case MerchantTab.store:
@@ -69,8 +69,8 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return Icons.dashboard;
-      case MerchantTab.stock:
-        return Icons.inventory_2;
+      case MerchantTab.offers:
+        return Icons.local_offer;
       case MerchantTab.sales:
         return Icons.point_of_sale;
       case MerchantTab.store:
@@ -87,8 +87,8 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return Icons.dashboard;
-      case MerchantTab.stock:
-        return Icons.inventory_2;
+      case MerchantTab.offers:
+        return Icons.local_offer;
       case MerchantTab.sales:
         return Icons.point_of_sale;
       case MerchantTab.store:
@@ -105,8 +105,8 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return CupertinoIcons.chart_bar_square;
-      case MerchantTab.stock:
-        return CupertinoIcons.cube_box;
+      case MerchantTab.offers:
+        return CupertinoIcons.tag;
       case MerchantTab.sales:
         return CupertinoIcons.money_dollar_circle;
       case MerchantTab.store:
@@ -123,8 +123,8 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return CupertinoIcons.chart_bar_square_fill;
-      case MerchantTab.stock:
-        return CupertinoIcons.cube_box_fill;
+      case MerchantTab.offers:
+        return CupertinoIcons.tag_fill;
       case MerchantTab.sales:
         return CupertinoIcons.money_dollar_circle_fill;
       case MerchantTab.store:
@@ -141,8 +141,8 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return '/merchant/dashboard';
-      case MerchantTab.stock:
-        return '/merchant/stock';
+      case MerchantTab.offers:
+        return '/merchant/offers';
       case MerchantTab.sales:
         return '/merchant/sales';
       case MerchantTab.store:

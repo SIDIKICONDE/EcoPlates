@@ -6,6 +6,7 @@ import '../../../presentation/screens/merchant/management/reservations_screen.da
 import '../../../presentation/screens/merchant_detail_screen.dart';
 import '../../../presentation/screens/merchant_profile_screen.dart';
 import '../../../presentation/screens/merchant/management/offer_detail_screen.dart';
+import '../../../presentation/screens/recommended_offers_screen.dart';
 import '../../../core/widgets/adaptive_navigation.dart';
 import 'route_constants.dart';
 
@@ -42,6 +43,15 @@ class ConsumerRoutes {
 
   /// Routes consommateur sans navigation par onglets
   static List<RouteBase> get standaloneRoutes => [
+    // Page "Recommandé pour vous"
+    GoRoute(
+      path: RouteConstants.recommended,
+      name: RouteConstants.recommendedName,
+      pageBuilder: (context, state) => const MaterialPage(
+        child: RecommendedOffersScreen(),
+      ),
+    ),
+
     // Page de détail d'un marchand
     GoRoute(
       path: RouteConstants.merchantDetail,

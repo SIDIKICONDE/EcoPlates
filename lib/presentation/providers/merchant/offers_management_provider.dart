@@ -5,11 +5,7 @@ import '../../../domain/usecases/merchant/manage_offers_usecase.dart';
 import '../../../data/repositories/merchant_repository.dart';
 import '../../../data/repositories/food_offer_repository.dart';
 import '../../../core/error/failures.dart';
-
-// Repository providers (à implémenter dans les repos concrets)
-final merchantRepositoryProvider = Provider<MerchantRepository>((ref) {
-  throw UnimplementedError('MerchantRepository provider needs implementation');
-});
+import '../../../core/providers/repository_providers.dart';
 
 /// Provider pour le use case de gestion des offres
 final manageOffersUseCaseProvider = Provider<ManageOffersUseCase>((ref) {

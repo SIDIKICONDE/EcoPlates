@@ -5,6 +5,8 @@ import 'package:injectable/injectable.dart';
 import '../../core/error/failures.dart';
 import '../../core/network/api_client.dart';
 import '../../domain/entities/food_offer.dart';
+import '../../domain/entities/offer_requests.dart';
+import '../../domain/entities/offer_stats.dart';
 import '../../domain/repositories/food_offer_repository.dart';
 import '../models/food_offer_model.dart';
 
@@ -525,4 +527,274 @@ class FoodOfferRepositoryImpl implements FoodOfferRepository {
 
     return errorMessages.join(', ');
   }
+
+  @override
+  Future<Either<Failure, FoodOffer>> createOfferFromRequest({
+    required String merchantId,
+    required CreateOfferRequest request,
+  }) async {
+    try {
+      final data = {
+        'merchantId': merchantId,
+        'title': request.title,
+        'description': request.description,
+        'type': request.type.name,
+        'category': request.category.name,
+        'originalPrice': request.originalPrice,
+        'discountedPrice': request.discountedPrice,
+        'quantity': request.quantity,
+        'allergens': request.allergens,
+        'pickupStartTime': request.pickupStartTime.toIso8601String(),
+        'pickupEndTime': request.pickupEndTime.toIso8601String(),
+        'images': request.images,
+        'isVegetarian': request.isVegetarian,
+        'isVegan': request.isVegan,
+        'isHalal': request.isHalal,
+      };
+
+      final response = await _apiClient.post('/offers', data: data);
+
+      if (response.statusCode == 201) {
+        final createdOffer = FoodOfferModel.fromJson(response.data['data']);
+        return Right(createdOffer.toEntity());
+      }
+
+      return Left(ServerFailure('Erreur lors de la création de l\'offre'));
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure('Erreur inattendue: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, FoodOffer>> updateOfferFromRequest({
+    required String offerId,
+    required UpdateOfferRequest request,
+  }) async {
+    try {
+      final data = <String, dynamic>{};
+      if (request.title != null) data['title'] = request.title;
+      if (request.description != null) data['description'] = request.description;
+      if (request.type != null) data['type'] = request.type!.name;
+      if (request.category != null) data['category'] = request.category!.name;
+      if (request.originalPrice != null) data['originalPrice'] = request.originalPrice;
+      if (request.discountedPrice != null) data['discountedPrice'] = request.discountedPrice;
+      if (request.quantity != null) data['quantity'] = request.quantity;
+      if (request.allergens != null) data['allergens'] = request.allergens;
+      if (request.pickupStartTime != null) data['pickupStartTime'] = request.pickupStartTime!.toIso8601String();
+      if (request.pickupEndTime != null) data['pickupEndTime'] = request.pickupEndTime!.toIso8601String();
+      if (request.images != null) data['images'] = request.images;
+      if (request.isVegetarian != null) data['isVegetarian'] = request.isVegetarian;
+      if (request.isVegan != null) data['isVegan'] = request.isVegan;
+      if (request.isHalal != null) data['isHalal'] = request.isHalal;
+      if (request.status != null) data['status'] = request.status!.name;
+
+      final response = await _apiClient.put('/offers/$offerId', data: data);
+
+      if (response.statusCode == 200) {
+        final updatedOffer = FoodOfferModel.fromJson(response.data['data']);
+        return Right(updatedOffer.toEntity());
+      }
+
+      return Left(ServerFailure('Erreur lors de la mise à jour de l\'offre'));
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure('Erreur inattendue: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteOfferWithReason({
+    required String offerId,
+    String? reason,
+  }) async {
+    try {
+      final data = reason != null ? {'reason': reason} : null;
+      final response = await _apiClient.delete('/offers/$offerId', data: data);
+
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        return const Right(null);
+      }
+
+      return Left(ServerFailure('Erreur lors de la suppression de l\'offre'));
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure('Erreur inattendue: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<FoodOffer>>> getMerchantOffersAdvanced({
+    required String merchantId,
+    OfferStatus? status,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? limit,
+    int? offset,
+  }) async {
+    try {
+      final queryParams = <String, dynamic>{
+        'merchantId': merchantId,
+        if (status != null) 'status': status.name,
+        if (startDate != null) 'startDate': startDate.toIso8601String(),
+        if (endDate != null) 'endDate': endDate.toIso8601String(),
+        if (limit != null) 'limit': limit,
+        if (offset != null) 'offset': offset,
+      };
+
+      final response = await _apiClient.get(
+        '/offers',
+        queryParameters: queryParams,
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> offersData = response.data['data'];
+        final offers = offersData
+            .map((json) => FoodOfferModel.fromJson(json).toEntity())
+            .toList();
+        return Right(offers);
+      }
+
+      return Left(ServerFailure('Erreur lors de la récupération des offres'));
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure('Erreur inattendue: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, OfferStats>> getOfferStats(String offerId) async {
+    try {
+      final response = await _apiClient.get('/offers/$offerId/stats');
+
+      if (response.statusCode == 200) {
+        final statsData = response.data['data'];
+        final stats = OfferStats(
+          views: statsData['views'] ?? 0,
+          reservations: statsData['reservations'] ?? 0,
+          completedPickups: statsData['completedPickups'] ?? 0,
+          conversionRate: (statsData['conversionRate'] ?? 0.0).toDouble(),
+          averageRating: (statsData['averageRating'] ?? 0.0).toDouble(),
+          totalReviews: statsData['totalReviews'] ?? 0,
+          revenue: (statsData['revenue'] ?? 0.0).toDouble(),
+          co2Saved: (statsData['co2Saved'] ?? 0.0).toDouble(),
+          lastUpdated: DateTime.tryParse(statsData['lastUpdated'] ?? '') ?? DateTime.now(),
+        );
+        return Right(stats);
+      }
+
+      return Left(ServerFailure('Erreur lors de la récupération des statistiques'));
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure('Erreur inattendue: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, FoodOffer>> updateOfferStatus({
+    required String offerId,
+    required OfferStatus status,
+  }) async {
+    try {
+      final data = {'status': status.name};
+      final response = await _apiClient.patch('/offers/$offerId/status', data: data);
+
+      if (response.statusCode == 200) {
+        final updatedOffer = FoodOfferModel.fromJson(response.data['data']);
+        return Right(updatedOffer.toEntity());
+      }
+
+      return Left(ServerFailure('Erreur lors de la mise à jour du statut'));
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure('Erreur inattendue: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<bool> hasActiveReservations(String offerId) async {
+    try {
+      final response = await _apiClient.get('/offers/$offerId/reservations/active');
+
+      if (response.statusCode == 200) {
+        return response.data['hasActiveReservations'] ?? false;
+      }
+
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<int> getActiveReservationsCount(String offerId) async {
+    try {
+      final response = await _apiClient.get('/offers/$offerId/reservations/count');
+
+      if (response.statusCode == 200) {
+        return response.data['count'] ?? 0;
+      }
+
+      return 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  @override
+  Future<Either<Failure, FoodOffer>> updateOfferStockQuantity({
+    required String offerId,
+    required int quantity,
+  }) async {
+    try {
+      final data = {
+        'availableQuantity': quantity,
+        'updatedAt': DateTime.now().toIso8601String(),
+      };
+
+      // Auto-désactiver si stock épuisé
+      if (quantity == 0) {
+        data['status'] = OfferStatus.cancelled.name;
+      }
+
+      final response = await _apiClient.patch('/offers/$offerId/stock', data: data);
+
+      if (response.statusCode == 200) {
+        final updatedOffer = FoodOfferModel.fromJson(response.data['data']);
+        return Right(updatedOffer.toEntity());
+      }
+
+      return Left(ServerFailure('Erreur lors de la mise à jour du stock'));
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure('Erreur inattendue: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, FoodOffer>> getOffer(String id) => getOfferById(id);
+
+  @override
+  Future<Either<Failure, List<FoodOffer>>> getMerchantOffers({
+    required String merchantId,
+    OfferStatus? status,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? limit,
+    int? offset,
+  }) => getMerchantOffersAdvanced(
+    merchantId: merchantId,
+    status: status,
+    startDate: startDate,
+    endDate: endDate,
+    limit: limit,
+    offset: offset,
+  );
 }

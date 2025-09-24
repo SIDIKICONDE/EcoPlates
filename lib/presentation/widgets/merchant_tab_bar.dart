@@ -85,8 +85,8 @@ class MerchantTabBar extends ConsumerWidget {
     // TODO: Implémenter la logique pour afficher les badges
     // Par exemple : nouvelles commandes, stock faible, etc.
     switch (tab) {
-      case MerchantTab.stock:
-        return false; // Retourner true si stock faible
+      case MerchantTab.offers:
+        return false; // Retourner true si offres expirées
       case MerchantTab.sales:
         return false; // Retourner true si nouvelles ventes
       default:
@@ -98,8 +98,8 @@ class MerchantTabBar extends ConsumerWidget {
   String _getBadgeCount(MerchantTab tab) {
     // TODO: Implémenter la logique pour obtenir le compte
     switch (tab) {
-      case MerchantTab.stock:
-        return '2'; // Nombre d'articles en rupture
+      case MerchantTab.offers:
+        return '2'; // Nombre d'offres expirées
       case MerchantTab.sales:
         return '5'; // Nombre de nouvelles ventes
       default:

@@ -322,7 +322,7 @@ class AdaptiveTextField extends StatelessWidget {
 class AdaptiveIconButton extends StatelessWidget {
   final Widget icon;
   final IconData? cupertinoIcon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String? tooltip;
   final Color? color;
   

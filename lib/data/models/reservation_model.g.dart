@@ -24,8 +24,7 @@ ReservationModel _$ReservationModelFromJson(Map<String, dynamic> json) =>
       paymentInfo: json['paymentInfo'] == null
           ? null
           : PaymentInfoModel.fromJson(
-              json['paymentInfo'] as Map<String, dynamic>,
-            ),
+              json['paymentInfo'] as Map<String, dynamic>),
       quantity: (json['quantity'] as num?)?.toInt() ?? 1,
     );
 

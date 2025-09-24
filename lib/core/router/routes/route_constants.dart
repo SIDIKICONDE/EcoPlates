@@ -10,10 +10,12 @@ class RouteConstants {
   // Routes consommateur
   static const String profile = '/profile';
   static const String reservations = '/reservations';
+  static const String brands = '/brands';
+  static const String recommended = '/recommended';
   
   // Routes marchand - Navigation principale
   static const String merchantDashboard = '/merchant/dashboard';
-  static const String merchantStock = '/merchant/stock';
+  static const String merchantOffers = '/merchant/offers';
   static const String merchantSales = '/merchant/sales';
   static const String merchantStore = '/merchant/store';
   static const String merchantAnalytics = '/merchant/analytics';
@@ -22,7 +24,7 @@ class RouteConstants {
   // Routes marchand - Fonctionnalités
   static const String merchantScan = '/merchant/scan';
   static const String merchantScanReturn = '/merchant/scan-return';
-  static const String merchantOffers = '/merchant/offers';
+  static const String merchantOffersManagement = '/merchant/offers-management';
   static const String merchantCreateOffer = '/merchant/offers/create';
   static const String merchantEditOffer = '/merchant/offers/:id/edit';
   static const String merchantReservations = '/merchant/reservations';
@@ -40,15 +42,17 @@ class RouteConstants {
   static const String mainHomeName = 'main-home';
   static const String profileName = 'profile';
   static const String reservationsName = 'reservations';
+  static const String brandsName = 'brands';
+  static const String recommendedName = 'recommended';
   static const String merchantDashboardName = 'merchant-dashboard';
-  static const String merchantStockName = 'merchant-stock';
+  static const String merchantOffersName = 'merchant-offers';
   static const String merchantSalesName = 'merchant-sales';
   static const String merchantStoreName = 'merchant-store';
   static const String merchantAnalyticsName = 'merchant-analytics';
   static const String merchantProfileName = 'merchant-profile-settings';
   static const String merchantScanName = 'merchant-scan';
   static const String merchantScanReturnName = 'merchant-scan-return';
-  static const String merchantOffersName = 'merchant-offers';
+  static const String merchantOffersManagementName = 'merchant-offers-management';
   static const String merchantCreateOfferName = 'merchant-create-offer';
   static const String merchantEditOfferName = 'merchant-edit-offer';
   static const String merchantReservationsName = 'merchant-reservations';

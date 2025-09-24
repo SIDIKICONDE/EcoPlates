@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../presentation/screens/merchant/dashboard_screen.dart';
-import '../../../presentation/screens/merchant/stock_screen.dart';
+import '../../../presentation/screens/merchant/offers/offers_list_screen.dart';
 import '../../../presentation/screens/merchant/sales_screen.dart';
 import '../../../presentation/screens/merchant/profile_screen.dart' as merchant_profile;
 import '../../../presentation/screens/merchant/analytics/analytics_dashboard_screen.dart';
 import '../../../presentation/screens/merchant/management/reservations_screen.dart';
-import '../../../presentation/screens/merchant/offers/offers_list_screen.dart';
 import '../../../presentation/screens/merchant/offers/create_offer_screen.dart';
 import '../../../presentation/screens/merchant/offers/edit_offer_screen.dart';
 import '../../../presentation/screens/scan_screen.dart';
@@ -37,10 +36,10 @@ class MerchantRoutes {
           },
         ),
         GoRoute(
-          path: RouteConstants.merchantStock,
-          name: RouteConstants.merchantStockName,
+          path: RouteConstants.merchantOffers,
+          name: RouteConstants.merchantOffersName,
           pageBuilder: (context, state) {
-            return const MaterialPage(child: MerchantStockScreen());
+            return const MaterialPage(child: OffersListScreen());
           },
         ),
         GoRoute(
@@ -95,8 +94,8 @@ class MerchantRoutes {
     
     // Gestion des offres
     GoRoute(
-      path: RouteConstants.merchantOffers,
-      name: RouteConstants.merchantOffersName,
+      path: RouteConstants.merchantOffersManagement,
+      name: RouteConstants.merchantOffersManagementName,
       pageBuilder: (context, state) {
         return const MaterialPage(child: OffersListScreen());
       },

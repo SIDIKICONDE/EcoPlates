@@ -4,12 +4,13 @@ import '../../../domain/entities/analytics.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../../domain/usecases/merchant/merchant_analytics_usecase.dart';
 import '../../../data/repositories/analytics_repository.dart';
+import '../../../data/repositories/analytics_repository_fake.dart';
 import '../../../core/error/failures.dart';
 import 'offers_management_provider.dart';
 
 /// Provider pour le repository analytics
 final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
-  throw UnimplementedError('AnalyticsRepository provider needs implementation');
+  return FakeAnalyticsRepository();
 });
 
 /// Provider pour le use case analytics

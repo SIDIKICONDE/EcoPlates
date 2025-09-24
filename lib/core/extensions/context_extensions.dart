@@ -8,6 +8,7 @@ extension ContextExtensions on BuildContext {
 
   /// Affiche une erreur sous forme de SnackBar
   void showError(Failure failure) {
+    if (this is! Element || !(this as Element).mounted) return;
     final messenger = ScaffoldMessenger.of(this);
 
     messenger.showSnackBar(
@@ -42,6 +43,7 @@ extension ContextExtensions on BuildContext {
 
   /// Affiche un message de succès
   void showSuccess(String message) {
+    if (this is! Element || !(this as Element).mounted) return;
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Row(
@@ -66,6 +68,7 @@ extension ContextExtensions on BuildContext {
 
   /// Affiche un message d'information
   void showInfo(String message) {
+    if (this is! Element || !(this as Element).mounted) return;
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Row(
@@ -86,6 +89,7 @@ extension ContextExtensions on BuildContext {
 
   /// Affiche un avertissement
   void showWarning(String message) {
+    if (this is! Element || !(this as Element).mounted) return;
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Row(
@@ -112,6 +116,7 @@ extension ContextExtensions on BuildContext {
     String? title,
     VoidCallback? onRetry,
   }) async {
+    if (this is! Element || !(this as Element).mounted) return;
     return showDialog<void>(
       context: this,
       barrierDismissible: false,
@@ -150,6 +155,7 @@ extension ContextExtensions on BuildContext {
     String cancelText = 'Annuler',
     bool isDestructive = false,
   }) async {
+    if (this is! Element || !(this as Element).mounted) return null;
     return showDialog<bool>(
       context: this,
       builder: (context) => AlertDialog(
@@ -174,6 +180,7 @@ extension ContextExtensions on BuildContext {
 
   /// Affiche un loading dialog
   void showLoadingDialog([String? message]) {
+    if (this is! Element || !(this as Element).mounted) return;
     showDialog<void>(
       context: this,
       barrierDismissible: false,
@@ -191,6 +198,7 @@ extension ContextExtensions on BuildContext {
 
   /// Ferme le loading dialog
   void hideLoadingDialog() {
+    if (this is! Element || !(this as Element).mounted) return;
     Navigator.of(this).pop();
   }
 

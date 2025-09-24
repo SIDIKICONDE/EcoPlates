@@ -6,33 +6,35 @@ part of 'food_offer_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FoodOfferModel _$FoodOfferModelFromJson(
-  Map<String, dynamic> json,
-) => FoodOfferModel(
-  id: json['id'] as String,
-  merchantId: json['merchantId'] as String,
-  merchantName: json['merchantName'] as String,
-  title: json['title'] as String,
-  description: json['description'] as String,
-  images: (json['images'] as List<dynamic>).map((e) => e as String).toList(),
-  type: $enumDecode(_$OfferTypeEnumMap, json['type']),
-  category: $enumDecode(_$FoodCategoryEnumMap, json['category']),
-  originalPrice: (json['originalPrice'] as num).toDouble(),
-  discountedPrice: (json['discountedPrice'] as num).toDouble(),
-  quantity: (json['quantity'] as num).toInt(),
-  pickupStartTime: DateTime.parse(json['pickupStartTime'] as String),
-  pickupEndTime: DateTime.parse(json['pickupEndTime'] as String),
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  status: $enumDecode(_$OfferStatusEnumMap, json['status']),
-  location: LocationModel.fromJson(json['location'] as Map<String, dynamic>),
-  allergens:
-      (json['allergens'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const [],
-  isVegetarian: json['isVegetarian'] as bool? ?? false,
-  isVegan: json['isVegan'] as bool? ?? false,
-  isHalal: json['isHalal'] as bool? ?? false,
-  co2Saved: (json['co2Saved'] as num?)?.toInt() ?? 500,
-);
+FoodOfferModel _$FoodOfferModelFromJson(Map<String, dynamic> json) =>
+    FoodOfferModel(
+      id: json['id'] as String,
+      merchantId: json['merchantId'] as String,
+      merchantName: json['merchantName'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      images:
+          (json['images'] as List<dynamic>).map((e) => e as String).toList(),
+      type: $enumDecode(_$OfferTypeEnumMap, json['type']),
+      category: $enumDecode(_$FoodCategoryEnumMap, json['category']),
+      originalPrice: (json['originalPrice'] as num).toDouble(),
+      discountedPrice: (json['discountedPrice'] as num).toDouble(),
+      quantity: (json['quantity'] as num).toInt(),
+      pickupStartTime: DateTime.parse(json['pickupStartTime'] as String),
+      pickupEndTime: DateTime.parse(json['pickupEndTime'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      status: $enumDecode(_$OfferStatusEnumMap, json['status']),
+      location:
+          LocationModel.fromJson(json['location'] as Map<String, dynamic>),
+      allergens: (json['allergens'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      isVegetarian: json['isVegetarian'] as bool? ?? false,
+      isVegan: json['isVegan'] as bool? ?? false,
+      isHalal: json['isHalal'] as bool? ?? false,
+      co2Saved: (json['co2Saved'] as num?)?.toInt() ?? 500,
+    );
 
 Map<String, dynamic> _$FoodOfferModelToJson(FoodOfferModel instance) =>
     <String, dynamic>{

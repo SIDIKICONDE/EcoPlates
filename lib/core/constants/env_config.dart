@@ -8,6 +8,12 @@ class EnvConfig {
   static String get environment => dotenv.env['ENVIRONMENT'] ?? 'development';
   static String get apiBaseUrl =>
       dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000/api/v1';
+  static bool get useMockData => isDevelopment && !isBackendAvailable();
+  
+  static bool isBackendAvailable() {
+    // In development, we'll use mock data instead of requiring a backend
+    return false;
+  }
   static int get apiTimeout =>
       int.tryParse(dotenv.env['API_TIMEOUT'] ?? '30000') ?? 30000;
 

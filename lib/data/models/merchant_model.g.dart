@@ -15,24 +15,20 @@ MerchantModel _$MerchantModelFromJson(Map<String, dynamic> json) =>
       type: $enumDecode(_$MerchantTypeEnumMap, json['type']),
       status: $enumDecode(_$MerchantStatusEnumMap, json['status']),
       businessInfo: BusinessInfoModel.fromJson(
-        json['businessInfo'] as Map<String, dynamic>,
-      ),
+          json['businessInfo'] as Map<String, dynamic>),
       address: AddressModel.fromJson(json['address'] as Map<String, dynamic>),
-      teamMemberIds:
-          (json['teamMemberIds'] as List<dynamic>?)
+      teamMemberIds: (json['teamMemberIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
       settings: MerchantSettingsModel.fromJson(
-        json['settings'] as Map<String, dynamic>,
-      ),
+          json['settings'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),
       verifiedAt: json['verifiedAt'] == null
           ? null
           : DateTime.parse(json['verifiedAt'] as String),
       stats: MerchantStatsModel.fromJson(json['stats'] as Map<String, dynamic>),
-      certifications:
-          (json['certifications'] as List<dynamic>?)
+      certifications: (json['certifications'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -84,16 +80,13 @@ BusinessInfoModel _$BusinessInfoModelFromJson(Map<String, dynamic> json) =>
       vatNumber: json['vatNumber'] as String,
       website: json['website'] as String?,
       description: json['description'] as String?,
-      specialties:
-          (json['specialties'] as List<dynamic>?)
+      specialties: (json['specialties'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
       openingHours: OpeningHoursModel.fromJson(
-        json['openingHours'] as Map<String, dynamic>,
-      ),
-      paymentMethods:
-          (json['paymentMethods'] as List<dynamic>?)
+          json['openingHours'] as Map<String, dynamic>),
+      paymentMethods: (json['paymentMethods'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -116,8 +109,7 @@ OpeningHoursModel _$OpeningHoursModelFromJson(Map<String, dynamic> json) =>
         (k, e) =>
             MapEntry(k, DayHoursModel.fromJson(e as Map<String, dynamic>)),
       ),
-      holidays:
-          (json['holidays'] as List<dynamic>?)
+      holidays: (json['holidays'] as List<dynamic>?)
               ?.map((e) => HolidayModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -148,10 +140,10 @@ Map<String, dynamic> _$DayHoursModelToJson(DayHoursModel instance) =>
     };
 
 HolidayModel _$HolidayModelFromJson(Map<String, dynamic> json) => HolidayModel(
-  date: DateTime.parse(json['date'] as String),
-  name: json['name'] as String,
-  isClosed: json['isClosed'] as bool,
-);
+      date: DateTime.parse(json['date'] as String),
+      name: json['name'] as String,
+      isClosed: json['isClosed'] as bool,
+    );
 
 Map<String, dynamic> _$HolidayModelToJson(HolidayModel instance) =>
     <String, dynamic>{
@@ -161,14 +153,14 @@ Map<String, dynamic> _$HolidayModelToJson(HolidayModel instance) =>
     };
 
 AddressModel _$AddressModelFromJson(Map<String, dynamic> json) => AddressModel(
-  street: json['street'] as String,
-  city: json['city'] as String,
-  postalCode: json['postalCode'] as String,
-  country: json['country'] as String,
-  latitude: (json['latitude'] as num).toDouble(),
-  longitude: (json['longitude'] as num).toDouble(),
-  additionalInfo: json['additionalInfo'] as String?,
-);
+      street: json['street'] as String,
+      city: json['city'] as String,
+      postalCode: json['postalCode'] as String,
+      country: json['country'] as String,
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      additionalInfo: json['additionalInfo'] as String?,
+    );
 
 Map<String, dynamic> _$AddressModelToJson(AddressModel instance) =>
     <String, dynamic>{
@@ -182,36 +174,36 @@ Map<String, dynamic> _$AddressModelToJson(AddressModel instance) =>
     };
 
 MerchantSettingsModel _$MerchantSettingsModelFromJson(
-  Map<String, dynamic> json,
-) => MerchantSettingsModel(
-  maxActiveOffers: (json['maxActiveOffers'] as num?)?.toInt() ?? 10,
-  maxDailyOffers: (json['maxDailyOffers'] as num?)?.toInt() ?? 20,
-  autoAcceptReservations: json['autoAcceptReservations'] as bool? ?? true,
-  notifyOnReservation: json['notifyOnReservation'] as bool? ?? true,
-  notifyOnLowStock: json['notifyOnLowStock'] as bool? ?? true,
-  lowStockThreshold: (json['lowStockThreshold'] as num?)?.toInt() ?? 5,
-  enabledChannels:
-      (json['enabledChannels'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList() ??
-      const ['push', 'email'],
-  requireConfirmationCode: json['requireConfirmationCode'] as bool? ?? true,
-  defaultPickupDuration: (json['defaultPickupDuration'] as num?)?.toInt() ?? 30,
-);
+        Map<String, dynamic> json) =>
+    MerchantSettingsModel(
+      maxActiveOffers: (json['maxActiveOffers'] as num?)?.toInt() ?? 10,
+      maxDailyOffers: (json['maxDailyOffers'] as num?)?.toInt() ?? 20,
+      autoAcceptReservations: json['autoAcceptReservations'] as bool? ?? true,
+      notifyOnReservation: json['notifyOnReservation'] as bool? ?? true,
+      notifyOnLowStock: json['notifyOnLowStock'] as bool? ?? true,
+      lowStockThreshold: (json['lowStockThreshold'] as num?)?.toInt() ?? 5,
+      enabledChannels: (json['enabledChannels'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const ['push', 'email'],
+      requireConfirmationCode: json['requireConfirmationCode'] as bool? ?? true,
+      defaultPickupDuration:
+          (json['defaultPickupDuration'] as num?)?.toInt() ?? 30,
+    );
 
 Map<String, dynamic> _$MerchantSettingsModelToJson(
-  MerchantSettingsModel instance,
-) => <String, dynamic>{
-  'maxActiveOffers': instance.maxActiveOffers,
-  'maxDailyOffers': instance.maxDailyOffers,
-  'autoAcceptReservations': instance.autoAcceptReservations,
-  'notifyOnReservation': instance.notifyOnReservation,
-  'notifyOnLowStock': instance.notifyOnLowStock,
-  'lowStockThreshold': instance.lowStockThreshold,
-  'enabledChannels': instance.enabledChannels,
-  'requireConfirmationCode': instance.requireConfirmationCode,
-  'defaultPickupDuration': instance.defaultPickupDuration,
-};
+        MerchantSettingsModel instance) =>
+    <String, dynamic>{
+      'maxActiveOffers': instance.maxActiveOffers,
+      'maxDailyOffers': instance.maxDailyOffers,
+      'autoAcceptReservations': instance.autoAcceptReservations,
+      'notifyOnReservation': instance.notifyOnReservation,
+      'notifyOnLowStock': instance.notifyOnLowStock,
+      'lowStockThreshold': instance.lowStockThreshold,
+      'enabledChannels': instance.enabledChannels,
+      'requireConfirmationCode': instance.requireConfirmationCode,
+      'defaultPickupDuration': instance.defaultPickupDuration,
+    };
 
 MerchantStatsModel _$MerchantStatsModelFromJson(Map<String, dynamic> json) =>
     MerchantStatsModel(
@@ -223,12 +215,9 @@ MerchantStatsModel _$MerchantStatsModelFromJson(Map<String, dynamic> json) =>
       totalCo2Saved: (json['totalCo2Saved'] as num).toDouble(),
       totalMealsSaved: (json['totalMealsSaved'] as num).toInt(),
       averageRating: (json['averageRating'] as num).toDouble(),
-      dailyStats:
-          (json['dailyStats'] as Map<String, dynamic>?)?.map(
+      dailyStats: (json['dailyStats'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(
-              k,
-              DailyStatsModel.fromJson(e as Map<String, dynamic>),
-            ),
+                k, DailyStatsModel.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
     );

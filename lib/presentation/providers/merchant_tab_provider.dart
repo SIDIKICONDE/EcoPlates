@@ -3,7 +3,7 @@ import '../../core/constants/merchant_tabs.dart';
 
 /// Provider pour l'onglet actuellement sélectionné dans la navigation marchand
 final merchantTabProvider = StateProvider<MerchantTab>((ref) {
-  return MerchantTab.dashboard;
+  return MerchantTab.stock;
 });
 
 /// Provider pour l'index de l'onglet actuellement sélectionné
@@ -14,7 +14,7 @@ final merchantTabIndexProvider = Provider<int>((ref) {
 
 /// Notifier pour gérer les changements d'onglets avec logique métier
 class MerchantTabNotifier extends StateNotifier<MerchantTab> {
-  MerchantTabNotifier() : super(MerchantTab.dashboard);
+  MerchantTabNotifier() : super(MerchantTab.stock);
 
   /// Change l'onglet actuel
   void selectTab(MerchantTab tab) {

@@ -6,5 +6,4 @@ library;
 
 export 'route_constants.dart';
 export 'public_routes.dart';
-export 'merchant_routes.dart';
-export 'consumer_routes.dart';
+

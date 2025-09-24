@@ -1,30 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-/// Enumération des onglets disponibles pour l'interface marchand
+/// Énumération des onglets disponibles pour l'interface marchand
 enum MerchantTab {
   dashboard,
-  offers,
+  stock,
   sales,
-  store,
   analytics,
-  profile;
+  home;
 
   /// Label localisé de l'onglet
   String get label {
     switch (this) {
       case MerchantTab.dashboard:
         return 'Tableau de bord';
-      case MerchantTab.offers:
-        return 'Offres';
+      case MerchantTab.stock:
+        return 'Stock';
       case MerchantTab.sales:
         return 'Ventes';
-      case MerchantTab.store:
-        return 'Boutique';
       case MerchantTab.analytics:
         return 'Analytics';
-      case MerchantTab.profile:
-        return 'Profil';
+      case MerchantTab.home:
+        return 'Accueil';
     }
   }
 
@@ -32,17 +29,15 @@ enum MerchantTab {
   String get shortLabel {
     switch (this) {
       case MerchantTab.dashboard:
-        return 'Dashboard';
-      case MerchantTab.offers:
-        return 'Offres';
+        return 'Tableau';
+      case MerchantTab.stock:
+        return 'Stock';
       case MerchantTab.sales:
         return 'Ventes';
-      case MerchantTab.store:
-        return 'Store';
       case MerchantTab.analytics:
-        return 'Analytics';
-      case MerchantTab.profile:
-        return 'Profil';
+        return 'Analyse';
+      case MerchantTab.home:
+        return 'Accueil';
     }
   }
 
@@ -51,16 +46,14 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return '📊';
-      case MerchantTab.offers:
-        return '🥗';
+      case MerchantTab.stock:
+        return '📦';
       case MerchantTab.sales:
         return '💰';
-      case MerchantTab.store:
-        return '🏪';
       case MerchantTab.analytics:
         return '📈';
-      case MerchantTab.profile:
-        return '⚙️';
+      case MerchantTab.home:
+        return '🏠';
     }
   }
 
@@ -68,17 +61,15 @@ enum MerchantTab {
   IconData get icon {
     switch (this) {
       case MerchantTab.dashboard:
-        return Icons.dashboard;
-      case MerchantTab.offers:
-        return Icons.local_offer;
+        return Icons.dashboard_outlined;
+      case MerchantTab.stock:
+        return Icons.inventory_2_outlined;
       case MerchantTab.sales:
-        return Icons.point_of_sale;
-      case MerchantTab.store:
-        return Icons.store;
+        return Icons.point_of_sale_outlined;
       case MerchantTab.analytics:
-        return Icons.analytics;
-      case MerchantTab.profile:
-        return Icons.settings;
+        return Icons.analytics_outlined;
+      case MerchantTab.home:
+        return Icons.home_outlined;
     }
   }
 
@@ -87,16 +78,14 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return Icons.dashboard;
-      case MerchantTab.offers:
-        return Icons.local_offer;
+      case MerchantTab.stock:
+        return Icons.inventory_2;
       case MerchantTab.sales:
         return Icons.point_of_sale;
-      case MerchantTab.store:
-        return Icons.store;
       case MerchantTab.analytics:
         return Icons.analytics;
-      case MerchantTab.profile:
-        return Icons.settings;
+      case MerchantTab.home:
+        return Icons.home;
     }
   }
 
@@ -105,16 +94,14 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return CupertinoIcons.chart_bar_square;
-      case MerchantTab.offers:
-        return CupertinoIcons.tag;
+      case MerchantTab.stock:
+        return CupertinoIcons.cube_box;
       case MerchantTab.sales:
-        return CupertinoIcons.money_dollar_circle;
-      case MerchantTab.store:
-        return CupertinoIcons.shopping_cart;
+        return CupertinoIcons.money_dollar;
       case MerchantTab.analytics:
-        return CupertinoIcons.chart_bar_alt_fill;
-      case MerchantTab.profile:
-        return CupertinoIcons.gear;
+        return CupertinoIcons.chart_pie;
+      case MerchantTab.home:
+        return CupertinoIcons.home;
     }
   }
 
@@ -123,16 +110,14 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return CupertinoIcons.chart_bar_square_fill;
-      case MerchantTab.offers:
-        return CupertinoIcons.tag_fill;
+      case MerchantTab.stock:
+        return CupertinoIcons.cube_box_fill;
       case MerchantTab.sales:
         return CupertinoIcons.money_dollar_circle_fill;
-      case MerchantTab.store:
-        return CupertinoIcons.cart_fill;
       case MerchantTab.analytics:
-        return CupertinoIcons.chart_bar_alt_fill;
-      case MerchantTab.profile:
-        return CupertinoIcons.gear_solid;
+        return CupertinoIcons.chart_pie_fill;
+      case MerchantTab.home:
+        return CupertinoIcons.house_fill;
     }
   }
 
@@ -141,16 +126,14 @@ enum MerchantTab {
     switch (this) {
       case MerchantTab.dashboard:
         return '/merchant/dashboard';
-      case MerchantTab.offers:
-        return '/merchant/offers';
+      case MerchantTab.stock:
+        return '/merchant/stock';
       case MerchantTab.sales:
         return '/merchant/sales';
-      case MerchantTab.store:
-        return '/merchant/store';
       case MerchantTab.analytics:
         return '/merchant/analytics';
-      case MerchantTab.profile:
-        return '/merchant/profile';
+      case MerchantTab.home:
+        return '/merchant/home';
     }
   }
 

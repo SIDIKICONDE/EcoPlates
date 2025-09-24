@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/merchant.dart';
 import '../../core/utils/animation_manager.dart';
 import '../../core/utils/accessibility_helper.dart';
+import '../../domain/entities/merchant.dart';
 import 'restaurant_card_components/card_background.dart';
 import 'restaurant_card_components/discount_badge.dart';
 import 'restaurant_card_components/popularity_badge.dart';

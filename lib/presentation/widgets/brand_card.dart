@@ -21,6 +21,7 @@ class BrandCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: 100, // Hauteur fixe pour la carte
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
@@ -36,11 +37,9 @@ class BrandCard extends StatelessWidget {
         child: Stack(
           children: [
             // Image de fond de nourriture
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
                 child: CachedNetworkImage(
                   imageUrl: _getFoodImageUrl(brand.category),
                   fit: BoxFit.cover,

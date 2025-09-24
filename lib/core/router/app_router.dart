@@ -4,10 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../presentation/providers/app_mode_provider.dart';
 import 'routes/public_routes.dart';
-import 'routes/merchant_routes.dart';
-import 'routes/consumer_routes.dart';
 import 'routes/route_constants.dart';
 import 'error_page.dart';
+import '../../presentation/screens/main_home_screen.dart';
+import '../../presentation/screens/welcome_screen.dart';
+import '../../presentation/screens/all_brands_screen.dart';
+import '../../presentation/widgets/merchant_shell.dart';
+import '../../presentation/widgets/consumer_shell.dart';
 
 /// Provider pour le router de l'application EcoPlates
 /// 
@@ -18,13 +21,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return AppRouter.createRouter(appMode);
 });
 
-/// Configuration centralisée du router de l'application EcoPlates
-/// 
-/// Architecture modulaire respectant les directives EcoPlates :
-/// - Séparation des responsabilités par type d'utilisateur
-/// - Gestion d'erreurs personnalisée
-/// - Navigation adaptative selon le mode d'application
-/// - Code maintenable et extensible
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -52,15 +48,8 @@ class AppRouter {
   /// [mode] : Mode d'application actuel
   /// Retourne le chemin de la route initiale
   static String _getInitialLocation(AppMode mode) {
-    switch (mode) {
-      case AppMode.consumer:
-        // TODO: Implémenter la logique de redirection consommateur
-        return RouteConstants.merchantDashboard;
-      case AppMode.merchant:
-        return RouteConstants.merchantDashboard;
-      case AppMode.onboarding:
-        return RouteConstants.onboarding;
-    }
+    // Commencer par la page de bienvenue
+    return RouteConstants.welcome;
   }
 
   /// Construit toutes les routes de l'application
@@ -69,14 +58,130 @@ class AppRouter {
   /// Retourne la liste complète des routes configurées
   static List<RouteBase> _buildAllRoutes() {
     return [
-      // Routes publiques (priorité haute)
+      // Page de bienvenue (première page)
+      GoRoute(
+        path: RouteConstants.welcome,
+        name: RouteConstants.welcomeName,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: WelcomeScreen());
+        },
+      ),
+      
+      // Page toutes les marques
+      GoRoute(
+        path: RouteConstants.allBrands,
+        name: RouteConstants.allBrandsName,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: AllBrandsScreen());
+        },
+      ),
+      
+      // Routes publiques
       ...PublicRoutes.routes,
       
-      // Routes marchandes (avec et sans navigation)
-      ...MerchantRoutes.allRoutes,
-      
-      // Routes consommateur (avec et sans navigation)
-      ...ConsumerRoutes.allRoutes,
+      // Routes merchant avec shell et tab menu
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return MerchantShell(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: RouteConstants.merchantDashboard,
+            name: RouteConstants.merchantDashboardName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.merchantStock,
+            name: RouteConstants.merchantStockName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.merchantStore,
+            name: RouteConstants.merchantStoreName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.merchantSales,
+            name: RouteConstants.merchantSalesName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.merchantAnalytics,
+            name: RouteConstants.merchantAnalyticsName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: '/merchant/home',
+            name: 'merchant-home',
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+        ],
+      ),
+
+      // Routes consumer avec shell et tab menu
+      ShellRoute(
+        navigatorKey: GlobalKey<NavigatorState>(),
+        builder: (context, state, child) {
+          return ConsumerShell(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: RouteConstants.consumerDiscover,
+            name: RouteConstants.consumerDiscoverName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.consumerBrowse,
+            name: RouteConstants.consumerBrowseName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.consumerFavorites,
+            name: RouteConstants.consumerFavoritesName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.consumerCart,
+            name: RouteConstants.consumerCartName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.consumerDelivery,
+            name: RouteConstants.consumerDeliveryName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.consumerProfile,
+            name: RouteConstants.consumerProfileName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MainHomeScreen());
+            },
+          ),
+        ],
+      ),
     ];
   }
 

@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/material.dart';
 
-import '../../../presentation/screens/onboarding/user_type_selection_screen.dart';
 import '../../../presentation/screens/main_home_screen.dart';
 import 'route_constants.dart';
 
@@ -17,7 +16,7 @@ class PublicRoutes {
       path: RouteConstants.onboarding,
       name: RouteConstants.onboardingName,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: UserTypeSelectionScreen());
+        return const MaterialPage(child: MainHomeScreen());
       },
     ),
 

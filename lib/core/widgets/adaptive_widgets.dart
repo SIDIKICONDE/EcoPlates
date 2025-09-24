@@ -69,6 +69,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool centerTitle;
   final Color? backgroundColor;
+  final PreferredSizeWidget? bottom;
 
   const AdaptiveAppBar({
     super.key,
@@ -77,6 +78,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.centerTitle = true,
     this.backgroundColor,
+    this.bottom,
   });
 
   @override
@@ -97,12 +99,14 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         actions: actions,
         centerTitle: centerTitle,
         backgroundColor: backgroundColor,
+        bottom: bottom,
       );
     }
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(
+      kToolbarHeight + (bottom?.preferredSize.height ?? 0));
 }
 
 /// Bouton adaptatif
@@ -311,5 +315,43 @@ class AdaptiveTextField extends StatelessWidget {
         onChanged: onChanged,
       );
     }
+  }
+}
+
+/// Bouton d'icône adaptatif
+class AdaptiveIconButton extends StatelessWidget {
+  final Widget icon;
+  final IconData? cupertinoIcon;
+  final VoidCallback onPressed;
+  final String? tooltip;
+  final Color? color;
+  
+  const AdaptiveIconButton({
+    super.key,
+    required this.icon,
+    this.cupertinoIcon,
+    required this.onPressed,
+    this.tooltip,
+    this.color,
+  });
+  
+  @override
+  Widget build(BuildContext context) {
+    if (PlatformUtils.shouldUseCupertino) {
+      return CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+        child: cupertinoIcon != null
+            ? Icon(cupertinoIcon, color: color)
+            : icon,
+      );
+    }
+    
+    return IconButton(
+      icon: icon,
+      onPressed: onPressed,
+      tooltip: tooltip,
+      color: color,
+    );
   }
 }

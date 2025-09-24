@@ -5,7 +5,7 @@ import '../../domain/entities/merchant_details.dart';
 import '../../domain/entities/merchant_types.dart';
 
 /// Provider pour récupérer un merchant par son ID
-final merchantByIdProvider = Provider.family<Merchant, String>((ref, merchantId) {
+final merchantByIdProvider = Provider.family<Merchant?, String>((ref, merchantId) {
   // TODO: Implémenter le service des merchants
   // Pour l'instant, retourner des données de test pour n'importe quel ID
   debugPrint('🏢 Récupération du merchant avec ID: $merchantId');

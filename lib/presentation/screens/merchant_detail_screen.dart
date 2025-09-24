@@ -82,7 +82,7 @@ class _MerchantDetailScreenState extends ConsumerState<MerchantDetailScreen>
     final merchant = ref.watch(merchantByIdProvider(widget.merchantId));
 
     if (merchant == null) {
-      return Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     _isFavorite = merchant.isFavorite;

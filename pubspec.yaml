@@ -74,6 +74,7 @@ dependencies:
   
   # Media
   image_picker: ^1.0.4
+  video_player: ^2.8.3
   
   # Charts & Analytics
   fl_chart: ^0.68.0
@@ -118,6 +119,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/videos/
     - environments/
 
   # An image asset can refer to one or more resolution-specific "variants", see

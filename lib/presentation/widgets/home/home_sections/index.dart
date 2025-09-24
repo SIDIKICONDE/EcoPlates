@@ -9,3 +9,4 @@ export 'new_section.dart';
 export 'offers_section.dart';
 export 'recommended_section.dart';
 export 'vegetarian_section.dart';
+export 'video_section.dart';

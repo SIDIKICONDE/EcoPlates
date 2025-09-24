@@ -2,234 +2,96 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../presentation/screens/main_home_screen.dart';
-import '../../presentation/screens/merchant_detail_screen.dart';
-import '../../presentation/screens/merchant_profile_screen.dart';
-import '../../presentation/screens/merchant/merchant_home_screen.dart';
-import '../../presentation/screens/scan_screen.dart';
-import '../../presentation/screens/profile_screen.dart';
-import '../../presentation/screens/onboarding/user_type_selection_screen.dart';
-import '../../presentation/screens/merchant/management/reservations_screen.dart';
-import '../../presentation/screens/merchant/analytics/analytics_dashboard_screen.dart';
-import '../../presentation/screens/merchant/offers/offers_list_screen.dart';
-import '../../presentation/screens/merchant/offers/create_offer_screen.dart';
-import '../../presentation/screens/merchant/offers/edit_offer_screen.dart';
-import '../../presentation/screens/merchant/management/offer_detail_screen.dart';
-import '../../presentation/widgets/offer_card_example.dart';
 import '../../presentation/providers/app_mode_provider.dart';
-import '../widgets/adaptive_navigation.dart';
+import 'routes/public_routes.dart';
+import 'routes/merchant_routes.dart';
+import 'routes/consumer_routes.dart';
+import 'routes/route_constants.dart';
+import 'error_page.dart';
 
-/// Provider pour le router
+/// Provider pour le router de l'application EcoPlates
+/// 
+/// Utilise Riverpod pour la gestion d'état et la réactivité
+/// selon les directives EcoPlates
 final appRouterProvider = Provider<GoRouter>((ref) {
   final appMode = ref.watch(appModeProvider);
   return AppRouter.createRouter(appMode);
 });
 
-/// Configuration du router de l'application
+/// Configuration centralisée du router de l'application EcoPlates
+/// 
+/// Architecture modulaire respectant les directives EcoPlates :
+/// - Séparation des responsabilités par type d'utilisateur
+/// - Gestion d'erreurs personnalisée
+/// - Navigation adaptative selon le mode d'application
+/// - Code maintenable et extensible
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
+  /// Crée et configure le router selon le mode d'application
+  /// 
+  /// [mode] : Mode d'application (consumer, merchant, onboarding)
+  /// Retourne une instance de GoRouter configurée
   static GoRouter createRouter(AppMode mode) {
-    // Déterminer la route initiale selon le mode
-    String initialLocation;
-    switch (mode) {
-      case AppMode.consumer:
-        initialLocation = '/';
-        break;
-      case AppMode.merchant:
-        initialLocation = '/merchant/dashboard';
-        break;
-      case AppMode.onboarding:
-        initialLocation = '/onboarding';
-        break;
-    }
-
     return GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: initialLocation,
-      debugLogDiagnostics: true,
-      routes: [
-        // Route d'onboarding (sans navigation)
-        GoRoute(
-          path: '/onboarding',
-          name: 'onboarding',
-          pageBuilder: (context, state) {
-            return const MaterialPage(child: UserTypeSelectionScreen());
-          },
-        ),
-
-        // Page d'accueil principale 
-        
-        GoRoute(
-          path: '/',
-          name: 'main-home',
-          pageBuilder: (context, state) {
-            return const MaterialPage(child: MainHomeScreen());
-          },
-        ),
-
-        // Page de détail d'un merchant
-        GoRoute(
-          path: '/merchant/:id',
-          name: 'merchant-detail',
-          pageBuilder: (context, state) {
-            final merchantId = state.pathParameters['id']!;
-            return MaterialPage(
-              child: MerchantDetailScreen(merchantId: merchantId),
-            );
-          },
-        ),
-        
-        // Page de profil du merchant (vue acheteur)
-        GoRoute(
-          path: '/merchant-profile/:id',
-          name: 'merchant-profile',
-          pageBuilder: (context, state) {
-            final merchantId = state.pathParameters['id']!;
-            return MaterialPage(
-              child: MerchantProfileScreen(merchantId: merchantId),
-            );
-          },
-        ),
-        
-        // Page de détail d'une offre
-        GoRoute(
-          path: '/offer/:id',
-          name: 'offer-detail',
-          pageBuilder: (context, state) {
-            final offerId = state.pathParameters['id']!;
-            return MaterialPage(
-              child: OfferDetailScreen(offerId: offerId),
-            );
-          },
-        ),
-        
-        // Route de test pour l'OfferCard
-        GoRoute(
-          path: '/test-offer-card',
-          name: 'test-offer-card',
-          pageBuilder: (context, state) {
-            return const MaterialPage(
-              child: OfferCardExample(),
-            );
-          },
-        ),
-
-        // Routes consommateur avec navigation
-        ShellRoute(
-          navigatorKey: _shellNavigatorKey,
-          builder: (context, state, child) {
-            return AdaptiveNavigationScaffold(child: child);
-          },
-          routes: [
-            GoRoute(
-              path: '/profile',
-              name: 'profile',
-              pageBuilder: (context, state) {
-                return const MaterialPage(child: ProfileScreen());
-              },
-            ),
-            GoRoute(
-              path: '/reservations',
-              name: 'reservations',
-              pageBuilder: (context, state) {
-                return const MaterialPage(child: ReservationsScreen());
-              },
-            ),
-          ],
-        ),
-        // Routes commerçant (sans bottom navigation)
-        GoRoute(
-          path: '/merchant/dashboard',
-          name: 'merchant-dashboard',
-          pageBuilder: (context, state) {
-            return const MaterialPage(child: MerchantHomeScreen());
-          },
-        ),
-
-        // Scan réservé aux commerçants
-        GoRoute(
-          path: '/merchant/scan',
-          name: 'merchant-scan',
-          pageBuilder: (context, state) {
-            return const MaterialPage(child: ScanScreen());
-          },
-        ),
-        GoRoute(
-          path: '/merchant/scan-return',
-          name: 'merchant-scan-return',
-          pageBuilder: (context, state) {
-            return const MaterialPage(child: ScanScreen());
-          },
-        ),
-
-        // Dashboard Analytics
-        GoRoute(
-          path: '/merchant/analytics',
-          name: 'merchant-analytics',
-          pageBuilder: (context, state) {
-            return const MaterialPage(child: AnalyticsDashboardScreen());
-          },
-        ),
-
-        // Gestion des offres
-        GoRoute(
-          path: '/merchant/offers',
-          name: 'merchant-offers',
-          pageBuilder: (context, state) {
-            return const MaterialPage(child: OffersListScreen());
-          },
-        ),
-
-        // Création d'offre
-        GoRoute(
-          path: '/merchant/offers/create',
-          name: 'merchant-create-offer',
-          pageBuilder: (context, state) {
-            return const MaterialPage(child: CreateOfferScreen());
-          },
-        ),
-
-        // Édition d'offre
-        GoRoute(
-          path: '/merchant/offers/:id/edit',
-          name: 'merchant-edit-offer',
-          pageBuilder: (context, state) {
-            final offerId = state.pathParameters['id']!;
-            return MaterialPage(child: EditOfferScreen(offerId: offerId));
-          },
-        ),
-      ],
+      initialLocation: _getInitialLocation(mode),
+      debugLogDiagnostics: _isDebugMode(),
+      routes: _buildAllRoutes(),
       errorPageBuilder: (context, state) {
         return MaterialPage(
-          child: Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Page non trouvée',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.uri.toString(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => context.go('/'),
-                    child: const Text('Retour à l\'accueil'),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child: EcoPlatesErrorPage(state: state),
         );
       },
     );
   }
+
+  /// Détermine la route initiale selon le mode d'application
+  /// 
+  /// [mode] : Mode d'application actuel
+  /// Retourne le chemin de la route initiale
+  static String _getInitialLocation(AppMode mode) {
+    switch (mode) {
+      case AppMode.consumer:
+        // TODO: Implémenter la logique de redirection consommateur
+        return RouteConstants.merchantDashboard;
+      case AppMode.merchant:
+        return RouteConstants.merchantDashboard;
+      case AppMode.onboarding:
+        return RouteConstants.onboarding;
+    }
+  }
+
+  /// Construit toutes les routes de l'application
+  /// 
+  /// Organise les routes par priorité et type d'utilisateur
+  /// Retourne la liste complète des routes configurées
+  static List<RouteBase> _buildAllRoutes() {
+    return [
+      // Routes publiques (priorité haute)
+      ...PublicRoutes.routes,
+      
+      // Routes marchandes (avec et sans navigation)
+      ...MerchantRoutes.allRoutes,
+      
+      // Routes consommateur (avec et sans navigation)
+      ...ConsumerRoutes.allRoutes,
+    ];
+  }
+
+  /// Détermine si le mode debug est activé
+  /// 
+  /// Retourne true en mode debug, false en production
+  static bool _isDebugMode() {
+    // TODO: Utiliser une configuration d'environnement
+    return true; // Temporaire pour le développement
+  }
+
+  /// Clés de navigation pour l'accès externe
+  /// 
+  /// Permet l'accès aux clés de navigation depuis d'autres parties
+  /// de l'application si nécessaire
+  static GlobalKey<NavigatorState> get rootNavigatorKey => _rootNavigatorKey;
+  static GlobalKey<NavigatorState> get shellNavigatorKey => _shellNavigatorKey;
 }

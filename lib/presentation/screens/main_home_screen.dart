@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../widgets/home/categories_section.dart';
 import '../widgets/home/home_sections/index.dart';
 import '../widgets/home/surprise_box_section.dart';
@@ -80,6 +79,9 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
 
             // Section des catégories
             const CategoriesSection(),
+
+            // Section vidéos - Nouveau!
+            const VideoSection(),
 
             // Section "Recommandé pour vous"
             const RecommendedSection(),

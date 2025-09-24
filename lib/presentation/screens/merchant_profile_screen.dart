@@ -25,6 +25,14 @@ class _MerchantProfileScreenState extends ConsumerState<MerchantProfileScreen> {
     
     final merchant = ref.watch(merchantByIdProvider(widget.merchantId));
 
+    if (merchant == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: CustomScrollView(

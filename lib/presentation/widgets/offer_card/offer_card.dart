@@ -5,7 +5,7 @@ import 'widgets/offer_card_content.dart';
 
 /// Widget de carte pour afficher une offre anti-gaspillage
 /// Utilisable dans toutes les listes et grilles de l'application
-class OfferCard extends StatelessWidget {
+class OfferCard extends StatefulWidget {
   final FoodOffer offer;
   final VoidCallback? onTap;
   final bool showDistance;
@@ -20,6 +20,36 @@ class OfferCard extends StatelessWidget {
   });
 
   @override
+  State<OfferCard> createState() => _OfferCardState();
+}
+
+class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.98,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+  }
+  
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -29,10 +59,16 @@ class OfferCard extends StatelessWidget {
       label: _buildSemanticLabel(),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 12),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
+        child: GestureDetector(
+          onTapDown: (_) => _controller.forward(),
+          onTapUp: (_) => _controller.reverse(),
+          onTapCancel: () => _controller.reverse(),
+          onTap: widget.onTap,
+          child: AnimatedBuilder(
+            animation: _scaleAnimation,
+            builder: (context, child) => Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Container(
             decoration: BoxDecoration(
               color: isDark ? Colors.grey[900] : Colors.white,
               borderRadius: BorderRadius.circular(16),
@@ -48,15 +84,17 @@ class OfferCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Image avec badges
-                OfferCardImage(offer: offer),
+                OfferCardImage(offer: widget.offer),
                 
                 // Contenu de la carte
                 OfferCardContent(
-                  offer: offer,
-                  showDistance: showDistance,
-                  distance: distance,
+                  offer: widget.offer,
+                  showDistance: widget.showDistance,
+                  distance: widget.distance,
                 ),
               ],
+            ),
+              ),
             ),
           ),
         ),
@@ -66,20 +104,20 @@ class OfferCard extends StatelessWidget {
 
   String _buildSemanticLabel() {
     final buffer = StringBuffer();
-    buffer.write('${offer.title} chez ${offer.merchantName}. ');
-    buffer.write('Prix: ${offer.priceText}. ');
+    buffer.write('${widget.offer.title} chez ${widget.offer.merchantName}. ');
+    buffer.write('Prix: ${widget.offer.priceText}. ');
     
-    if (offer.isFree) {
+    if (widget.offer.isFree) {
       buffer.write('Offre gratuite. ');
     } else {
-      buffer.write('Réduction de ${offer.discountPercentage.toStringAsFixed(0)}%. ');
+      buffer.write('Réduction de ${widget.offer.discountPercentage.toStringAsFixed(0)}%. ');
     }
     
-    if (showDistance && distance != null) {
-      buffer.write('À ${distance!.toStringAsFixed(1)} kilomètres. ');
+    if (widget.showDistance && widget.distance != null) {
+      buffer.write('À ${widget.distance!.toStringAsFixed(1)} kilomètres. ');
     }
     
-    if (offer.canPickup) {
+    if (widget.offer.canPickup) {
       buffer.write('Collecte disponible. ');
     }
     

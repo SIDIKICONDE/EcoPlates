@@ -29,7 +29,7 @@ class _SearchFilterBarState extends ConsumerState<SearchFilterBar> {
   final List<FilterTag> _tags = [
     FilterTag('Nouveau', Icons.new_releases),
     FilterTag('Top vendeur', Icons.star),
-    FilterTag('Gratuit', Icons.volunteer_activism),
+    FilterTag('Gratuit', Icons.card_giftcard),
     FilterTag('< 3€', Icons.euro),
     FilterTag('Bio', Icons.spa),
     FilterTag('Local', Icons.location_on),

@@ -19,6 +19,12 @@ class FoodOfferService {
     bool? freeOnly,
     String? sortBy,
   }) async {
+    // MOCK DATA - En attendant l'API réelle
+    await Future.delayed(const Duration(milliseconds: 800)); // Simuler la latence
+    
+    return _getMockOffers(freeOnly: freeOnly);
+    
+    /* TODO: Décommenter quand l'API sera prête
     try {
       final queryParams = <String, dynamic>{};
 
@@ -50,10 +56,17 @@ class FoodOfferService {
     } on DioException catch (e) {
       throw _handleError(e);
     }
+    */
   }
 
   /// Récupérer une offre par son ID
   Future<FoodOffer> getOfferById(String offerId) async {
+    // MOCK DATA - En attendant l'API réelle
+    await Future.delayed(const Duration(milliseconds: 500)); // Simuler la latence
+    
+    return _getMockOfferById(offerId);
+    
+    /* TODO: Décommenter quand l'API sera prête
     try {
       final response = await _dio.get('${EnvConfig.apiUrl}/offers/$offerId');
 
@@ -65,6 +78,7 @@ class FoodOfferService {
     } on DioException catch (e) {
       throw _handleError(e);
     }
+    */
   }
 
   /// Rechercher des offres par mot-clé
@@ -203,5 +217,143 @@ class FoodOfferService {
     }
 
     return Exception('Erreur inconnue: ${error.message}');
+  }
+  
+  /// Données mock temporaires pour les tests
+  FoodOffer _getMockOfferById(String offerId) {
+    // Créer une offre de test selon l'ID
+    return FoodOffer(
+      id: offerId,
+      merchantId: 'merchant-1',
+      merchantName: 'Au Pain Doré',
+      title: 'Panier surprise boulangerie',
+      description: 'Assortiment de pains et viennoiseries fraîches du jour avec des croissants, pain au chocolat et autres délices.',
+      images: [
+        'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop',
+        'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=400&h=300&fit=crop',
+      ],
+      type: OfferType.boulangerie,
+      category: FoodCategory.boulangerie,
+      originalPrice: 15.00,
+      discountedPrice: 5.00,
+      quantity: 3,
+      pickupStartTime: DateTime.now().add(const Duration(hours: 2)),
+      pickupEndTime: DateTime.now().add(const Duration(hours: 6)),
+      createdAt: DateTime.now().subtract(const Duration(hours: 1)),
+      status: OfferStatus.available,
+      location: Location(
+        latitude: 48.8566,
+        longitude: 2.3522,
+        address: '123 Rue de la Paix',
+        city: 'Paris',
+        postalCode: '75001',
+        additionalInfo: 'Entrée par la rue latérale, sonner \u00e0 la porte de service',
+      ),
+      allergens: ['Gluten', 'Œufs', 'Lait'],
+      isVegetarian: true,
+      isVegan: false,
+      isHalal: false,
+      co2Saved: 750, // 750g de CO2 économisé
+    );
+  }
+  
+  /// Générer une liste d'offres mock
+  List<FoodOffer> _getMockOffers({bool? freeOnly}) {
+    final offers = [
+      // Offre 1 - Boulangerie
+      FoodOffer(
+        id: 'offer-1',
+        merchantId: 'merchant-1',
+        merchantName: 'Au Pain Doré',
+        title: 'Panier surprise boulangerie',
+        description: 'Pains et viennoiseries',
+        images: ['https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop'],
+        type: OfferType.boulangerie,
+        category: FoodCategory.boulangerie,
+        originalPrice: 15.00,
+        discountedPrice: 5.00,
+        quantity: 3,
+        pickupStartTime: DateTime.now().add(const Duration(hours: 2)),
+        pickupEndTime: DateTime.now().add(const Duration(hours: 6)),
+        createdAt: DateTime.now().subtract(const Duration(hours: 1)),
+        status: OfferStatus.available,
+        location: Location(
+          latitude: 48.8566,
+          longitude: 2.3522,
+          address: '123 Rue de la Paix',
+          city: 'Paris',
+          postalCode: '75001',
+        ),
+        allergens: ['Gluten'],
+        isVegetarian: true,
+        co2Saved: 750,
+      ),
+      
+      // Offre 2 - Restaurant
+      FoodOffer(
+        id: 'offer-2',
+        merchantId: 'merchant-2',
+        merchantName: 'Le Petit Bistrot',
+        title: 'Plat du jour',
+        description: 'Menu complet',
+        images: ['https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop'],
+        type: OfferType.plat,
+        category: FoodCategory.dejeuner,
+        originalPrice: 18.00,
+        discountedPrice: 8.50,
+        quantity: 2,
+        pickupStartTime: DateTime.now().add(const Duration(hours: 1)),
+        pickupEndTime: DateTime.now().add(const Duration(hours: 4)),
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+        status: OfferStatus.available,
+        location: Location(
+          latitude: 48.8606,
+          longitude: 2.3376,
+          address: '45 Avenue des Champs',
+          city: 'Paris',
+          postalCode: '75008',
+        ),
+        allergens: [],
+        isVegetarian: false,
+        co2Saved: 900,
+      ),
+      
+      // Offre 3 - Gratuite
+      FoodOffer(
+        id: 'offer-3',
+        merchantId: 'merchant-3',
+        merchantName: 'Fresh Market',
+        title: 'Fruits et légumes',
+        description: 'Invendus fraîcheur',
+        images: ['https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'],
+        type: OfferType.fruits,
+        category: FoodCategory.fruitLegume,
+        originalPrice: 12.00,
+        discountedPrice: 0.00, // Gratuit
+        quantity: 5,
+        pickupStartTime: DateTime.now().add(const Duration(minutes: 30)),
+        pickupEndTime: DateTime.now().add(const Duration(hours: 2)),
+        createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
+        status: OfferStatus.available,
+        location: Location(
+          latitude: 48.8529,
+          longitude: 2.3500,
+          address: '78 Boulevard Saint-Germain',
+          city: 'Paris',
+          postalCode: '75006',
+        ),
+        allergens: [],
+        isVegetarian: true,
+        isVegan: true,
+        co2Saved: 600,
+      ),
+    ];
+    
+    // Filtrer les offres gratuites si demandé
+    if (freeOnly == true) {
+      return offers.where((offer) => offer.isFree).toList();
+    }
+    
+    return offers;
   }
 }

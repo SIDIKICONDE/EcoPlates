@@ -44,12 +44,12 @@ class OfferCardContent extends StatelessWidget {
           _buildPickupDate(),
           const SizedBox(height: 6),
           
-          // Ligne de séparation en pointillés
+          // Ligne de séparation en pointillés (couleur selon fraîcheur)
           SizedBox(
-            height: 0.5,
+            height: 1,
             child: CustomPaint(
               size: const Size(double.infinity, 1),
-              painter: _DottedLinePainter(),
+              painter: _DottedLinePainter(color: _getLineColor()),
             ),
           ),
           const SizedBox(height: 6),
@@ -71,7 +71,7 @@ class OfferCardContent extends StatelessWidget {
         fontSize: 14,
         color: theme.primaryColor,
         fontWeight: FontWeight.w600,
-        height: 1.0,
+        height: 1.1,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
@@ -89,9 +89,9 @@ class OfferCardContent extends StatelessWidget {
     return Text(
       truncatedDescription,
       style: TextStyle(
-        fontSize: 14,
+        fontSize: 12,
         color: Colors.grey[600],
-        height: 1.0,
+        height: 1,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
@@ -155,15 +155,38 @@ class OfferCardContent extends StatelessWidget {
       return 'Horaire à définir';
     }
   }
+  
+  /// Détermine la couleur de la ligne selon l'urgence de l'offre
+  Color _getLineColor() {
+    final now = DateTime.now();
+    final timeUntilEnd = offer.pickupEndTime.difference(now);
+    
+    // Moins de 2 heures = rouge (urgent)
+    if (timeUntilEnd.inHours < 2) {
+      return Colors.red.withValues(alpha: 0.5);
+    }
+    // Moins de 6 heures = orange (bientôt)
+    else if (timeUntilEnd.inHours < 6) {
+      return Colors.orange.withValues(alpha: 0.5);
+    }
+    // Plus de 6 heures = vert (frais)
+    else {
+      return Colors.green.withValues(alpha: 0.5);
+    }
+  }
 }
 
 /// Painter pour dessiner une ligne en pointillés
 class _DottedLinePainter extends CustomPainter {
+  final Color color;
+  
+  _DottedLinePainter({required this.color});
+  
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey.withValues(alpha: 0.3)
-      ..strokeWidth = 1;
+      ..color = color
+      ..strokeWidth = 1.5;
 
     const double dashWidth = 5;
     const double dashSpace = 5;

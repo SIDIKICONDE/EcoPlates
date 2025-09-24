@@ -61,7 +61,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
                 ),
               ],
             ),
-            onPressed: () => _showNotifications(context),
+            onPressed: () {}, // TODO: Implement notifications
             tooltip: 'Notifications',
           ),
           const SizedBox(width: 8),
@@ -174,9 +174,9 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
     );
   }
 
-  void _showNotifications(BuildContext context) {
-    context.go('/notifications');
-  }
+  // void _showNotifications(BuildContext context) {
+  //   context.go('/notifications');
+  // }
 
   void _showFilterSheet(BuildContext context) {
     showModalBottomSheet(

@@ -21,10 +21,10 @@ class AdaptiveBottomNavigation extends StatelessWidget {
 
     switch (index) {
       case 0:
-        context.go('/home');
+        context.go('/');
         break;
       case 1:
-        context.go('/history');
+        context.go('/reservations');
         break;
       case 2:
         context.go('/profile');
@@ -86,8 +86,8 @@ class AdaptiveNavigationScaffold extends StatelessWidget {
 
   int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.toString();
-    if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/history')) return 1;
+    if (location == '/') return 0;
+    if (location.startsWith('/reservations')) return 1;
     if (location.startsWith('/profile')) return 2;
     return 0;
   }
@@ -104,10 +104,10 @@ class AdaptiveNavigationScaffold extends StatelessWidget {
           onTap: (index) {
             switch (index) {
               case 0:
-                context.go('/home');
+                context.go('/');
                 break;
               case 1:
-                context.go('/history');
+                context.go('/reservations');
                 break;
               case 2:
                 context.go('/profile');
@@ -120,8 +120,8 @@ class AdaptiveNavigationScaffold extends StatelessWidget {
               label: 'Accueil',
             ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.clock),
-              label: 'Historique',
+              icon: Icon(CupertinoIcons.calendar),
+              label: 'Réservations',
             ),
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.person),
@@ -141,7 +141,7 @@ class AdaptiveNavigationScaffold extends StatelessWidget {
           currentIndex: currentIndex,
           items: const [
             AdaptiveNavItem(icon: Icons.home, label: 'Accueil'),
-            AdaptiveNavItem(icon: Icons.history, label: 'Historique'),
+            AdaptiveNavItem(icon: Icons.calendar_today, label: 'Réservations'),
             AdaptiveNavItem(icon: Icons.person, label: 'Profil'),
           ],
         ),

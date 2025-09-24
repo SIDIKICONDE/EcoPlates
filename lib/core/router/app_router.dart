@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../presentation/screens/main_home_screen.dart';
 import '../../presentation/screens/merchant_detail_screen.dart';
+import '../../presentation/screens/merchant_profile_screen.dart';
 import '../../presentation/screens/merchant/merchant_home_screen.dart';
 import '../../presentation/screens/scan_screen.dart';
 import '../../presentation/screens/profile_screen.dart';
@@ -13,9 +14,8 @@ import '../../presentation/screens/merchant/analytics/analytics_dashboard_screen
 import '../../presentation/screens/merchant/offers/offers_list_screen.dart';
 import '../../presentation/screens/merchant/offers/create_offer_screen.dart';
 import '../../presentation/screens/merchant/offers/edit_offer_screen.dart';
-import '../../presentation/screens/association/association_management_screen.dart';
-import '../../presentation/screens/association/association_profile_screen.dart';
-import '../../presentation/screens/association/association_home_screen.dart';
+import '../../presentation/screens/merchant/management/offer_detail_screen.dart';
+import '../../presentation/widgets/offer_card_example.dart';
 import '../../presentation/providers/app_mode_provider.dart';
 import '../widgets/adaptive_navigation.dart';
 
@@ -59,7 +59,8 @@ class AppRouter {
           },
         ),
 
-        // Page d'accueil principale (type Too Good To Go)
+        // Page d'accueil principale 
+        
         GoRoute(
           path: '/',
           name: 'main-home',
@@ -76,6 +77,41 @@ class AppRouter {
             final merchantId = state.pathParameters['id']!;
             return MaterialPage(
               child: MerchantDetailScreen(merchantId: merchantId),
+            );
+          },
+        ),
+        
+        // Page de profil du merchant (vue acheteur)
+        GoRoute(
+          path: '/merchant-profile/:id',
+          name: 'merchant-profile',
+          pageBuilder: (context, state) {
+            final merchantId = state.pathParameters['id']!;
+            return MaterialPage(
+              child: MerchantProfileScreen(merchantId: merchantId),
+            );
+          },
+        ),
+        
+        // Page de détail d'une offre
+        GoRoute(
+          path: '/offer/:id',
+          name: 'offer-detail',
+          pageBuilder: (context, state) {
+            final offerId = state.pathParameters['id']!;
+            return MaterialPage(
+              child: OfferDetailScreen(offerId: offerId),
+            );
+          },
+        ),
+        
+        // Route de test pour l'OfferCard
+        GoRoute(
+          path: '/test-offer-card',
+          name: 'test-offer-card',
+          pageBuilder: (context, state) {
+            return const MaterialPage(
+              child: OfferCardExample(),
             );
           },
         ),
@@ -102,42 +138,6 @@ class AppRouter {
               },
             ),
           ],
-        ),
-
-        // Routes associations
-        GoRoute(
-          path: '/association/:id',
-          name: 'association-profile',
-          pageBuilder: (context, state) {
-            final associationId = state.pathParameters['id']!;
-            return MaterialPage(
-              child: AssociationProfileScreen(associationId: associationId),
-            );
-          },
-        ),
-
-        // Gestion association (pour les membres)
-        GoRoute(
-          path: '/association/:id/manage',
-          name: 'association-management',
-          pageBuilder: (context, state) {
-            final associationId = state.pathParameters['id']!;
-            return MaterialPage(
-              child: AssociationManagementScreen(associationId: associationId),
-            );
-          },
-        ),
-
-        // Page d'accueil association
-        GoRoute(
-          path: '/association/:id/home',
-          name: 'association-home',
-          pageBuilder: (context, state) {
-            final associationId = state.pathParameters['id']!;
-            return MaterialPage(
-              child: AssociationHomeScreen(associationId: associationId),
-            );
-          },
         ),
         // Routes commerçant (sans bottom navigation)
         GoRoute(
@@ -221,7 +221,7 @@ class AppRouter {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.go('/home'),
+                    onPressed: () => context.go('/'),
                     child: const Text('Retour à l\'accueil'),
                   ),
                 ],

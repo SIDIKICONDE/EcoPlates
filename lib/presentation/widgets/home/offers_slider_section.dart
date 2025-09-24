@@ -415,7 +415,7 @@ class _OffersSliderSectionState extends ConsumerState<OffersSliderSection>
               child: GestureDetector(
                 onTap: () {
                   // Navigation vers le détail de l'offre
-                  context.push('/offers/${offer.id}');
+                  context.push('/offer/${offer.id}');
                 },
                 child: OfferCard(
                   offer: offer,

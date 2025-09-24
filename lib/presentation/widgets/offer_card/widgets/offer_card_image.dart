@@ -80,9 +80,7 @@ class OfferCardImage extends StatelessWidget {
             Positioned(
               top: 16,
               right: 16,
-              child: OfferTimeBadge(
-                timeRemaining: offer.timeRemaining,
-              ),
+              child: _buildContextualBadge(),
             ),
 
           // Indicateur de stock en bas à droite (quantité restante)
@@ -96,6 +94,118 @@ class OfferCardImage extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+  
+  /// Construit le badge contextuel selon l'état de l'offre
+  Widget _buildContextualBadge() {
+    final timeUntilEnd = offer.pickupEndTime.difference(DateTime.now());
+    
+    // Badge "Dernière minute" si moins de 2 heures
+    if (timeUntilEnd.inHours < 2) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.timer, color: Colors.white, size: 12),
+            SizedBox(width: 4),
+            Text(
+              'Dernière minute',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    // Badge "Nouveau" si créé dans les dernières 24h
+    final isNew = DateTime.now().difference(offer.createdAt).inHours < 24;
+    if (isNew) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+          ),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.auto_awesome, color: Colors.white, size: 12),
+            SizedBox(width: 4),
+            Text(
+              'Nouveau',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    // Badge "Populaire" si beaucoup de quantité vendue (on simule)
+    if (offer.quantity < 5 && offer.quantity > 0) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.orange,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.local_fire_department, color: Colors.white, size: 12),
+            SizedBox(width: 4),
+            Text(
+              'Populaire',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    // Badge temps restant par défaut
+    return OfferTimeBadge(
+      timeRemaining: offer.timeRemaining,
     );
   }
 }

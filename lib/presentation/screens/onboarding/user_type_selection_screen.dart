@@ -58,7 +58,7 @@ class UserTypeSelectionScreen extends ConsumerWidget {
                 onTap: () {
                   // Pour la démo, on simule une connexion directe
                   ref.read(appModeProvider.notifier).setMode(AppMode.consumer);
-                  context.go('/home');
+                  context.go('/');
                 },
               ),
 

@@ -5,6 +5,7 @@ class RouteConstants {
   static const String onboarding = '/onboarding';
   static const String mainHome = '/main-home';
   static const String allBrands = '/all-brands';
+  static const String urgentOffers = '/urgent-offers';
   
   // Routes merchant
   static const String merchantDashboard = '/merchant/dashboard';
@@ -26,6 +27,7 @@ class RouteConstants {
   static const String onboardingName = 'onboarding';
   static const String mainHomeName = 'main-home';
   static const String allBrandsName = 'all-brands';
+  static const String urgentOffersName = 'urgent-offers';
   static const String merchantDashboardName = 'merchant-dashboard';
   static const String merchantStockName = 'merchant-stock';
   static const String merchantSalesName = 'merchant-sales';

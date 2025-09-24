@@ -28,20 +28,28 @@ class OfferCard extends StatefulWidget {
 class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _elevationAnimation;
   
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 150),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
       begin: 1.0,
-      end: 0.98,
+      end: 0.97,
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeInOut,
+      curve: Curves.easeOutCubic,
+    ));
+    _elevationAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
     ));
   }
   
@@ -65,7 +73,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
           onTapCancel: () => _controller.reverse(),
           onTap: widget.onTap,
           child: AnimatedBuilder(
-            animation: _scaleAnimation,
+            animation: Listenable.merge([_scaleAnimation, _elevationAnimation]),
             builder: (context, child) => Transform.scale(
               scale: _scaleAnimation.value,
               child: Container(
@@ -74,10 +82,23 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: Colors.black.withValues(
+                    alpha: isDark 
+                      ? 0.3 + (0.1 * _elevationAnimation.value)
+                      : 0.08 + (0.06 * _elevationAnimation.value),
+                  ),
+                  blurRadius: 10 + (8 * _elevationAnimation.value),
+                  offset: Offset(0, 4 + (4 * _elevationAnimation.value)),
                 ),
+                // Ombre secondaire pour plus de profondeur
+                if (_elevationAnimation.value > 0)
+                  BoxShadow(
+                    color: theme.primaryColor.withValues(
+                      alpha: 0.1 * _elevationAnimation.value,
+                    ),
+                    blurRadius: 20 * _elevationAnimation.value,
+                    offset: Offset(0, 8 * _elevationAnimation.value),
+                  ),
               ],
             ),
             child: Column(

@@ -26,7 +26,7 @@ class OfferCardImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(3.0),
+      padding: const EdgeInsets.all(4.0),
       child: Stack(
         children: [
           // Section image principale avec coins arrondis

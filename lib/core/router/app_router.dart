@@ -9,6 +9,7 @@ import 'error_page.dart';
 import '../../presentation/screens/main_home_screen.dart';
 import '../../presentation/screens/welcome_screen.dart';
 import '../../presentation/screens/all_brands_screen.dart';
+import '../../presentation/screens/all_urgent_offers_screen.dart';
 import '../../presentation/widgets/merchant_shell.dart';
 import '../../presentation/widgets/consumer_shell.dart';
 
@@ -73,6 +74,15 @@ class AppRouter {
         name: RouteConstants.allBrandsName,
         pageBuilder: (context, state) {
           return const MaterialPage(child: AllBrandsScreen());
+        },
+      ),
+      
+      // Page offres urgentes à sauver
+      GoRoute(
+        path: RouteConstants.urgentOffers,
+        name: RouteConstants.urgentOffersName,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: AllUrgentOffersScreen());
         },
       ),
       

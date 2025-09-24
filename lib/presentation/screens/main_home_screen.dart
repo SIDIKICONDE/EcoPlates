@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/minimal_header.dart';
+import '../widgets/home/sections/urgent_section.dart';
+import '../widgets/home/sections/merchant_section.dart';
+import '../widgets/home/sections/meals_section.dart';
+import '../widgets/home/sections/videos_section.dart';
 import '../widgets/home/sections/brand_section.dart';
 import '../widgets/home/sections/categories_section.dart';
 import '../widgets/home/sections/recommended_section.dart';
@@ -28,14 +32,26 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
           children: [
             const SizedBox(height: 4),
             
-            // Section des marques/enseignes (toujours en haut)
+            // Section des grandes enseignes (toujours en premier)
             const BrandSection(),
             
-            // Section des catégories (en dessous des enseignes)
+            // Section des catégories
             const CategoriesSection(),
+            
+            // Section des offres urgentes
+            const UrgentSection(),
             
             // Section recommandé pour vous
             const RecommendedSection(),
+            
+            // Section des repas complets
+            const MealsSection(),
+            
+            // Section des marchands partenaires
+            const MerchantSection(),
+            
+            // Section des vidéos et astuces
+            const VideosSection(),
             
             const SizedBox(height: 16),
           ],

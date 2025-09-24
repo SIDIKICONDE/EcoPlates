@@ -250,16 +250,32 @@ class OfferCardContent extends StatelessWidget {
     );
   }
   
-  /// Version compacte du prix (sans prix barré)
+  /// Version compacte du prix (avec prix barré)
   Widget _buildCompactPrice(ThemeData theme) {
-    return Text(
-      offer.priceText,
-      style: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-        color: offer.isFree ? Colors.green : theme.primaryColor,
-        height: 1.0,
-      ),
+    return Row(
+      children: [
+        if (!offer.isFree) ...[
+          Text(
+            '€${offer.originalPrice.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 11,
+              decoration: TextDecoration.lineThrough,
+              color: Colors.grey[500],
+              height: 1.0,
+            ),
+          ),
+          const SizedBox(width: 6),
+        ],
+        Text(
+          offer.priceText,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: offer.isFree ? Colors.green : theme.primaryColor,
+            height: 1.0,
+          ),
+        ),
+      ],
     );
   }
   
@@ -359,20 +375,31 @@ class OfferCardContent extends StatelessWidget {
     }
   }
   
-  /// Bouton coeur pour les favoris
+  /// Bouton coeur pour les favoris avec animation
   Widget _buildFavoriteButton() {
-    return GestureDetector(
-      onTap: () {
-        // TODO: Implémenter la logique des favoris
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 1.0, end: 1.0),
+      duration: const Duration(milliseconds: 300),
+      builder: (context, value, child) {
+        return GestureDetector(
+          onTapDown: (_) => {},
+          onTapUp: (_) => {},
+          onTap: () {
+            // TODO: Implémenter la logique des favoris
+          },
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                Icons.favorite_border,
+                size: 16,
+                color: Colors.grey[400],
+              ),
+            ),
+          ),
+        );
       },
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        child: Icon(
-          Icons.favorite_border,
-          size: 16,
-          color: Colors.grey[400],
-        ),
-      ),
     );
   }
 }

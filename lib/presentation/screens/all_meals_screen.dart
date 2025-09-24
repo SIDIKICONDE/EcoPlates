@@ -264,7 +264,7 @@ class AllMealsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              if (meal.isVegetarian ?? false) ...[
+              if (meal.isVegetarian) ...[
                 const SizedBox(height: 8),
                 Row(
                   children: [

@@ -179,7 +179,7 @@ final vegetarianMealsProvider = Provider<List<FoodOffer>>((ref) {
   final mealsAsync = ref.watch(mealsProvider);
   
   return mealsAsync.when(
-    data: (meals) => meals.where((m) => m.isVegetarian ?? false).toList(),
+    data: (meals) => meals.where((m) => m.isVegetarian).toList(),
     loading: () => [],
     error: (_, __) => [],
   );

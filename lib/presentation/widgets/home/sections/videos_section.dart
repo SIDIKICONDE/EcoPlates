@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/videos_provider.dart';
-import '../../video_card/index.dart';
 import '../../../../domain/entities/video_preview.dart';
-
+import '../../video_card/video_card.dart';
+import '../../video_player/floating_video_modal.dart';
+import '../../../pages/videos/all_videos_page.dart';
 /// Section affichant les vidéos de recettes et conseils anti-gaspi
 class VideosSection extends ConsumerWidget {
   const VideosSection({super.key});
@@ -42,11 +43,10 @@ class VideosSection extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () {
-                  // TODO: Navigation vers toutes les vidéos
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Page toutes les vidéos en construction'),
-                      duration: Duration(seconds: 2),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AllVideosPage(),
                     ),
                   );
                 },
@@ -56,9 +56,9 @@ class VideosSection extends ConsumerWidget {
           ),
         ),
         
-        // Liste horizontale de vidéos
+        // Liste horizontale de vidéos avec cartes verticales compactes
         SizedBox(
-          height: 200, // Hauteur optimisée pour les VideoCard
+          height: 140, // Hauteur réduite de 50%
           child: videosAsync.when(
             data: (videos) {
               if (videos.isEmpty) {
@@ -109,14 +109,17 @@ class VideosSection extends ConsumerWidget {
                   final video = videoPreviews[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: VideoCard(
-                      video: video,
-                      width: 320,
-                      height: 180,
-                      play: false, // Ne pas jouer automatiquement dans la liste
-                      onTap: () {
-                        _showVideoModal(context, video);
-                      },
+                    child: SizedBox(
+                      width: 100, // Largeur réduite de 50%
+                      child: VideoCard(
+                        video: video,
+                        width: 100,
+                        height: 130, // Hauteur réduite de 50%
+                        play: false, // Ne pas jouer automatiquement dans la liste
+                        onTap: () {
+                          _showVideoModal(context, video);
+                        },
+                      ),
                     ),
                   );
                 },

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,13 +61,18 @@ class _FloatingVideoOverlay extends StatefulWidget {
   State<_FloatingVideoOverlay> createState() => _FloatingVideoOverlayState();
 }
 
-class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with SingleTickerProviderStateMixin {
+class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with TickerProviderStateMixin {
   final VideoPoolManager _pool = VideoPoolManager();
   VideoPlayerController? _controller;
 
   // Position absolue du lecteur (depuis le coin supérieur gauche)
   Offset? _position;
   bool _positionInitialized = false;
+  
+  // Animation d'entrée
+  late AnimationController _entryController;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _fadeAnimation;
 
   // Taille du player (16:9)
   late double _baseWidth; // taille normale
@@ -80,6 +86,29 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Singl
   Timer? _hideTimer;
 
   static const MethodChannel _pipChannel = MethodChannel('app.ecoplates/pip');
+  
+  @override
+  void initState() {
+    super.initState();
+    _entryController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.7,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _entryController,
+      curve: Curves.easeOutBack,
+    ));
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _entryController,
+      curve: Curves.easeOut,
+    ));
+  }
 
   @override
   void didChangeDependencies() {
@@ -94,13 +123,17 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Singl
               : 420;
       _baseHeight = _baseWidth * 9 / 16;
 
-      const margin = 16.0;
-      // Position initiale: coin bas-droit
-      _position = Offset(size.width - _baseWidth - margin, size.height - _baseHeight - margin);
+      // Position initiale: centre de l'écran
+      _position = Offset(
+        (size.width - _baseWidth) / 2,
+        (size.height - _baseHeight) / 2,
+      );
       _positionInitialized = true;
       // Initialisation contrôleur
       _initController();
       _planHideControls();
+      // Démarrer l'animation d'entrée
+      _entryController.forward();
     }
   }
 
@@ -135,6 +168,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Singl
   @override
   void dispose() {
     _hideTimer?.cancel();
+    _entryController.dispose();
     // Ne pas disposer: le pool gère la mémoire. Mettre en pause suffit.
     _controller?.pause();
     super.dispose();
@@ -263,13 +297,38 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay> with Singl
 
     final isReady = _controller != null && _controller!.value.isInitialized;
 
-    return IgnorePointer(
-      ignoring: false, // On n'ignore pas les pointeurs sur la fenêtre flottante
-      child: Stack(children: [
-        // Toute zone hors de la fenêtre reste interactive pour l'app dessous
+    return Stack(children: [
+      // Overlay avec effet de flou
+      Positioned.fill(
+        child: IgnorePointer(
+          ignoring: _isMini, // Pas de flou en mode mini
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            color: Colors.black.withValues(alpha: _isMini ? 0 : 0.3),
+            child: BackdropFilter(
+              filter: _isMini 
+                ? ImageFilter.blur(sigmaX: 0, sigmaY: 0)
+                : ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+          ),
+        ),
+      ),
+      
+      // Zone tactile pour fermer le modal (seulement si pas mini)
+      if (!_isMini)
+        Positioned.fill(
+          child: GestureDetector(
+            onTap: widget.onClose,
+            behavior: HitTestBehavior.opaque,
+            child: Container(color: Colors.transparent),
+          ),
+        ),
 
-        // Lecteur flottant positionné avec animation
-        AnimatedPositioned(
+      // Lecteur flottant positionné avec animation
+      AnimatedPositioned(
           duration: const Duration(milliseconds: 180),
           curve: Curves.easeOut,
           left: _position!.dx,

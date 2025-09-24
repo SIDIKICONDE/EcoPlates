@@ -97,7 +97,7 @@ class RecommendedSection extends ConsumerWidget {
                           width: _cardWidth,
                           child: Material(
                             elevation: 2,
-                            shadowColor: colorScheme.shadow.withOpacity(0.1),
+                            shadowColor: colorScheme.shadow.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
                             child: OfferCard(
                               offer: offer,
@@ -265,7 +265,7 @@ class RecommendedSection extends ConsumerWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withOpacity(0.1),
+            color: colorScheme.shadow.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),
@@ -279,7 +279,7 @@ class RecommendedSection extends ConsumerWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: colorScheme.onSurfaceVariant.withOpacity(0.3),
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -288,7 +288,7 @@ class RecommendedSection extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 16, 16),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceVariant.withOpacity(0.3),
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             ),
             child: Row(
@@ -371,7 +371,7 @@ class RecommendedSection extends ConsumerWidget {
               color: colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow.withOpacity(0.1),
+                  color: colorScheme.shadow.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, -2),
                 ),

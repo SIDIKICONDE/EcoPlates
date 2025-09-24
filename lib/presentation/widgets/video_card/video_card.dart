@@ -142,7 +142,83 @@ class _VideoCardState extends State<VideoCard>
           );
         }
         
-        // Placeholder pendant le chargement
+        // Afficher le thumbnail si disponible, sinon placeholder
+        if (!widget.play && widget.video.thumbnailUrl.isNotEmpty) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.network(
+                widget.video.thumbnailUrl,
+                fit: BoxFit.cover,
+                alignment: alignment,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          isDark ? Colors.grey[900]! : Colors.grey[300]!,
+                          isDark ? Colors.grey[800]! : Colors.grey[200]!,
+                        ],
+                      ),
+                    ),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white30,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          isDark ? Colors.grey[900]! : Colors.grey[300]!,
+                          isDark ? Colors.grey[800]! : Colors.grey[200]!,
+                        ],
+                      ),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.broken_image,
+                        color: isDark ? Colors.white30 : Colors.black26,
+                        size: 48,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              // Icône play overlay sur le thumbnail (taille adaptée)
+              Center(
+                child: Container(
+                  width: (widget.height ?? _defaultHeight) <= 150 ? 24 : 48,
+                  height: (widget.height ?? _defaultHeight) <= 150 ? 24 : 48,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                    size: (widget.height ?? _defaultHeight) <= 150 ? 16 : 32,
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+        
+        // Placeholder si pas de thumbnail ou en chargement vidéo
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -178,13 +254,67 @@ class _VideoCardState extends State<VideoCard>
     )),
   );
 
-  Widget _buildInfoOverlay(ThemeData theme) => Positioned(
-    left: VideoCardConstants.contentPadding, right: VideoCardConstants.contentPadding, bottom: VideoCardConstants.contentPadding,
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-      Text(widget.video.title, style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w600, height: VideoCardConstants.titleLineHeight), maxLines: 2, overflow: TextOverflow.ellipsis),
-      const SizedBox(height: VideoCardConstants.textIconSpacing),
-      Text(widget.video.merchantName, style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70, fontSize: VideoCardConstants.merchantNameFontSize), maxLines: 1, overflow: TextOverflow.ellipsis),
-    ]),
-  );
+  Widget _buildInfoOverlay(ThemeData theme) {
+    final isCompact = (widget.height ?? _defaultHeight) <= 150; // Mode compact si hauteur <= 150
+    
+    if (isCompact) {
+      // Mode compact : seulement le nom de l'enseigne
+      return Positioned(
+        left: VideoCardConstants.contentPadding, 
+        right: VideoCardConstants.contentPadding, 
+        bottom: VideoCardConstants.contentPadding,
+        child: Text(
+          widget.video.merchantName, 
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: Colors.white, 
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            shadows: [
+              Shadow(
+                offset: const Offset(0, 1),
+                blurRadius: 3,
+                color: Colors.black.withValues(alpha: 0.8),
+              ),
+            ],
+          ), 
+          maxLines: 1, 
+          overflow: TextOverflow.ellipsis
+        ),
+      );
+    }
+    
+    // Mode normal : titre et nom du marchand
+    return Positioned(
+      left: VideoCardConstants.contentPadding, 
+      right: VideoCardConstants.contentPadding, 
+      bottom: VideoCardConstants.contentPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, 
+        mainAxisSize: MainAxisSize.min, 
+        children: [
+          Text(
+            widget.video.title, 
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: Colors.white, 
+              fontWeight: FontWeight.w600, 
+              height: VideoCardConstants.titleLineHeight
+            ), 
+            maxLines: 2, 
+            overflow: TextOverflow.ellipsis
+          ),
+          const SizedBox(height: VideoCardConstants.textIconSpacing),
+          Text(
+            widget.video.merchantName, 
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: Colors.white70, 
+              fontSize: VideoCardConstants.merchantNameFontSize
+            ), 
+            maxLines: 1, 
+            overflow: TextOverflow.ellipsis
+          ),
+        ]
+      ),
+    );
+  }
 
 }

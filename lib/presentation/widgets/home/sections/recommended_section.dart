@@ -47,7 +47,7 @@ class RecommendedSection extends ConsumerWidget {
         
         // Liste horizontale d'offres
         SizedBox(
-          height: 180, // Hauteur réduite pour les cartes compactes
+          height: 140, // Hauteur ultra-réduite pour les cartes compactes
           child: recommendedOffersAsync.when(
             data: (offers) => ListView.builder(
               scrollDirection: Axis.horizontal,

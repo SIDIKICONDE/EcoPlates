@@ -31,24 +31,50 @@ class OfferCardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    if (compact) {
+      // Version ultra-compacte : tout sur 2 lignes
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Ligne 1 : Marchand + Prix sur la même ligne
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: _buildCompactMerchantName(theme),
+                ),
+                _buildCompactPrice(theme),
+              ],
+            ),
+            const SizedBox(height: 2),
+            // Ligne 2 : Horaires seulement
+            _buildCompactPickupDate(),
+          ],
+        ),
+      );
+    }
+    
+    // Version normale (inchangée)
     return Padding(
-      padding: compact 
-        ? const EdgeInsets.fromLTRB(12, 6, 12, 8) 
-        : const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section nom du commerçant avec style distinctif
           _buildMerchantName(theme),
-          SizedBox(height: compact ? 1 : 2),
+          const SizedBox(height: 2),
 
           // Section description du produit (tronquée si trop longue)
-          if (!compact) _buildDescription(),
-          if (!compact) const SizedBox(height: 4),
+          _buildDescription(),
+          const SizedBox(height: 4),
 
           // Section date de récupération
           _buildPickupDate(),
-          SizedBox(height: compact ? 4 : 6),
+          const SizedBox(height: 6),
 
           // Ligne de séparation en pointillés (couleur selon fraîcheur)
           SizedBox(
@@ -58,7 +84,7 @@ class OfferCardContent extends StatelessWidget {
               painter: _DottedLinePainter(color: _getLineColor()),
             ),
           ),
-          SizedBox(height: compact ? 4 : 6),
+          const SizedBox(height: 6),
 
           // Section prix
           _buildPriceOnly(theme),
@@ -183,6 +209,48 @@ class OfferCardContent extends StatelessWidget {
     else {
       return Colors.green.withValues(alpha: 0.5);
     }
+  }
+  
+  /// Version compacte du nom du commerçant
+  Widget _buildCompactMerchantName(ThemeData theme) {
+    return Text(
+      offer.merchantName,
+      style: TextStyle(
+        fontSize: 13,
+        color: theme.primaryColor,
+        fontWeight: FontWeight.w600,
+        height: 1.0,
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+  
+  /// Version compacte du prix (sans prix barré)
+  Widget _buildCompactPrice(ThemeData theme) {
+    return Text(
+      offer.priceText,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        color: offer.isFree ? Colors.green : theme.primaryColor,
+        height: 1.0,
+      ),
+    );
+  }
+  
+  /// Version compacte de la date de récupération
+  Widget _buildCompactPickupDate() {
+    return Text(
+      _formatPickupTime(),
+      style: TextStyle(
+        fontSize: 11,
+        color: Colors.grey[600],
+        height: 1.0,
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
   }
 }
 

@@ -47,7 +47,7 @@ class RecommendedSection extends ConsumerWidget {
         
         // Liste horizontale d'offres
         SizedBox(
-          height: 250, // Hauteur augmentée pour ligne prix séparée
+          height: 275, // Hauteur augmentée pour éviter overflow (+25px)
           child: recommendedOffersAsync.when(
             data: (offers) => ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -59,7 +59,7 @@ class RecommendedSection extends ConsumerWidget {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: SizedBox(
-                    width: 280, // Largeur réduite pour les cartes compactes
+                    width: 340, // Largeur augmentée (hauteur inchangée)
                     child: OfferCard(
                       offer: offer,
                       compact: true,

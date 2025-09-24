@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../domain/entities/food_offer.dart';
-import 'offer_discount_badge.dart';
-import 'offer_time_badge.dart';
 import 'offer_quantity_badge.dart';
+import 'offer_rating_badge.dart';
 
 /// Widget spécialisé pour afficher l'image principale d'une carte d'offre
 /// Inclut tous les badges informatifs (réduction, temps restant, quantité)
@@ -68,148 +67,163 @@ class OfferCardImage extends StatelessWidget {
             ),
           ),
 
-          // Badge promotionnel en haut à gauche (priorité haute visibilité)
-          Positioned(
-            top: 16,
-            left: 16,
-            child: OfferDiscountBadge(
-              isFree: offer.isFree,
-              discountBadge: offer.discountBadge,
-            ),
-          ),
-
-          // Badge temporel en haut à droite (urgence pour dernières minutes)
-          if (offer.canPickup)
-            Positioned(
-              top: 16,
-              right: 16,
-              child: _buildContextualBadge(),
-            ),
-
-          // Indicateur de stock en bas à droite (quantité restante)
+          // Badge nombre de produits restants en haut à gauche
           if (offer.quantity > 0)
             Positioned(
-              bottom: 16,
-              right: 16,
+              top: 16,
+              left: 16,
               child: OfferQuantityBadge(
                 quantity: offer.quantity,
               ),
             ),
+
+          // Badge rating de l'enseigne en haut à droite
+          Positioned(
+            top: 16,
+            right: 16,
+            child: OfferRatingBadge(
+              rating: _getMerchantRating(),
+            ),
+          ),
+
+            
+          // Logo de l'enseigne en bas à gauche
+          Positioned(
+            bottom: 12,
+            left: 12,
+            child: _buildMerchantLogo(),
+          ),
         ],
       ),
     );
   }
   
-  /// Construit le badge contextuel selon l'état de l'offre
-  Widget _buildContextualBadge() {
-    final timeUntilEnd = offer.pickupEndTime.difference(DateTime.now());
-    
-    // Badge "Dernière minute" si moins de 2 heures
-    if (timeUntilEnd.inHours < 2) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.timer, color: Colors.white, size: 12),
-            SizedBox(width: 4),
-            Text(
-              'Dernière minute',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    
-    // Badge "Nouveau" si créé dans les dernières 24h
-    final isNew = DateTime.now().difference(offer.createdAt).inHours < 24;
-    if (isNew) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+  
+  /// Construit le logo de l'enseigne
+  Widget _buildMerchantLogo() {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.auto_awesome, color: Colors.white, size: 12),
-            SizedBox(width: 4),
-            Text(
-              'Nouveau',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    
-    // Badge "Populaire" si beaucoup de quantité vendue (on simule)
-    if (offer.quantity < 5 && offer.quantity > 0) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.orange,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.local_fire_department, color: Colors.white, size: 12),
-            SizedBox(width: 4),
-            Text(
-              'Populaire',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    
-    // Badge temps restant par défaut
-    return OfferTimeBadge(
-      timeRemaining: offer.timeRemaining,
+        ],
+      ),
+      child: ClipOval(
+        child: _getMerchantLogo(),
+      ),
     );
+  }
+  
+  /// Génère le logo selon le nom de l'enseigne
+  Widget _getMerchantLogo() {
+    final merchantName = offer.merchantName.toLowerCase();
+    
+    // URLs des vrais logos des enseignes
+    String? logoUrl;
+    Color backgroundColor = Colors.white;
+    
+    if (merchantName.contains('mcdonald')) {
+      logoUrl = 'https://logos-world.net/wp-content/uploads/2020/04/McDonalds-Logo.png';
+      backgroundColor = Colors.red[50]!;
+    }
+    else if (merchantName.contains('carrefour')) {
+      logoUrl = 'https://logos-world.net/wp-content/uploads/2020/11/Carrefour-Logo.png';
+      backgroundColor = Colors.blue[50]!;
+    }
+    else if (merchantName.contains('starbucks')) {
+      logoUrl = 'https://logos-world.net/wp-content/uploads/2020/04/Starbucks-Logo.png';
+      backgroundColor = Colors.green[50]!;
+    }
+    else if (merchantName.contains('monoprix')) {
+      logoUrl = 'https://logos-world.net/wp-content/uploads/2020/12/Monoprix-Logo.png';
+      backgroundColor = Colors.purple[50]!;
+    }
+    else if (merchantName.contains('paul')) {
+      logoUrl = 'https://upload.wikimedia.org/wikipedia/fr/thumb/3/3a/Logo_Paul.svg/1200px-Logo_Paul.svg.png';
+      backgroundColor = Colors.brown[50]!;
+    }
+    
+    // Si on a une URL de logo, on l'affiche
+    if (logoUrl != null) {
+      return Container(
+        color: backgroundColor,
+        child: CachedNetworkImage(
+          imageUrl: logoUrl,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Container(
+            color: backgroundColor,
+            child: Center(
+              child: SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.grey[400],
+                ),
+              ),
+            ),
+          ),
+          errorWidget: (context, url, error) => _getFallbackLogo(merchantName),
+        ),
+      );
+    }
+    
+    // Fallback pour les enseignes inconnues
+    return _getFallbackLogo(merchantName);
+  }
+  
+  /// Logo de fallback avec la première lettre
+  Widget _getFallbackLogo(String merchantName) {
+    final firstLetter = offer.merchantName.isNotEmpty 
+        ? offer.merchantName[0].toUpperCase()
+        : '?';
+        
+    return Container(
+      color: Colors.grey[100],
+      child: Center(
+        child: Text(
+          firstLetter,
+          style: TextStyle(
+            color: Colors.grey[700],
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+  
+  /// Génère un rating pour l'enseigne
+  double _getMerchantRating() {
+    final merchantName = offer.merchantName.toLowerCase();
+    
+    // Ratings simulés pour les enseignes connues
+    if (merchantName.contains('mcdonald')) {
+      return 4.2;
+    }
+    else if (merchantName.contains('carrefour')) {
+      return 4.1;
+    }
+    else if (merchantName.contains('starbucks')) {
+      return 4.5;
+    }
+    else if (merchantName.contains('monoprix')) {
+      return 3.9;
+    }
+    else if (merchantName.contains('paul')) {
+      return 4.3;
+    }
+    // Rating générique pour les autres enseignes
+    else {
+      return 4.0;
+    }
   }
 }
 
@@ -233,7 +247,6 @@ class _ImagePlaceholder extends StatelessWidget {
     );
   }
 }
-
 /// Widget d'image par défaut contextuel selon le type d'offre alimentaire
 /// Affiche une icône représentative du type de nourriture pour améliorer l'identification
 /// Utilisé quand l'image réseau n'est pas disponible ou en cas d'erreur de chargement

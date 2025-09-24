@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-/// Badge affichant la quantité restante d'offres
-class OfferQuantityBadge extends StatelessWidget {
-  final int quantity;
+/// Badge affichant le rating de l'enseigne avec étoiles
+class OfferRatingBadge extends StatelessWidget {
+  final double rating;
   
-  const OfferQuantityBadge({
+  const OfferRatingBadge({
     super.key,
-    required this.quantity,
+    required this.rating,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Version ultra-compacte du badge
+    // Version compacte du badge de rating
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 8,
+        horizontal: 6,
         vertical: 3,
       ),
       decoration: BoxDecoration(
@@ -25,13 +25,13 @@ class OfferQuantityBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(
-            Icons.inventory_2,
-            color: Colors.white,
+            Icons.star,
+            color: Colors.amber,
             size: 10,
           ),
           const SizedBox(width: 2),
           Text(
-            '$quantity',
+            rating.toStringAsFixed(1),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 10,

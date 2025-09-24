@@ -35,9 +35,9 @@ class OfferCardImage extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             child: Stack(
               children: [
-                // Image principale avec ratio adaptatif (compact: 3:1, normal: 16:9)
+                // Image principale avec ratio adaptatif (compact: 2:1, normal: 16:9)
                 AspectRatio(
-                  aspectRatio: compact ? 3 / 1 : 16 / 9,
+                  aspectRatio: compact ? 2 / 1 : 16 / 9,
                   child: offer.images.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: offer.images.first,

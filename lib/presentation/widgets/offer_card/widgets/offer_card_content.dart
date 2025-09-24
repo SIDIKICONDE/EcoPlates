@@ -32,14 +32,14 @@ class OfferCardContent extends StatelessWidget {
     final theme = Theme.of(context);
 
     if (compact) {
-      // Version ultra-compacte : tout sur 2 lignes
+      // Version compacte avec tous les éléments demandés
       return Padding(
-        padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Ligne 1 : Marchand + Prix sur la même ligne
+            // Ligne 1 : Nom de l'enseigne + coeur favoris
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,12 +47,36 @@ class OfferCardContent extends StatelessWidget {
                 Expanded(
                   child: _buildCompactMerchantName(theme),
                 ),
+                _buildFavoriteButton(),
+              ],
+            ),
+            const SizedBox(height: 3),
+            
+            // Ligne 2 : Description
+            _buildCompactDescription(),
+            const SizedBox(height: 4),
+            
+            // Ligne 3 : À récupérer + distance
+            _buildCompactPickupWithDistance(),
+            const SizedBox(height: 6),
+            
+            // Ligne de séparation en pointillés
+            SizedBox(
+              height: 1,
+              child: CustomPaint(
+                size: const Size(double.infinity, 1),
+                painter: _DottedLinePainter(color: _getLineColor()),
+              ),
+            ),
+            const SizedBox(height: 6),
+            
+            // Ligne 4 : Prix aligné à droite
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
                 _buildCompactPrice(theme),
               ],
             ),
-            const SizedBox(height: 2),
-            // Ligne 2 : Horaires seulement
-            _buildCompactPickupDate(),
           ],
         ),
       );
@@ -239,17 +263,116 @@ class OfferCardContent extends StatelessWidget {
     );
   }
   
-  /// Version compacte de la date de récupération
-  Widget _buildCompactPickupDate() {
+  /// Version compacte de la description
+  Widget _buildCompactDescription() {
+    final truncatedDescription = offer.description.length > 35
+        ? '${offer.description.substring(0, 35)}...'
+        : offer.description;
+    
     return Text(
-      _formatPickupTime(),
+      truncatedDescription,
       style: TextStyle(
         fontSize: 11,
         color: Colors.grey[600],
+        height: 1.1,
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+  
+  /// Version compacte "À récupérer" avec distance et horaires
+  Widget _buildCompactPickupWithDistance() {
+    final pickupText = _getSmartPickupText();
+    final timeText = _formatPickupTime();
+    final distanceText = distance != null 
+        ? ' • ${distance!.toStringAsFixed(1)}km'
+        : '';
+        
+    return Text(
+      '$pickupText • $timeText$distanceText',
+      style: TextStyle(
+        fontSize: 10,
+        color: Colors.grey[500],
         height: 1.0,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
+    );
+  }
+  
+  /// Génère un texte intelligent selon l'horaire de récupération
+  String _getSmartPickupText() {
+    final now = DateTime.now();
+    final startTime = offer.pickupStartTime;
+    final endTime = offer.pickupEndTime;
+    
+    // Si la récupération est déjà passée
+    if (endTime.isBefore(now)) {
+      return 'Éxpirée';
+    }
+    
+    // Si la récupération a déjà commencé
+    if (startTime.isBefore(now) && endTime.isAfter(now)) {
+      final remainingHours = endTime.difference(now).inHours;
+      if (remainingHours < 1) {
+        return 'Dernière chance';
+      } else {
+        return 'Disponible maintenant';
+      }
+    }
+    
+    // Déterminer si c'est aujourd'hui, demain, etc.
+    final today = DateTime(now.year, now.month, now.day);
+    final startDay = DateTime(startTime.year, startTime.month, startTime.day);
+    final daysDifference = startDay.difference(today).inDays;
+    
+    // Aujourd'hui
+    if (daysDifference == 0) {
+      if (startTime.hour < 12) {
+        return 'À récupérer ce matin';
+      } else if (startTime.hour < 18) {
+        return 'À récupérer cet après-midi';
+      } else {
+        return 'À récupérer ce soir';
+      }
+    }
+    // Demain
+    else if (daysDifference == 1) {
+      if (startTime.hour < 12) {
+        return 'À récupérer demain matin';
+      } else if (startTime.hour < 18) {
+        return 'À récupérer demain après-midi';
+      } else {
+        return 'À récupérer demain soir';
+      }
+    }
+    // Dans plusieurs jours
+    else if (daysDifference <= 7) {
+      final weekdays = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+      final weekday = weekdays[startTime.weekday - 1];
+      return 'À récupérer $weekday';
+    }
+    // Plus loin dans le futur
+    else {
+      return 'À récupérer le ${startTime.day}/${startTime.month}';
+    }
+  }
+  
+  /// Bouton coeur pour les favoris
+  Widget _buildFavoriteButton() {
+    return GestureDetector(
+      onTap: () {
+        // TODO: Implémenter la logique des favoris
+      },
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        child: Icon(
+          Icons.favorite_border,
+          size: 16,
+          color: Colors.grey[400],
+        ),
+      ),
     );
   }
 }

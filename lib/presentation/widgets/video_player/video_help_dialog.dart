@@ -5,7 +5,7 @@ class VideoHelpDialog extends StatelessWidget {
   const VideoHelpDialog({super.key});
 
   static void show(BuildContext context) {
-    showDialog(
+    showDialog<Widget>(
       context: context,
       builder: (context) => const VideoHelpDialog(),
     );
@@ -14,7 +14,7 @@ class VideoHelpDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AlertDialog(
       title: Row(
         children: [
@@ -31,28 +31,33 @@ class VideoHelpDialog extends StatelessWidget {
             _buildOption(
               icon: Icons.close_fullscreen_rounded,
               title: 'Mode Mini',
-              description: "Réduit la vidéo en petit format pour continuer à naviguer dans l'app.",
+              description:
+                  "Réduit la vidéo en petit format pour continuer à naviguer dans l'app.",
               available: true,
             ),
             const SizedBox(height: 16),
             _buildOption(
               icon: Icons.picture_in_picture_alt_rounded,
               title: 'Picture-in-Picture système',
-              description: 'Non disponible avec le lecteur Flutter. Utilisez le mode mini à la place.',
+              description:
+                  'Non disponible avec le lecteur Flutter. Utilisez le mode mini à la place.',
               available: false,
             ),
             const SizedBox(height: 16),
             _buildOption(
               icon: Icons.notifications_active_rounded,
               title: 'Contrôles de notification',
-              description: 'Contrôlez la lecture depuis la barre de notification (bientôt disponible).',
+              description:
+                  'Contrôlez la lecture depuis la barre de notification (bientôt disponible).',
               available: false,
             ),
             const SizedBox(height: 24),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.3,
+                ),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: theme.colorScheme.primary.withValues(alpha: 0.3),
@@ -102,9 +107,9 @@ class VideoHelpDialog extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: available 
-              ? Colors.green.withValues(alpha: 0.1)
-              : Colors.grey.withValues(alpha: 0.1),
+            color: available
+                ? Colors.green.withValues(alpha: 0.1)
+                : Colors.grey.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -152,10 +157,7 @@ class VideoHelpDialog extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 description,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
               ),
             ],
           ),

@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../core/services/geo_location_service.dart';
 import '../../../core/services/map_service.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/browse_search_provider.dart';
 
 /// Vue carte des offres pour la page Parcourir
 class BrowseMapView extends ConsumerStatefulWidget {
-  const BrowseMapView({
-    required this.offers,
-    super.key,
-  });
+  const BrowseMapView({required this.offers, super.key});
 
   final List<FoodOffer> offers;
 
@@ -56,7 +54,7 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
 
   Future<void> _tryCenterOnUserLocation() async {
     try {
-      final position = await _mapService.getCurrentPosition();
+      final position = await GeoLocationService.instance.getCurrentPosition();
       if (position != null) {
         // Ajouter le marqueur de position utilisateur et centrer
         _mapService.updateUserLocationMarker(position);
@@ -64,13 +62,13 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
       } else {
         // Fallback : montrer toutes les offres si disponibles
         if (widget.offers.isNotEmpty) {
-          _mapService.showAllOffers(widget.offers);
+          await _mapService.showAllOffers(widget.offers);
         }
       }
     } catch (e) {
       // En cas d'erreur, montrer les offres si disponibles
       if (widget.offers.isNotEmpty) {
-        _mapService.showAllOffers(widget.offers);
+        await _mapService.showAllOffers(widget.offers);
       }
     }
   }
@@ -107,14 +105,15 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
               ),
               onMapCreated: _onMapCreated,
               markers: markers,
-              myLocationButtonEnabled: false, // Nous utilisons notre propre bouton
+              myLocationButtonEnabled:
+                  false, // Nous utilisons notre propre bouton
               zoomControlsEnabled: false,
               mapToolbarEnabled: false,
               buildingsEnabled: false,
             );
           },
         ),
-        
+
         // Bouton de recentrage
         Positioned(
           bottom: 16,
@@ -137,7 +136,6 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
             },
           ),
         ),
-
       ],
     );
   }

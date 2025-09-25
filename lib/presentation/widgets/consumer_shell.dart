@@ -11,12 +11,14 @@ class ConsumerShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentTab = ref.watch(consumerTabProvider);
-
+    // Déterminer l'onglet actuel basé sur la route
+    final currentLocation = GoRouterState.of(context).uri.toString();
+    final tabFromRoute = ConsumerTab.fromRoute(currentLocation) ?? ConsumerTab.discover;
+    
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(
-        selectedIndex: currentTab.index,
+        selectedIndex: tabFromRoute.index,
         onDestinationSelected: (index) {
           final tab = ConsumerTab.values[index];
           ref.read(consumerTabProvider.notifier).state = tab;

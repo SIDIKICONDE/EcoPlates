@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'geo_location_service.dart';
+
 import '../../../domain/entities/food_offer.dart';
 
 /// Service pour gérer la carte Google Maps et les marqueurs d'offres
@@ -135,35 +137,9 @@ class MapService {
     print("Marqueur tapé pour l'offre: ${offer.title}");
   }
 
-  /// Obtient la position actuelle de l'utilisateur
-  Future<Position?> getCurrentPosition() async {
-    try {
-      // Vérifier les permissions
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return null;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        return null;
-      }
-
-      // Obtenir la position
-      return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-    } catch (e) {
-      print("Erreur lors de l'obtention de la position: $e");
-      return null;
-    }
-  }
-
   /// Centre la carte sur la position actuelle
   Future<void> centerOnUserLocation() async {
-    final position = await getCurrentPosition();
+    final position = await GeoLocationService.instance.getCurrentPosition();
     if (position != null && _mapController != null) {
       // Mettre à jour le marqueur de position utilisateur
       updateUserLocationMarker(position);

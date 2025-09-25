@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'common/location_header.dart';
+
 /// En-tête minimaliste, élégant et professionnel
 /// - Hauteur compacte (48px par défaut)
 /// - Fond neutre (surface)
@@ -17,6 +19,7 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
     this.showBottomDivider = true,
     this.backgroundColor,
     this.horizontalPadding = 12,
+    this.showLocationInstead = false,
   });
   final String? title;
   final Widget? leading;
@@ -25,6 +28,7 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool showBottomDivider;
   final Color? backgroundColor;
   final double horizontalPadding;
+  final bool showLocationInstead;
 
   @override
   Size get preferredSize => Size.fromHeight(height + (kIsWeb ? 0 : 0));
@@ -60,16 +64,22 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
               // Leading (ex: bouton retour ou logo compact)
               leading ?? const SizedBox(width: 44),
 
-              // Titre centré
+              // Titre centré ou localisation
               Expanded(
-                child: Text(
-                  title ?? '',
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                child: showLocationInstead
+                    ? const Center(
+                        child: LocationHeader(
+                          showIcon: true,
+                        ),
+                      )
+                    : Text(
+                        title ?? '',
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
               ),
 
               // Actions (ex: icône de recherche, panier, etc.)

@@ -21,43 +21,40 @@ class MainHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
-
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: MinimalHeader(
-        title: 'EcoPlates',
-      ),
-      body: SingleChildScrollView(
+    return Scaffold(
+      appBar: const MinimalHeader(showLocationInstead: true),
+      body: const SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 4),
-            
+
             // Section des grandes enseignes (toujours en premier)
             BrandSection(),
-            
+
             // Section des catégories
             CategoriesSection(),
-            
+
             // Section Près de chez vous (nouvelle)
             NearbySection(),
-            
+
             // Section des offres urgentes
             UrgentSection(),
-            
+
             // Section recommandé pour vous
             RecommendedSection(),
-            
+
             // Section des repas complets
             MealsSection(),
-            
+
             // Section des marchands partenaires
             MerchantSection(),
-            
+
             // Section des vidéos et astuces
             VideosSection(),
-            
+
             SizedBox(height: 16),
           ],
         ),

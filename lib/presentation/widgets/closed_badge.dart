@@ -2,19 +2,13 @@ import 'package:flutter/material.dart';
 
 /// Badge pour indiquer qu'une boutique est fermée
 class ClosedBadge extends StatelessWidget {
-  const ClosedBadge({
-    super.key,
-    this.reopenTime,
-    this.size = BadgeSize.medium,
-  });
+  const ClosedBadge({super.key, this.reopenTime, this.size = BadgeSize.medium});
 
   final String? reopenTime;
   final BadgeSize size;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: size == BadgeSize.small ? 6 : 8,
@@ -115,8 +109,4 @@ class ClosedBadgeWithTime extends StatelessWidget {
 }
 
 /// Tailles disponibles pour les badges
-enum BadgeSize {
-  small,
-  medium,
-  large,
-}
+enum BadgeSize { small, medium, large }

@@ -1,0 +1,167 @@
+{
+	// By default, VS Code will only switch to the Debug Console when you start
+	// debugging the first time in a session. This setting tells VS Code to always
+	// switch to the Debug Console when starting a session, so you can see the
+	// programs output.
+	"debug.internalConsoleOptions": "openOnSessionStart",
+
+	"[dart]": {
+		// Automatically format code on save and during typing of certain characters
+		// (like `;` and `}`).
+		"editor.formatOnSave": true,
+		"editor.formatOnType": true,
+
+		// Draw a guide line at 80 characters, where Dart's formatting will wrap code.
+		"editor.rulers": [80],
+
+		// Disables built-in highlighting of words that match your selection. Without
+		// this, all instances of the selected text will be highlighted, interfering
+		// with Dart's ability to highlight only exact references to the selected variable.
+		"editor.selectionHighlight": false,
+
+		// Allows pressing <TAB> to complete snippets such as `for` even when the
+		// completion list is not visible.
+		"editor.tabCompletion": "onlySnippets",
+
+		// By default, VS Code will populate code completion with words found in the
+		// matching documents when a language service does not provide its own completions.
+		// This results in code completion suggesting words when editing comments and
+		// strings. This setting will prevent that.
+		"editor.wordBasedSuggestions": "off",
+	},
+
+	// === PERSONNALISATION DES COULEURS DE L'IDE ===
+	
+	// Thème de couleur principal
+	"workbench.colorTheme": "Dark+ (default dark)",
+	
+	// Couleurs personnalisées pour l'éditeur
+	"workbench.colorCustomizations": {
+		// Couleur de fond de l'éditeur
+		"editor.background": "#1e1e1e",
+		
+		// Couleur de la ligne active
+		"editor.lineHighlightBackground": "#2d2d30",
+		
+		// Couleur de sélection
+		"editor.selectionBackground": "#264f78",
+		"editor.selectionHighlightBackground": "#3b3939",
+		
+		// Couleur des numéros de ligne
+		"editorLineNumber.foreground": "#858585",
+		"editorLineNumber.activeForeground": "#c6c6c6",
+		
+		// Couleur de la règle à 80 caractères
+		"editorRuler.foreground": "#404040",
+		
+		// Couleurs de la barre latérale
+		"sideBar.background": "#252526",
+		"sideBar.foreground": "#cccccc",
+		"sideBarTitle.foreground": "#cccccc",
+		
+		// Couleurs de l'explorateur de fichiers
+		"tree.indentGuidesStroke": "#404040",
+		"tree.tableColumnsBorder": "#404040",
+		
+		// Couleurs de la barre d'état
+		"statusBar.background": "#007acc",
+		"statusBar.foreground": "#ffffff",
+		
+		// Couleurs de l'onglet actif
+		"tab.activeBackground": "#1e1e1e",
+		"tab.activeForeground": "#ffffff",
+		"tab.inactiveBackground": "#2d2d30",
+		"tab.inactiveForeground": "#858585",
+		
+		// Couleurs du terminal
+		"terminal.background": "#1e1e1e",
+		"terminal.foreground": "#cccccc",
+		
+		// Couleurs des suggestions
+		"editorSuggestWidget.background": "#252526",
+		"editorSuggestWidget.border": "#454545",
+		"editorSuggestWidget.foreground": "#cccccc",
+		"editorSuggestWidget.highlightForeground": "#007acc",
+		
+		// Couleurs des erreurs et avertissements
+		"editorError.foreground": "#f44747",
+		"editorWarning.foreground": "#ffcc02",
+		"editorInfo.foreground": "#75beff"
+	},
+
+	// Couleurs spécifiques pour Dart/Flutter
+	"editor.tokenColorCustomizations": {
+		"textMateRules": [
+			{
+				"scope": "keyword.control.dart",
+				"settings": {
+					"foreground": "#C586C0"
+				}
+			},
+			{
+				"scope": "keyword.other.dart",
+				"settings": {
+					"foreground": "#569CD6"
+				}
+			},
+			{
+				"scope": "string.quoted.dart",
+				"settings": {
+					"foreground": "#CE9178"
+				}
+			},
+			{
+				"scope": "comment.dart",
+				"settings": {
+					"foreground": "#6A9955",
+					"fontStyle": "italic"
+				}
+			},
+			{
+				"scope": "variable.dart",
+				"settings": {
+					"foreground": "#9CDCFE"
+				}
+			},
+			{
+				"scope": "entity.name.function.dart",
+				"settings": {
+					"foreground": "#DCDCAA"
+				}
+			},
+			{
+				"scope": "entity.name.type.class.dart",
+				"settings": {
+					"foreground": "#4EC9B0"
+				}
+			},
+			{
+				"scope": "constant.numeric.dart",
+				"settings": {
+					"foreground": "#B5CEA8"
+				}
+			}
+		]
+	},
+
+	// Configuration des icônes
+	"workbench.iconTheme": "material-icon-theme",
+	
+	// Configuration de la police
+	"editor.fontFamily": "'Fira Code', 'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace",
+	"editor.fontSize": 14,
+	"editor.fontLigatures": true,
+	"editor.lineHeight": 1.5,
+	
+	// Configuration des onglets
+	"workbench.editor.enablePreview": false,
+	"workbench.editor.showTabs": "multiple",
+	
+	// Configuration de la minimap
+	"editor.minimap.enabled": true,
+	"editor.minimap.maxColumn": 120,
+	
+	// Configuration des guides d'indentation
+	"editor.guides.indentation": true,
+	"editor.guides.bracketPairs": true
+}

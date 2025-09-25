@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../../domain/entities/food_offer.dart';
+
 import '../../../core/utils/offer_formatters.dart';
+import '../../../domain/entities/food_offer.dart';
 
 /// Section des métadonnées de l'offre (type, catégorie, date, statut)
 class OfferMetadataSection extends StatelessWidget {
+  const OfferMetadataSection({required this.offer, super.key});
   final FoodOffer offer;
-
-  const OfferMetadataSection({
-    super.key,
-    required this.offer,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +20,7 @@ class OfferMetadataSection extends StatelessWidget {
               Expanded(
                 child: _buildInfoSection(
                   icon: Icons.category,
-                  title: 'Type d\'offre',
+                  title: "Type d'offre",
                   content: OfferFormatters.formatOfferType(offer.type),
                   color: Colors.blue,
                 ),
@@ -101,10 +98,7 @@ class OfferMetadataSection extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             content,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
         ],
       ),

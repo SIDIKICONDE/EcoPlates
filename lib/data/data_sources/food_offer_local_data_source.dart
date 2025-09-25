@@ -67,6 +67,10 @@ abstract class FoodOfferLocalDataSource {
 
 /// Implémentation avec Hive
 class FoodOfferLocalDataSourceImpl implements FoodOfferLocalDataSource {
+  
+  FoodOfferLocalDataSourceImpl() {
+    _initBoxes();
+  }
   static const String _offersBoxName = 'offers';
   static const String _recommendationsBoxName = 'recommendations';
   static const String _pendingActionsBoxName = 'pending_actions';
@@ -77,10 +81,6 @@ class FoodOfferLocalDataSourceImpl implements FoodOfferLocalDataSource {
   late final Box<Map<String, dynamic>> _pendingActionsBox;
   late final Box<dynamic> _metadataBox;
   
-  FoodOfferLocalDataSourceImpl() {
-    _initBoxes();
-  }
-  
   Future<void> _initBoxes() async {
     _offersBox = await Hive.openBox<FoodOfferModel>(_offersBoxName);
     _recommendationsBox = await Hive.openBox<List<String>>(_recommendationsBoxName);
@@ -90,8 +90,8 @@ class FoodOfferLocalDataSourceImpl implements FoodOfferLocalDataSource {
   
   @override
   Future<void> cacheOffers(List<FoodOfferModel> offers) async {
-    final Map<String, FoodOfferModel> offersMap = {
-      for (var offer in offers) offer.id: offer
+    final offersMap = <String, FoodOfferModel>{
+      for (final offer in offers) offer.id: offer
     };
     await _offersBox.putAll(offersMap);
     await updateLastSyncDate();
@@ -214,7 +214,7 @@ class FoodOfferLocalDataSourceImpl implements FoodOfferLocalDataSource {
       'synced': false,
     };
     
-    await _pendingActionsBox.put(reservation['id'] as String, reservation);
+    await _pendingActionsBox.put(reservation['id']! as String, reservation);
   }
   
   @override
@@ -243,7 +243,7 @@ class FoodOfferLocalDataSourceImpl implements FoodOfferLocalDataSource {
       'synced': false,
     };
     
-    await _pendingActionsBox.put(cancellation['id'] as String, cancellation);
+    await _pendingActionsBox.put(cancellation['id']! as String, cancellation);
   }
   
   @override

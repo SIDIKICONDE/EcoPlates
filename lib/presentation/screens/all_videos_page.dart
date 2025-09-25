@@ -21,7 +21,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
     final videosAsync = ref.watch(videosProvider);
     final theme = Theme.of(context);
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Toutes les vidéos'),
@@ -60,16 +60,16 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
               ],
             ),
           ),
-          
+
           const Divider(height: 1),
-          
+
           // Liste des vidéos
           Expanded(
             child: videosAsync.when(
               data: (allVideos) {
                 // Filtrer les vidéos
-                var videos = _filterVideos(allVideos);
-                
+                final videos = _filterVideos(allVideos);
+
                 if (videos.isEmpty) {
                   return Center(
                     child: Column(
@@ -91,7 +91,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                     ),
                   );
                 }
-                
+
                 // Grille adaptative
                 return RefreshIndicator(
                   onRefresh: () async {
@@ -103,7 +103,8 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                       crossAxisCount: isSmallScreen ? 2 : 3,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
-                      childAspectRatio: 16 / 12, // Format plus carré pour la grille
+                      childAspectRatio:
+                          16 / 12, // Format plus carré pour la grille
                     ),
                     itemCount: videos.length,
                     itemBuilder: (context, index) {
@@ -114,18 +115,17 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                         description: videoData.description,
                         videoUrl: videoData.videoUrl,
                         thumbnailUrl: videoData.thumbnailUrl,
-                        merchantId: videoData.merchantName.toLowerCase().replaceAll(' ', '-'),
+                        merchantId: videoData.merchantName
+                            .toLowerCase()
+                            .replaceAll(' ', '-'),
                         merchantName: videoData.merchantName,
                         duration: _parseDuration(videoData.duration),
                         viewCount: videoData.views,
                         publishedAt: videoData.publishedAt,
-                        tags: [],
-                        focalPoint: VideoFocalPoint.center,
                       );
-                      
+
                       return VideoCard(
                         video: video,
-                        play: false,
                         onTap: () {
                           showFloatingVideoModal(context, video);
                         },
@@ -134,18 +134,12 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                   ),
                 );
               },
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Colors.red[400],
-                    ),
+                    Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
                     const SizedBox(height: 16),
                     Text(
                       'Erreur de chargement',
@@ -170,7 +164,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
       ),
     );
   }
-  
+
   Widget _buildFilterChip(String label, String value) {
     final isSelected = _selectedFilter == value;
     return FilterChip(
@@ -184,38 +178,42 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
       selectedColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
     );
   }
-  
+
   List<VideoData> _filterVideos(List<VideoData> videos) {
-    List<VideoData> filtered = videos;
-    
+    var filtered = videos;
+
     // Appliquer le filtre sélectionné
     switch (_selectedFilter) {
       case 'recent':
         final threeDaysAgo = DateTime.now().subtract(const Duration(days: 3));
-        filtered = filtered.where((v) => v.publishedAt.isAfter(threeDaysAgo)).toList();
-        break;
+        filtered = filtered
+            .where((v) => v.publishedAt.isAfter(threeDaysAgo))
+            .toList();
       case 'popular':
         filtered = filtered.where((v) => v.views > 10000).toList();
-        break;
       case 'anti-waste':
-        filtered = filtered.where((v) => 
-          v.title.toLowerCase().contains('gaspi') || 
-          v.title.toLowerCase().contains('déchet') ||
-          v.description.toLowerCase().contains('gaspillage')
-        ).toList();
-        break;
+        filtered = filtered
+            .where(
+              (v) =>
+                  v.title.toLowerCase().contains('gaspi') ||
+                  v.title.toLowerCase().contains('déchet') ||
+                  v.description.toLowerCase().contains('gaspillage'),
+            )
+            .toList();
       case 'recipes':
-        filtered = filtered.where((v) => 
-          v.title.toLowerCase().contains('recette') || 
-          v.title.toLowerCase().contains('smoothie') ||
-          v.description.toLowerCase().contains('cuisine')
-        ).toList();
-        break;
+        filtered = filtered
+            .where(
+              (v) =>
+                  v.title.toLowerCase().contains('recette') ||
+                  v.title.toLowerCase().contains('smoothie') ||
+                  v.description.toLowerCase().contains('cuisine'),
+            )
+            .toList();
     }
-    
+
     return filtered;
   }
-  
+
   Duration _parseDuration(String durationStr) {
     final parts = durationStr.split(':');
     if (parts.length == 2) {
@@ -223,16 +221,15 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
       final seconds = int.tryParse(parts[1]) ?? 0;
       return Duration(minutes: minutes, seconds: seconds);
     }
-    return const Duration(minutes: 0);
+    return const Duration();
   }
 }
 
 /// Delegate pour la recherche de vidéos
 class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
-  final WidgetRef ref;
-  
   _VideoSearchDelegate({required this.ref});
-  
+  final WidgetRef ref;
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -245,7 +242,7 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
         ),
     ];
   }
-  
+
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
@@ -255,28 +252,31 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
       },
     );
   }
-  
+
   @override
   Widget buildResults(BuildContext context) {
     return _buildSearchResults(context);
   }
-  
+
   @override
   Widget buildSuggestions(BuildContext context) {
     return _buildSearchResults(context);
   }
-  
+
   Widget _buildSearchResults(BuildContext context) {
     final videosAsync = ref.read(videosProvider);
-    
+
     return videosAsync.when(
       data: (videos) {
-        final filtered = videos.where((v) =>
-          v.title.toLowerCase().contains(query.toLowerCase()) ||
-          v.merchantName.toLowerCase().contains(query.toLowerCase()) ||
-          v.description.toLowerCase().contains(query.toLowerCase())
-        ).toList();
-        
+        final filtered = videos
+            .where(
+              (v) =>
+                  v.title.toLowerCase().contains(query.toLowerCase()) ||
+                  v.merchantName.toLowerCase().contains(query.toLowerCase()) ||
+                  v.description.toLowerCase().contains(query.toLowerCase()),
+            )
+            .toList();
+
         if (filtered.isEmpty) {
           return Center(
             child: Column(
@@ -292,7 +292,7 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
             ),
           );
         }
-        
+
         return ListView.builder(
           itemCount: filtered.length,
           itemBuilder: (context, index) {
@@ -303,20 +303,21 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
               description: videoData.description,
               videoUrl: videoData.videoUrl,
               thumbnailUrl: videoData.thumbnailUrl,
-              merchantId: videoData.merchantName.toLowerCase().replaceAll(' ', '-'),
+              merchantId: videoData.merchantName.toLowerCase().replaceAll(
+                ' ',
+                '-',
+              ),
               merchantName: videoData.merchantName,
               duration: _parseDuration(videoData.duration),
               viewCount: videoData.views,
               publishedAt: videoData.publishedAt,
-              tags: [],
-              focalPoint: VideoFocalPoint.center,
             );
-            
+
             return ListTile(
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: AspectRatio(
-                  aspectRatio: 16/9,
+                  aspectRatio: 16 / 9,
                   child: Image.network(
                     video.thumbnailUrl,
                     fit: BoxFit.cover,
@@ -327,7 +328,11 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
                   ),
                 ),
               ),
-              title: Text(video.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+              title: Text(
+                video.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
               subtitle: Text('${video.merchantName} • ${video.viewCount} vues'),
               onTap: () {
                 close(context, null);
@@ -338,12 +343,11 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Center(
-        child: Text('Erreur lors du chargement des vidéos'),
-      ),
+      error: (_, __) =>
+          const Center(child: Text('Erreur lors du chargement des vidéos')),
     );
   }
-  
+
   Duration _parseDuration(String durationStr) {
     final parts = durationStr.split(':');
     if (parts.length == 2) {
@@ -351,6 +355,6 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
       final seconds = int.tryParse(parts[1]) ?? 0;
       return Duration(minutes: minutes, seconds: seconds);
     }
-    return const Duration(minutes: 0);
+    return const Duration();
   }
 }

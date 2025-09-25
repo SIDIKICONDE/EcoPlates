@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../domain/entities/food_offer.dart';
 import '../providers/urgent_offers_provider.dart';
 import '../widgets/offer_card.dart';
 import '../widgets/offer_detail/index.dart';
-import '../../domain/entities/food_offer.dart';
 
 /// Page affichant toutes les offres urgentes à sauver
 class AllUrgentOffersScreen extends ConsumerStatefulWidget {
   const AllUrgentOffersScreen({super.key});
 
   @override
-  ConsumerState<AllUrgentOffersScreen> createState() => _AllUrgentOffersScreenState();
+  ConsumerState<AllUrgentOffersScreen> createState() =>
+      _AllUrgentOffersScreenState();
 }
 
-class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen> 
+class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _pulseAnimation;
@@ -25,14 +27,10 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat();
-    
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+
+    _pulseAnimation = Tween<double>(begin: 1, end: 1.05).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -44,7 +42,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
   @override
   Widget build(BuildContext context) {
     final offersAsync = ref.watch(urgentOffersProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -59,7 +57,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
               },
             ),
             const SizedBox(width: 8),
-            const Text('À sauver d\'urgence'),
+            const Text("À sauver d'urgence"),
           ],
         ),
         centerTitle: false,
@@ -84,7 +82,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
           if (offers.isEmpty) {
             return _buildEmptyState(context);
           }
-          
+
           // Trier les offres par urgence
           final sortedOffers = List<FoodOffer>.from(offers)
             ..sort((a, b) {
@@ -92,7 +90,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
               final bTime = b.pickupEndTime.difference(DateTime.now());
               return aTime.compareTo(bTime);
             });
-          
+
           return RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(urgentOffersProvider);
@@ -103,29 +101,29 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
               itemCount: sortedOffers.length,
               itemBuilder: (context, index) {
                 final offer = sortedOffers[index];
-                final remainingTime = offer.pickupEndTime.difference(DateTime.now());
-                
+                final remainingTime = offer.pickupEndTime.difference(
+                  DateTime.now(),
+                );
+
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Stack(
                     children: [
                       OfferCard(
                         offer: offer,
-                        compact: false,
-                        showDistance: true,
                         distance: 0.3 + (index * 0.1),
                         onTap: () {
                           _navigateToOfferDetail(context, offer);
                         },
                       ),
-                      
+
                       // Badge urgence en overlay
                       Positioned(
                         top: 12,
                         right: 12,
                         child: _buildUrgencyIndicator(remainingTime),
                       ),
-                      
+
                       // Indicateur de stock faible
                       if (offer.quantity <= 3)
                         Positioned(
@@ -137,9 +135,9 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                               vertical: 5,
                             ),
                             decoration: BoxDecoration(
-                              color: offer.quantity == 1 
-                                ? Colors.red 
-                                : Colors.orange,
+                              color: offer.quantity == 1
+                                  ? Colors.red
+                                  : Colors.orange,
                               borderRadius: BorderRadius.circular(15),
                               boxShadow: [
                                 BoxShadow(
@@ -159,9 +157,9 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  offer.quantity == 1 
-                                    ? 'Dernier disponible !' 
-                                    : 'Plus que ${offer.quantity} restants',
+                                  offer.quantity == 1
+                                      ? 'Dernier disponible !'
+                                      : 'Plus que ${offer.quantity} restants',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
@@ -183,16 +181,11 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const CircularProgressIndicator(
-                color: Colors.red,
-              ),
+              const CircularProgressIndicator(color: Colors.red),
               const SizedBox(height: 16),
               Text(
                 'Recherche des offres urgentes...',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: Colors.grey[600], fontSize: 16),
               ),
             ],
           ),
@@ -206,15 +199,15 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
     if (remainingTime.isNegative) {
       return Container(); // Offre expirée
     }
-    
+
     final hours = remainingTime.inHours;
     final minutes = remainingTime.inMinutes % 60;
-    
+
     Color bgColor;
     Color textColor;
     String label;
     IconData icon;
-    
+
     if (hours == 0 && minutes <= 30) {
       bgColor = Colors.red;
       textColor = Colors.white;
@@ -236,7 +229,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
       label = '${hours}h';
       icon = Icons.schedule;
     }
-    
+
     return AnimatedBuilder(
       animation: _pulseAnimation,
       builder: (context, child) {
@@ -288,26 +281,19 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
               color: Colors.green[50],
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.check_circle,
-              size: 60,
-              color: Colors.green[600],
-            ),
+            child: Icon(Icons.check_circle, size: 60, color: Colors.green[600]),
           ),
           const SizedBox(height: 24),
           Text(
             'Tout a été sauvé ! 🎉',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Text(
             'Aucune offre urgente en ce moment.\nRevenez plus tard pour sauver de la nourriture !',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 16,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 16),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -366,7 +352,10 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
               label: const Text('Réessayer'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
               ),
             ),
           ],
@@ -387,7 +376,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
   Widget _buildOfferDetailModal(BuildContext context, FoodOffer offer) {
     final remainingTime = offer.pickupEndTime.difference(DateTime.now());
     final isVeryUrgent = remainingTime.inMinutes <= 60;
-    
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,
       decoration: const BoxDecoration(
@@ -401,13 +390,15 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: isVeryUrgent 
-                  ? [Colors.red[100]!, Colors.orange[50]!]
-                  : [Colors.orange[100]!, Colors.yellow[50]!],
+                colors: isVeryUrgent
+                    ? [Colors.red[100]!, Colors.orange[50]!]
+                    : [Colors.orange[100]!, Colors.yellow[50]!],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -437,10 +428,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                       const SizedBox(height: 4),
                       Text(
                         'À récupérer avant ${_formatTime(offer.pickupEndTime)}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[700],
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
                     ],
                   ),
@@ -452,7 +440,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
               ],
             ),
           ),
-          
+
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
@@ -468,22 +456,16 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                       decoration: BoxDecoration(
                         color: Colors.orange[50],
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.orange[200]!,
-                          width: 1,
-                        ),
+                        border: Border.all(color: Colors.orange[200]!),
                       ),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.inventory_2,
-                            color: Colors.orange[700],
-                          ),
+                          Icon(Icons.inventory_2, color: Colors.orange[700]),
                           const SizedBox(width: 12),
                           Text(
                             offer.quantity == 1
-                              ? 'Dernier article disponible !'
-                              : 'Plus que ${offer.quantity} articles disponibles',
+                                ? 'Dernier article disponible !'
+                                : 'Plus que ${offer.quantity} articles disponibles',
                             style: TextStyle(
                               color: Colors.orange[900],
                               fontWeight: FontWeight.bold,
@@ -492,23 +474,23 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                         ],
                       ),
                     ),
-                  
+
                   // Informations principales
                   OfferInfoSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Détails pratiques
                   OfferDetailsSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Adresse
                   OfferAddressSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Badges allergènes
                   OfferBadgesSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Métadonnées
                   OfferMetadataSection(offer: offer),
                   const SizedBox(height: 100),
@@ -516,7 +498,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
               ),
             ),
           ),
-          
+
           // Barre de réservation urgente
           Container(
             padding: const EdgeInsets.all(16),
@@ -526,9 +508,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
-              border: Border(
-                top: BorderSide(color: Colors.red[200]!),
-              ),
+              border: Border(top: BorderSide(color: Colors.red[200]!)),
             ),
             child: SafeArea(
               child: Row(
@@ -548,15 +528,15 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                           ),
                         ),
                       Text(
-                        offer.discountedPrice == 0 
-                          ? 'Gratuit !'
-                          : '${offer.discountedPrice.toStringAsFixed(2)}€',
+                        offer.discountedPrice == 0
+                            ? 'Gratuit !'
+                            : '${offer.discountedPrice.toStringAsFixed(2)}€',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: offer.discountedPrice == 0 
-                            ? Colors.green 
-                            : Colors.black,
+                          color: offer.discountedPrice == 0
+                              ? Colors.green
+                              : Colors.black,
                         ),
                       ),
                     ],
@@ -572,12 +552,17 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                             backgroundColor: Colors.green,
                             content: Row(
                               children: [
-                                const Icon(Icons.check_circle, color: Colors.white),
+                                const Icon(
+                                  Icons.check_circle,
+                                  color: Colors.white,
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     'Bravo ! Vous avez sauvé "${offer.title}"',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -639,14 +624,14 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
             children: [
               Text(
                 'Trier par',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               ListTile(
                 leading: const Icon(Icons.timer, color: Colors.red),
-                title: const Text('Plus urgent d\'abord'),
+                title: const Text("Plus urgent d'abord"),
                 subtitle: const Text('Offres qui expirent bientôt'),
                 onTap: () {
                   Navigator.pop(context);
@@ -715,7 +700,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                 ],
               ),
               const SizedBox(height: 20),
-              
+
               // Filtre par temps restant
               Text(
                 'Temps restant',
@@ -748,9 +733,9 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // Filtre par quantité
               Text(
                 'Quantité disponible',
@@ -777,9 +762,9 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // Boutons d'action
               Row(
                 children: [

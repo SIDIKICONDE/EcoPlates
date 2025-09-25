@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers/recommended_offers_provider.dart';
-import '../../offer_card.dart';
-import '../../../screens/all_recommended_offers_screen.dart';
-import '../../offer_detail/index.dart';
+
 import '../../../../domain/entities/food_offer.dart';
+import '../../../providers/recommended_offers_provider.dart';
+import '../../../screens/all_recommended_offers_screen.dart';
+import '../../offer_card.dart';
+import '../../offer_detail/index.dart';
 
 /// Section des offres recommandées avec style Material 3
 class RecommendedSection extends ConsumerWidget {
   const RecommendedSection({super.key});
 
-  static const double _horizontalPadding = 20.0;
-  static const double _sectionSpacing = 24.0;
-  static const double _cardHeight = 280.0;
-  static const double _cardWidth = 340.0;
-  static const double _cardSpacing = 12.0;
+  static const double _horizontalPadding = 20;
+  static const double _sectionSpacing = 24;
+  static const double _cardHeight = 280;
+  static const double _cardWidth = 340;
+  static const double _cardSpacing = 12;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recommendedOffersAsync = ref.watch(recommendedOffersProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // En-tête de section avec style amélioré
         Container(
-          padding: EdgeInsets.fromLTRB(
+          padding: const EdgeInsets.fromLTRB(
             _horizontalPadding,
             _sectionSpacing / 2,
             _horizontalPadding - 8,
@@ -73,7 +74,7 @@ class RecommendedSection extends ConsumerWidget {
             ],
           ),
         ),
-        
+
         // Liste horizontale d'offres avec animations
         SizedBox(
           height: _cardHeight,
@@ -82,7 +83,9 @@ class RecommendedSection extends ConsumerWidget {
                 ? _buildEmptyState(context)
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: _horizontalPadding - _cardSpacing / 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: _horizontalPadding - _cardSpacing / 2,
+                    ),
                     physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics(),
                     ),
@@ -92,19 +95,23 @@ class RecommendedSection extends ConsumerWidget {
                       return AnimatedContainer(
                         duration: Duration(milliseconds: 300 + (index * 50)),
                         curve: Curves.easeOutCubic,
-                        padding: EdgeInsets.symmetric(horizontal: _cardSpacing / 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: _cardSpacing / 2,
+                        ),
                         child: SizedBox(
                           width: _cardWidth,
                           child: Material(
                             elevation: 2,
-                            shadowColor: colorScheme.shadow.withValues(alpha: 0.1),
+                            shadowColor: colorScheme.shadow.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(16),
                             child: OfferCard(
                               offer: offer,
                               compact: true,
-                              showDistance: true,
                               distance: 1.2 + (index * 0.3),
-                              onTap: () => _showOfferDetailModal(context, offer),
+                              onTap: () =>
+                                  _showOfferDetailModal(context, offer),
                             ),
                           ),
                         ),
@@ -115,8 +122,8 @@ class RecommendedSection extends ConsumerWidget {
             error: (error, stack) => _buildErrorState(context, ref),
           ),
         ),
-        
-        SizedBox(height: _sectionSpacing),
+
+        const SizedBox(height: _sectionSpacing),
       ],
     );
   }
@@ -146,7 +153,7 @@ class RecommendedSection extends ConsumerWidget {
   Widget _buildErrorState(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Center(
       child: Container(
         padding: const EdgeInsets.all(32),
@@ -201,7 +208,7 @@ class RecommendedSection extends ConsumerWidget {
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Center(
       child: Container(
         padding: const EdgeInsets.all(32),
@@ -256,7 +263,7 @@ class RecommendedSection extends ConsumerWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final mediaQuery = MediaQuery.of(context);
-    
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: mediaQuery.size.height * 0.9,
@@ -283,20 +290,22 @@ class RecommendedSection extends ConsumerWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // Header de la modal avec style Material 3
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 16, 16),
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
-                    'Détails de l\'offre',
+                    "Détails de l'offre",
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: colorScheme.onSurface,
@@ -317,7 +326,7 @@ class RecommendedSection extends ConsumerWidget {
               ],
             ),
           ),
-          
+
           // Contenu scrollable avec animations
           Expanded(
             child: SingleChildScrollView(
@@ -332,39 +341,41 @@ class RecommendedSection extends ConsumerWidget {
                     child: OfferInfoSection(offer: offer),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Détails pratiques
                   _AnimatedSection(
                     delay: 100,
                     child: OfferDetailsSection(offer: offer),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Adresse
                   _AnimatedSection(
                     delay: 200,
                     child: OfferAddressSection(offer: offer),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Badges allergènes
                   _AnimatedSection(
                     delay: 300,
                     child: OfferBadgesSection(offer: offer),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Métadonnées
                   _AnimatedSection(
                     delay: 400,
                     child: OfferMetadataSection(offer: offer),
                   ),
-                  const SizedBox(height: 120), // Espace pour la barre de réservation
+                  const SizedBox(
+                    height: 120,
+                  ), // Espace pour la barre de réservation
                 ],
               ),
             ),
           ),
-          
+
           // Barre de réservation avec style amélioré
           Container(
             decoration: BoxDecoration(
@@ -400,10 +411,7 @@ class RecommendedSection extends ConsumerWidget {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              Icons.check_circle_rounded,
-              color: colorScheme.onPrimary,
-            ),
+            Icon(Icons.check_circle_rounded, color: colorScheme.onPrimary),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -415,9 +423,7 @@ class RecommendedSection extends ConsumerWidget {
         ),
         backgroundColor: colorScheme.primary,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
           label: 'Voir',
@@ -433,13 +439,9 @@ class RecommendedSection extends ConsumerWidget {
 
 // Widget d'animation pour les sections
 class _AnimatedSection extends StatefulWidget {
+  const _AnimatedSection({required this.child, required this.delay});
   final Widget child;
   final int delay;
-
-  const _AnimatedSection({
-    required this.child,
-    required this.delay,
-  });
 
   @override
   State<_AnimatedSection> createState() => _AnimatedSectionState();
@@ -459,19 +461,13 @@ class _AnimatedSectionState extends State<_AnimatedSection>
       vsync: this,
     );
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     Future.delayed(Duration(milliseconds: widget.delay), () {
       if (mounted) {
@@ -490,10 +486,7 @@ class _AnimatedSectionState extends State<_AnimatedSection>
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: widget.child,
-      ),
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
     );
   }
 }

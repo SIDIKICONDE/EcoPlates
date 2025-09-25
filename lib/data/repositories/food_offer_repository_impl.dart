@@ -28,15 +28,15 @@ class CacheException implements Exception {
 /// - La synchronisation offline/online
 /// - La gestion des erreurs
 class FoodOfferRepositoryImpl implements FoodOfferRepository {
-  final FoodOfferRemoteDataSource remoteDataSource;
-  final FoodOfferLocalDataSource localDataSource;
-  final ApiClient apiClient;
 
   FoodOfferRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.apiClient,
   });
+  final FoodOfferRemoteDataSource remoteDataSource;
+  final FoodOfferLocalDataSource localDataSource;
+  final ApiClient apiClient;
 
   @override
   Future<Either<Failure, List<FoodOffer>>> getUrgentOffers() async {
@@ -322,7 +322,7 @@ class FoodOfferRepositoryImpl implements FoodOfferRepository {
     List<FoodOfferModel> local,
     List<FoodOfferModel> remote,
   ) {
-    final Map<String, FoodOfferModel> combined = {};
+    final combined = <String, FoodOfferModel>{};
     
     // Ajouter d'abord les résultats locaux
     for (final offer in local) {

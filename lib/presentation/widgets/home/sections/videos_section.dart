@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers/videos_provider.dart';
+
 import '../../../../domain/entities/video_preview.dart';
+import '../../../providers/videos_provider.dart';
+import '../../../screens/all_videos_page.dart';
 import '../../video_card/video_card.dart';
 import '../../video_player/floating_video_modal.dart';
-import '../../../screens/all_videos_page.dart';
+
 /// Section affichant les vidéos de recettes et conseils anti-gaspi
 class VideosSection extends ConsumerWidget {
   const VideosSection({super.key});
@@ -12,7 +14,7 @@ class VideosSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final videosAsync = ref.watch(videosProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,17 +29,11 @@ class VideosSection extends ConsumerWidget {
                 children: [
                   const Text(
                     'Vidéos & Astuces',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     'Recettes et conseils anti-gaspi',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -55,7 +51,7 @@ class VideosSection extends ConsumerWidget {
             ],
           ),
         ),
-        
+
         // Liste horizontale de vidéos avec cartes verticales compactes
         SizedBox(
           height: 140, // Hauteur réduite de 50%
@@ -74,32 +70,34 @@ class VideosSection extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         'Aucune vidéo disponible',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 16,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
                       ),
                     ],
                   ),
                 );
               }
-              
+
               // Convertir VideoData en VideoPreview pour utiliser VideoCard
-              final videoPreviews = videos.map((v) => VideoPreview(
-                id: v.id,
-                title: v.title,
-                description: v.description,
-                videoUrl: v.videoUrl,
-                thumbnailUrl: v.thumbnailUrl,
-                merchantId: v.merchantName.toLowerCase().replaceAll(' ', '-'),
-                merchantName: v.merchantName,
-                duration: _parseDuration(v.duration),
-                viewCount: v.views,
-                publishedAt: v.publishedAt,
-                tags: [],
-                focalPoint: VideoFocalPoint.center,
-              )).toList();
-              
+              final videoPreviews = videos
+                  .map(
+                    (v) => VideoPreview(
+                      id: v.id,
+                      title: v.title,
+                      description: v.description,
+                      videoUrl: v.videoUrl,
+                      thumbnailUrl: v.thumbnailUrl,
+                      merchantId: v.merchantName.toLowerCase().replaceAll(
+                        ' ',
+                        '-',
+                      ),
+                      merchantName: v.merchantName,
+                      duration: _parseDuration(v.duration),
+                      viewCount: v.views,
+                      publishedAt: v.publishedAt,
+                    ),
+                  )
+                  .toList();
+
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -115,7 +113,6 @@ class VideosSection extends ConsumerWidget {
                         video: video,
                         width: 100,
                         height: 130, // Hauteur réduite de 50%
-                        play: false, // Ne pas jouer automatiquement dans la liste
                         onTap: () {
                           _showVideoModal(context, video);
                         },
@@ -125,18 +122,12 @@ class VideosSection extends ConsumerWidget {
                 },
               );
             },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red[400],
-                  ),
+                  Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
                   const SizedBox(height: 8),
                   Text(
                     'Erreur de chargement',
@@ -155,7 +146,7 @@ class VideosSection extends ConsumerWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
       ],
     );
@@ -168,7 +159,7 @@ class VideosSection extends ConsumerWidget {
       final seconds = int.tryParse(parts[1]) ?? 0;
       return Duration(minutes: minutes, seconds: seconds);
     }
-    return const Duration(minutes: 0);
+    return const Duration();
   }
 
   void _showVideoModal(BuildContext context, VideoPreview video) {

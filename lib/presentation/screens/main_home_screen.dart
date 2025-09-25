@@ -24,41 +24,41 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MinimalHeader(
+    return const Scaffold(
+      appBar: MinimalHeader(
         title: 'EcoPlates',
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 4),
             
             // Section des grandes enseignes (toujours en premier)
-            const BrandSection(),
+            BrandSection(),
             
             // Section des catégories
-            const CategoriesSection(),
+            CategoriesSection(),
             
             // Section Près de chez vous (nouvelle)
-            const NearbySection(),
+            NearbySection(),
             
             // Section des offres urgentes
-            const UrgentSection(),
+            UrgentSection(),
             
             // Section recommandé pour vous
-            const RecommendedSection(),
+            RecommendedSection(),
             
             // Section des repas complets
-            const MealsSection(),
+            MealsSection(),
             
             // Section des marchands partenaires
-            const MerchantSection(),
+            MerchantSection(),
             
             // Section des vidéos et astuces
-            const VideosSection(),
+            VideosSection(),
             
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
         ),
       ),

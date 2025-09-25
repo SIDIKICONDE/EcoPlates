@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 /// Widget affichant l'impact écologique de l'offre
 class OfferEcoImpact extends StatelessWidget {
-  final int co2Saved; // en grammes
-  
-  const OfferEcoImpact({
-    super.key,
-    required this.co2Saved,
-  });
+  // en grammes
+
+  const OfferEcoImpact({required this.co2Saved, super.key});
+  final int co2Saved;
 
   @override
   Widget build(BuildContext context) {

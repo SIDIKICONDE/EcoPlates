@@ -7,7 +7,7 @@ import '../repositories/food_offer_repository_impl.dart';
 abstract class FoodOfferRemoteDataSource {
   /// Récupère les offres urgentes depuis l'API
   Future<List<FoodOfferModel>> getUrgentOffers();
-  
+
   /// Récupère les offres avec pagination et filtres
   Future<List<FoodOfferModel>> getOffers({
     required int page,
@@ -16,23 +16,23 @@ abstract class FoodOfferRemoteDataSource {
     double? maxDistance,
     String? sortBy,
   });
-  
+
   /// Récupère une offre par son ID
   Future<FoodOfferModel> getOfferById(String offerId);
-  
+
   /// Récupère les offres recommandées pour un utilisateur
   Future<List<FoodOfferModel>> getRecommendedOffers(String userId);
-  
+
   /// Effectue une réservation
   Future<void> reserveOffer({
     required String offerId,
     required String userId,
     required int quantity,
   });
-  
+
   /// Annule une réservation
   Future<void> cancelReservation(String reservationId);
-  
+
   /// Recherche des offres
   Future<List<FoodOfferModel>> searchOffers({
     required String query,
@@ -42,10 +42,9 @@ abstract class FoodOfferRemoteDataSource {
 
 /// Implémentation concrète utilisant l'API REST
 class FoodOfferRemoteDataSourceImpl implements FoodOfferRemoteDataSource {
-  final ApiClient apiClient;
-  
   FoodOfferRemoteDataSourceImpl({required this.apiClient});
-  
+  final ApiClient apiClient;
+
   @override
   Future<List<FoodOfferModel>> getUrgentOffers() async {
     try {
@@ -57,19 +56,27 @@ class FoodOfferRemoteDataSourceImpl implements FoodOfferRemoteDataSource {
           'order': 'asc',
         },
       );
-      
+
       if (response.statusCode == 200) {
-        final List<dynamic> data = (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
-        return data.map((json) => FoodOfferModel.fromJson(json as Map<String, dynamic>)).toList();
+        final data =
+            (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ??
+            [];
+        return data
+            .map(
+              (json) => FoodOfferModel.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
       } else {
-        throw ServerException('Failed to load urgent offers: ${response.statusCode}');
+        throw ServerException(
+          'Failed to load urgent offers: ${response.statusCode}',
+        );
       }
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException('Network error: ${e.toString()}');
+      throw ServerException('Network error: $e');
     }
   }
-  
+
   @override
   Future<List<FoodOfferModel>> getOffers({
     required int page,
@@ -86,39 +93,51 @@ class FoodOfferRemoteDataSourceImpl implements FoodOfferRemoteDataSource {
         if (maxDistance != null) 'maxDistance': maxDistance,
         if (sortBy != null) 'sortBy': sortBy,
       };
-      
-      final response = await apiClient.get('/offers', queryParameters: queryParams);
-      
+
+      final response = await apiClient.get(
+        '/offers',
+        queryParameters: queryParams,
+      );
+
       if (response.statusCode == 200) {
-        final List<dynamic> data = (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
-        return data.map((json) => FoodOfferModel.fromJson(json as Map<String, dynamic>)).toList();
+        final data =
+            (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ??
+            [];
+        return data
+            .map(
+              (json) => FoodOfferModel.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
       } else {
         throw ServerException('Failed to load offers: ${response.statusCode}');
       }
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException('Network error: ${e.toString()}');
+      throw ServerException('Network error: $e');
     }
   }
-  
+
   @override
   Future<FoodOfferModel> getOfferById(String offerId) async {
     try {
       final response = await apiClient.get('/offers/$offerId');
-      
+
       if (response.statusCode == 200) {
-        return FoodOfferModel.fromJson((response.data as Map<String, dynamic>)['data'] as Map<String, dynamic>);
+        return FoodOfferModel.fromJson(
+          (response.data as Map<String, dynamic>)['data']
+              as Map<String, dynamic>,
+        );
       } else if (response.statusCode == 404) {
-        throw ServerException('Offer not found');
+        throw const ServerException('Offer not found');
       } else {
         throw ServerException('Failed to load offer: ${response.statusCode}');
       }
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException('Network error: ${e.toString()}');
+      throw ServerException('Network error: $e');
     }
   }
-  
+
   @override
   Future<List<FoodOfferModel>> getRecommendedOffers(String userId) async {
     try {
@@ -128,17 +147,25 @@ class FoodOfferRemoteDataSourceImpl implements FoodOfferRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        final data = (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
-        return data.map((json) => FoodOfferModel.fromJson(json as Map<String, dynamic>)).toList();
+        final data =
+            (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ??
+            [];
+        return data
+            .map(
+              (json) => FoodOfferModel.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
       } else {
-        throw ServerException('Failed to load recommendations: ${response.statusCode}');
+        throw ServerException(
+          'Failed to load recommendations: ${response.statusCode}',
+        );
       }
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException('Network error: ${e.toString()}');
+      throw ServerException('Network error: $e');
     }
   }
-  
+
   @override
   Future<void> reserveOffer({
     required String offerId,
@@ -154,46 +181,53 @@ class FoodOfferRemoteDataSourceImpl implements FoodOfferRemoteDataSource {
           'timestamp': DateTime.now().toIso8601String(),
         },
       );
-      
+
       if (response.statusCode != 200 && response.statusCode != 201) {
-        final errorMessage = (response.data as Map<String, dynamic>?)?['message'] as String? ?? 'Reservation failed';
-        final errorCode = (response.data as Map<String, dynamic>?)?['code'] as String?;
-        
+        final errorMessage =
+            (response.data as Map<String, dynamic>?)?['message'] as String? ??
+            'Reservation failed';
+        final errorCode =
+            (response.data as Map<String, dynamic>?)?['code'] as String?;
+
         // Gestion des erreurs métier spécifiques
         switch (errorCode) {
           case 'OFFER_EXPIRED':
-            throw ServerException('This offer has expired');
+            throw const ServerException('This offer has expired');
           case 'INSUFFICIENT_QUANTITY':
-            throw ServerException('Not enough quantity available');
+            throw const ServerException('Not enough quantity available');
           case 'RESERVATION_LIMIT':
-            throw ServerException('You have reached the reservation limit');
+            throw const ServerException(
+              'You have reached the reservation limit',
+            );
           case 'OUTSIDE_PICKUP_HOURS':
-            throw ServerException('Outside pickup hours');
+            throw const ServerException('Outside pickup hours');
           default:
             throw ServerException(errorMessage);
         }
       }
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException('Network error: ${e.toString()}');
+      throw ServerException('Network error: $e');
     }
   }
-  
+
   @override
   Future<void> cancelReservation(String reservationId) async {
     try {
       final response = await apiClient.delete('/reservations/$reservationId');
-      
+
       if (response.statusCode != 200 && response.statusCode != 204) {
-        final errorMessage = (response.data as Map<String, dynamic>?)?['message'] as String? ?? 'Cancellation failed';
+        final errorMessage =
+            (response.data as Map<String, dynamic>?)?['message'] as String? ??
+            'Cancellation failed';
         throw ServerException(errorMessage);
       }
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException('Network error: ${e.toString()}');
+      throw ServerException('Network error: $e');
     }
   }
-  
+
   @override
   Future<List<FoodOfferModel>> searchOffers({
     required String query,
@@ -205,18 +239,27 @@ class FoodOfferRemoteDataSourceImpl implements FoodOfferRemoteDataSource {
         'limit': 50,
         if (filters != null) ...filters,
       };
-      
-      final response = await apiClient.get('/offers/search', queryParameters: queryParams);
-      
+
+      final response = await apiClient.get(
+        '/offers/search',
+        queryParameters: queryParams,
+      );
+
       if (response.statusCode == 200) {
-        final List<dynamic> data = (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
-        return data.map((json) => FoodOfferModel.fromJson(json as Map<String, dynamic>)).toList();
+        final data =
+            (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ??
+            [];
+        return data
+            .map(
+              (json) => FoodOfferModel.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
       } else {
         throw ServerException('Search failed: ${response.statusCode}');
       }
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException('Network error: ${e.toString()}');
+      throw ServerException('Network error: $e');
     }
   }
 }
@@ -227,11 +270,11 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
   Future<List<FoodOfferModel>> getUrgentOffers() async {
     // Simuler un délai réseau
     await Future<void>.delayed(const Duration(milliseconds: 800));
-    
+
     // Retourner des données mock
     return _generateMockOffers(count: 5, urgent: true);
   }
-  
+
   @override
   Future<List<FoodOfferModel>> getOffers({
     required int page,
@@ -243,19 +286,19 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
     await Future<void>.delayed(const Duration(milliseconds: 600));
     return _generateMockOffers(count: limit);
   }
-  
+
   @override
   Future<FoodOfferModel> getOfferById(String offerId) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     return _generateMockOffers(count: 1).first;
   }
-  
+
   @override
   Future<List<FoodOfferModel>> getRecommendedOffers(String userId) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
     return _generateMockOffers(count: 8, recommended: true);
   }
-  
+
   @override
   Future<void> reserveOffer({
     required String offerId,
@@ -263,34 +306,36 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
     required int quantity,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 1000));
-    
+
     // Simuler des erreurs aléatoires pour tester
     if (DateTime.now().millisecondsSinceEpoch % 10 == 0) {
-      throw ServerException('Simulated error for testing');
+      throw const ServerException('Simulated error for testing');
     }
   }
-  
+
   @override
   Future<void> cancelReservation(String reservationId) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
   }
-  
+
   @override
   Future<List<FoodOfferModel>> searchOffers({
     required String query,
     Map<String, dynamic>? filters,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 700));
-    
+
     // Filtrer les résultats mock selon la query
     final allOffers = _generateMockOffers(count: 20);
     return allOffers
-        .where((offer) =>
-            offer.title.toLowerCase().contains(query.toLowerCase()) ||
-            offer.description.toLowerCase().contains(query.toLowerCase()))
+        .where(
+          (offer) =>
+              offer.title.toLowerCase().contains(query.toLowerCase()) ||
+              offer.description.toLowerCase().contains(query.toLowerCase()),
+        )
         .toList();
   }
-  
+
   /// Génère des offres mock pour le développement
   List<FoodOfferModel> _generateMockOffers({
     required int count,
@@ -298,13 +343,24 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
     bool recommended = false,
   }) {
     final now = DateTime.now();
-    final merchants = ['Carrefour', 'Auchan', 'Leclerc', 'Intermarché', 'Casino', "McDonald's", 'Starbucks', 'Burger King', 'Subway', 'KFC'];
+    final merchants = [
+      'Carrefour',
+      'Auchan',
+      'Leclerc',
+      'Intermarché',
+      'Casino',
+      "McDonald's",
+      'Starbucks',
+      'Burger King',
+      'Subway',
+      'KFC',
+    ];
     final categories = [
       FoodCategory.boulangerie,
       FoodCategory.fruitLegume,
       FoodCategory.dejeuner,
       FoodCategory.epicerie,
-      FoodCategory.dessert
+      FoodCategory.dessert,
     ];
     final images = [
       'https://images.unsplash.com/photo-1509440159596-0249088772ff',
@@ -313,12 +369,12 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
       'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38',
       'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445',
     ];
-    
+
     return List.generate(count, (index) {
       final pickupEnd = urgent
           ? now.add(Duration(hours: 1, minutes: index * 10))
           : now.add(Duration(hours: 3 + index));
-      
+
       return FoodOfferModel(
         id: 'offer_${now.millisecondsSinceEpoch}_$index',
         merchantId: 'merchant_$index',
@@ -326,9 +382,10 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
         title: urgent
             ? 'Panier Surprise Urgent ${index + 1}'
             : recommended
-                ? 'Recommandé pour vous ${index + 1}'
-                : 'Panier Anti-Gaspi ${index + 1}',
-        description: 'Délicieux produits à sauver avant la fermeture. Contenu varié selon disponibilité.',
+            ? 'Recommandé pour vous ${index + 1}'
+            : 'Panier Anti-Gaspi ${index + 1}',
+        description:
+            'Délicieux produits à sauver avant la fermeture. Contenu varié selon disponibilité.',
         images: [images[index % images.length]],
         type: OfferType.panier,
         category: categories[index % categories.length],

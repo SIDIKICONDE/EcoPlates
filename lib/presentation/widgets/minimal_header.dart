@@ -7,13 +7,6 @@ import 'package:flutter/material.dart';
 /// - Légère bordure inférieure pour la séparation
 /// - Titre centré, leading et actions optionnels
 class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
-  final String? title;
-  final Widget? leading;
-  final List<Widget>? actions;
-  final double height;
-  final bool showBottomDivider;
-  final Color? backgroundColor;
-  final double horizontalPadding;
 
   const MinimalHeader({
     super.key,
@@ -25,6 +18,13 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
     this.backgroundColor,
     this.horizontalPadding = 12,
   });
+  final String? title;
+  final Widget? leading;
+  final List<Widget>? actions;
+  final double height;
+  final bool showBottomDivider;
+  final Color? backgroundColor;
+  final double horizontalPadding;
 
   @override
   Size get preferredSize => Size.fromHeight(height + (kIsWeb ? 0 : 0));
@@ -42,7 +42,6 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
 
     return Material(
       color: bg,
-      elevation: 0,
       child: SafeArea(
         bottom: false,
         child: Container
@@ -51,7 +50,7 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
           decoration: BoxDecoration(
             border: showBottomDivider
                 ? Border(
-                    bottom: BorderSide(color: dividerColor, width: 1),
+                    bottom: BorderSide(color: dividerColor),
                   )
                 : null,
           ),

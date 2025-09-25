@@ -2,26 +2,19 @@ import 'package:flutter/material.dart';
 
 /// Widget pour afficher un tag avec icône
 class RestaurantTag extends StatelessWidget {
+  const RestaurantTag({required this.tag, super.key});
   final String tag;
-  
-  const RestaurantTag({
-    super.key,
-    required this.tag,
-  });
-  
+
   @override
   Widget build(BuildContext context) {
     final (icon, color) = _getTagStyle(tag);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: color.withValues(alpha: 0.5),
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -40,7 +33,7 @@ class RestaurantTag extends StatelessWidget {
       ),
     );
   }
-  
+
   (IconData, Color) _getTagStyle(String tag) {
     switch (tag.toLowerCase()) {
       case 'végétarien':

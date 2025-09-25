@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 
 /// Classe abstraite représentant une erreur/échec dans l'application
 abstract class Failure extends Equatable {
+
+  const Failure(this.message, {this.code, this.details});
   final String message;
   final String? code;
   final dynamic details;
-
-  const Failure(this.message, {this.code, this.details});
 
   @override
   List<Object?> get props => [message, code, details];
@@ -29,7 +29,6 @@ class CacheFailure extends Failure {
 
 /// Erreur de validation des données
 class ValidationFailure extends Failure {
-  final Map<String, List<String>>? fieldErrors;
 
   const ValidationFailure(
     super.message, {
@@ -37,6 +36,7 @@ class ValidationFailure extends Failure {
     super.details,
     this.fieldErrors,
   });
+  final Map<String, List<String>>? fieldErrors;
 
   @override
   List<Object?> get props => [message, code, details, fieldErrors];
@@ -59,8 +59,6 @@ class BusinessFailure extends Failure {
 
 /// Ressource non trouvée (404)
 class NotFoundFailure extends Failure {
-  final String? resourceType;
-  final String? resourceId;
 
   const NotFoundFailure(
     super.message, {
@@ -69,6 +67,8 @@ class NotFoundFailure extends Failure {
     this.resourceType,
     this.resourceId,
   });
+  final String? resourceType;
+  final String? resourceId;
 
   @override
   List<Object?> get props => [message, code, details, resourceType, resourceId];
@@ -86,8 +86,6 @@ class UnexpectedFailure extends Failure {
 
 /// Erreur de quota/limite dépassée
 class QuotaExceededFailure extends Failure {
-  final int? currentUsage;
-  final int? limit;
 
   const QuotaExceededFailure(
     super.message, {
@@ -96,6 +94,8 @@ class QuotaExceededFailure extends Failure {
     this.currentUsage,
     this.limit,
   });
+  final int? currentUsage;
+  final int? limit;
 
   @override
   List<Object?> get props => [message, code, details, currentUsage, limit];
@@ -103,8 +103,6 @@ class QuotaExceededFailure extends Failure {
 
 /// Erreur de paiement
 class PaymentFailure extends Failure {
-  final String? transactionId;
-  final String? paymentMethod;
 
   const PaymentFailure(
     super.message, {
@@ -113,6 +111,8 @@ class PaymentFailure extends Failure {
     this.transactionId,
     this.paymentMethod,
   });
+  final String? transactionId;
+  final String? paymentMethod;
 
   @override
   List<Object?> get props => [

@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Bouton favori animé avec effet de transition
 class FavoriteButton extends StatelessWidget {
+  const FavoriteButton({required this.isFavorite, super.key, this.onTap});
   final bool isFavorite;
   final VoidCallback? onTap;
-  
-  const FavoriteButton({
-    super.key,
-    required this.isFavorite,
-    this.onTap,
-  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/router/routes/route_constants.dart';
 import '../../../providers/brand_provider.dart';
 import '../../brand_card.dart';
-import '../../../../core/router/routes/route_constants.dart';
 
 /// Section des grandes marques/enseignes
 class BrandSection extends ConsumerWidget {

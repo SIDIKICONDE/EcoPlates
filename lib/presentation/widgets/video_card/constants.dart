@@ -39,12 +39,12 @@ class VideoCardConstants {
   static const double indicatorBorderOpacity = 0.3;
 
   // Échelles d'animation
-  static const double normalScale = 1.0;
+  static const double normalScale = 1;
   static const double pressedScale = 0.98;
 
   // Gradient stops
   static const double gradientStartStop = 0.5;
-  static const double gradientEndStop = 1.0;
+  static const double gradientEndStop = 1;
 
   // Espacement des lignes de texte
   static const double titleLineHeight = 1.2;

@@ -4,9 +4,9 @@ import 'package:flutter/scheduler.dart';
 /// Gestionnaire centralisé des animations pour éviter les collisions
 /// et optimiser les performances
 class AnimationManager {
+  factory AnimationManager() => _instance;
   AnimationManager._internal();
   static final AnimationManager _instance = AnimationManager._internal();
-  factory AnimationManager() => _instance;
 
   // Map pour tracker les animations actives
   final Map<String, AnimationController> _activeAnimations = {};

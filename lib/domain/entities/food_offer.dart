@@ -2,6 +2,44 @@ import 'dart:math' as math;
 
 /// Entité représentant une offre anti-gaspillage
 class FoodOffer {
+  const FoodOffer({
+    required this.id,
+    required this.merchantId,
+    required this.merchantName,
+    required this.title,
+    required this.description,
+    required this.images,
+    required this.type,
+    required this.category,
+    required this.originalPrice,
+    required this.discountedPrice,
+    required this.quantity,
+    required this.pickupStartTime,
+    required this.pickupEndTime,
+    required this.createdAt,
+    required this.status,
+    required this.location,
+    required this.merchantAddress,
+    required this.updatedAt,
+    this.allergens = const [],
+    this.isVegetarian = false,
+    this.isVegan = false,
+    this.isHalal = false,
+    this.co2Saved = 500, // 500g par défaut
+    this.merchantLogo,
+    this.availableQuantity = 0,
+    this.totalQuantity = 0,
+    this.tags = const [],
+    this.nutritionalInfo,
+    this.ecoImpact,
+    this.rating = 0.0,
+    this.ratingsCount = 0,
+    this.distanceKm,
+    this.preparationTime = 30,
+    this.isFavorite = false,
+    this.viewCount = 0,
+    this.soldCount = 0,
+  });
   final String id;
   final String merchantId;
   final String merchantName;
@@ -40,49 +78,10 @@ class FoodOffer {
   final int soldCount;
   final DateTime updatedAt;
 
-  const FoodOffer({
-    required this.id,
-    required this.merchantId,
-    required this.merchantName,
-    required this.title,
-    required this.description,
-    required this.images,
-    required this.type,
-    required this.category,
-    required this.originalPrice,
-    required this.discountedPrice,
-    required this.quantity,
-    required this.pickupStartTime,
-    required this.pickupEndTime,
-    required this.createdAt,
-    required this.status,
-    required this.location,
-    required this.merchantAddress,
-    this.allergens = const [],
-    this.isVegetarian = false,
-    this.isVegan = false,
-    this.isHalal = false,
-    this.co2Saved = 500, // 500g par défaut
-    this.merchantLogo,
-    this.availableQuantity = 0,
-    this.totalQuantity = 0,
-    this.tags = const [],
-    this.nutritionalInfo,
-    this.ecoImpact,
-    this.rating = 0.0,
-    this.ratingsCount = 0,
-    this.distanceKm,
-    this.preparationTime = 30,
-    this.isFavorite = false,
-    this.viewCount = 0,
-    this.soldCount = 0,
-    required this.updatedAt,
-  });
-
   /// Calcule le pourcentage de réduction
   double get discountPercentage {
     if (originalPrice == 0) return 100;
-    return ((originalPrice - discountedPrice) / originalPrice * 100);
+    return (originalPrice - discountedPrice) / originalPrice * 100;
   }
 
   /// Vérifie si l'offre est gratuite
@@ -149,12 +148,7 @@ enum OfferStatus {
 
 /// Localisation du commerçant
 class Location {
-  final double latitude;
-  final double longitude;
-  final String address;
-  final String city;
-  final String postalCode;
-  final String? additionalInfo; // "Entrée par la rue X", etc.
+  // "Entrée par la rue X", etc.
 
   const Location({
     required this.latitude,
@@ -164,20 +158,26 @@ class Location {
     required this.postalCode,
     this.additionalInfo,
   });
+  final double latitude;
+  final double longitude;
+  final String address;
+  final String city;
+  final String postalCode;
+  final String? additionalInfo;
 
   /// Calcule la distance depuis une position (en km)
   double distanceFrom(double lat, double lng) {
     // Formule simplifiée de Haversine
     const double earthRadius = 6371; // km
-    double dLat = _toRadians(latitude - lat);
-    double dLng = _toRadians(longitude - lng);
-    double a =
+    final dLat = _toRadians(latitude - lat);
+    final dLng = _toRadians(longitude - lng);
+    final a =
         math.sin(dLat / 2) * math.sin(dLat / 2) +
         math.cos(_toRadians(lat)) *
             math.cos(_toRadians(latitude)) *
             math.sin(dLng / 2) *
             math.sin(dLng / 2);
-    double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+    final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
     return earthRadius * c;
   }
 

@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import '../../core/utils/animation_manager.dart';
+
 import '../../core/utils/accessibility_helper.dart';
+import '../../core/utils/animation_manager.dart';
 import '../../domain/entities/merchant.dart';
 import 'restaurant_card_components/card_background.dart';
 import 'restaurant_card_components/discount_badge.dart';
-import 'restaurant_card_components/popularity_badge.dart';
 import 'restaurant_card_components/favorite_button.dart';
-import 'restaurant_card_components/time_indicator.dart';
-import 'restaurant_card_components/restaurant_tag.dart';
+import 'restaurant_card_components/popularity_badge.dart';
 import 'restaurant_card_components/price_info.dart';
 import 'restaurant_card_components/rating_display.dart';
+import 'restaurant_card_components/restaurant_tag.dart';
+import 'restaurant_card_components/time_indicator.dart';
 
 /// Carte de merchant moderne et modulaire
 class MerchantCard extends StatefulWidget {
+  const MerchantCard({required this.merchant, super.key, this.onTap});
   final Merchant merchant;
   final VoidCallback? onTap;
-
-  const MerchantCard({
-    super.key,
-    required this.merchant,
-    this.onTap,
-  });
 
   @override
   State<MerchantCard> createState() => _MerchantCardState();
@@ -42,23 +38,20 @@ class _MerchantCardState extends State<MerchantCard>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    
+
     // Enregistrer l'animation dans le gestionnaire pour éviter les collisions
     _animationManager.registerAnimation(
       id: 'restaurant_card_${widget.merchant.id}',
       controller: _controller,
       priority: true,
     );
-    
+
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
-  
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -145,13 +138,13 @@ class _MerchantCardState extends State<MerchantCard>
               category: widget.merchant.category,
               isDarkMode: isDarkMode,
             ),
-            
+
             // Contenu principal
             _buildMainContent(context),
-            
+
             // Badges supérieurs
             _buildTopBadges(),
-            
+
             // Indicateur de temps
             if (widget.merchant.availableOffers <= 3)
               TimeIndicator(availableOffers: widget.merchant.availableOffers),
@@ -180,7 +173,7 @@ class _MerchantCardState extends State<MerchantCard>
               ),
             ],
           ),
-          
+
           // Section inférieure avec infos
           _buildBottomInfo(context),
         ],
@@ -203,43 +196,43 @@ class _MerchantCardState extends State<MerchantCard>
           ),
           const SizedBox(height: 4),
         ],
-        
+
         // Nom du commerçant
         Text(
           widget.merchant.name,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: AccessibleFontSizes.medium,
             fontWeight: FontWeight.bold,
-            shadows: const [Shadow(color: Colors.black, blurRadius: 4)],
+            shadows: [Shadow(blurRadius: 4)],
             letterSpacing: 0.2,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           semanticsLabel: widget.merchant.name,
         ),
-        
+
         const SizedBox(height: 2),
-        
+
         // Type de cuisine
         Text(
           widget.merchant.cuisineType,
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.9),
             fontSize: 12,
-            shadows: const [Shadow(color: Colors.black, blurRadius: 2)],
+            shadows: const [Shadow(blurRadius: 2)],
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        
+
         const SizedBox(height: 4),
-        
+
         // Ligne d'infos (rating, distance, prix)
         _buildInfoRow(),
-        
+
         const SizedBox(height: 4),
-        
+
         // Horaire de collecte
         _buildPickupTime(),
       ],
@@ -252,12 +245,12 @@ class _MerchantCardState extends State<MerchantCard>
         // Note
         RatingDisplay(rating: widget.merchant.rating),
         const SizedBox(width: 8),
-        
+
         // Distance
         _buildDistanceBadge(),
-        
+
         const Spacer(),
-        
+
         // Prix
         PriceInfo(
           hasActiveOffer: widget.merchant.hasActiveOffer,
@@ -296,10 +289,7 @@ class _MerchantCardState extends State<MerchantCard>
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -325,9 +315,8 @@ class _MerchantCardState extends State<MerchantCard>
       left: 12,
       right: 60,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-            // Badge de réduction
+          // Badge de réduction
           if (widget.merchant.hasActiveOffer) ...[
             DiscountBadge(
               discountPercentage: widget.merchant.discountPercentage,
@@ -335,7 +324,7 @@ class _MerchantCardState extends State<MerchantCard>
             ),
             if (_isPopular) const SizedBox(width: 8),
           ],
-          
+
           // Badge de popularité
           if (_isPopular) const PopularityBadge(),
         ],

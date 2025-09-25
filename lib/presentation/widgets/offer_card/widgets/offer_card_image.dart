@@ -28,7 +28,7 @@ class OfferCardImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(4),
       child: Stack(
         children: [
           // Section image principale avec coins arrondis
@@ -42,7 +42,6 @@ class OfferCardImage extends StatelessWidget {
                   child: offer.images.isNotEmpty
                       ? EcoCachedImage(
                           imageUrl: offer.images.first,
-                          fit: BoxFit.cover,
                           size: compact ? ImageSize.small : ImageSize.medium,
                           priority: Priority.high, // Haute priorité pour les images d'offres
                           borderRadius: BorderRadius.circular(12),
@@ -209,7 +208,7 @@ class OfferCardImage extends StatelessWidget {
     }
     // Rating générique pour les autres enseignes
     else {
-      return 4.0;
+      return 4;
     }
   }
 }

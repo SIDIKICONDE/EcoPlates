@@ -5,6 +5,22 @@ enum VideoFocalPoint { center, top, bottom }
 
 /// Entité représentant une vidéo de présentation d'un commerçant
 class VideoPreview extends Equatable {
+  const VideoPreview({
+    required this.id,
+    required this.title,
+    required this.videoUrl,
+    required this.thumbnailUrl,
+    required this.merchantId,
+    required this.merchantName,
+    required this.duration,
+    required this.publishedAt,
+    this.description,
+    this.merchantAvatarUrl,
+    this.viewCount = 0,
+    this.isFeatured = false,
+    this.tags = const [],
+    this.focalPoint = VideoFocalPoint.center,
+  });
   final String id;
   final String title;
   final String? description;
@@ -19,23 +35,6 @@ class VideoPreview extends Equatable {
   final bool isFeatured;
   final List<String> tags;
   final VideoFocalPoint focalPoint;
-  
-  const VideoPreview({
-    required this.id,
-    required this.title,
-    this.description,
-    required this.videoUrl,
-    required this.thumbnailUrl,
-    required this.merchantId,
-    required this.merchantName,
-    this.merchantAvatarUrl,
-    required this.duration,
-    this.viewCount = 0,
-    required this.publishedAt,
-    this.isFeatured = false,
-    this.tags = const [],
-    this.focalPoint = VideoFocalPoint.center,
-  });
 
   /// Label sémantique pour l'accessibilité
   String get semanticLabel {
@@ -68,7 +67,7 @@ class VideoPreview extends Equatable {
   String get formattedPublishedDate {
     final now = DateTime.now();
     final difference = now.difference(publishedAt);
-    
+
     if (difference.inDays == 0) {
       if (difference.inHours == 0) {
         return 'Il y a ${difference.inMinutes} min';
@@ -92,19 +91,19 @@ class VideoPreview extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        description,
-        videoUrl,
-        thumbnailUrl,
-        merchantId,
-        merchantName,
-        merchantAvatarUrl,
-        duration,
-        viewCount,
-        publishedAt,
-        isFeatured,
-        tags,
-        focalPoint,
-      ];
+    id,
+    title,
+    description,
+    videoUrl,
+    thumbnailUrl,
+    merchantId,
+    merchantName,
+    merchantAvatarUrl,
+    duration,
+    viewCount,
+    publishedAt,
+    isFeatured,
+    tags,
+    focalPoint,
+  ];
 }

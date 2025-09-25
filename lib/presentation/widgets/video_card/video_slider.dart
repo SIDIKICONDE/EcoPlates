@@ -6,8 +6,7 @@ import 'video_card.dart';
 /// Widget pour liste horizontale vidéos style Apple TV+
 class VideoSlider extends StatefulWidget {
   const VideoSlider({
-    super.key,
-    required this.videos,
+    required this.videos, super.key,
     this.title,
     this.height = VideoSliderConstants.defaultHeight,
     this.onVideoTap,
@@ -95,7 +94,9 @@ class _VideoSliderState extends State<VideoSlider>
   );
 
   Widget _buildVideoItem(double screenWidth, int index) {
-    final video = widget.videos[index], isFirst = index == 0, isLast = index == widget.videos.length - 1;
+    final video = widget.videos[index];
+    final isFirst = index == 0;
+    final isLast = index == widget.videos.length - 1;
     final itemOffset = (index * VideoSliderConstants.itemWidth) - _scrollOffset;
 
     return Container(
@@ -108,8 +109,6 @@ class _VideoSliderState extends State<VideoSlider>
           video: video,
           width: VideoCardConstants.defaultWidth,
           height: widget.height,
-          play: false, // ❌ AUTOPLAY DÉSACTIVÉ - Respecte les directives EcoPlates (économie batterie, UX contrôlée)
-          muted: true,
           onTap: () => widget.onVideoTap?.call(video),
         ),
       ),
@@ -118,7 +117,7 @@ class _VideoSliderState extends State<VideoSlider>
   void _recomputeActiveIndex() {
     if (!mounted) return;
     final centerX = _scrollOffset + (_viewportWidth / 2) - widget.padding.left;
-    int idx = (centerX / VideoSliderConstants.itemWidth).round();
+    var idx = (centerX / VideoSliderConstants.itemWidth).round();
     if (idx < 0) idx = 0;
     if (idx >= widget.videos.length) idx = widget.videos.length - 1;
     if (idx != _activeIndex) {
@@ -130,8 +129,7 @@ class _VideoSliderState extends State<VideoSlider>
 /// Widget grille vidéos
 class VideoGrid extends StatelessWidget {
   const VideoGrid({
-    super.key,
-    required this.videos,
+    required this.videos, super.key,
     this.onVideoTap,
     this.scrollController,
     this.shrinkWrap = false,

@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 
 /// Widget pour afficher les informations de prix
 class PriceInfo extends StatelessWidget {
-  final bool hasActiveOffer;
-  final double? originalPrice;
-  final double? discountedPrice;
-  final double? minPrice;
-  
   const PriceInfo({
-    super.key,
     required this.hasActiveOffer,
+    super.key,
     this.originalPrice,
     this.discountedPrice,
     this.minPrice,
   });
-  
+  final bool hasActiveOffer;
+  final double? originalPrice;
+  final double? discountedPrice;
+  final double? minPrice;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        if (hasActiveOffer && originalPrice != null && discountedPrice != null) ...[
+        if (hasActiveOffer &&
+            originalPrice != null &&
+            discountedPrice != null) ...[
           Text(
             '${originalPrice!.toStringAsFixed(2)}€',
             style: const TextStyle(
@@ -40,10 +41,7 @@ class PriceInfo extends StatelessWidget {
         ] else if (minPrice != null)
           Text(
             'Dès ${minPrice!.toStringAsFixed(2)}€',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 13,
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 13),
           ),
       ],
     );

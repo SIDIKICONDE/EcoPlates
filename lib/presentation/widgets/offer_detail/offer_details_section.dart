@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../../domain/entities/food_offer.dart';
+
 import '../../../core/utils/offer_formatters.dart';
+import '../../../domain/entities/food_offer.dart';
 
 /// Section des informations pratiques pour la récupération
 class OfferDetailsSection extends StatelessWidget {
+  const OfferDetailsSection({required this.offer, super.key});
   final FoodOffer offer;
-
-  const OfferDetailsSection({
-    super.key,
-    required this.offer,
-  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[50],
@@ -25,15 +22,12 @@ class OfferDetailsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Infos pratiques',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
-          
+
           // Horaire de récupération
           _buildCompactInfo(
             icon: Icons.access_time_filled,
@@ -41,12 +35,11 @@ class OfferDetailsSection extends StatelessWidget {
             value: OfferFormatters.formatPickupTime(offer),
             iconColor: theme.primaryColor,
           ),
-          
         ],
       ),
     );
   }
-  
+
   Widget _buildCompactInfo({
     required IconData icon,
     required String label,
@@ -54,7 +47,6 @@ class OfferDetailsSection extends StatelessWidget {
     required Color iconColor,
   }) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(icon, color: iconColor, size: 20),
         const SizedBox(width: 8),
@@ -64,10 +56,7 @@ class OfferDetailsSection extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
               Text(
                 value,
@@ -82,5 +71,4 @@ class OfferDetailsSection extends StatelessWidget {
       ],
     );
   }
-  
 }

@@ -301,9 +301,8 @@ extension ContextExtensions on BuildContext {
 class BottomSheetOption<T> {
   const BottomSheetOption({
     required this.title,
-    this.subtitle,
+    required this.value, this.subtitle,
     this.icon,
-    required this.value,
   });
 
   final String title;

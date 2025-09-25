@@ -6,17 +6,13 @@ import '../providers/consumer_tab_provider.dart';
 
 /// Shell pour l'interface consumer avec tab menu
 class ConsumerShell extends ConsumerWidget {
+  const ConsumerShell({required this.child, super.key});
   final Widget child;
-  
-  const ConsumerShell({
-    super.key,
-    required this.child,
-  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTab = ref.watch(consumerTabProvider);
-    
+
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(

@@ -1,11 +1,11 @@
+import 'package:dartz/dartz.dart';
+import 'package:ecoplates/core/error/failures.dart';
+import 'package:ecoplates/domain/entities/food_offer.dart';
+import 'package:ecoplates/domain/repositories/food_offer_repository.dart';
+import 'package:ecoplates/domain/use_cases/get_urgent_offers_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:dartz/dartz.dart';
-import 'package:ecoplates/domain/use_cases/get_urgent_offers_use_case.dart';
-import 'package:ecoplates/domain/repositories/food_offer_repository.dart';
-import 'package:ecoplates/domain/entities/food_offer.dart';
-import 'package:ecoplates/core/error/failures.dart';
 
 import 'get_urgent_offers_use_case_test.mocks.dart';
 
@@ -21,7 +21,7 @@ void main() {
 
   group('GetUrgentOffersUseCase', () {
     final tNow = DateTime.now();
-    
+
     final tUrgentOffers = [
       FoodOffer(
         id: '1',
@@ -32,21 +32,22 @@ void main() {
         merchantAddress: 'Address 1',
         merchantLogo: 'logo1.png',
         category: FoodCategory.boulangerie,
-        originalPrice: 10.0,
-        discountedPrice: 3.0,
+        originalPrice: 10,
+        discountedPrice: 3,
         type: OfferType.panier,
         quantity: 2,
         availableQuantity: 2,
         totalQuantity: 5,
         pickupStartTime: tNow.subtract(const Duration(minutes: 30)),
-        pickupEndTime: tNow.add(const Duration(minutes: 60)), // 1 heure = urgent
+        pickupEndTime: tNow.add(
+          const Duration(minutes: 60),
+        ), // 1 heure = urgent
         images: ['image1.jpg'],
         tags: ['Bio'],
         allergens: [],
         distanceKm: 0.5,
         rating: 4.5,
         ratingsCount: 100,
-        isFavorite: false,
         nutritionalInfo: {},
         ecoImpact: {},
         createdAt: tNow.subtract(const Duration(hours: 1)),
@@ -72,14 +73,16 @@ void main() {
         merchantAddress: 'Address 2',
         merchantLogo: 'logo2.png',
         category: FoodCategory.dejeuner,
-        originalPrice: 20.0,
-        discountedPrice: 6.0,
+        originalPrice: 20,
+        discountedPrice: 6,
         type: OfferType.plat,
         quantity: 1,
         availableQuantity: 1,
         totalQuantity: 3,
         pickupStartTime: tNow.subtract(const Duration(minutes: 15)),
-        pickupEndTime: tNow.add(const Duration(minutes: 45)), // 45 minutes = plus urgent
+        pickupEndTime: tNow.add(
+          const Duration(minutes: 45),
+        ), // 45 minutes = plus urgent
         images: ['image2.jpg'],
         tags: ['Végétarien'],
         allergens: ['Gluten'],
@@ -105,115 +108,97 @@ void main() {
       ),
     ];
 
-    const tParams = UrgentOffersParams(
-      maxMinutesBeforeExpiry: 120,
-      maxDistanceKm: 5.0,
-      allowCached: true,
-    );
+    const tParams = UrgentOffersParams(maxDistanceKm: 5);
 
-    test(
-      'should get urgent offers from repository when successful',
-      () async {
-        // arrange
-        when(mockRepository.getUrgentOffers())
-            .thenAnswer((_) async => Right(tUrgentOffers));
-        when(mockRepository.cacheOffers(any))
-            .thenAnswer((_) async => const Right(null));
+    test('should get urgent offers from repository when successful', () async {
+      // arrange
+      when(
+        mockRepository.getUrgentOffers(),
+      ).thenAnswer((_) async => Right(tUrgentOffers));
+      when(
+        mockRepository.cacheOffers(any),
+      ).thenAnswer((_) async => const Right(null));
 
-        // act
-        final result = await useCase(tParams);
+      // act
+      final result = await useCase(tParams);
 
-        // assert
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (offers) {
-            expect(offers.length, 2);
-            expect(offers.map((o) => o.id), containsAll(['1', '2']));
-          },
-        );
-        verify(mockRepository.getUrgentOffers());
-        verify(mockRepository.cacheOffers(any));
-        verifyNoMoreInteractions(mockRepository);
-      },
-    );
+      // assert
+      result.fold((failure) => fail('Should not return failure'), (offers) {
+        expect(offers.length, 2);
+        expect(offers.map((o) => o.id), containsAll(['1', '2']));
+      });
+      verify(mockRepository.getUrgentOffers());
+      verify(mockRepository.cacheOffers(any));
+      verifyNoMoreInteractions(mockRepository);
+    });
 
-    test(
-      'should filter offers by max distance when specified',
-      () async {
-        // arrange
-        const paramsWithDistance = UrgentOffersParams(
-          maxMinutesBeforeExpiry: 120,
-          maxDistanceKm: 1.0,
-          allowCached: true,
-        );
-        
-        when(mockRepository.getUrgentOffers())
-            .thenAnswer((_) async => Right(tUrgentOffers));
-        when(mockRepository.cacheOffers(any))
-            .thenAnswer((_) async => const Right(null));
+    test('should filter offers by max distance when specified', () async {
+      // arrange
+      const paramsWithDistance = UrgentOffersParams(maxDistanceKm: 1);
 
-        // act
-        final result = await useCase(paramsWithDistance);
+      when(
+        mockRepository.getUrgentOffers(),
+      ).thenAnswer((_) async => Right(tUrgentOffers));
+      when(
+        mockRepository.cacheOffers(any),
+      ).thenAnswer((_) async => const Right(null));
 
-        // assert
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (offers) {
-            expect(offers.length, 1);
-            expect(offers.first.id, '1');
-            expect(offers.first.distanceKm, lessThanOrEqualTo(1.0));
-          },
-        );
-      },
-    );
+      // act
+      final result = await useCase(paramsWithDistance);
 
-    test(
-      'should sort offers by urgency (pickup end time)',
-      () async {
-        // arrange
-        when(mockRepository.getUrgentOffers())
-            .thenAnswer((_) async => Right(tUrgentOffers));
-        when(mockRepository.cacheOffers(any))
-            .thenAnswer((_) async => const Right(null));
+      // assert
+      result.fold((failure) => fail('Should not return failure'), (offers) {
+        expect(offers.length, 1);
+        expect(offers.first.id, '1');
+        expect(offers.first.distanceKm, lessThanOrEqualTo(1.0));
+      });
+    });
 
-        // act
-        final result = await useCase(tParams);
+    test('should sort offers by urgency (pickup end time)', () async {
+      // arrange
+      when(
+        mockRepository.getUrgentOffers(),
+      ).thenAnswer((_) async => Right(tUrgentOffers));
+      when(
+        mockRepository.cacheOffers(any),
+      ).thenAnswer((_) async => const Right(null));
 
-        // assert
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (offers) {
-            expect(offers.length, 2);
-            expect(offers[0].id, '2'); // Plus urgent (45 min)
-            expect(offers[1].id, '1'); // Moins urgent (1 heure)
-          },
-        );
-      },
-    );
+      // act
+      final result = await useCase(tParams);
+
+      // assert
+      result.fold((failure) => fail('Should not return failure'), (offers) {
+        expect(offers.length, 2);
+        expect(offers[0].id, '2'); // Plus urgent (45 min)
+        expect(offers[1].id, '1'); // Moins urgent (1 heure)
+      });
+    });
 
     test(
       'should return cached offers when repository fails and cache is allowed',
       () async {
         // arrange
-        when(mockRepository.getUrgentOffers())
-            .thenAnswer((_) async => Left(ServerFailure('Server error')));
-        when(mockRepository.getCachedOffers())
-            .thenAnswer((_) async => Right(tUrgentOffers));
+        when(
+          mockRepository.getUrgentOffers(),
+        ).thenAnswer((_) async => const Left(ServerFailure('Server error')));
+        when(
+          mockRepository.getCachedOffers(),
+        ).thenAnswer((_) async => Right(tUrgentOffers));
 
         // act
         final result = await useCase(tParams);
 
         // assert
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (offers) {
-            expect(offers.length, greaterThanOrEqualTo(0)); // Peut être vide si filtré
-            // Vérifier que ce sont bien les offres attendues si elles passent le filtre
-            for (final offer in offers) {
-              expect(tUrgentOffers.any((o) => o.id == offer.id), true);
-            }
-          },
-        );
+        result.fold((failure) => fail('Should not return failure'), (offers) {
+          expect(
+            offers.length,
+            greaterThanOrEqualTo(0),
+          ); // Peut être vide si filtré
+          // Vérifier que ce sont bien les offres attendues si elles passent le filtre
+          for (final offer in offers) {
+            expect(tUrgentOffers.any((o) => o.id == offer.id), true);
+          }
+        });
         verify(mockRepository.getUrgentOffers());
         verify(mockRepository.getCachedOffers());
         verifyNoMoreInteractions(mockRepository);
@@ -224,19 +209,17 @@ void main() {
       'should return failure when repository fails and cache is not allowed',
       () async {
         // arrange
-        const paramsNoCached = UrgentOffersParams(
-          maxMinutesBeforeExpiry: 120,
-          allowCached: false,
-        );
-        
-        when(mockRepository.getUrgentOffers())
-            .thenAnswer((_) async => Left(ServerFailure('Server error')));
+        const paramsNoCached = UrgentOffersParams(allowCached: false);
+
+        when(
+          mockRepository.getUrgentOffers(),
+        ).thenAnswer((_) async => const Left(ServerFailure('Server error')));
 
         // act
         final result = await useCase(paramsNoCached);
 
         // assert
-        expect(result, Left(ServerFailure('Server error')));
+        expect(result, const Left(ServerFailure('Server error')));
         verify(mockRepository.getUrgentOffers());
         verifyNever(mockRepository.getCachedOffers());
       },
@@ -255,8 +238,8 @@ void main() {
           merchantAddress: 'Address 3',
           merchantLogo: 'logo3.png',
           category: FoodCategory.epicerie,
-          originalPrice: 15.0,
-          discountedPrice: 5.0,
+          originalPrice: 15,
+          discountedPrice: 5,
           type: OfferType.panier,
           quantity: 5,
           availableQuantity: 5,
@@ -269,11 +252,10 @@ void main() {
           distanceKm: 0.8,
           rating: 4.2,
           ratingsCount: 50,
-          isFavorite: false,
           nutritionalInfo: {},
           ecoImpact: {},
           createdAt: tNow.subtract(const Duration(hours: 1)),
-        preparationTime: 5,
+          preparationTime: 5,
           viewCount: 30,
           soldCount: 10,
           status: OfferStatus.available,
@@ -286,92 +268,85 @@ void main() {
           ),
           updatedAt: tNow,
         );
-        
+
         final mixedOffers = [...tUrgentOffers, nonUrgentOffer];
-        
-        when(mockRepository.getUrgentOffers())
-            .thenAnswer((_) async => Right(mixedOffers));
-        when(mockRepository.cacheOffers(any))
-            .thenAnswer((_) async => const Right(null));
+
+        when(
+          mockRepository.getUrgentOffers(),
+        ).thenAnswer((_) async => Right(mixedOffers));
+        when(
+          mockRepository.cacheOffers(any),
+        ).thenAnswer((_) async => const Right(null));
 
         // act
         final result = await useCase(tParams);
 
         // assert
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (offers) {
-            expect(offers.length, 2);
-            expect(offers.any((o) => o.id == '3'), false);
-          },
-        );
+        result.fold((failure) => fail('Should not return failure'), (offers) {
+          expect(offers.length, 2);
+          expect(offers.any((o) => o.id == '3'), false);
+        });
       },
     );
 
-    test(
-      'should filter out offers with no available quantity',
-      () async {
-        // arrange
-        final soldOutOffer = FoodOffer(
-          id: '4',
-          title: 'Sold Out Offer',
-          description: 'Description 4',
-          merchantId: 'merchant_4',
-          merchantName: 'Test Merchant 4',
-          merchantAddress: 'Address 4',
-          merchantLogo: 'logo4.png',
-          category: FoodCategory.dejeuner,
-          originalPrice: 12.0,
-          discountedPrice: 4.0,
-          type: OfferType.plat,
-          quantity: 0,
-          availableQuantity: 0, // Épuisé
-          totalQuantity: 5,
-          pickupStartTime: tNow.add(const Duration(minutes: 30)),
-          pickupEndTime: tNow.add(const Duration(hours: 1)),
-          images: ['image4.jpg'],
-          tags: [],
-          allergens: [],
-          distanceKm: 0.5,
-          rating: 4.6,
-          ratingsCount: 80,
-          isFavorite: false,
-          nutritionalInfo: {},
-          ecoImpact: {},
-          createdAt: tNow.subtract(const Duration(hours: 1)),
+    test('should filter out offers with no available quantity', () async {
+      // arrange
+      final soldOutOffer = FoodOffer(
+        id: '4',
+        title: 'Sold Out Offer',
+        description: 'Description 4',
+        merchantId: 'merchant_4',
+        merchantName: 'Test Merchant 4',
+        merchantAddress: 'Address 4',
+        merchantLogo: 'logo4.png',
+        category: FoodCategory.dejeuner,
+        originalPrice: 12,
+        discountedPrice: 4,
+        type: OfferType.plat,
+        quantity: 0,
+        totalQuantity: 5,
+        pickupStartTime: tNow.add(const Duration(minutes: 30)),
+        pickupEndTime: tNow.add(const Duration(hours: 1)),
+        images: ['image4.jpg'],
+        tags: [],
+        allergens: [],
+        distanceKm: 0.5,
+        rating: 4.6,
+        ratingsCount: 80,
+        nutritionalInfo: {},
+        ecoImpact: {},
+        createdAt: tNow.subtract(const Duration(hours: 1)),
         preparationTime: 5,
-          viewCount: 60,
-          soldCount: 30,
-          status: OfferStatus.available,
-          location: const Location(
-            latitude: 48.8566,
-            longitude: 2.3522,
-            address: 'Test Address 4',
-            city: 'Paris',
-            postalCode: '75001',
-          ),
-          updatedAt: tNow,
-        );
-        
-        final mixedOffers = [...tUrgentOffers, soldOutOffer];
-        
-        when(mockRepository.getUrgentOffers())
-            .thenAnswer((_) async => Right(mixedOffers));
-        when(mockRepository.cacheOffers(any))
-            .thenAnswer((_) async => const Right(null));
+        viewCount: 60,
+        soldCount: 30,
+        status: OfferStatus.available,
+        location: const Location(
+          latitude: 48.8566,
+          longitude: 2.3522,
+          address: 'Test Address 4',
+          city: 'Paris',
+          postalCode: '75001',
+        ),
+        updatedAt: tNow,
+      );
 
-        // act
-        final result = await useCase(tParams);
+      final mixedOffers = [...tUrgentOffers, soldOutOffer];
 
-        // assert
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (offers) {
-            expect(offers.length, 2);
-            expect(offers.any((o) => o.id == '4'), false);
-          },
-        );
-      },
-    );
+      when(
+        mockRepository.getUrgentOffers(),
+      ).thenAnswer((_) async => Right(mixedOffers));
+      when(
+        mockRepository.cacheOffers(any),
+      ).thenAnswer((_) async => const Right(null));
+
+      // act
+      final result = await useCase(tParams);
+
+      // assert
+      result.fold((failure) => fail('Should not return failure'), (offers) {
+        expect(offers.length, 2);
+        expect(offers.any((o) => o.id == '4'), false);
+      });
+    });
   });
 }

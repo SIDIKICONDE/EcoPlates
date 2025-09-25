@@ -6,6 +6,90 @@ part 'food_offer_model.g.dart';
 /// Modèle de données pour FoodOffer avec sérialisation JSON
 @JsonSerializable(explicitToJson: true)
 class FoodOfferModel {
+  const FoodOfferModel({
+    required this.id,
+    required this.merchantId,
+    required this.merchantName,
+    required this.title,
+    required this.description,
+    required this.images,
+    required this.type,
+    required this.category,
+    required this.originalPrice,
+    required this.discountedPrice,
+    required this.quantity,
+    required this.pickupStartTime,
+    required this.pickupEndTime,
+    required this.createdAt,
+    required this.status,
+    required this.location,
+    required this.merchantAddress,
+    required this.updatedAt,
+    this.allergens = const [],
+    this.isVegetarian = false,
+    this.isVegan = false,
+    this.isHalal = false,
+    this.co2Saved = 500,
+    this.merchantLogo,
+    this.availableQuantity = 0,
+    this.totalQuantity = 0,
+    this.tags = const [],
+    this.nutritionalInfo,
+    this.ecoImpact,
+    this.rating = 0.0,
+    this.ratingsCount = 0,
+    this.distanceKm,
+    this.preparationTime = 30,
+    this.isFavorite = false,
+    this.viewCount = 0,
+    this.soldCount = 0,
+  });
+
+  /// Créer une instance depuis JSON
+  factory FoodOfferModel.fromJson(Map<String, dynamic> json) =>
+      _$FoodOfferModelFromJson(json);
+
+  /// Créer depuis l'entité domaine
+  factory FoodOfferModel.fromEntity(FoodOffer offer) {
+    return FoodOfferModel(
+      id: offer.id,
+      merchantId: offer.merchantId,
+      merchantName: offer.merchantName,
+      title: offer.title,
+      description: offer.description,
+      images: offer.images,
+      type: offer.type,
+      category: offer.category,
+      originalPrice: offer.originalPrice,
+      discountedPrice: offer.discountedPrice,
+      quantity: offer.quantity,
+      pickupStartTime: offer.pickupStartTime,
+      pickupEndTime: offer.pickupEndTime,
+      createdAt: offer.createdAt,
+      status: offer.status,
+      location: LocationModel.fromEntity(offer.location),
+      allergens: offer.allergens,
+      isVegetarian: offer.isVegetarian,
+      isVegan: offer.isVegan,
+      isHalal: offer.isHalal,
+      co2Saved: offer.co2Saved,
+      merchantAddress: offer.merchantAddress,
+      merchantLogo: offer.merchantLogo,
+      availableQuantity: offer.availableQuantity,
+      totalQuantity: offer.totalQuantity,
+      tags: offer.tags,
+      nutritionalInfo: offer.nutritionalInfo,
+      ecoImpact: offer.ecoImpact,
+      rating: offer.rating,
+      ratingsCount: offer.ratingsCount,
+      distanceKm: offer.distanceKm,
+      preparationTime: offer.preparationTime,
+      isFavorite: offer.isFavorite,
+      viewCount: offer.viewCount,
+      soldCount: offer.soldCount,
+      updatedAt: offer.updatedAt,
+    );
+  }
   final String id;
   final String merchantId;
   final String merchantName;
@@ -43,49 +127,6 @@ class FoodOfferModel {
   final int viewCount;
   final int soldCount;
   final DateTime updatedAt;
-
-  const FoodOfferModel({
-    required this.id,
-    required this.merchantId,
-    required this.merchantName,
-    required this.title,
-    required this.description,
-    required this.images,
-    required this.type,
-    required this.category,
-    required this.originalPrice,
-    required this.discountedPrice,
-    required this.quantity,
-    required this.pickupStartTime,
-    required this.pickupEndTime,
-    required this.createdAt,
-    required this.status,
-    required this.location,
-    required this.merchantAddress,
-    this.allergens = const [],
-    this.isVegetarian = false,
-    this.isVegan = false,
-    this.isHalal = false,
-    this.co2Saved = 500,
-    this.merchantLogo,
-    this.availableQuantity = 0,
-    this.totalQuantity = 0,
-    this.tags = const [],
-    this.nutritionalInfo,
-    this.ecoImpact,
-    this.rating = 0.0,
-    this.ratingsCount = 0,
-    this.distanceKm,
-    this.preparationTime = 30,
-    this.isFavorite = false,
-    this.viewCount = 0,
-    this.soldCount = 0,
-    required this.updatedAt,
-  });
-
-  /// Créer une instance depuis JSON
-  factory FoodOfferModel.fromJson(Map<String, dynamic> json) =>
-      _$FoodOfferModelFromJson(json);
 
   /// Convertir en JSON
   Map<String, dynamic> toJson() => _$FoodOfferModelToJson(this);
@@ -169,48 +210,6 @@ class FoodOfferModel {
     );
   }
 
-  /// Créer depuis l'entité domaine
-  factory FoodOfferModel.fromEntity(FoodOffer offer) {
-    return FoodOfferModel(
-      id: offer.id,
-      merchantId: offer.merchantId,
-      merchantName: offer.merchantName,
-      title: offer.title,
-      description: offer.description,
-      images: offer.images,
-      type: offer.type,
-      category: offer.category,
-      originalPrice: offer.originalPrice,
-      discountedPrice: offer.discountedPrice,
-      quantity: offer.quantity,
-      pickupStartTime: offer.pickupStartTime,
-      pickupEndTime: offer.pickupEndTime,
-      createdAt: offer.createdAt,
-      status: offer.status,
-      location: LocationModel.fromEntity(offer.location),
-      allergens: offer.allergens,
-      isVegetarian: offer.isVegetarian,
-      isVegan: offer.isVegan,
-      isHalal: offer.isHalal,
-      co2Saved: offer.co2Saved,
-      merchantAddress: offer.merchantAddress,
-      merchantLogo: offer.merchantLogo,
-      availableQuantity: offer.availableQuantity,
-      totalQuantity: offer.totalQuantity,
-      tags: offer.tags,
-      nutritionalInfo: offer.nutritionalInfo,
-      ecoImpact: offer.ecoImpact,
-      rating: offer.rating,
-      ratingsCount: offer.ratingsCount,
-      distanceKm: offer.distanceKm,
-      preparationTime: offer.preparationTime,
-      isFavorite: offer.isFavorite,
-      viewCount: offer.viewCount,
-      soldCount: offer.soldCount,
-      updatedAt: offer.updatedAt,
-    );
-  }
-
   /// Convertir vers l'entité domaine
   FoodOffer toEntity() {
     return FoodOffer(
@@ -264,13 +263,6 @@ class FoodOfferModel {
 /// Modèle pour Location avec sérialisation JSON
 @JsonSerializable()
 class LocationModel {
-  final double latitude;
-  final double longitude;
-  final String address;
-  final String city;
-  final String postalCode;
-  final String? additionalInfo;
-
   const LocationModel({
     required this.latitude,
     required this.longitude,
@@ -283,8 +275,6 @@ class LocationModel {
   factory LocationModel.fromJson(Map<String, dynamic> json) =>
       _$LocationModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$LocationModelToJson(this);
-
   factory LocationModel.fromEntity(Location location) {
     return LocationModel(
       latitude: location.latitude,
@@ -295,4 +285,12 @@ class LocationModel {
       additionalInfo: location.additionalInfo,
     );
   }
+  final double latitude;
+  final double longitude;
+  final String address;
+  final String city;
+  final String postalCode;
+  final String? additionalInfo;
+
+  Map<String, dynamic> toJson() => _$LocationModelToJson(this);
 }

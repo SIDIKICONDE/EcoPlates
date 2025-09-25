@@ -12,13 +12,6 @@ final isLocationActiveProvider = StateProvider<bool>((ref) => false);
 
 /// Classe pour gérer les filtres de recherche
 class BrowseFilters {
-  final double? maxDistance; // en km
-  final double? minPrice;
-  final double? maxPrice;
-  final List<String> categories;
-  final List<String> dietaryPreferences;
-  final bool availableNow;
-  final bool freeOnly;
 
   const BrowseFilters({
     this.maxDistance,
@@ -29,6 +22,13 @@ class BrowseFilters {
     this.availableNow = false,
     this.freeOnly = false,
   });
+  final double? maxDistance; // en km
+  final double? minPrice;
+  final double? maxPrice;
+  final List<String> categories;
+  final List<String> dietaryPreferences;
+  final bool availableNow;
+  final bool freeOnly;
 
   BrowseFilters copyWith({
     double? maxDistance,
@@ -61,7 +61,7 @@ class BrowseFilters {
   }
 
   int get activeFiltersCount {
-    int count = 0;
+    var count = 0;
     if (maxDistance != null) count++;
     if (minPrice != null || maxPrice != null) count++;
     if (categories.isNotEmpty) count++;

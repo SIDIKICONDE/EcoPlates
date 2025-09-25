@@ -4,23 +4,24 @@ import '../../core/services/video_pool_manager.dart' as core_services;
 /// Widget wrapper qui gère automatiquement la pause/reprise des vidéos
 /// selon l'état de l'application (avant-plan/arrière-plan)
 class VideoPoolManager extends StatefulWidget {
-  final bool autoPauseOnBackground;
-  final bool autoResumeOnForeground;
-  final Widget child;
-
   const VideoPoolManager({
+    required this.child,
     super.key,
     this.autoPauseOnBackground = true,
     this.autoResumeOnForeground = true,
-    required this.child,
   });
+  final bool autoPauseOnBackground;
+  final bool autoResumeOnForeground;
+  final Widget child;
 
   @override
   State<VideoPoolManager> createState() => _VideoPoolManagerState();
 }
 
-class _VideoPoolManagerState extends State<VideoPoolManager> with WidgetsBindingObserver {
-  final core_services.VideoPoolManager _poolManager = core_services.VideoPoolManager();
+class _VideoPoolManagerState extends State<VideoPoolManager>
+    with WidgetsBindingObserver {
+  final core_services.VideoPoolManager _poolManager =
+      core_services.VideoPoolManager();
 
   @override
   void initState() {
@@ -43,13 +44,11 @@ class _VideoPoolManagerState extends State<VideoPoolManager> with WidgetsBinding
         if (widget.autoPauseOnBackground) {
           _poolManager.disposeAll();
         }
-        break;
       case AppLifecycleState.resumed:
         // Les vidéos se réinitialiseront automatiquement quand elles seront rejouées
         break;
       case AppLifecycleState.detached:
         _poolManager.disposeAll();
-        break;
     }
   }
 

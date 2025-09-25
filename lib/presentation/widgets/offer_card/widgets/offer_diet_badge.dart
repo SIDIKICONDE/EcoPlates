@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Badge affichant les informations diététiques (vegan, végétarien, halal)
 class OfferDietBadge extends StatelessWidget {
+  const OfferDietBadge({required this.label, required this.color, super.key});
   final String label;
   final Color color;
-  
-  const OfferDietBadge({
-    super.key,
-    required this.label,
-    required this.color,
-  });
 
   @override
   Widget build(BuildContext context) {

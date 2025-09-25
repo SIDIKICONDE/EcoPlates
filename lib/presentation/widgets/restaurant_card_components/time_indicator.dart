@@ -1,14 +1,11 @@
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
 
 /// Indicateur animé pour les offres urgentes
 class TimeIndicator extends StatelessWidget {
+  const TimeIndicator({required this.availableOffers, super.key});
   final int availableOffers;
-  
-  const TimeIndicator({
-    super.key,
-    required this.availableOffers,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +13,7 @@ class TimeIndicator extends StatelessWidget {
       bottom: 16,
       right: 16,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 6,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: availableOffers <= 2 ? Colors.red : Colors.orange,
           borderRadius: BorderRadius.circular(20),
@@ -41,11 +35,7 @@ class TimeIndicator extends StatelessWidget {
               builder: (context, value, child) {
                 return Transform.rotate(
                   angle: value * 2 * math.pi,
-                  child: const Icon(
-                    Icons.timer,
-                    size: 14,
-                    color: Colors.white,
-                  ),
+                  child: const Icon(Icons.timer, size: 14, color: Colors.white),
                 );
               },
             ),

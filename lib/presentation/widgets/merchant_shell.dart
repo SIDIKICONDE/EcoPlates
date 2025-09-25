@@ -6,17 +6,13 @@ import '../providers/merchant_tab_provider.dart';
 
 /// Shell pour l'interface merchant avec tab menu
 class MerchantShell extends ConsumerWidget {
+  const MerchantShell({required this.child, super.key});
   final Widget child;
-  
-  const MerchantShell({
-    super.key,
-    required this.child,
-  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTab = ref.watch(merchantTabProvider);
-    
+
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(

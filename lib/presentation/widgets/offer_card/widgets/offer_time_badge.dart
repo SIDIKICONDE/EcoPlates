@@ -2,39 +2,24 @@ import 'package:flutter/material.dart';
 
 /// Badge affichant le temps restant pour collecter l'offre
 class OfferTimeBadge extends StatelessWidget {
+  const OfferTimeBadge({required this.timeRemaining, super.key});
   final Duration timeRemaining;
-  
-  const OfferTimeBadge({
-    super.key,
-    required this.timeRemaining,
-  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 6,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.red,
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.access_time,
-            size: 14,
-            color: Colors.white,
-          ),
+          const Icon(Icons.access_time, size: 14, color: Colors.white),
           const SizedBox(width: 4),
           Text(
             _formatTimeRemaining(timeRemaining),

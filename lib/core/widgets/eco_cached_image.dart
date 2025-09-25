@@ -15,22 +15,6 @@ import '../services/image_cache_service.dart';
 /// - Optimisation de taille automatique
 /// - Support du mode hors-ligne
 class EcoCachedImage extends ConsumerStatefulWidget {
-  final String imageUrl;
-  final double? width;
-  final double? height;
-  final BoxFit fit;
-  final ImageSize size;
-  final Widget? placeholder;
-  final Widget? errorWidget;
-  final Duration fadeInDuration;
-  final bool showLoading;
-  final BorderRadius? borderRadius;
-  final Color? backgroundColor;
-  final List<BoxShadow>? shadows;
-  final bool enableMemoryCache;
-  final VoidCallback? onTap;
-  final String? heroTag;
-  final Priority priority;
 
   const EcoCachedImage({
     required this.imageUrl,
@@ -51,6 +35,22 @@ class EcoCachedImage extends ConsumerStatefulWidget {
     this.heroTag,
     this.priority = Priority.normal,
   });
+  final String imageUrl;
+  final double? width;
+  final double? height;
+  final BoxFit fit;
+  final ImageSize size;
+  final Widget? placeholder;
+  final Widget? errorWidget;
+  final Duration fadeInDuration;
+  final bool showLoading;
+  final BorderRadius? borderRadius;
+  final Color? backgroundColor;
+  final List<BoxShadow>? shadows;
+  final bool enableMemoryCache;
+  final VoidCallback? onTap;
+  final String? heroTag;
+  final Priority priority;
 
   @override
   ConsumerState<EcoCachedImage> createState() => _EcoCachedImageState();
@@ -347,7 +347,7 @@ mixin ImagePreloadMixin<T extends StatefulWidget> on State<T> {
     
     // Précharger uniquement les nouvelles images
     final urlsToPreload = <String>[];
-    for (int i = startIndex; i < endIndex; i++) {
+    for (var i = startIndex; i < endIndex; i++) {
       final url = imageUrls[i];
       if (!_preloadedUrls.contains(url)) {
         urlsToPreload.add(url);

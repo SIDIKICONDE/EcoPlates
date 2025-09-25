@@ -2,11 +2,6 @@ import 'dart:math' as math;
 
 /// Entité pour représenter les données de localisation
 class LocationData {
-  final double latitude;
-  final double longitude;
-  final String address;
-  final String? city;
-  final String? postalCode;
   
   const LocationData({
     required this.latitude,
@@ -15,6 +10,11 @@ class LocationData {
     this.city,
     this.postalCode,
   });
+  final double latitude;
+  final double longitude;
+  final String address;
+  final String? city;
+  final String? postalCode;
   
   /// Calcule la distance en kilomètres entre deux points
   double distanceTo(LocationData other) {

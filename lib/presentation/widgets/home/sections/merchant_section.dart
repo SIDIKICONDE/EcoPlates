@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../providers/merchants_provider.dart';
-import '../../merchant_card.dart';
 import '../../../screens/all_merchants_screen.dart';
+import '../../merchant_card.dart';
 
 /// Section affichant la liste des marchands partenaires
 class MerchantSection extends ConsumerWidget {

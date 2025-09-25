@@ -31,7 +31,7 @@ class VideoHelpDialog extends StatelessWidget {
             _buildOption(
               icon: Icons.close_fullscreen_rounded,
               title: 'Mode Mini',
-              description: 'Réduit la vidéo en petit format pour continuer à naviguer dans l\'app.',
+              description: "Réduit la vidéo en petit format pour continuer à naviguer dans l'app.",
               available: true,
             ),
             const SizedBox(height: 16),

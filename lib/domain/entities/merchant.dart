@@ -1,5 +1,23 @@
 /// Entité représentant un commerçant
 class Merchant {
+  const Merchant({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+    required this.category,
+    required this.cuisineType,
+    required this.rating,
+    required this.distanceText,
+    required this.originalPrice,
+    required this.discountedPrice,
+    required this.minPrice,
+    required this.availableOffers,
+    required this.pickupTime,
+    required this.discountPercentage,
+    this.isFavorite = false,
+    this.tags,
+    this.hasActiveOffer = false,
+  });
   final String id;
   final String name;
   final String imageUrl;
@@ -16,23 +34,4 @@ class Merchant {
   final int availableOffers;
   final String pickupTime;
   final int discountPercentage;
-
-  const Merchant({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-    required this.category,
-    this.isFavorite = false,
-    this.tags,
-    required this.cuisineType,
-    required this.rating,
-    required this.distanceText,
-    this.hasActiveOffer = false,
-    required this.originalPrice,
-    required this.discountedPrice,
-    required this.minPrice,
-    required this.availableOffers,
-    required this.pickupTime,
-    required this.discountPercentage,
-  });
 }

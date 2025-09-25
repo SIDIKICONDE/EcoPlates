@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../domain/entities/food_offer.dart';
 import '../providers/recommended_offers_provider.dart';
 import '../widgets/offer_card.dart';
 import '../widgets/offer_detail/index.dart';
-import '../../domain/entities/food_offer.dart';
 
 /// Page affichant toutes les offres recommandées
 class AllRecommendedOffersScreen extends ConsumerWidget {
@@ -12,7 +13,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final offersAsync = ref.watch(recommendedOffersProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Offres recommandées'),
@@ -32,7 +33,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
           if (offers.isEmpty) {
             return _buildEmptyState(context);
           }
-          
+
           return RefreshIndicator(
             onRefresh: () async {
               // Forcer le rechargement des offres
@@ -60,9 +61,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => _buildErrorState(context, ref, error),
       ),
     );
@@ -73,11 +72,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.local_offer_outlined,
-            size: 80,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.local_offer_outlined, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
             'Aucune offre disponible',
@@ -86,10 +81,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           Text(
             'Revenez plus tard pour découvrir\nde nouvelles offres anti-gaspi',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 16,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 16),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -112,11 +104,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
             const SizedBox(height: 16),
             Text(
               'Erreur lors du chargement',
@@ -166,16 +154,18 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.grey[50],
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Détails de l\'offre',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  "Détails de l'offre",
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -184,7 +174,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
               ],
             ),
           ),
-          
+
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
@@ -195,27 +185,29 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                   // Informations principales
                   OfferInfoSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Détails pratiques
                   OfferDetailsSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Adresse
                   OfferAddressSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Badges allergènes
                   OfferBadgesSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Métadonnées
                   OfferMetadataSection(offer: offer),
-                  const SizedBox(height: 100), // Espace pour la barre de réservation
+                  const SizedBox(
+                    height: 100,
+                  ), // Espace pour la barre de réservation
                 ],
               ),
             ),
           ),
-          
+
           // Barre de réservation
           OfferReservationBar(
             offer: offer,
@@ -225,7 +217,9 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Réservation pour "${offer.title}" confirmée !'),
+                  content: Text(
+                    'Réservation pour "${offer.title}" confirmée !',
+                  ),
                   duration: const Duration(seconds: 2),
                 ),
               );
@@ -265,12 +259,9 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              
+
               // Filtres par catégorie
-              Text(
-                'Catégorie',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text('Catégorie', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
@@ -294,9 +285,9 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // Filtres par régime
               Text(
                 'Régime alimentaire',
@@ -323,14 +314,11 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // Filtres par prix
-              Text(
-                'Prix',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text('Prix', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
@@ -355,9 +343,9 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // Boutons d'action
               Row(
                 children: [

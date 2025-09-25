@@ -69,7 +69,6 @@ class CategoriesSection extends ConsumerWidget {
                             color: isSelected
                               ? Theme.of(context).primaryColor
                               : Colors.grey.shade300,
-                            width: 1,
                           ),
                           boxShadow: isSelected ? [
                             BoxShadow(

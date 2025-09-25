@@ -1,17 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+
 import '../../domain/entities/brand.dart';
 
 /// Carte horizontale avec image de fond de nourriture
 class BrandCard extends StatelessWidget {
+  const BrandCard({required this.brand, super.key, this.onTap});
   final Brand brand;
   final VoidCallback? onTap;
-
-  const BrandCard({
-    super.key,
-    required this.brand,
-    this.onTap,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +40,15 @@ class BrandCard extends StatelessWidget {
                   imageUrl: _getFoodImageUrl(brand.category),
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
-                    color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade100,
+                    color: isDarkMode
+                        ? Colors.grey.shade800
+                        : Colors.grey.shade100,
                   ),
                   errorWidget: (context, url, error) => Container(
                     decoration: BoxDecoration(
-                      color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade100,
+                      color: isDarkMode
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -60,7 +60,7 @@ class BrandCard extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Overlay gradient pour la lisibilité
             Container(
               decoration: BoxDecoration(
@@ -70,12 +70,10 @@ class BrandCard extends StatelessWidget {
                     Colors.black.withValues(alpha: 0.7),
                     Colors.black.withValues(alpha: 0.3),
                   ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
                 ),
               ),
             ),
-            
+
             // Contenu principal
             Padding(
               padding: const EdgeInsets.all(12),
@@ -91,7 +89,6 @@ class BrandCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.3),
-                        width: 1,
                       ),
                     ),
                     child: Stack(
@@ -117,7 +114,7 @@ class BrandCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        
+
                         // Badge Premium/New
                         if (brand.isPremium || brand.isNew)
                           Positioned(
@@ -130,13 +127,12 @@ class BrandCard extends StatelessWidget {
                                     ? Colors.amber.shade100
                                     : Colors.green.shade100,
                                 shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
+                                border: Border.all(color: Colors.white),
                               ),
                               child: Icon(
-                                brand.isPremium ? Icons.star : Icons.new_releases,
+                                brand.isPremium
+                                    ? Icons.star
+                                    : Icons.new_releases,
                                 size: 8,
                                 color: brand.isPremium
                                     ? Colors.amber.shade700
@@ -147,9 +143,9 @@ class BrandCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(width: 12),
-                  
+
                   // Info Section
                   Expanded(
                     child: Column(
@@ -163,35 +159,25 @@ class BrandCard extends StatelessWidget {
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black,
-                                blurRadius: 4,
-                              ),
-                            ],
+                            shadows: [Shadow(blurRadius: 4)],
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 2),
-                        
+
                         // Category
                         Text(
                           brand.category,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.9),
-                            shadows: const [
-                              Shadow(
-                                color: Colors.black,
-                                blurRadius: 2,
-                              ),
-                            ],
+                            shadows: const [Shadow(blurRadius: 2)],
                           ),
                         ),
-                        
+
                         const SizedBox(height: 6),
-                        
+
                         // Stats Row
                         Row(
                           children: [
@@ -218,9 +204,9 @@ class BrandCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            
+
                             const SizedBox(width: 8),
-                            
+
                             // Discount
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -240,9 +226,9 @@ class BrandCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            
+
                             const Spacer(),
-                            
+
                             // Arrow
                             const Icon(
                               Icons.arrow_forward_ios,

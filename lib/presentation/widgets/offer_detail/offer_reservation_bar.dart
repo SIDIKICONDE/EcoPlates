@@ -3,16 +3,15 @@ import '../../../domain/entities/food_offer.dart';
 
 /// Barre de réservation flottante en bas de l'écran
 class OfferReservationBar extends StatelessWidget {
-  final FoodOffer offer;
-  final bool isReserving;
-  final VoidCallback onReserve;
-
   const OfferReservationBar({
-    super.key,
     required this.offer,
     required this.isReserving,
     required this.onReserve,
+    super.key,
   });
+  final FoodOffer offer;
+  final bool isReserving;
+  final VoidCallback onReserve;
 
   @override
   Widget build(BuildContext context) {

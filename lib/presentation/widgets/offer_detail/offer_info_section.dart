@@ -3,12 +3,8 @@ import '../../../domain/entities/food_offer.dart';
 
 /// Section d'informations essentielles pour l'acheteur
 class OfferInfoSection extends StatelessWidget {
+  const OfferInfoSection({required this.offer, super.key});
   final FoodOffer offer;
-
-  const OfferInfoSection({
-    super.key,
-    required this.offer,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,28 +14,19 @@ class OfferInfoSection extends StatelessWidget {
         // Titre de l'offre
         Text(
           offer.title,
-          style: const TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 24),
 
         // Description
-        Text(
+        const Text(
           'Que contient cette offre ?',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
           offer.description,
-          style: const TextStyle(
-            fontSize: 16,
-            height: 1.5,
-          ),
+          style: const TextStyle(fontSize: 16, height: 1.5),
         ),
       ],
     );

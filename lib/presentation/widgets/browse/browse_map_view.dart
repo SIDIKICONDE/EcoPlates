@@ -58,7 +58,8 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
     try {
       final position = await _mapService.getCurrentPosition();
       if (position != null) {
-        // Centrer sur la position utilisateur
+        // Ajouter le marqueur de position utilisateur et centrer
+        _mapService.updateUserLocationMarker(position);
         await _mapService.centerOnUserLocation();
       } else {
         // Fallback : montrer toutes les offres si disponibles
@@ -106,13 +107,10 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
               ),
               onMapCreated: _onMapCreated,
               markers: markers,
-              myLocationEnabled: true,
               myLocationButtonEnabled: false, // Nous utilisons notre propre bouton
               zoomControlsEnabled: false,
               mapToolbarEnabled: false,
-              compassEnabled: true,
               buildingsEnabled: false,
-              mapType: MapType.normal,
             );
           },
         ),

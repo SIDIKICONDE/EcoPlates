@@ -1,5 +1,22 @@
 /// Entité Brand pour représenter les grandes enseignes partenaires
 class Brand {
+  const Brand({
+    required this.id,
+    required this.name,
+    required this.logoUrl,
+    required this.category,
+    required this.totalStores,
+    required this.activeOffers,
+    required this.averageDiscount,
+    required this.description,
+    required this.primaryColor,
+    this.isPremium = false,
+    this.isNew = false,
+    this.tagline,
+    this.backgroundColor,
+    this.tags,
+    this.partnerSince,
+  });
   final String id;
   final String name;
   final String logoUrl;
@@ -15,24 +32,6 @@ class Brand {
   final String? backgroundColor;
   final List<String>? tags;
   final DateTime? partnerSince;
-
-  const Brand({
-    required this.id,
-    required this.name,
-    required this.logoUrl,
-    required this.category,
-    required this.totalStores,
-    required this.activeOffers,
-    required this.averageDiscount,
-    required this.description,
-    this.isPremium = false,
-    this.isNew = false,
-    this.tagline,
-    required this.primaryColor,
-    this.backgroundColor,
-    this.tags,
-    this.partnerSince,
-  });
 
   /// Créé une copie de la marque avec des champs modifiés
   Brand copyWith({
@@ -106,7 +105,7 @@ class Brand {
 
   /// Formatte le nombre d'offres pour l'affichage
   String get formattedOffersCount {
-    if (activeOffers == 0) return 'Pas d\'offres';
+    if (activeOffers == 0) return "Pas d'offres";
     if (activeOffers == 1) return '1 offre';
     return '$activeOffers offres';
   }

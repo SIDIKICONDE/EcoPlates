@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
+
 import '../../domain/entities/food_offer.dart';
-import 'offer_card/widgets/offer_card_image.dart';
 import 'offer_card/widgets/offer_card_content.dart';
+import 'offer_card/widgets/offer_card_image.dart';
 
 /// Widget de carte pour afficher une offre anti-gaspillage
 /// Utilisable dans toutes les listes et grilles de l'application
 class OfferCard extends StatefulWidget {
-  final FoodOffer offer;
-  final VoidCallback? onTap;
-  final bool showDistance;
-  final double? distance; // en km
-  final bool compact; // Mode compact pour réduire la hauteur
+  // Mode compact pour réduire la hauteur
 
   const OfferCard({
-    super.key,
     required this.offer,
+    super.key,
     this.onTap,
     this.showDistance = true,
     this.distance,
     this.compact = false,
   });
+  final FoodOffer offer;
+  final VoidCallback? onTap;
+  final bool showDistance;
+  final double? distance; // en km
+  final bool compact;
 
   @override
   State<OfferCard> createState() => _OfferCardState();
 }
 
-class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMixin {
+class _OfferCardState extends State<OfferCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _elevationAnimation;
-  
+
   @override
   void initState() {
     super.initState();
@@ -38,21 +41,15 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.97,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     _elevationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
@@ -68,57 +65,57 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
       button: true,
       label: _buildSemanticLabel(),
       child: GestureDetector(
-          onTapDown: (_) => _controller.forward(),
-          onTapUp: (_) => _controller.reverse(),
-          onTapCancel: () => _controller.reverse(),
-          onTap: widget.onTap,
-          child: AnimatedBuilder(
-            animation: Listenable.merge([_scaleAnimation, _elevationAnimation]),
-            builder: (context, child) => Transform.scale(
-              scale: _scaleAnimation.value,
-              child: Container(
-            decoration: BoxDecoration(
-              color: isDark ? Colors.grey[900] : Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(
-                    alpha: isDark 
-                      ? 0.3 + (0.1 * _elevationAnimation.value)
-                      : 0.08 + (0.06 * _elevationAnimation.value),
-                  ),
-                  blurRadius: 10 + (8 * _elevationAnimation.value),
-                  offset: Offset(0, 4 + (4 * _elevationAnimation.value)),
-                ),
-                // Ombre secondaire pour plus de profondeur
-                if (_elevationAnimation.value > 0)
+        onTapDown: (_) => _controller.forward(),
+        onTapUp: (_) => _controller.reverse(),
+        onTapCancel: () => _controller.reverse(),
+        onTap: widget.onTap,
+        child: AnimatedBuilder(
+          animation: Listenable.merge([_scaleAnimation, _elevationAnimation]),
+          builder: (context, child) => Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey[900] : Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
                   BoxShadow(
-                    color: theme.primaryColor.withValues(
-                      alpha: 0.1 * _elevationAnimation.value,
+                    color: Colors.black.withValues(
+                      alpha: isDark
+                          ? 0.3 + (0.1 * _elevationAnimation.value)
+                          : 0.08 + (0.06 * _elevationAnimation.value),
                     ),
-                    blurRadius: 20 * _elevationAnimation.value,
-                    offset: Offset(0, 8 * _elevationAnimation.value),
+                    blurRadius: 10 + (8 * _elevationAnimation.value),
+                    offset: Offset(0, 4 + (4 * _elevationAnimation.value)),
                   ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Image avec badges
-                OfferCardImage(offer: widget.offer, compact: widget.compact),
-                
-                // Contenu de la carte
-                OfferCardContent(
-                  offer: widget.offer,
-                  showDistance: widget.showDistance,
-                  distance: widget.distance,
-                  compact: widget.compact,
-                ),
-              ],
-            ),
+                  // Ombre secondaire pour plus de profondeur
+                  if (_elevationAnimation.value > 0)
+                    BoxShadow(
+                      color: theme.primaryColor.withValues(
+                        alpha: 0.1 * _elevationAnimation.value,
+                      ),
+                      blurRadius: 20 * _elevationAnimation.value,
+                      offset: Offset(0, 8 * _elevationAnimation.value),
+                    ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image avec badges
+                  OfferCardImage(offer: widget.offer, compact: widget.compact),
+
+                  // Contenu de la carte
+                  OfferCardContent(
+                    offer: widget.offer,
+                    showDistance: widget.showDistance,
+                    distance: widget.distance,
+                    compact: widget.compact,
+                  ),
+                ],
               ),
             ),
           ),
+        ),
       ),
     );
   }
@@ -127,21 +124,23 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
     final buffer = StringBuffer();
     buffer.write('${widget.offer.title} chez ${widget.offer.merchantName}. ');
     buffer.write('Prix: ${widget.offer.priceText}. ');
-    
+
     if (widget.offer.isFree) {
       buffer.write('Offre gratuite. ');
     } else {
-      buffer.write('Réduction de ${widget.offer.discountPercentage.toStringAsFixed(0)}%. ');
+      buffer.write(
+        'Réduction de ${widget.offer.discountPercentage.toStringAsFixed(0)}%. ',
+      );
     }
-    
+
     if (widget.showDistance && widget.distance != null) {
       buffer.write('À ${widget.distance!.toStringAsFixed(1)} kilomètres. ');
     }
-    
+
     if (widget.offer.canPickup) {
       buffer.write('Collecte disponible. ');
     }
-    
+
     return buffer.toString();
   }
 }

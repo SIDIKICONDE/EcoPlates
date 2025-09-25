@@ -122,7 +122,7 @@ class WelcomeScreen extends ConsumerWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  'Les deux options mènent à la même page d\'accueil pour le moment',
+                  "Les deux options mènent à la même page d'accueil pour le moment",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12,

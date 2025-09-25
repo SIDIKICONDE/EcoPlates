@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/brand_provider.dart';
+
 import '../../../domain/entities/brand.dart';
+import '../../providers/brand_provider.dart';
 
 /// Widget pour afficher le logo du restaurant avec badge de quantité disponible
 class MerchantLogoWithBadge extends ConsumerWidget {
@@ -26,9 +27,7 @@ class MerchantLogoWithBadge extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
       ),
       child: Stack(
         children: [
@@ -68,19 +67,11 @@ class MerchantLogoWithBadge extends ConsumerWidget {
             top: -2,
             right: -2,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 6,
-                vertical: 2,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: availableQuantity <= 3
-                    ? Colors.orange
-                    : Colors.green,
+                color: availableQuantity <= 3 ? Colors.orange : Colors.green,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2,
-                ),
+                border: Border.all(color: Colors.white, width: 2),
               ),
               child: Text(
                 '$availableQuantity',
@@ -118,7 +109,8 @@ class MerchantLogoWithBadge extends ConsumerWidget {
       for (final brand in brands) {
         final brandNameLower = brand.name.toLowerCase();
         if (merchantNameLower.contains(brandNameLower) &&
-            (merchantNameLower.length - brandNameLower.length) < 10) { // Évite les faux positifs trop longs
+            (merchantNameLower.length - brandNameLower.length) < 10) {
+          // Évite les faux positifs trop longs
           foundBrand = brand;
           break;
         }
@@ -130,8 +122,12 @@ class MerchantLogoWithBadge extends ConsumerWidget {
       for (final brand in brands) {
         final brandNameLower = brand.name.toLowerCase();
         // Gère les cas comme "McDonald's" vs "Mc Donald's"
-        final normalizedMerchant = merchantNameLower.replaceAll("'", "").replaceAll(" ", "");
-        final normalizedBrand = brandNameLower.replaceAll("'", "").replaceAll(" ", "");
+        final normalizedMerchant = merchantNameLower
+            .replaceAll("'", '')
+            .replaceAll(' ', '');
+        final normalizedBrand = brandNameLower
+            .replaceAll("'", '')
+            .replaceAll(' ', '');
         if (normalizedMerchant == normalizedBrand ||
             normalizedMerchant.contains(normalizedBrand) ||
             normalizedBrand.contains(normalizedMerchant)) {
@@ -185,7 +181,9 @@ class MerchantLogoWithBadge extends ConsumerWidget {
         ),
         errorWidget: (context, url, error) {
           // Log l'erreur pour le debugging
-          print('Erreur chargement logo ${foundBrand?.name}: $error (URL: $url)');
+          print(
+            'Erreur chargement logo ${foundBrand?.name}: $error (URL: $url)',
+          );
 
           // Essayer une URL alternative si disponible
           if (foundBrand != null && _hasAlternativeUrl(foundBrand)) {

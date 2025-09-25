@@ -3,17 +3,13 @@ import '../../../../domain/entities/food_offer.dart';
 
 /// Chip affichant la catégorie de l'offre
 class OfferCategoryChip extends StatelessWidget {
+  const OfferCategoryChip({required this.category, super.key});
   final FoodCategory category;
-  
-  const OfferCategoryChip({
-    super.key,
-    required this.category,
-  });
 
   @override
   Widget build(BuildContext context) {
     final (label, color) = _getCategoryInfo(category);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -44,11 +43,8 @@ final connectivityProvider = StreamProvider<List<ConnectivityResult>>((ref) {
 final imagePreloadManagerProvider = Provider<ImagePreloadManager>((ref) {
   final cacheService = ref.watch(imageCacheServiceProvider);
   final strategy = ref.watch(preloadStrategyProvider);
-  
-  return ImagePreloadManager(
-    cacheService: cacheService,
-    strategy: strategy,
-  );
+
+  return ImagePreloadManager(cacheService: cacheService, strategy: strategy);
 });
 
 /// Stratégies de préchargement
@@ -100,20 +96,17 @@ enum PreloadStrategy {
 
 /// Gestionnaire de préchargement intelligent
 class ImagePreloadManager {
-  ImagePreloadManager({
-    required this.cacheService,
-    required this.strategy,
-  });
-  
+  ImagePreloadManager({required this.cacheService, required this.strategy});
+
   final ImageCacheService cacheService;
   final PreloadStrategy strategy;
-  
+
   // Cache des URLs en cours de préchargement
   final Set<String> _preloadingUrls = {};
-  
+
   // File d'attente de préchargement avec priorités
   final Map<String, PreloadRequest> _preloadQueue = {};
-  
+
   /// Précharge les images pour une liste scrollable
   Future<void> preloadForList({
     required List<String> imageUrls,
@@ -128,31 +121,37 @@ class ImagePreloadManager {
     final sizes = strategy.sizes;
 
     // Calculer la plage à précharger
-    final startIndex = (visibleIndex - visibleRange)
-        .clamp(0, imageUrls.length - 1);
-    final endIndex = (visibleIndex + visibleRange)
-        .clamp(0, imageUrls.length - 1);
+    final startIndex = (visibleIndex - visibleRange).clamp(
+      0,
+      imageUrls.length - 1,
+    );
+    final endIndex = (visibleIndex + visibleRange).clamp(
+      0,
+      imageUrls.length - 1,
+    );
 
     // Ajouter les requêtes à la file
-    for (int i = startIndex; i <= endIndex; i++) {
+    for (var i = startIndex; i <= endIndex; i++) {
       final url = imageUrls[i];
       final distance = (i - visibleIndex).abs();
 
       // Priorité basée sur la distance
       final adjustedPriority = _calculatePriority(distance, priority);
 
-      _addToQueue(PreloadRequest(
-        url: url,
-        sizes: overrideSize != null ? [overrideSize] : sizes,
-        priority: adjustedPriority,
-        timestamp: DateTime.now(),
-      ));
+      _addToQueue(
+        PreloadRequest(
+          url: url,
+          sizes: overrideSize != null ? [overrideSize] : sizes,
+          priority: adjustedPriority,
+          timestamp: DateTime.now(),
+        ),
+      );
     }
 
     // Traiter la file
     await _processQueue();
   }
-  
+
   /// Précharge les images pour une grille
   Future<void> preloadForGrid({
     required List<String> imageUrls,
@@ -163,18 +162,18 @@ class ImagePreloadManager {
     Priority priority = Priority.normal,
   }) async {
     if (strategy == PreloadStrategy.disabled) return;
-    
+
     // Calculer les lignes visibles
     final startRow = visibleStartIndex ~/ crossAxisCount;
     final endRow = visibleEndIndex ~/ crossAxisCount;
-    
+
     // Étendre la plage selon la stratégie
     final preloadStartRow = (startRow - strategy.visibleRange).clamp(0, 999);
     final preloadEndRow = endRow + strategy.visibleRange;
-    
+
     // Précharger les images de la plage étendue
-    for (int row = preloadStartRow; row <= preloadEndRow; row++) {
-      for (int col = 0; col < crossAxisCount; col++) {
+    for (var row = preloadStartRow; row <= preloadEndRow; row++) {
+      for (var col = 0; col < crossAxisCount; col++) {
         final index = row * crossAxisCount + col;
         if (index < imageUrls.length) {
           final distance = _calculateGridDistance(
@@ -183,20 +182,22 @@ class ImagePreloadManager {
             visibleEndIndex,
             crossAxisCount,
           );
-          
-          _addToQueue(PreloadRequest(
-            url: imageUrls[index],
-            sizes: [size],
-            priority: _calculatePriority(distance, priority),
-            timestamp: DateTime.now(),
-          ));
+
+          _addToQueue(
+            PreloadRequest(
+              url: imageUrls[index],
+              sizes: [size],
+              priority: _calculatePriority(distance, priority),
+              timestamp: DateTime.now(),
+            ),
+          );
         }
       }
     }
-    
+
     await _processQueue();
   }
-  
+
   /// Précharge une image spécifique immédiatement
   Future<void> preloadNow(
     String imageUrl, {
@@ -204,7 +205,7 @@ class ImagePreloadManager {
     Priority priority = Priority.high,
   }) async {
     if (_preloadingUrls.contains(imageUrl)) return;
-    
+
     _preloadingUrls.add(imageUrl);
     try {
       await cacheService.precacheImage(
@@ -216,19 +217,19 @@ class ImagePreloadManager {
       _preloadingUrls.remove(imageUrl);
     }
   }
-  
+
   /// Ajoute une requête à la file
   void _addToQueue(PreloadRequest request) {
     // Ne pas ajouter si déjà en cours
     if (_preloadingUrls.contains(request.url)) return;
-    
+
     // Ajouter ou mettre à jour la priorité
     final existing = _preloadQueue[request.url];
     if (existing == null || request.priority.index > existing.priority.index) {
       _preloadQueue[request.url] = request;
     }
   }
-  
+
   /// Traite la file de préchargement
   Future<void> _processQueue() async {
     if (_preloadQueue.isEmpty) return;
@@ -247,17 +248,13 @@ class ImagePreloadManager {
 
     // Traiter par batch selon la stratégie
     final batches = <List<PreloadRequest>>[];
-    for (int i = 0; i < sortedRequests.length; i += maxConcurrent) {
-      batches.add(
-        sortedRequests.skip(i).take(maxConcurrent).toList(),
-      );
+    for (var i = 0; i < sortedRequests.length; i += maxConcurrent) {
+      batches.add(sortedRequests.skip(i).take(maxConcurrent).toList());
     }
 
     // Exécuter les batches avec délai
     for (final batch in batches) {
-      await Future.wait(
-        batch.map(_executePreload),
-      );
+      await Future.wait(batch.map(_executePreload));
 
       // Délai entre les batches pour ne pas surcharger
       if (batches.last != batch) {
@@ -268,12 +265,12 @@ class ImagePreloadManager {
     // Nettoyer la file
     _preloadQueue.clear();
   }
-  
+
   /// Exécute une requête de préchargement
   Future<void> _executePreload(PreloadRequest request) async {
     _preloadingUrls.add(request.url);
     _preloadQueue.remove(request.url);
-    
+
     try {
       // Précharger toutes les tailles demandées
       for (final size in request.sizes) {
@@ -289,7 +286,7 @@ class ImagePreloadManager {
       _preloadingUrls.remove(request.url);
     }
   }
-  
+
   /// Calcule la priorité basée sur la distance
   Priority _calculatePriority(int distance, Priority basePriority) {
     if (distance == 0) return Priority.high;
@@ -297,7 +294,7 @@ class ImagePreloadManager {
     if (distance <= 2) return basePriority;
     return Priority.low;
   }
-  
+
   /// Calcule la distance dans une grille
   int _calculateGridDistance(
     int index,
@@ -306,15 +303,15 @@ class ImagePreloadManager {
     int crossAxisCount,
   ) {
     if (index >= visibleStart && index <= visibleEnd) return 0;
-    
+
     final indexRow = index ~/ crossAxisCount;
     final startRow = visibleStart ~/ crossAxisCount;
     final endRow = visibleEnd ~/ crossAxisCount;
-    
+
     if (indexRow < startRow) return startRow - indexRow;
     return indexRow - endRow;
   }
-  
+
   /// Nettoie les ressources
   void dispose() {
     _preloadQueue.clear();
@@ -330,7 +327,7 @@ class PreloadRequest {
     required this.priority,
     required this.timestamp,
   });
-  
+
   final String url;
   final List<ImageSize> sizes;
   final Priority priority;
@@ -341,7 +338,7 @@ class PreloadRequest {
 mixin AutoPreloadImages<T extends StatefulWidget> on State<T> {
   Timer? _preloadTimer;
   int _lastVisibleIndex = 0;
-  
+
   /// Démarre le préchargement automatique
   void startAutoPreload({
     required List<String> imageUrls,
@@ -351,19 +348,21 @@ mixin AutoPreloadImages<T extends StatefulWidget> on State<T> {
   }) {
     _preloadTimer?.cancel();
     _preloadTimer = Timer(debounce, () {
-      ref.read(imagePreloadManagerProvider).preloadForList(
-        imageUrls: imageUrls,
-        visibleIndex: _lastVisibleIndex,
-        overrideSize: size,
-      );
+      ref
+          .read(imagePreloadManagerProvider)
+          .preloadForList(
+            imageUrls: imageUrls,
+            visibleIndex: _lastVisibleIndex,
+            overrideSize: size,
+          );
     });
   }
-  
+
   /// Met à jour l'index visible
   set visibleIndex(int index) {
     _lastVisibleIndex = index;
   }
-  
+
   @override
   void dispose() {
     _preloadTimer?.cancel();

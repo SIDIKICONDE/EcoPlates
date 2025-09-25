@@ -4,12 +4,8 @@ import '../../../domain/entities/food_offer.dart';
 
 /// Section dédiée à l'adresse de récupération
 class OfferAddressSection extends StatelessWidget {
+  const OfferAddressSection({required this.offer, super.key});
   final FoodOffer offer;
-
-  const OfferAddressSection({
-    super.key,
-    required this.offer,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +13,7 @@ class OfferAddressSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey[200]!, width: 1),
+        border: Border.all(color: Colors.grey[200]!),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -26,11 +22,7 @@ class OfferAddressSection extends StatelessWidget {
           // Adresse principale avec icône simple
           Row(
             children: [
-              Icon(
-                Icons.location_on,
-                color: Colors.grey[600],
-                size: 20,
-              ),
+              Icon(Icons.location_on, color: Colors.grey[600], size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -47,18 +39,17 @@ class OfferAddressSection extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       '${offer.location.postalCode} ${offer.location.city}',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[700],
-                      ),
+                      style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                     ),
                     const SizedBox(height: 6),
                     GestureDetector(
                       onTap: () {
                         // Navigation vers le profil du marchand
                         final merchantId = offer.merchantId;
-                        debugPrint('🔗 Navigation vers profil marchand: $merchantId');
-                        
+                        debugPrint(
+                          '🔗 Navigation vers profil marchand: $merchantId',
+                        );
+
                         try {
                           context.push('/merchant-profile/$merchantId');
                         } catch (e) {
@@ -66,7 +57,9 @@ class OfferAddressSection extends StatelessWidget {
                           // Fallback: afficher un message ou naviguer vers une page d'erreur
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Impossible d\'ouvrir le profil du marchand'),
+                              content: const Text(
+                                "Impossible d'ouvrir le profil du marchand",
+                              ),
                               action: SnackBarAction(
                                 label: 'OK',
                                 onPressed: () {},
@@ -79,7 +72,7 @@ class OfferAddressSection extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Plus d\'informations sur le marchand',
+                            "Plus d'informations sur le marchand",
                             style: TextStyle(
                               fontSize: 13,
                               color: Theme.of(context).primaryColor,
@@ -101,7 +94,6 @@ class OfferAddressSection extends StatelessWidget {
               ),
             ],
           ),
-          
         ],
       ),
     );

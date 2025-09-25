@@ -1,13 +1,21 @@
 import 'dart:async';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import '../../../domain/entities/food_offer.dart';
 
 /// Service pour gérer la carte Google Maps et les marqueurs d'offres
 class MapService {
+  /// Constructeur public (pour compatibilité)
+  factory MapService() => instance;
+
+  /// Constructeur privé pour singleton
+  MapService._();
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
-  final StreamController<Set<Marker>> _markersController = StreamController<Set<Marker>>.broadcast();
+  final StreamController<Set<Marker>> _markersController =
+      StreamController<Set<Marker>>.broadcast();
 
   /// Instance singleton
   static MapService? _instance;
@@ -18,12 +26,6 @@ class MapService {
     return _instance!;
   }
 
-  /// Constructeur privé pour singleton
-  MapService._();
-
-  /// Constructeur public (pour compatibilité)
-  factory MapService() => instance;
-
   /// Stream des marqueurs pour mettre à jour l'UI
   Stream<Set<Marker>> get markersStream => _markersController.stream;
 
@@ -32,6 +34,12 @@ class MapService {
 
   /// Contrôleur de la carte
   GoogleMapController? get mapController => _mapController;
+
+  /// Marqueur de la position utilisateur
+  Marker? _userLocationMarker;
+
+  /// Liste actuelle des offres pour rafraîchissement
+  List<FoodOffer> _currentOffers = [];
 
   /// Initialise le service
   void initialize() {
@@ -45,9 +53,20 @@ class MapService {
 
   /// Met à jour les marqueurs pour les offres données
   void updateMarkers(List<FoodOffer> offers) {
+    _currentOffers = offers; // Sauvegarder la liste actuelle
+    _refreshMarkers();
+  }
+
+  /// Rafraîchit les marqueurs avec les données actuelles
+  void _refreshMarkers() {
     _markers.clear();
 
-    for (final offer in offers) {
+    // Toujours ajouter le marqueur de position utilisateur en premier
+    if (_userLocationMarker != null) {
+      _markers.add(_userLocationMarker!);
+    }
+
+    for (final offer in _currentOffers) {
       if (offer.location.latitude != 0 && offer.location.longitude != 0) {
         final marker = Marker(
           markerId: MarkerId(offer.id),
@@ -73,6 +92,22 @@ class MapService {
     _markersController.add(_markers);
   }
 
+  /// Met à jour le marqueur de position utilisateur
+  void updateUserLocationMarker(Position position) {
+    _userLocationMarker = Marker(
+      markerId: const MarkerId('user_location'),
+      position: LatLng(position.latitude, position.longitude),
+      infoWindow: const InfoWindow(
+        title: 'Votre position',
+        snippet: 'Vous êtes ici',
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    );
+
+    // Rafraîchir les marqueurs pour afficher le nouveau marqueur utilisateur
+    _refreshMarkers();
+  }
+
   /// Obtient l'icône du marqueur selon le type d'offre
   BitmapDescriptor _getMarkerIcon(FoodOffer offer) {
     // Par défaut, utiliser l'icône standard
@@ -88,7 +123,7 @@ class MapService {
       await _mapController!.animateCamera(
         CameraUpdate.newLatLngZoom(
           LatLng(latitude, longitude),
-          16.0, // Zoom niveau rue
+          16, // Zoom niveau rue
         ),
       );
     }
@@ -130,6 +165,9 @@ class MapService {
   Future<void> centerOnUserLocation() async {
     final position = await getCurrentPosition();
     if (position != null && _mapController != null) {
+      // Mettre à jour le marqueur de position utilisateur
+      updateUserLocationMarker(position);
+
       await _mapController!.animateCamera(
         CameraUpdate.newLatLngZoom(
           LatLng(position.latitude, position.longitude),

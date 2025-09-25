@@ -3,18 +3,14 @@ import '../../../domain/entities/food_offer.dart';
 
 /// Section des allergènes avec slider moderne
 class OfferBadgesSection extends StatelessWidget {
+  const OfferBadgesSection({required this.offer, super.key});
   final FoodOffer offer;
-
-  const OfferBadgesSection({
-    super.key,
-    required this.offer,
-  });
 
   @override
   Widget build(BuildContext context) {
     // N'afficher que s'il y a des allergènes
     if (offer.allergens.isEmpty) return const SizedBox.shrink();
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -45,7 +41,7 @@ class OfferBadgesSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        
+
         // Slider horizontal des allergènes
         SizedBox(
           height: 40,
@@ -56,23 +52,19 @@ class OfferBadgesSection extends StatelessWidget {
             itemBuilder: (context, index) {
               final allergen = offer.allergens[index];
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.grey[300]!,
-                    width: 1,
-                  ),
+                  border: Border.all(color: Colors.grey[300]!),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.info,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
+                    Icon(Icons.info, size: 16, color: Colors.grey[600]),
                     const SizedBox(width: 6),
                     Text(
                       allergen,

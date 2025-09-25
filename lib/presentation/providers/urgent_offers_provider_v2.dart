@@ -10,9 +10,7 @@ final urgentOffersParamsProvider = Provider<UrgentOffersParams>((ref) {
   final userPrefs = ref.watch(userPreferencesProvider);
   
   return UrgentOffersParams(
-    maxMinutesBeforeExpiry: 120, // 2 heures
     maxDistanceKm: userPrefs['maxDistance'] as double? ?? 5.0,
-    allowCached: true,
   );
 });
 
@@ -58,12 +56,12 @@ final urgentOffersStreamProvider = StreamProvider.autoDispose<List<FoodOffer>>((
 
 /// State notifier pour gérer l'état complexe des offres urgentes
 class UrgentOffersNotifier extends StateNotifier<AsyncValue<List<FoodOffer>>> {
-  final GetUrgentOffersUseCase _useCase;
-  final Ref _ref;
   
   UrgentOffersNotifier(this._useCase, this._ref) : super(const AsyncValue.loading()) {
     loadOffers();
   }
+  final GetUrgentOffersUseCase _useCase;
+  final Ref _ref;
   
   Future<void> loadOffers() async {
     state = const AsyncValue.loading();
@@ -171,7 +169,7 @@ final urgentOffersByCategoryProvider = Provider.autoDispose<Map<String, List<Foo
   
   return offersAsync.when(
     data: (offers) {
-      final Map<String, List<FoodOffer>> grouped = {};
+      final grouped = <String, List<FoodOffer>>{};
       for (final offer in offers) {
         grouped.putIfAbsent(offer.category.name, () => []).add(offer);
       }

@@ -208,7 +208,6 @@ class NearbySection extends ConsumerWidget {
                           OfferCard(
                             offer: offer,
                             compact: true,
-                            showDistance: true,
                             distance: distance,
                             onTap: () {
                               _showOfferDetailModal(context, offer);
@@ -425,7 +424,6 @@ class _DistanceFilterModal extends StatefulWidget {
   const _DistanceFilterModal({
     required this.currentRadius,
     required this.onRadiusChanged,
-    super.key,
   });
 
   final double currentRadius;

@@ -3,32 +3,28 @@ import '../../../core/utils/accessibility_helper.dart';
 
 /// Widget pour afficher la note avec des étoiles accessibles WCAG
 class RatingDisplay extends StatelessWidget {
+  const RatingDisplay({required this.rating, super.key});
   final double rating;
-  
-  const RatingDisplay({
-    super.key,
-    required this.rating,
-  });
-  
+
   @override
   Widget build(BuildContext context) {
     final starCount = rating.floor();
     final halfStar = rating - starCount >= 0.5;
-    
+
     return Semantics(
       label: 'Noté ${rating.toStringAsFixed(1)} sur 5 étoiles',
       child: Row(
         children: [
           ...List.generate(5, (index) {
             if (index < starCount) {
-              return Icon(
+              return const Icon(
                 Icons.star,
                 size: 14,
                 color: AccessibleColors.ratingAmber,
                 semanticLabel: '',
               );
             } else if (index == starCount && halfStar) {
-              return Icon(
+              return const Icon(
                 Icons.star_half,
                 size: 14,
                 color: AccessibleColors.ratingAmber,
@@ -46,7 +42,7 @@ class RatingDisplay extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             rating.toStringAsFixed(1),
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: AccessibleFontSizes.small,
               fontWeight: FontWeight.bold,

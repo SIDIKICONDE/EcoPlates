@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/meals_provider.dart';
+import '../../../screens/all_meals_screen.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
-import '../../../../domain/entities/food_offer.dart';
-import '../../../screens/all_meals_screen.dart';
 
 /// Section affichant les offres de repas complets
 class MealsSection extends ConsumerWidget {
@@ -13,7 +14,7 @@ class MealsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mealsAsync = ref.watch(mealsProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -28,17 +29,11 @@ class MealsSection extends ConsumerWidget {
                 children: [
                   const Text(
                     'Repas complets',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     'Menus et formules à prix réduits',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -55,7 +50,7 @@ class MealsSection extends ConsumerWidget {
             ],
           ),
         ),
-        
+
         // Liste horizontale d'offres de repas
         SizedBox(
           height: 275, // Hauteur optimisée pour les cartes d'offres
@@ -74,16 +69,13 @@ class MealsSection extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         'Aucun repas disponible',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 16,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
                       ),
                     ],
                   ),
                 );
               }
-              
+
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -98,7 +90,6 @@ class MealsSection extends ConsumerWidget {
                       child: OfferCard(
                         offer: meal,
                         compact: true,
-                        showDistance: true,
                         distance: 0.8 + (index * 0.3), // Distance simulée
                         onTap: () {
                           _showMealDetailModal(context, meal);
@@ -109,18 +100,12 @@ class MealsSection extends ConsumerWidget {
                 },
               );
             },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red[400],
-                  ),
+                  Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
                   const SizedBox(height: 8),
                   Text(
                     'Erreur de chargement',
@@ -139,7 +124,7 @@ class MealsSection extends ConsumerWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
       ],
     );
@@ -168,7 +153,9 @@ class MealsSection extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.grey[50],
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,10 +173,7 @@ class MealsSection extends ConsumerWidget {
                     ),
                     Text(
                       'À récupérer : ${_formatPickupTime(meal)}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -200,7 +184,7 @@ class MealsSection extends ConsumerWidget {
               ],
             ),
           ),
-          
+
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
@@ -211,23 +195,23 @@ class MealsSection extends ConsumerWidget {
                   // Informations principales
                   OfferInfoSection(offer: meal),
                   const SizedBox(height: 24),
-                  
+
                   // Composition du repas
                   _buildMealComposition(meal),
                   const SizedBox(height: 24),
-                  
+
                   // Détails pratiques
                   OfferDetailsSection(offer: meal),
                   const SizedBox(height: 24),
-                  
+
                   // Adresse
                   OfferAddressSection(offer: meal),
                   const SizedBox(height: 24),
-                  
+
                   // Badges allergènes
                   OfferBadgesSection(offer: meal),
                   const SizedBox(height: 24),
-                  
+
                   // Métadonnées
                   OfferMetadataSection(offer: meal),
                   const SizedBox(height: 100),
@@ -235,14 +219,12 @@ class MealsSection extends ConsumerWidget {
               ),
             ),
           ),
-          
+
           // Barre de réservation
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border(
-                top: BorderSide(color: Colors.grey[200]!),
-              ),
+              border: Border(top: BorderSide(color: Colors.grey[200]!)),
             ),
             child: OfferReservationBar(
               offer: meal,
@@ -263,17 +245,14 @@ class MealsSection extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildMealComposition(FoodOffer meal) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'Composition du repas',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Container(
@@ -288,7 +267,11 @@ class MealsSection extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.restaurant_menu, size: 20, color: Colors.orange),
+                  const Icon(
+                    Icons.restaurant_menu,
+                    size: 20,
+                    color: Colors.orange,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -306,7 +289,10 @@ class MealsSection extends ConsumerWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green[100],
                         borderRadius: BorderRadius.circular(16),
@@ -336,10 +322,12 @@ class MealsSection extends ConsumerWidget {
       ],
     );
   }
-  
+
   String _formatPickupTime(FoodOffer meal) {
-    final start = '${meal.pickupStartTime.hour.toString().padLeft(2, '0')}:${meal.pickupStartTime.minute.toString().padLeft(2, '0')}';
-    final end = '${meal.pickupEndTime.hour.toString().padLeft(2, '0')}:${meal.pickupEndTime.minute.toString().padLeft(2, '0')}';
+    final start =
+        '${meal.pickupStartTime.hour.toString().padLeft(2, '0')}:${meal.pickupStartTime.minute.toString().padLeft(2, '0')}';
+    final end =
+        '${meal.pickupEndTime.hour.toString().padLeft(2, '0')}:${meal.pickupEndTime.minute.toString().padLeft(2, '0')}';
     return '$start - $end';
   }
 }

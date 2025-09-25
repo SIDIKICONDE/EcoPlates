@@ -19,6 +19,10 @@ final imageCacheServiceProvider = Provider<ImageCacheService>((ref) {
 /// - Compression automatique
 /// - Gestion des priorités
 class ImageCacheService {
+  
+  ImageCacheService() {
+    _initializeCacheManagers();
+  }
   static const String _cacheKey = 'ecoplates_image_cache';
   
   // Configuration du cache
@@ -42,10 +46,6 @@ class ImageCacheService {
   final Map<String, Uint8List> _memoryCache = {};
   static const int _maxMemoryCacheSize = 50 * 1024 * 1024; // 50MB
   int _currentMemoryCacheSize = 0;
-  
-  ImageCacheService() {
-    _initializeCacheManagers();
-  }
   
   void _initializeCacheManagers() {
     // Cache principal pour images de taille normale
@@ -110,11 +110,10 @@ class ImageCacheService {
     int maxConcurrent = 3,
   }) async {
     // Traiter par batch pour éviter la surcharge
-    for (int i = 0; i < imageUrls.length; i += maxConcurrent) {
+    for (var i = 0; i < imageUrls.length; i += maxConcurrent) {
       final batch = imageUrls.skip(i).take(maxConcurrent);
       await Future.wait(
         batch.map((url) => precacheImage(url, size: size)),
-        eagerError: false,
       );
     }
   }
@@ -187,8 +186,8 @@ class ImageCacheService {
     final directory = await getTemporaryDirectory();
     final cacheDir = Directory('${directory.path}/$_cacheKey');
     
-    int totalSize = 0;
-    int fileCount = 0;
+    var totalSize = 0;
+    var fileCount = 0;
     
     if (await cacheDir.exists()) {
       await for (final file in cacheDir.list(recursive: true)) {
@@ -254,10 +253,6 @@ enum Priority {
 
 /// Informations sur le cache
 class CacheInfo {
-  final int totalSizeBytes;
-  final int fileCount;
-  final int memoryCacheSizeBytes;
-  final int memoryCacheCount;
   
   const CacheInfo({
     required this.totalSizeBytes,
@@ -265,6 +260,10 @@ class CacheInfo {
     required this.memoryCacheSizeBytes,
     required this.memoryCacheCount,
   });
+  final int totalSizeBytes;
+  final int fileCount;
+  final int memoryCacheSizeBytes;
+  final int memoryCacheCount;
   
   double get totalSizeMB => totalSizeBytes / (1024 * 1024);
   double get memoryCacheSizeMB => memoryCacheSizeBytes / (1024 * 1024);

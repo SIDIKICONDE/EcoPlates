@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../domain/entities/food_offer.dart';
+import 'package:flutter/material.dart';
+
 import '../../../core/utils/offer_formatters.dart';
+import '../../../domain/entities/food_offer.dart';
 
 /// Header de l'offre avec image et badges
 class OfferImageHeader extends StatelessWidget {
-  final FoodOffer offer;
-  final VoidCallback onBackPressed;
-
   const OfferImageHeader({
-    super.key,
     required this.offer,
     required this.onBackPressed,
+    super.key,
   });
+  final FoodOffer offer;
+  final VoidCallback onBackPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +24,18 @@ class OfferImageHeader extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             // Image principale
-            offer.images.isNotEmpty
-                ? CachedNetworkImage(
-                    imageUrl: offer.images.first,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        _buildPlaceholderImage(),
-                  )
-                : _buildPlaceholderImage(),
+            if (offer.images.isNotEmpty)
+              CachedNetworkImage(
+                imageUrl: offer.images.first,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[300],
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+                errorWidget: (context, url, error) => _buildPlaceholderImage(),
+              )
+            else
+              _buildPlaceholderImage(),
 
             // Gradient overlay
             Container(
@@ -118,7 +116,9 @@ class OfferImageHeader extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  OfferFormatters.formatTimeRemaining(offer.timeRemaining),
+                                  OfferFormatters.formatTimeRemaining(
+                                    offer.timeRemaining,
+                                  ),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

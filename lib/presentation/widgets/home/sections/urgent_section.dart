@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/image_preload_provider.dart';
-import '../../../../core/services/image_cache_service.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/urgent_offers_provider.dart';
 import '../../../screens/all_urgent_offers_screen.dart';
@@ -19,16 +16,16 @@ class UrgentSection extends ConsumerStatefulWidget {
   ConsumerState<UrgentSection> createState() => _UrgentSectionState();
 }
 
-class _UrgentSectionState extends ConsumerState<UrgentSection> 
+class _UrgentSectionState extends ConsumerState<UrgentSection>
     with AutoPreloadImages {
   final ScrollController _scrollController = ScrollController();
-  
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
   }
-  
+
   @override
   void dispose() {
     _scrollController
@@ -36,7 +33,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
       ..dispose();
     super.dispose();
   }
-  
+
   void _onScroll() {
     // Déterminer l'index visible pour le préchargement
     if (_scrollController.hasClients) {
@@ -46,11 +43,11 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
       visibleIndex = visibleIndexValue;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final urgentOffersAsync = ref.watch(urgentOffersProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -64,7 +61,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                 children: [
                   // Icône animée d'urgence
                   TweenAnimationBuilder<double>(
-                    tween: Tween(begin: 1.0, end: 1.2),
+                    tween: Tween(begin: 1, end: 1.2),
                     duration: const Duration(milliseconds: 800),
                     curve: Curves.easeInOut,
                     builder: (context, scale, child) {
@@ -91,7 +88,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'À sauver d\'urgence !',
+                        "À sauver d'urgence !",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -100,10 +97,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                       ),
                       Text(
                         'Dernière chance avant fermeture',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -123,7 +117,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
             ],
           ),
         ),
-        
+
         // Liste horizontale d'offres urgentes
         SizedBox(
           height: 275, // Hauteur ajustée pour éliminer l'espace blanc
@@ -142,10 +136,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                       const SizedBox(height: 8),
                       Text(
                         'Aucune offre urgente',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 16,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
                       ),
                       Text(
                         'Tout a été sauvé !',
@@ -158,15 +149,11 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                   ),
                 );
               }
-              
+
               // Précharger les images des offres urgentes
               final imageUrls = offers.map((o) => o.images.first).toList();
-              startAutoPreload(
-                imageUrls: imageUrls,
-                ref: ref,
-                size: ImageSize.small,
-              );
-              
+              startAutoPreload(imageUrls: imageUrls, ref: ref);
+
               return ListView.builder(
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
@@ -182,7 +169,10 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                       child: OfferCard(
                         offer: offer,
                         compact: true,
-                        distance: 0.5 + (index * 0.2), // Distance plus proche pour l'urgence
+                        distance:
+                            0.5 +
+                            (index *
+                                0.2), // Distance plus proche pour l'urgence
                         onTap: () {
                           _showOfferDetailModal(context, offer);
                         },
@@ -192,18 +182,12 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                 },
               );
             },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red[400],
-                  ),
+                  Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
                   const SizedBox(height: 8),
                   Text(
                     'Erreur de chargement',
@@ -222,12 +206,11 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
             ),
           ),
         ),
-        
+
         const SizedBox(height: 8),
       ],
     );
   }
-
 
   void _showOfferDetailModal(BuildContext context, FoodOffer offer) {
     showModalBottomSheet<void>(
@@ -241,7 +224,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
   Widget _buildOfferDetailModal(BuildContext context, FoodOffer offer) {
     final remainingTime = offer.pickupEndTime.difference(DateTime.now());
     final isVeryUrgent = remainingTime.inMinutes <= 60;
-    
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,
       decoration: const BoxDecoration(
@@ -255,7 +238,9 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isVeryUrgent ? Colors.red[50] : Colors.grey[50],
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             child: Column(
               children: [
@@ -291,7 +276,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
               ],
             ),
           ),
-          
+
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
@@ -302,19 +287,19 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                   // Informations principales
                   OfferInfoSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Détails pratiques
                   OfferDetailsSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Adresse
                   OfferAddressSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Badges allergènes
                   OfferBadgesSection(offer: offer),
                   const SizedBox(height: 24),
-                  
+
                   // Métadonnées
                   OfferMetadataSection(offer: offer),
                   const SizedBox(height: 100),
@@ -322,7 +307,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
               ),
             ),
           ),
-          
+
           // Barre de réservation avec indication d'urgence
           Container(
             decoration: BoxDecoration(
@@ -353,7 +338,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
       ),
     );
   }
-  
+
   String _formatTime(DateTime time) {
     final hour = time.hour.toString().padLeft(2, '0');
     final minute = time.minute.toString().padLeft(2, '0');

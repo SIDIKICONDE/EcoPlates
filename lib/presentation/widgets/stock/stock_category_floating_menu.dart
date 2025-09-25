@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Menu flottant pour filtrer par catégorie
-/// 
+///
 /// Affiche un bouton d'action flottant qui, lorsqu'il est pressé,
 /// ouvre un menu élégant avec toutes les catégories disponibles
 class StockCategoryFloatingMenu extends ConsumerStatefulWidget {
@@ -66,13 +66,9 @@ class _StockCategoryFloatingMenuState
       parent: _animationController,
       curve: Curves.easeOutBack,
     );
-    _rotationAnimation = Tween<double>(
-      begin: 0,
-      end: 0.5,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _rotationAnimation = Tween<double>(begin: 0, end: 0.5).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -107,9 +103,7 @@ class _StockCategoryFloatingMenuState
         if (_isOpen)
           GestureDetector(
             onTap: _toggleMenu,
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.3),
-            ),
+            child: Container(color: Colors.black.withValues(alpha: 0.3)),
           ),
 
         // Menu des catégories
@@ -167,8 +161,9 @@ class _StockCategoryFloatingMenuState
                                 ref
                                     .read(stockFiltersProvider.notifier)
                                     .state = currentFilters.copyWith(
-                                  searchQuery:
-                                      entry.key == 'Tous' ? '' : entry.key,
+                                  searchQuery: entry.key == 'Tous'
+                                      ? ''
+                                      : entry.key,
                                 );
                                 _toggleMenu();
                               },
@@ -247,29 +242,20 @@ class _StockCategoryFloatingMenuState
           ),
 
         // Bouton flottant principal
-        FloatingActionButton.extended(
+        FloatingActionButton.small(
           onPressed: _toggleMenu,
           backgroundColor: theme.colorScheme.primary,
-          icon: RotationTransition(
+          elevation: 4,
+          highlightElevation: 6,
+          tooltip: _isOpen ? 'Fermer' : 'Filtrer par catégorie',
+          child: RotationTransition(
             turns: _rotationAnimation,
             child: Icon(
               _isOpen ? Icons.close : Icons.category,
               color: theme.colorScheme.onPrimary,
+              size: 20,
             ),
           ),
-          label: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: Text(
-              _isOpen ? 'Fermer' : 'Catégories',
-              key: ValueKey(_isOpen),
-              style: TextStyle(
-                color: theme.colorScheme.onPrimary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          elevation: 6,
-          highlightElevation: 8,
         ),
       ],
     );

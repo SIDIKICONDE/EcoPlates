@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/stock_items_provider.dart';
 import '../widgets/stock/stock_filter_chips.dart';
 import '../widgets/stock/stock_list_view.dart';
 import '../widgets/stock/stock_category_floating_menu.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/repositories/stock_repository.dart';
 import '../widgets/stock/stock_search_bar.dart';
-import 'stock_item_form_page.dart';
+import 'stock_item_form/page.dart';
 
 /// Page principale de gestion de stock pour les marchands
-/// 
+///
 /// Affiche la liste des articles avec possibilité de :
 /// - Rechercher par nom ou SKU
 /// - Filtrer par statut (actif/inactif)
@@ -34,7 +34,7 @@ class MerchantStockPage extends ConsumerWidget {
         children: [
           // En-tête avec recherche et filtres
           _buildHeader(),
-          
+
           // Liste des articles
           Expanded(
             child: StockListView(
@@ -56,6 +56,7 @@ class MerchantStockPage extends ConsumerWidget {
     int outOfStockCount,
   ) {
     return AdaptiveAppBar(
+      leading: _buildMerchantLogo(theme),
       title: const Text('Stock'),
       actions: [
         // Bouton d'ajout d'article
@@ -74,9 +75,9 @@ class MerchantStockPage extends ConsumerWidget {
         // Badges d'information
         if (stockCount > 0)
           _buildStockBadge(theme, stockCount, outOfStockCount),
-        
+
         const SizedBox(width: 8),
-        
+
         // Menu d'actions
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert),
@@ -108,7 +109,7 @@ class MerchantStockPage extends ConsumerWidget {
             ),
           ],
         ),
-        
+
         const SizedBox(width: 8),
       ],
     );
@@ -120,10 +121,7 @@ class MerchantStockPage extends ConsumerWidget {
     int outOfStockCount,
   ) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: theme.colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(12),
@@ -139,7 +137,7 @@ class MerchantStockPage extends ConsumerWidget {
               color: theme.colorScheme.onSecondaryContainer,
             ),
           ),
-          
+
           if (outOfStockCount > 0) ...[
             const SizedBox(width: 4),
             Container(
@@ -160,25 +158,17 @@ class MerchantStockPage extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.black12,
-            width: 0.5,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.black12, width: 0.5)),
       ),
       child: const Column(
         children: [
           // Barre de recherche
           StockSearchBar(),
-          
+
           SizedBox(height: 16),
-          
+
           // Chips de filtrage
-          Align(
-            alignment: Alignment.centerLeft,
-            child: StockFilterChips(),
-          ),
+          Align(alignment: Alignment.centerLeft, child: StockFilterChips()),
         ],
       ),
     );
@@ -208,15 +198,21 @@ class MerchantStockPage extends ConsumerWidget {
           child: ListView(
             shrinkWrap: true,
             children: [
-              const ListTile(
-                title: Text('Trier par'),
+              const ListTile(title: Text('Trier par')),
+              ...options.map(
+                (opt) => ListTile(
+                  title: Text(opt.label),
+                  leading: Icon(
+                    opt == current.sortBy
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_unchecked,
+                    color: opt == current.sortBy
+                        ? Theme.of(ctx).colorScheme.primary
+                        : null,
+                  ),
+                  onTap: () => Navigator.of(ctx).pop(opt),
+                ),
               ),
-              ...options.map((opt) => RadioListTile<StockSortOption>(
-                    title: Text(opt.label),
-                    value: opt,
-                    groupValue: current.sortBy,
-                    onChanged: (val) => Navigator.of(ctx).pop(val),
-                  )),
             ],
           ),
         );
@@ -235,6 +231,26 @@ class MerchantStockPage extends ConsumerWidget {
       // Rafraîchir la liste
       await ref.read(stockItemsProvider.notifier).refresh();
     }
+  }
+
+  Widget _buildMerchantLogo(ThemeData theme) {
+    // Pour cette démo, on utilise le logo du premier marchand
+    // En production, ceci devrait venir du profil de l'utilisateur connecté
+    const merchantLogoUrl =
+        'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center';
+
+    return Container(
+      margin: const EdgeInsets.all(8),
+      child: CircleAvatar(
+        radius: 16,
+        backgroundColor: theme.colorScheme.surface,
+        backgroundImage: const NetworkImage(merchantLogoUrl),
+        onBackgroundImageError: (_, __) {
+          // Fallback vers une icône si l'image ne charge pas
+        },
+        child: const Icon(Icons.store, size: 20, color: Colors.grey),
+      ),
+    );
   }
 
   void _showItemDetails(BuildContext context, dynamic item) {

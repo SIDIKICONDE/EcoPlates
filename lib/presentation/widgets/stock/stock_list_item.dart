@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/stock_item.dart';
-import '../../pages/stock_item_form_page.dart';
+import '../../pages/stock_item_form/page.dart';
 import 'stock_quantity_adjuster.dart';
 import 'stock_status_toggle.dart';
 

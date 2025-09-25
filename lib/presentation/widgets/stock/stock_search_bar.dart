@@ -94,9 +94,10 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
     final theme = Theme.of(context);
 
     return Container(
+      height: 40, // Hauteur fixe réduite
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: theme.colorScheme.outline.withValues(alpha: 0.2),
         ),
@@ -106,28 +107,35 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
         onChanged: _onSearchChanged,
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+          hintStyle: TextStyle(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontSize: 14,
+          ),
           prefixIcon: Icon(
             Icons.search,
             color: theme.colorScheme.onSurfaceVariant,
+            size: 18,
           ),
           suffixIcon: _controller.text.isNotEmpty
               ? IconButton(
                   icon: Icon(
                     Icons.clear,
                     color: theme.colorScheme.onSurfaceVariant,
+                    size: 18,
                   ),
                   onPressed: _clearSearch,
                   tooltip: 'Effacer la recherche',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 )
               : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
+            horizontal: 12,
+            vertical: 8,
           ),
         ),
-        style: TextStyle(color: theme.colorScheme.onSurface),
+        style: const TextStyle(color: Colors.black, fontSize: 14, height: 1.2),
         textInputAction: TextInputAction.search,
       ),
     );

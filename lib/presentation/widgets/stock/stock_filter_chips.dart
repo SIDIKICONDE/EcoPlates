@@ -92,7 +92,7 @@ class StockFilterChips extends ConsumerWidget {
                     : theme.colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 4),
-              Text(option.label),
+              Text(option.label, style: const TextStyle(height: 1.2)),
               if (showCounts && count > 0) ...[
                 const SizedBox(width: 4),
                 Container(
@@ -118,6 +118,7 @@ class StockFilterChips extends ConsumerWidget {
                       color: isSelected
                           ? theme.colorScheme.onSecondaryContainer
                           : theme.colorScheme.onSurfaceVariant,
+                      height: 1.2,
                     ),
                   ),
                 ),
@@ -130,6 +131,7 @@ class StockFilterChips extends ConsumerWidget {
           backgroundColor: theme.colorScheme.surface,
           selectedColor: theme.colorScheme.secondaryContainer,
           checkmarkColor: theme.colorScheme.onSecondaryContainer,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         );
       }).toList(),
     );

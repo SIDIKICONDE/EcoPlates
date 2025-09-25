@@ -7,6 +7,7 @@ import '../../../providers/urgent_offers_provider.dart';
 import '../../../screens/all_urgent_offers_screen.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
+import 'categories_section.dart';
 
 /// Section des offres urgentes à sauver avant qu'il soit trop tard
 class UrgentSection extends ConsumerStatefulWidget {
@@ -122,7 +123,9 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
         SizedBox(
           height: 275, // Hauteur ajustée pour éliminer l'espace blanc
           child: urgentOffersAsync.when(
-            data: (offers) {
+            data: (allOffers) {
+              // Filtrer les offres selon la catégorie sélectionnée
+              final offers = ref.watch(filterOffersByCategoryProvider(allOffers));
               if (offers.isEmpty) {
                 return Center(
                   child: Column(

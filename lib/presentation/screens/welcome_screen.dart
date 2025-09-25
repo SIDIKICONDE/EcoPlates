@@ -63,7 +63,7 @@ class WelcomeScreen extends ConsumerWidget {
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () {
-                      context.go(RouteConstants.merchantDashboard);
+                      context.go(RouteConstants.merchantStore);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

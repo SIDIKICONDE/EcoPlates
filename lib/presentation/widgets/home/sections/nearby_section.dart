@@ -5,6 +5,7 @@ import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/nearby_offers_provider.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
+import 'categories_section.dart';
 
 /// Section des offres près de chez vous avec géolocalisation
 class NearbySection extends ConsumerWidget {
@@ -45,7 +46,9 @@ class NearbySection extends ConsumerWidget {
         SizedBox(
           height: 280,
           child: nearbyOffersAsync.when(
-            data: (offers) {
+            data: (allOffers) {
+              // Filtrer les offres selon la catégorie sélectionnée
+              final offers = ref.watch(filterOffersByCategoryProvider(allOffers));
               if (offers.isEmpty) {
                 return Center(
                   child: Column(
@@ -78,7 +81,7 @@ class NearbySection extends ConsumerWidget {
                 itemCount: offers.length,
                 itemBuilder: (context, index) {
                   final offer = offers[index];
-                  final distance = 0.3 + (index * 0.4); // Distance simulée
+final distance = offer.distanceKm ?? (0.3 + (index * 0.4)); // Distance réelle si disponible
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -124,7 +127,7 @@ class NearbySection extends ConsumerWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    '${(distance * 15).round()} min',
+'${(distance * 15).round()} min',
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,

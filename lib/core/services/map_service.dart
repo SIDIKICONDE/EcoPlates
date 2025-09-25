@@ -112,7 +112,7 @@ class MapService {
   /// Obtient l'icône du marqueur selon le type d'offre
   BitmapDescriptor _getMarkerIcon(FoodOffer offer) {
     // Par défaut, utiliser l'icône standard
-    // TODO: Personnaliser selon le type d'offre (panier, plat, etc.)
+    // FIXME: Customize based on offer type (basket, dish, etc.)
     return BitmapDescriptor.defaultMarkerWithHue(
       offer.isFree ? BitmapDescriptor.hueGreen : BitmapDescriptor.hueOrange,
     );
@@ -132,8 +132,8 @@ class MapService {
 
   /// Gère le tap sur un marqueur
   void _onMarkerTapped(FoodOffer offer) {
-    // TODO: Implémenter la navigation vers les détails de l'offre
-    print("Marqueur tapé pour l'offre: ${offer.title}");
+    // FIXME: Implement navigation to offer details
+    // Debug: Marker tapped for offer: ${offer.title}
   }
 
   /// Centre la carte sur la position actuelle

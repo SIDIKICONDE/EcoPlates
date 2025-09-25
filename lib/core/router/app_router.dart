@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/entities/food_offer.dart';
+
 import '../../presentation/pages/browse_page.dart';
 import '../../presentation/pages/merchant_stock_page.dart';
+import '../../presentation/pages/merchant_store_page.dart';
+import '../../presentation/pages/offer_form/page.dart';
+import '../../presentation/pages/promotions_management_page.dart';
 import '../../presentation/providers/app_mode_provider.dart';
 import '../../presentation/screens/all_brands_screen.dart';
 import '../../presentation/screens/all_urgent_offers_screen.dart';
@@ -16,7 +21,7 @@ import 'routes/public_routes.dart';
 import 'routes/route_constants.dart';
 
 /// Provider pour le router de l'application EcoPlates
-/// 
+///
 /// Utilise Riverpod pour la gestion d'état et la réactivité
 /// selon les directives EcoPlates
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -29,7 +34,7 @@ class AppRouter {
   static final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
   /// Crée et configure le router selon le mode d'application
-  /// 
+  ///
   /// [mode] : Mode d'application (consumer, merchant, onboarding)
   /// Retourne une instance de GoRouter configurée
   static GoRouter createRouter(AppMode mode) {
@@ -39,15 +44,13 @@ class AppRouter {
       debugLogDiagnostics: _isDebugMode(),
       routes: _buildAllRoutes(),
       errorPageBuilder: (context, state) {
-        return MaterialPage(
-          child: EcoPlatesErrorPage(state: state),
-        );
+        return MaterialPage(child: EcoPlatesErrorPage(state: state));
       },
     );
   }
 
   /// Détermine la route initiale selon le mode d'application
-  /// 
+  ///
   /// [mode] : Mode d'application actuel
   /// Retourne le chemin de la route initiale
   static String _getInitialLocation(AppMode mode) {
@@ -56,7 +59,7 @@ class AppRouter {
   }
 
   /// Construit toutes les routes de l'application
-  /// 
+  ///
   /// Organise les routes par priorité et type d'utilisateur
   /// Retourne la liste complète des routes configurées
   static List<RouteBase> _buildAllRoutes() {
@@ -69,7 +72,7 @@ class AppRouter {
           return const MaterialPage(child: WelcomeScreen());
         },
       ),
-      
+
       // Page toutes les marques
       GoRoute(
         path: RouteConstants.allBrands,
@@ -78,7 +81,7 @@ class AppRouter {
           return const MaterialPage(child: AllBrandsScreen());
         },
       ),
-      
+
       // Page offres urgentes à sauver
       GoRoute(
         path: RouteConstants.urgentOffers,
@@ -87,10 +90,10 @@ class AppRouter {
           return const MaterialPage(child: AllUrgentOffersScreen());
         },
       ),
-      
+
       // Routes publiques
       ...PublicRoutes.routes,
-      
+
       // Shell unifié (consumer + merchant)
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
@@ -117,7 +120,22 @@ class AppRouter {
             path: RouteConstants.merchantStore,
             name: RouteConstants.merchantStoreName,
             pageBuilder: (context, state) {
-              return const MaterialPage(child: MainHomeScreen());
+              return const MaterialPage(child: MerchantStorePage());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.merchantOfferForm,
+            name: RouteConstants.merchantOfferFormName,
+            pageBuilder: (context, state) {
+              final offer = state.extra as FoodOffer?;
+              return MaterialPage(child: OfferFormPage(offer: offer));
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.merchantPromotions,
+            name: RouteConstants.merchantPromotionsName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: PromotionsManagementPage());
             },
           ),
           GoRoute(
@@ -191,7 +209,7 @@ class AppRouter {
   }
 
   /// Détermine si le mode debug est activé
-  /// 
+  ///
   /// Retourne true en mode debug, false en production
   static bool _isDebugMode() {
     // Activer les logs de debug uniquement si autorisés et hors production
@@ -199,7 +217,7 @@ class AppRouter {
   }
 
   /// Clés de navigation pour l'accès externe
-  /// 
+  ///
   /// Permet l'accès aux clés de navigation depuis d'autres parties
   /// de l'application si nécessaire
   static GlobalKey<NavigatorState> get rootNavigatorKey => _rootNavigatorKey;

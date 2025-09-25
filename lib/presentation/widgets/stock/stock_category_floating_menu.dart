@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/constants/categories.dart';
+import '../../../domain/entities/food_offer.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Menu flottant pour filtrer par catégorie
@@ -23,37 +25,28 @@ class _StockCategoryFloatingMenuState
   late Animation<double> _rotationAnimation;
   bool _isOpen = false;
 
-  // Liste des catégories disponibles avec leurs icônes
-  final Map<String, IconData> _categoryIcons = {
-    'Tous': Icons.grid_view_rounded,
-    'Fruits': Icons.apple,
-    'Légumes': Icons.eco,
-    'Plats': Icons.restaurant,
-    'Boulangerie': Icons.bakery_dining,
-    'Boissons': Icons.local_drink,
-    'Épicerie': Icons.shopping_basket,
-    'Viande': Icons.kebab_dining,
-    'Poisson': Icons.set_meal,
-    'Produits laitiers': Icons.icecream,
-    'Surgelés': Icons.ac_unit,
-    'Autre': Icons.more_horiz,
-  };
-
-  // Couleurs associées aux catégories
-  final Map<String, Color> _categoryColors = {
-    'Tous': Colors.blueGrey,
-    'Fruits': Colors.orange,
-    'Légumes': Colors.green,
-    'Plats': Colors.deepOrange,
-    'Boulangerie': Colors.brown,
-    'Boissons': Colors.blue,
-    'Épicerie': Colors.purple,
-    'Viande': Colors.red,
-    'Poisson': Colors.cyan,
-    'Produits laitiers': Colors.amber,
-    'Surgelés': Colors.lightBlue,
-    'Autre': Colors.grey,
-  };
+  // Catégories centralisées avec icônes et couleurs
+  late final List<
+    ({String label, String slug, FoodCategory id, IconData icon, Color color})
+  >
+  _categories = [
+    (
+      label: 'Tous',
+      slug: '',
+      id: FoodCategory.autre,
+      icon: Icons.grid_view_rounded,
+      color: Colors.blueGrey,
+    ),
+    ...Categories.ordered.map(
+      (c) => (
+        label: Categories.labelOf(c),
+        slug: Categories.slugOf(c),
+        id: c,
+        icon: Categories.iconOf(c),
+        color: Categories.colorOf(c),
+      ),
+    ),
+  ];
 
   @override
   void initState() {
@@ -149,21 +142,21 @@ class _StockCategoryFloatingMenuState
                         ),
                         const Divider(height: 1),
                         // Liste des catégories
-                        ..._categoryIcons.entries.map((entry) {
-                          final isSelected = selectedCategory == entry.key;
-                          final color = _categoryColors[entry.key]!;
+                        ..._categories.map((c) {
+                          final isSelected =
+                              selectedCategory == c.label ||
+                              selectedCategory == c.slug;
+                          final color = c.color;
 
                           return Material(
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                // Mettre à jour le filtre
+                                // Mettre à jour le filtre en stockant le slug (ou vide pour 'Tous')
                                 ref
                                     .read(stockFiltersProvider.notifier)
                                     .state = currentFilters.copyWith(
-                                  searchQuery: entry.key == 'Tous'
-                                      ? ''
-                                      : entry.key,
+                                  searchQuery: c.slug,
                                 );
                                 _toggleMenu();
                               },
@@ -198,7 +191,7 @@ class _StockCategoryFloatingMenuState
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Icon(
-                                        entry.value,
+                                        c.icon,
                                         size: 20,
                                         color: isSelected
                                             ? color
@@ -208,7 +201,7 @@ class _StockCategoryFloatingMenuState
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Text(
-                                        entry.key,
+                                        c.label,
                                         style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: isSelected

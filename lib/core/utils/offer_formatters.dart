@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../core/constants/categories.dart';
 import '../../domain/entities/food_offer.dart';
 
 /// Utilitaires pour formater les données des offres
@@ -21,30 +23,9 @@ class OfferFormatters {
     }
   }
 
-  /// Formate la catégorie alimentaire en texte français
+  /// Formate la catégorie alimentaire en texte français (centralisé)
   static String formatFoodCategory(FoodCategory category) {
-    switch (category) {
-      case FoodCategory.petitDejeuner:
-        return 'Petit-déjeuner';
-      case FoodCategory.dejeuner:
-        return 'Déjeuner';
-      case FoodCategory.diner:
-        return 'Dîner';
-      case FoodCategory.snack:
-        return 'Snack';
-      case FoodCategory.dessert:
-        return 'Dessert';
-      case FoodCategory.boisson:
-        return 'Boisson';
-      case FoodCategory.boulangerie:
-        return 'Boulangerie';
-      case FoodCategory.fruitLegume:
-        return 'Fruits et légumes';
-      case FoodCategory.epicerie:
-        return 'Épicerie';
-      case FoodCategory.autre:
-        return 'Autre';
-    }
+    return Categories.labelOf(category);
   }
 
   /// Formate le statut de l'offre en texte français

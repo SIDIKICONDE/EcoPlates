@@ -6,6 +6,7 @@ import '../../../providers/meals_provider.dart';
 import '../../../screens/all_meals_screen.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
+import 'categories_section.dart';
 
 /// Section affichant les offres de repas complets
 class MealsSection extends ConsumerWidget {
@@ -55,7 +56,9 @@ class MealsSection extends ConsumerWidget {
         SizedBox(
           height: 275, // Hauteur optimisée pour les cartes d'offres
           child: mealsAsync.when(
-            data: (meals) {
+            data: (allMeals) {
+              // Filtrer les offres selon la catégorie sélectionnée
+              final meals = ref.watch(filterOffersByCategoryProvider(allMeals));
               if (meals.isEmpty) {
                 return Center(
                   child: Column(

@@ -1,48 +1,17 @@
 import 'package:flutter/material.dart';
 
-/// Helper pour gérer les couleurs et icônes des catégories
+import '../../../core/constants/categories.dart';
+import '../../../domain/entities/food_offer.dart';
+
+/// Helper pour gérer les couleurs et icônes des catégories (centralisé)
 class CategoryHelper {
-  static Color getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case 'bakery':
-      case 'boulangerie':
-        return Colors.brown;
-      case 'restaurant':
-        return Colors.orange;
-      case 'grocery':
-      case 'épicerie':
-        return Colors.green;
-      case 'cafe':
-      case 'café':
-        return Colors.amber.shade800;
-      case 'pizza':
-        return Colors.red;
-      case 'sushi':
-        return Colors.pink;
-      default:
-        return Colors.indigo;
-    }
+  static Color getCategoryColor(String categoryText) {
+    final cat = Categories.fromString(categoryText) ?? FoodCategory.autre;
+    return Categories.colorOf(cat);
   }
-  
-  static IconData getCategoryIcon(String category) {
-    switch (category.toLowerCase()) {
-      case 'bakery':
-      case 'boulangerie':
-        return Icons.bakery_dining;
-      case 'restaurant':
-        return Icons.restaurant;
-      case 'grocery':
-      case 'épicerie':
-        return Icons.shopping_basket;
-      case 'cafe':
-      case 'café':
-        return Icons.coffee;
-      case 'pizza':
-        return Icons.local_pizza;
-      case 'sushi':
-        return Icons.rice_bowl;
-      default:
-        return Icons.store;
-    }
+
+  static IconData getCategoryIcon(String categoryText) {
+    final cat = Categories.fromString(categoryText) ?? FoodCategory.autre;
+    return Categories.iconOf(cat);
   }
 }

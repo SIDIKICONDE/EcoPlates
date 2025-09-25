@@ -78,6 +78,84 @@ class FoodOffer {
   final int soldCount;
   final DateTime updatedAt;
 
+  FoodOffer copyWith({
+    String? id,
+    String? merchantId,
+    String? merchantName,
+    String? title,
+    String? description,
+    List<String>? images,
+    OfferType? type,
+    FoodCategory? category,
+    double? originalPrice,
+    double? discountedPrice,
+    int? quantity,
+    DateTime? pickupStartTime,
+    DateTime? pickupEndTime,
+    DateTime? createdAt,
+    OfferStatus? status,
+    Location? location,
+    List<String>? allergens,
+    bool? isVegetarian,
+    bool? isVegan,
+    bool? isHalal,
+    int? co2Saved,
+    String? merchantAddress,
+    String? merchantLogo,
+    int? availableQuantity,
+    int? totalQuantity,
+    List<String>? tags,
+    Map<String, dynamic>? nutritionalInfo,
+    Map<String, dynamic>? ecoImpact,
+    double? rating,
+    int? ratingsCount,
+    double? distanceKm,
+    int? preparationTime,
+    bool? isFavorite,
+    int? viewCount,
+    int? soldCount,
+    DateTime? updatedAt,
+  }) {
+    return FoodOffer(
+      id: id ?? this.id,
+      merchantId: merchantId ?? this.merchantId,
+      merchantName: merchantName ?? this.merchantName,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      images: images ?? this.images,
+      type: type ?? this.type,
+      category: category ?? this.category,
+      originalPrice: originalPrice ?? this.originalPrice,
+      discountedPrice: discountedPrice ?? this.discountedPrice,
+      quantity: quantity ?? this.quantity,
+      pickupStartTime: pickupStartTime ?? this.pickupStartTime,
+      pickupEndTime: pickupEndTime ?? this.pickupEndTime,
+      createdAt: createdAt ?? this.createdAt,
+      status: status ?? this.status,
+      location: location ?? this.location,
+      allergens: allergens ?? this.allergens,
+      isVegetarian: isVegetarian ?? this.isVegetarian,
+      isVegan: isVegan ?? this.isVegan,
+      isHalal: isHalal ?? this.isHalal,
+      co2Saved: co2Saved ?? this.co2Saved,
+      merchantAddress: merchantAddress ?? this.merchantAddress,
+      merchantLogo: merchantLogo ?? this.merchantLogo,
+      availableQuantity: availableQuantity ?? this.availableQuantity,
+      totalQuantity: totalQuantity ?? this.totalQuantity,
+      tags: tags ?? this.tags,
+      nutritionalInfo: nutritionalInfo ?? this.nutritionalInfo,
+      ecoImpact: ecoImpact ?? this.ecoImpact,
+      rating: rating ?? this.rating,
+      ratingsCount: ratingsCount ?? this.ratingsCount,
+      distanceKm: distanceKm ?? this.distanceKm,
+      preparationTime: preparationTime ?? this.preparationTime,
+      isFavorite: isFavorite ?? this.isFavorite,
+      viewCount: viewCount ?? this.viewCount,
+      soldCount: soldCount ?? this.soldCount,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   /// Calcule le pourcentage de réduction
   double get discountPercentage {
     if (originalPrice == 0) return 100;
@@ -183,5 +261,59 @@ class Location {
 
   double _toRadians(double degree) {
     return degree * (math.pi / 180);
+  }
+}
+
+/// Niveau d'alerte pour le stock des offres
+enum OfferAlertLevel {
+  /// Stock normal
+  normal,
+
+  /// Stock faible
+  low,
+
+  /// Rupture de stock
+  outOfStock,
+}
+
+/// Extension pour calculer le niveau d'alerte des offres
+extension OfferAlertLevelExtension on FoodOffer {
+  /// Calcule le niveau d'alerte basé sur la quantité disponible
+  OfferAlertLevel get alertLevel {
+    final currentQuantity = availableQuantity > 0
+        ? availableQuantity
+        : quantity;
+
+    if (currentQuantity == 0) {
+      return OfferAlertLevel.outOfStock;
+    } else if (currentQuantity < 5) {
+      return OfferAlertLevel.low;
+    } else {
+      return OfferAlertLevel.normal;
+    }
+  }
+
+  /// Couleur associée au niveau d'alerte
+  String get alertColorKey {
+    switch (alertLevel) {
+      case OfferAlertLevel.normal:
+        return 'success';
+      case OfferAlertLevel.low:
+        return 'warning';
+      case OfferAlertLevel.outOfStock:
+        return 'error';
+    }
+  }
+
+  /// Icône associée au niveau d'alerte
+  String get alertIconName {
+    switch (alertLevel) {
+      case OfferAlertLevel.normal:
+        return 'check_circle';
+      case OfferAlertLevel.low:
+        return 'warning';
+      case OfferAlertLevel.outOfStock:
+        return 'error';
+    }
   }
 }

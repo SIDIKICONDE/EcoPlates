@@ -6,6 +6,7 @@ import '../../../providers/recommended_offers_provider.dart';
 import '../../../screens/all_recommended_offers_screen.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
+import 'categories_section.dart';
 
 /// Section des offres recommandées avec style Material 3
 class RecommendedSection extends ConsumerWidget {
@@ -79,9 +80,13 @@ class RecommendedSection extends ConsumerWidget {
         SizedBox(
           height: _cardHeight,
           child: recommendedOffersAsync.when(
-            data: (offers) => offers.isEmpty
-                ? _buildEmptyState(context)
-                : ListView.builder(
+            data: (allOffers) {
+              // Filtrer les offres selon la catégorie sélectionnée
+              final offers = ref.watch(filterOffersByCategoryProvider(allOffers));
+              
+              return offers.isEmpty
+                  ? _buildEmptyState(context)
+                  : ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(
                       horizontal: _horizontalPadding - _cardSpacing / 2,
@@ -117,7 +122,8 @@ class RecommendedSection extends ConsumerWidget {
                         ),
                       );
                     },
-                  ),
+                  );
+            },
             loading: () => _buildLoadingState(context),
             error: (error, stack) => _buildErrorState(context, ref),
           ),

@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Provider pour la catégorie sélectionnée
-final selectedCategoryProvider = StateProvider<String>((ref) => 'Tous');
+import '../../../../core/constants/categories.dart';
+import '../../../../domain/entities/food_offer.dart';
+import '../../../providers/offers_catalog_provider.dart';
+
+/// Provider pour la catégorie sélectionnée (null = Tous)
+final selectedCategoryProvider = StateProvider<FoodCategory?>((ref) => null);
+
+/// Provider pour vérifier si une catégorie est sélectionnée
+/// Peut être utilisé par d'autres sections pour filtrer les offres
+final isCategorySelectedProvider = Provider.family<bool, FoodCategory?>((ref, category) {
+  final selected = ref.watch(selectedCategoryProvider);
+  return selected == category;
+});
+
+/// Provider: disponibilité des catégories (compte d'offres actives par catégorie)
+final homeCategoryAvailabilityProvider = Provider<Map<FoodCategory, int>>((ref) {
+  final offers = ref.watch(offersCatalogProvider);
+  final counts = <FoodCategory, int>{};
+  for (final o in offers) {
+    if (!o.isAvailable) continue;
+    final key = o.category;
+    counts[key] = (counts[key] ?? 0) + 1;
+  }
+  return counts;
+});
+
+/// Provider pour filtrer une liste d'offres selon la catégorie sélectionnée
+final filterOffersByCategoryProvider = Provider.family<List<FoodOffer>, List<FoodOffer>>((ref, offers) {
+  final selectedCategory = ref.watch(selectedCategoryProvider);
+  if (selectedCategory == null) return offers; // Tous
+  return offers.where((o) => o.category == selectedCategory).toList();
+});
 
 /// Section des catégories avec slider horizontal
 class CategoriesSection extends ConsumerWidget {
@@ -11,20 +41,10 @@ class CategoriesSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCategory = ref.watch(selectedCategoryProvider);
+    final availability = ref.watch(homeCategoryAvailabilityProvider);
     
-    // Liste des catégories
-    final categories = [
-      'Tous',
-      'Repas',
-      'Boulangerie',
-      'Café',
-      'Épicerie',
-      'Fruits & Légumes',
-      'Surgelés',
-      'Boissons',
-      'Snacks',
-      'Desserts',
-    ];
+    // Liste des catégories centralisée avec "Tous" en premier
+    final categories = [null, ...Categories.ordered];
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +61,9 @@ class CategoriesSection extends ConsumerWidget {
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final category = categories[index];
-              final isSelected = selectedCategory == category;
+              final isEnabled = category == null || (availability[category] ?? 0) > 0;
+              final isSelected = isEnabled && selectedCategory == category;
+              final label = category == null ? 'Tous' : Categories.labelOf(category);
               
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -51,9 +73,11 @@ class CategoriesSection extends ConsumerWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(20),
-                      onTap: () {
-                        ref.read(selectedCategoryProvider.notifier).state = category;
-                      },
+                      onTap: isEnabled
+                          ? () {
+                              ref.read(selectedCategoryProvider.notifier).state = category;
+                            }
+                          : null,
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         padding: const EdgeInsets.symmetric(
@@ -63,12 +87,12 @@ class CategoriesSection extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: isSelected 
                             ? Theme.of(context).primaryColor
-                            : Colors.grey.shade100,
+                            : (isEnabled ? Colors.grey.shade100 : Colors.grey.shade50),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: isSelected
                               ? Theme.of(context).primaryColor
-                              : Colors.grey.shade300,
+                              : (isEnabled ? Colors.grey.shade300 : Colors.grey.shade200),
                           ),
                           boxShadow: isSelected ? [
                             BoxShadow(
@@ -79,17 +103,32 @@ class CategoriesSection extends ConsumerWidget {
                           ] : null,
                         ),
                         child: Center(
-                          child: Text(
-                            category,
-                            style: TextStyle(
-                              color: isSelected 
-                                ? Colors.white
-                                : Colors.grey.shade800,
-                              fontWeight: isSelected 
-                                ? FontWeight.w600 
-                                : FontWeight.w500,
-                              fontSize: 14,
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (category != null) ...[
+                                Icon(
+                                  Categories.iconOf(category),
+                                  size: 16,
+                                  color: isSelected 
+                                    ? Colors.white
+                                    : (isEnabled ? Categories.colorOf(category) : Colors.grey.shade400),
+                                ),
+                                const SizedBox(width: 6),
+                              ],
+                              Text(
+                                label,
+                                style: TextStyle(
+                                  color: isSelected 
+                                    ? Colors.white
+                                    : (isEnabled ? Colors.grey.shade800 : Colors.grey.shade400),
+                                  fontWeight: isSelected 
+                                    ? FontWeight.w600 
+                                    : FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -101,7 +140,7 @@ class CategoriesSection extends ConsumerWidget {
           ),
           ),
         ),
-        
+
         const SizedBox(height: 5),
       ],
     );

@@ -19,9 +19,6 @@ class EnvConfig {
       int.tryParse(dotenv.env['API_TIMEOUT'] ?? '30000') ?? 30000;
 
   // Feature flags
-  static bool get enableAnalytics => dotenv.env['ENABLE_ANALYTICS'] == 'true';
-  static bool get enableCrashlytics =>
-      dotenv.env['ENABLE_CRASHLYTICS'] == 'true';
   static bool get enableDebugLogs => dotenv.env['ENABLE_DEBUG_LOGS'] == 'true';
 
   // Version
@@ -53,8 +50,6 @@ class EnvConfig {
 Environment: $environment
 API Base URL: $apiBaseUrl
 API Timeout: $apiTimeout ms
-Analytics: $enableAnalytics
-Crashlytics: $enableCrashlytics
 Debug Logs: $enableDebugLogs
 Version: $appVersion (Build: $buildNumber)
 ========================

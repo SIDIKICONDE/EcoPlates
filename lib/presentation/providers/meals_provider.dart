@@ -1,192 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/food_offer.dart';
 
-/// Provider pour les offres de repas complets
+import '../../domain/entities/food_offer.dart';
+import '../../domain/services/offer_selection_service.dart';
+import 'offers_catalog_provider.dart';
+
+/// Provider pour les offres de repas complets (branché sur le catalogue central)
 final mealsProvider = FutureProvider<List<FoodOffer>>((ref) async {
-  // Simuler un appel API
-  await Future<void>.delayed(const Duration(milliseconds: 500));
-  
-  // Données mockées d'offres de repas
-  final now = DateTime.now();
-  return [
-    FoodOffer(
-      id: 'meal-1',
-      merchantId: 'm3',
-      merchantName: 'Le Bistrot du Coin',
-      title: 'Menu du jour complet',
-      description: 'Entrée + Plat + Dessert + Boisson',
-      images: ['https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400'],
-      type: OfferType.plat,
-      category: FoodCategory.dejeuner,
-      originalPrice: 15.90,
-      discountedPrice: 6.99,
-      merchantAddress: '15 rue des Restaurants, 75001 Paris',
-      quantity: 8,
-      pickupStartTime: now.add(const Duration(hours: 2)),
-      pickupEndTime: now.add(const Duration(hours: 3)),
-      createdAt: now.subtract(const Duration(hours: 1)),
-      status: OfferStatus.available,
-      location: const Location(
-        latitude: 48.8566,
-        longitude: 2.3522,
-        address: '45 rue de la République',
-        city: 'Paris',
-        postalCode: '75003',
-      ),
-      allergens: ['gluten'],
-      co2Saved: 1200,
-      updatedAt: now.subtract(const Duration(hours: 1)),
-    ),
-    FoodOffer(
-      id: 'meal-2',
-      merchantId: 'm5',
-      merchantName: 'Green Bowl',
-      title: 'Buddha Bowl Protéiné',
-      description: 'Quinoa, légumes de saison, tofu grillé, sauce tahini',
-      images: ['https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400'],
-      type: OfferType.plat,
-      category: FoodCategory.dejeuner,
-      originalPrice: 13.50,
-      discountedPrice: 5.50,
-      merchantAddress: '22 rue des Végétaux, 75002 Paris',
-      quantity: 6,
-      pickupStartTime: now.add(const Duration(hours: 1)),
-      pickupEndTime: now.add(const Duration(hours: 2)),
-      createdAt: now.subtract(const Duration(hours: 2)),
-      status: OfferStatus.available,
-      location: const Location(
-        latitude: 48.8584,
-        longitude: 2.3545,
-        address: '28 avenue des Champs',
-        city: 'Paris',
-        postalCode: '75008',
-      ),
-      isVegetarian: true,
-      allergens: ['soja', 'sésame'],
-      co2Saved: 800,
-      updatedAt: now.subtract(const Duration(hours: 2)),
-    ),
-    FoodOffer(
-      id: 'meal-3',
-      merchantId: 'm4',
-      merchantName: 'Pizza Express',
-      title: 'Formule Pizza + Dessert',
-      description: 'Pizza au choix + Tiramisu maison',
-      images: ['https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400'],
-      type: OfferType.plat,
-      category: FoodCategory.diner,
-      originalPrice: 18,
-      discountedPrice: 7.99,
-      merchantAddress: '33 rue des Pizzas, 75004 Paris',
-      quantity: 10,
-      pickupStartTime: now.add(const Duration(hours: 4)),
-      pickupEndTime: now.add(const Duration(hours: 5)),
-      createdAt: now.subtract(const Duration(minutes: 30)),
-      status: OfferStatus.available,
-      location: const Location(
-        latitude: 48.8530,
-        longitude: 2.3499,
-        address: '67 rue Saint-Antoine',
-        city: 'Paris',
-        postalCode: '75004',
-      ),
-      allergens: ['gluten', 'lactose'],
-      co2Saved: 1000,
-      updatedAt: now.subtract(const Duration(minutes: 30)),
-    ),
-    FoodOffer(
-      id: 'meal-4',
-      merchantId: 'm2',
-      merchantName: 'Sushi Shop',
-      title: 'Plateau Mix Sushi-Maki',
-      description: '12 pièces : 6 sushis + 6 makis + sauce soja',
-      images: ['https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400'],
-      type: OfferType.plat,
-      category: FoodCategory.diner,
-      originalPrice: 22.90,
-      discountedPrice: 9.99,
-      merchantAddress: '8 rue des Sushis, 75005 Paris',
-      quantity: 5,
-      pickupStartTime: now.add(const Duration(hours: 3)),
-      pickupEndTime: now.add(const Duration(hours: 4)),
-      createdAt: now.subtract(const Duration(hours: 1, minutes: 30)),
-      status: OfferStatus.available,
-      location: const Location(
-        latitude: 48.8606,
-        longitude: 2.3376,
-        address: '12 rue de Rivoli',
-        city: 'Paris',
-        postalCode: '75001',
-      ),
-      allergens: ['poisson', 'soja', 'sésame'],
-      co2Saved: 900,
-      updatedAt: now.subtract(const Duration(hours: 1, minutes: 30)),
-    ),
-    FoodOffer(
-      id: 'meal-5',
-      merchantId: 'm7',
-      merchantName: 'Traiteur Libanais',
-      title: 'Assiette Mezzé Complète',
-      description: 'Houmous, falafels, taboulé, pain pita',
-      images: ['https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=400'],
-      type: OfferType.plat,
-      category: FoodCategory.dejeuner,
-      originalPrice: 16,
-      discountedPrice: 6.50,
-      merchantAddress: '41 rue des Épices, 75006 Paris',
-      quantity: 7,
-      pickupStartTime: now.add(const Duration(hours: 2, minutes: 30)),
-      pickupEndTime: now.add(const Duration(hours: 3, minutes: 30)),
-      createdAt: now.subtract(const Duration(hours: 3)),
-      status: OfferStatus.available,
-      location: const Location(
-        latitude: 48.8625,
-        longitude: 2.3444,
-        address: '34 rue du Temple',
-        city: 'Paris',
-        postalCode: '75003',
-      ),
-      isVegetarian: true,
-      allergens: ['gluten', 'sésame'],
-      co2Saved: 700,
-      updatedAt: now.subtract(const Duration(hours: 3)),
-    ),
-    FoodOffer(
-      id: 'meal-6',
-      merchantId: 'm10',
-      merchantName: 'Burger Factory',
-      title: 'Menu Big Burger',
-      description: 'Double burger + frites + boisson 33cl',
-      images: ['https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400'],
-      type: OfferType.plat,
-      category: FoodCategory.diner,
-      originalPrice: 14.90,
-      discountedPrice: 5.99,
-      merchantAddress: '55 avenue des Burgers, 75007 Paris',
-      quantity: 12,
-      pickupStartTime: now.add(const Duration(hours: 5)),
-      pickupEndTime: now.add(const Duration(hours: 6)),
-      createdAt: now.subtract(const Duration(minutes: 45)),
-      status: OfferStatus.available,
-      location: const Location(
-        latitude: 48.8556,
-        longitude: 2.3515,
-        address: '89 boulevard Beaumarchais',
-        city: 'Paris',
-        postalCode: '75011',
-      ),
-     
-      allergens: ['gluten', 'lactose', 'moutarde'],
-      co2Saved: 1100,
-      updatedAt: now.subtract(const Duration(minutes: 45)),
-    ),
-  ];
+  final offers = ref.watch(offersCatalogProvider);
+  final meals = offers
+      .where((o) => o.isAvailable && OfferSelectionService.isMeal(o))
+      .toList();
+  // Option: trier par heure de collecte la plus proche
+  meals.sort((a, b) => a.pickupStartTime.compareTo(b.pickupStartTime));
+  return meals.take(12).toList();
 });
 
 /// Provider pour filtrer les repas végétariens
 final vegetarianMealsProvider = Provider<List<FoodOffer>>((ref) {
   final mealsAsync = ref.watch(mealsProvider);
-  
   return mealsAsync.when(
     data: (meals) => meals.where((m) => m.isVegetarian).toList(),
     loading: () => [],

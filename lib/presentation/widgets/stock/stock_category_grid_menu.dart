@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/constants/categories.dart';
+import '../../../domain/entities/food_offer.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Menu flottant avec grille de catégories
-/// 
+///
 /// Version alternative avec une présentation en grille
 class StockCategoryGridMenu extends ConsumerStatefulWidget {
   const StockCategoryGridMenu({super.key});
@@ -21,20 +23,17 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
   late Animation<double> _fadeAnimation;
   bool _isOpen = false;
 
-  // Catégories avec style
-  final List<CategoryItem> _categories = const [
-    CategoryItem('Tous', Icons.grid_view_rounded, Colors.blueGrey),
-    CategoryItem('Fruits', Icons.apple, Colors.orange),
-    CategoryItem('Légumes', Icons.eco, Colors.green),
-    CategoryItem('Plats', Icons.restaurant, Colors.deepOrange),
-    CategoryItem('Boulangerie', Icons.bakery_dining, Colors.brown),
-    CategoryItem('Boissons', Icons.local_drink, Colors.blue),
-    CategoryItem('Épicerie', Icons.shopping_basket, Colors.purple),
-    CategoryItem('Viande', Icons.kebab_dining, Colors.red),
-    CategoryItem('Poisson', Icons.set_meal, Colors.cyan),
-    CategoryItem('Produits laitiers', Icons.icecream, Colors.amber),
-    CategoryItem('Surgelés', Icons.ac_unit, Colors.lightBlue),
-    CategoryItem('Autre', Icons.more_horiz, Colors.grey),
+  // Catégories avec style (centralisé)
+  late final List<CategoryItem> _categories = [
+    const CategoryItem('Tous', Icons.grid_view_rounded, Colors.blueGrey),
+    ...Categories.ordered.map(
+      (c) => CategoryItem(
+        Categories.labelOf(c),
+        Categories.iconOf(c),
+        Categories.colorOf(c),
+        category: c,
+      ),
+    ),
   ];
 
   @override
@@ -148,7 +147,7 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                         ],
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Grille de catégories
                       Flexible(
                         child: SingleChildScrollView(
@@ -157,7 +156,8 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                             runSpacing: 12,
                             alignment: WrapAlignment.center,
                             children: _categories.map((category) {
-                              final isSelected = selectedCategory == category.name;
+                              final isSelected =
+                                  selectedCategory == category.name;
                               return SizedBox(
                                 width: (size.width * 0.9 - 48 - 24) / 3,
                                 height: (size.width * 0.9 - 48 - 24) / 3,
@@ -171,9 +171,9 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Bouton fermer
                       TextButton.icon(
                         onPressed: _toggleMenu,
@@ -226,9 +226,15 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
       child: InkWell(
         onTap: () {
           final currentFilters = ref.read(stockFiltersProvider);
-          ref.read(stockFiltersProvider.notifier).state =
-              currentFilters.copyWith(
-            searchQuery: category.name == 'Tous' ? '' : category.name,
+          ref
+              .read(stockFiltersProvider.notifier)
+              .state = currentFilters.copyWith(
+            // On stocke le slug (ou vide pour 'Tous') pour un traitement robuste
+            searchQuery: category.name == 'Tous'
+                ? ''
+                : (category.category != null
+                      ? Categories.slugOf(category.category!)
+                      : category.name),
           );
           _toggleMenu();
         },
@@ -306,9 +312,9 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
 
 // Classe pour représenter une catégorie
 class CategoryItem {
-  const CategoryItem(this.name, this.icon, this.color);
-  
+  const CategoryItem(this.name, this.icon, this.color, {this.category});
   final String name;
   final IconData icon;
   final Color color;
+  final FoodCategory? category;
 }

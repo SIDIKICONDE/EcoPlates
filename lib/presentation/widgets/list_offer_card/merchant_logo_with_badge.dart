@@ -180,10 +180,7 @@ class MerchantLogoWithBadge extends ConsumerWidget {
           ),
         ),
         errorWidget: (context, url, error) {
-          // Log l'erreur pour le debugging
-          print(
-            'Erreur chargement logo ${foundBrand?.name}: $error (URL: $url)',
-          );
+          // Debug: Error loading logo ${foundBrand?.name}: $error (URL: $url)
 
           // Essayer une URL alternative si disponible
           if (foundBrand != null && _hasAlternativeUrl(foundBrand)) {

@@ -35,7 +35,7 @@ typedef LogFunction = void Function(LogEvent event);
 class ConsoleLogOutput {
   void log(LogEvent event) {
     final message = _formatMessage(event);
-    
+
     if (kDebugMode) {
       developer.log(
         message,
@@ -114,10 +114,7 @@ class FileLogOutput {
 
 /// Output pour les services d'analytics/crash reporting
 class RemoteLogOutput {
-  RemoteLogOutput({
-    required this.endpoint,
-    this.headers = const {},
-  });
+  RemoteLogOutput({required this.endpoint, this.headers = const {}});
   final String endpoint;
   final Map<String, String> headers;
 
@@ -138,7 +135,7 @@ class RemoteLogOutput {
       //   reason: event.message,
       //   information: event.data.entries.map((e) => '${e.key}: ${e.value}').toList(),
       // );
-      
+
       if (kDebugMode) {
         print('Would send to remote: ${event.toJson()}');
       }
@@ -161,8 +158,8 @@ class LogEvent {
     Map<String, dynamic>? data,
     this.error,
     this.stackTrace,
-  })  : timestamp = timestamp ?? DateTime.now(),
-        data = data ?? {};
+  }) : timestamp = timestamp ?? DateTime.now(),
+       data = data ?? {};
 
   final LogLevel level;
   final String message;
@@ -173,14 +170,14 @@ class LogEvent {
   final StackTrace? stackTrace;
 
   Map<String, dynamic> toJson() => {
-        'level': level.name,
-        'message': message,
-        'tag': tag,
-        'timestamp': timestamp.toIso8601String(),
-        'data': data,
-        if (error != null) 'error': error.toString(),
-        if (stackTrace != null) 'stackTrace': stackTrace.toString(),
-      };
+    'level': level.name,
+    'message': message,
+    'tag': tag,
+    'timestamp': timestamp.toIso8601String(),
+    'data': data,
+    if (error != null) 'error': error.toString(),
+    if (stackTrace != null) 'stackTrace': stackTrace.toString(),
+  };
 }
 
 /// Service principal de logging
@@ -204,45 +201,18 @@ class LoggerService {
   }
 
   /// Log un message debug
-  void debug(
-    String message, {
-    Map<String, dynamic>? data,
-    String? tag,
-  }) {
-    _log(
-      level: LogLevel.debug,
-      message: message,
-      data: data,
-      tag: tag,
-    );
+  void debug(String message, {Map<String, dynamic>? data, String? tag}) {
+    _log(level: LogLevel.debug, message: message, data: data, tag: tag);
   }
 
   /// Log un message info
-  void info(
-    String message, {
-    Map<String, dynamic>? data,
-    String? tag,
-  }) {
-    _log(
-      level: LogLevel.info,
-      message: message,
-      data: data,
-      tag: tag,
-    );
+  void info(String message, {Map<String, dynamic>? data, String? tag}) {
+    _log(level: LogLevel.info, message: message, data: data, tag: tag);
   }
 
   /// Log un message warning
-  void warning(
-    String message, {
-    Map<String, dynamic>? data,
-    String? tag,
-  }) {
-    _log(
-      level: LogLevel.warning,
-      message: message,
-      data: data,
-      tag: tag,
-    );
+  void warning(String message, {Map<String, dynamic>? data, String? tag}) {
+    _log(level: LogLevel.warning, message: message, data: data, tag: tag);
   }
 
   /// Log une erreur
@@ -346,8 +316,8 @@ class LoggerService {
     final level = milliseconds > 1000
         ? LogLevel.warning
         : milliseconds > 500
-            ? LogLevel.info
-            : LogLevel.debug;
+        ? LogLevel.info
+        : LogLevel.debug;
 
     _log(
       level: level,
@@ -393,23 +363,20 @@ class LoggerService {
 /// Provider pour le service de logging
 final loggerServiceProvider = Provider<LoggerService>((ref) {
   final outputs = <LogFunction>[];
-  
+
   // Console output en dev
   if (kDebugMode) {
     outputs.add(ConsoleLogOutput().log);
   }
-  
+
   // File output (à activer en production)
   // outputs.add(FileLogOutput(filePath: 'logs/ecoplates.log'));
-  
+
   // Remote output (à configurer avec vos services)
   // outputs.add(RemoteLogOutput(endpoint: 'https://logs.ecoplates.com/v1/logs'));
-  
+
   return kDebugMode
-      ? LoggerService(
-          defaultTag: 'EcoPlates',
-          outputs: outputs,
-        )
+      ? LoggerService(defaultTag: 'EcoPlates', outputs: outputs)
       : LoggerService(
           defaultTag: 'EcoPlates',
           outputs: outputs,

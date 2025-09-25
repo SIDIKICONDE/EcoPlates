@@ -16,12 +16,14 @@ class OfferCard extends StatefulWidget {
     this.showDistance = true,
     this.distance,
     this.compact = false,
+    this.showInactiveBadge = false,
   });
   final FoodOffer offer;
   final VoidCallback? onTap;
   final bool showDistance;
   final double? distance; // en km
   final bool compact;
+  final bool showInactiveBadge;
 
   @override
   State<OfferCard> createState() => _OfferCardState();
@@ -98,20 +100,39 @@ class _OfferCardState extends State<OfferCard>
                     ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Image avec badges
-                  OfferCardImage(offer: widget.offer, compact: widget.compact),
+              child: ColorFiltered(
+                colorFilter: !widget.offer.isAvailable
+                    ? const ColorFilter.matrix(<double>[
+                        0.2126, 0.7152, 0.0722, 0, 0, // Rouge
+                        0.2126, 0.7152, 0.0722, 0, 0, // Vert
+                        0.2126, 0.7152, 0.0722, 0, 0, // Bleu
+                        0, 0, 0, 1, 0, // Alpha
+                      ])
+                    : const ColorFilter.matrix(<double>[
+                        1, 0, 0, 0, 0, // Rouge
+                        0, 1, 0, 0, 0, // Vert
+                        0, 0, 1, 0, 0, // Bleu
+                        0, 0, 0, 1, 0, // Alpha
+                      ]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Image avec badges
+                    OfferCardImage(
+                      offer: widget.offer,
+                      compact: widget.compact,
+                      showInactiveBadge: widget.showInactiveBadge,
+                    ),
 
-                  // Contenu de la carte
-                  OfferCardContent(
-                    offer: widget.offer,
-                    showDistance: widget.showDistance,
-                    distance: widget.distance,
-                    compact: widget.compact,
-                  ),
-                ],
+                    // Contenu de la carte
+                    OfferCardContent(
+                      offer: widget.offer,
+                      showDistance: widget.showDistance,
+                      distance: widget.distance,
+                      compact: widget.compact,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

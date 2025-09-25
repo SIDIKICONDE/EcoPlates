@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../core/services/map_service.dart';
 
 /// Provider pour gérer le texte de recherche
@@ -25,7 +26,7 @@ class BrowseFilters {
   final double? maxDistance; // en km
   final double? minPrice;
   final double? maxPrice;
-  final List<String> categories;
+final List<String> categories; // slugs ou labels (convertis via Categories.fromString)
   final List<String> dietaryPreferences;
   final bool availableNow;
   final bool freeOnly;

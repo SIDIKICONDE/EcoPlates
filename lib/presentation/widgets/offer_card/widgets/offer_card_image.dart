@@ -15,12 +15,17 @@ class OfferCardImage extends StatelessWidget {
     required this.offer,
     super.key,
     this.compact = false,
+    this.showInactiveBadge = false,
   });
-  
+
   /// L'offre alimentaire dont on affiche l'image et les badges
   final FoodOffer offer;
+
   /// Mode compact pour réduire la hauteur de l'image
   final bool compact;
+
+  /// Afficher le badge "Inactif" pour les offres désactivées
+  final bool showInactiveBadge;
 
   /// Construit le widget avec une mise en page en stack pour superposer les badges
   /// Utilise un système de padding cohérent avec les autres composants de carte
@@ -43,7 +48,8 @@ class OfferCardImage extends StatelessWidget {
                       ? EcoCachedImage(
                           imageUrl: offer.images.first,
                           size: compact ? ImageSize.small : ImageSize.medium,
-                          priority: Priority.high, // Haute priorité pour les images d'offres
+                          priority: Priority
+                              .high, // Haute priorité pour les images d'offres
                           borderRadius: BorderRadius.circular(12),
                           // Placeholder optimisé inclus
                           errorWidget: _OfferPlaceholderImage(type: offer.type),
@@ -71,8 +77,34 @@ class OfferCardImage extends StatelessWidget {
             Positioned(
               top: 16,
               left: 16,
-              child: OfferQuantityBadge(
-                quantity: offer.quantity,
+              child: OfferQuantityBadge(quantity: offer.quantity),
+            ),
+
+          // Badge "Inactif" pour les offres désactivées (en haut au centre)
+          if (showInactiveBadge && !offer.isAvailable)
+            Positioned(
+              top: 16,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.red[100],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Inactif',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.red[900],
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ),
 
@@ -80,24 +112,16 @@ class OfferCardImage extends StatelessWidget {
           Positioned(
             top: 16,
             right: 16,
-            child: OfferRatingBadge(
-              rating: _getMerchantRating(),
-            ),
+            child: OfferRatingBadge(rating: _getMerchantRating()),
           ),
 
-            
           // Logo de l'enseigne en bas à gauche
-          Positioned(
-            bottom: 12,
-            left: 12,
-            child: _buildMerchantLogo(),
-          ),
+          Positioned(bottom: 12, left: 12, child: _buildMerchantLogo()),
         ],
       ),
     );
   }
-  
-  
+
   /// Construit le logo de l'enseigne
   Widget _buildMerchantLogo() {
     return Container(
@@ -114,41 +138,40 @@ class OfferCardImage extends StatelessWidget {
           ),
         ],
       ),
-      child: ClipOval(
-        child: _getMerchantLogo(),
-      ),
+      child: ClipOval(child: _getMerchantLogo()),
     );
   }
-  
+
   /// Génère le logo selon le nom de l'enseigne
   Widget _getMerchantLogo() {
     final merchantName = offer.merchantName.toLowerCase();
-    
+
     // URLs des vrais logos des enseignes
     String? logoUrl;
     var backgroundColor = Colors.white;
-    
+
     if (merchantName.contains('mcdonald')) {
-      logoUrl = 'https://logos-world.net/wp-content/uploads/2020/04/McDonalds-Logo.png';
+      logoUrl =
+          'https://logos-world.net/wp-content/uploads/2020/04/McDonalds-Logo.png';
       backgroundColor = Colors.red[50]!;
-    }
-    else if (merchantName.contains('carrefour')) {
-      logoUrl = 'https://logos-world.net/wp-content/uploads/2020/11/Carrefour-Logo.png';
+    } else if (merchantName.contains('carrefour')) {
+      logoUrl =
+          'https://logos-world.net/wp-content/uploads/2020/11/Carrefour-Logo.png';
       backgroundColor = Colors.blue[50]!;
-    }
-    else if (merchantName.contains('starbucks')) {
-      logoUrl = 'https://logos-world.net/wp-content/uploads/2020/04/Starbucks-Logo.png';
+    } else if (merchantName.contains('starbucks')) {
+      logoUrl =
+          'https://logos-world.net/wp-content/uploads/2020/04/Starbucks-Logo.png';
       backgroundColor = Colors.green[50]!;
-    }
-    else if (merchantName.contains('monoprix')) {
-      logoUrl = 'https://logos-world.net/wp-content/uploads/2020/12/Monoprix-Logo.png';
+    } else if (merchantName.contains('monoprix')) {
+      logoUrl =
+          'https://logos-world.net/wp-content/uploads/2020/12/Monoprix-Logo.png';
       backgroundColor = Colors.purple[50]!;
-    }
-    else if (merchantName.contains('paul')) {
-      logoUrl = 'https://upload.wikimedia.org/wikipedia/fr/thumb/3/3a/Logo_Paul.svg/1200px-Logo_Paul.svg.png';
+    } else if (merchantName.contains('paul')) {
+      logoUrl =
+          'https://upload.wikimedia.org/wikipedia/fr/thumb/3/3a/Logo_Paul.svg/1200px-Logo_Paul.svg.png';
       backgroundColor = Colors.brown[50]!;
     }
-    
+
     // Si on a une URL de logo, on l'affiche
     if (logoUrl != null) {
       return ColoredBox(
@@ -160,17 +183,17 @@ class OfferCardImage extends StatelessWidget {
         ),
       );
     }
-    
+
     // Fallback pour les enseignes inconnues
     return _getFallbackLogo(merchantName);
   }
-  
+
   /// Logo de fallback avec la première lettre
   Widget _getFallbackLogo(String merchantName) {
-    final firstLetter = offer.merchantName.isNotEmpty 
+    final firstLetter = offer.merchantName.isNotEmpty
         ? offer.merchantName[0].toUpperCase()
         : '?';
-        
+
     return Container(
       color: Colors.grey[100],
       child: Center(
@@ -185,25 +208,21 @@ class OfferCardImage extends StatelessWidget {
       ),
     );
   }
-  
+
   /// Génère un rating pour l'enseigne
   double _getMerchantRating() {
     final merchantName = offer.merchantName.toLowerCase();
-    
+
     // Ratings simulés pour les enseignes connues
     if (merchantName.contains('mcdonald')) {
       return 4.2;
-    }
-    else if (merchantName.contains('carrefour')) {
+    } else if (merchantName.contains('carrefour')) {
       return 4.1;
-    }
-    else if (merchantName.contains('starbucks')) {
+    } else if (merchantName.contains('starbucks')) {
       return 4.5;
-    }
-    else if (merchantName.contains('monoprix')) {
+    } else if (merchantName.contains('monoprix')) {
       return 3.9;
-    }
-    else if (merchantName.contains('paul')) {
+    } else if (merchantName.contains('paul')) {
       return 4.3;
     }
     // Rating générique pour les autres enseignes
@@ -218,10 +237,8 @@ class OfferCardImage extends StatelessWidget {
 /// Utilisé quand l'image réseau n'est pas disponible ou en cas d'erreur de chargement
 /// Respecte le design system avec des icônes Material Design cohérentes
 class _OfferPlaceholderImage extends StatelessWidget {
-  const _OfferPlaceholderImage({
-    required this.type,
-  });
-  
+  const _OfferPlaceholderImage({required this.type});
+
   /// Le type d'offre pour déterminer l'icône appropriée
   final OfferType type;
 
@@ -231,11 +248,7 @@ class _OfferPlaceholderImage extends StatelessWidget {
     return Container(
       color: Colors.grey[300],
       child: Center(
-        child: Icon(
-          _getIconForType(type),
-          size: 48,
-          color: Colors.grey[500],
-        ),
+        child: Icon(_getIconForType(type), size: 48, color: Colors.grey[500]),
       ),
     );
   }

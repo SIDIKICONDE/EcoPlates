@@ -106,7 +106,10 @@ class MerchantErrorHandler {
   /// Gère les erreurs HTTP basées sur les codes de statut
   static Failure _handleHttpError(Response<dynamic>? response) {
     if (response == null) {
-      return const ServerFailure('Aucune réponse du serveur', code: 'NO_RESPONSE');
+      return const ServerFailure(
+        'Aucune réponse du serveur',
+        code: 'NO_RESPONSE',
+      );
     }
 
     final statusCode = response.statusCode ?? 0;
@@ -240,7 +243,9 @@ class MerchantErrorHandler {
   /// Extrait le code d'erreur depuis la réponse
   static String? _extractErrorCode(dynamic data) {
     if (data is Map) {
-      return data['code'] as String? ?? data['error_code'] as String? ?? data['error_type'] as String?;
+      return data['code'] as String? ??
+          data['error_code'] as String? ??
+          data['error_type'] as String?;
     }
     return null;
   }
@@ -269,7 +274,7 @@ class MerchantErrorHandler {
       debugPrint('$_tag: StackTrace - $stackTrace');
     }
 
-    // TODO: Envoyer à un service de monitoring (Crashlytics, Sentry, etc.)
+    // TODO: Envoyer à un service de monitoring (Sentry, etc.)
   }
 
   /// Affiche une erreur à l'utilisateur de manière appropriée

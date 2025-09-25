@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/home/sections/brand_section.dart';
 import '../widgets/home/sections/categories_section.dart';
+import '../widgets/home/sections/favorites_merchants_section.dart';
 import '../widgets/home/sections/meals_section.dart';
 import '../widgets/home/sections/merchant_section.dart';
 import '../widgets/home/sections/nearby_section.dart';
 import '../widgets/home/sections/recommended_section.dart';
 import '../widgets/home/sections/urgent_section.dart';
 import '../widgets/home/sections/videos_section.dart';
-import '../widgets/home/sections/favorites_merchants_section.dart';
 import '../widgets/minimal_header.dart';
 
 /// Page d'accueil principale type Too Good To Go

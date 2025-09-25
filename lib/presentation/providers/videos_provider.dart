@@ -31,7 +31,7 @@ class VideoData {
 /// Provider pour les vidéos de recettes et conseils anti-gaspi
 final videosProvider = FutureProvider<List<VideoData>>((ref) async {
   // Simuler un appel API
-  await Future.delayed(const Duration(milliseconds: 500));
+  await Future<void>.delayed(const Duration(milliseconds: 500));
 
   // Données mockées de vidéos
   final now = DateTime.now();

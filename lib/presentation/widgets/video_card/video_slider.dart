@@ -17,7 +17,7 @@ class VideoSlider extends StatefulWidget {
   final List<VideoPreview> videos;
   final String? title;
   final double height;
-  final Function(VideoPreview)? onVideoTap;
+  final void Function(VideoPreview)? onVideoTap;
   final VoidCallback? onSeeAllTap;
   final EdgeInsets padding;
 
@@ -136,7 +136,7 @@ class VideoGrid extends StatelessWidget {
   });
 
   final List<VideoPreview> videos;
-  final Function(VideoPreview)? onVideoTap;
+  final void Function(VideoPreview)? onVideoTap;
   final ScrollController? scrollController;
   final bool shrinkWrap;
 

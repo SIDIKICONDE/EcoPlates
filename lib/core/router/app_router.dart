@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../presentation/pages/browse_page.dart';
+import '../../presentation/pages/merchant_stock_page.dart';
 import '../../presentation/providers/app_mode_provider.dart';
 import '../../presentation/screens/all_brands_screen.dart';
 import '../../presentation/screens/all_urgent_offers_screen.dart';
@@ -109,7 +110,7 @@ class AppRouter {
             path: RouteConstants.merchantStock,
             name: RouteConstants.merchantStockName,
             pageBuilder: (context, state) {
-              return const MaterialPage(child: MainHomeScreen());
+              return const MaterialPage(child: MerchantStockPage());
             },
           ),
           GoRoute(

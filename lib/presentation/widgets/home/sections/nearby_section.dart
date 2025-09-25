@@ -13,8 +13,9 @@ class NearbySection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final nearbyOffersAsync = ref.watch(nearbyOffersProvider);
-    final userLocation = ref.watch(userLocationProvider);
-    final searchRadius = ref.watch(searchRadiusProvider);
+    // Watch providers to trigger rebuilds when they change
+    ref.watch(userLocationProvider);
+    ref.watch(searchRadiusProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

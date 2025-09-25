@@ -219,7 +219,7 @@ void main() {
         final result = await useCase(paramsNoCached);
 
         // assert
-        expect(result, const Left(ServerFailure('Server error')));
+        expect(result, const Left<ServerFailure, dynamic>(ServerFailure('Server error')));
         verify(mockRepository.getUrgentOffers());
         verifyNever(mockRepository.getCachedOffers());
       },

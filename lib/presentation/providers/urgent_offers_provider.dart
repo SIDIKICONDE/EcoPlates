@@ -4,7 +4,7 @@ import '../../domain/entities/food_offer.dart';
 /// Provider pour les offres urgentes à sauver
 final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
   // Simuler un appel API
-  await Future.delayed(const Duration(milliseconds: 500));
+  await Future<void>.delayed(const Duration(milliseconds: 500));
   
   // Données mockées pour les offres qui expirent bientôt
   final now = DateTime.now();

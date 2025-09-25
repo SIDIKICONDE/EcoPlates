@@ -41,7 +41,7 @@ class VideosSection extends ConsumerWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (context) => const AllVideosPage(),
                     ),
                   );

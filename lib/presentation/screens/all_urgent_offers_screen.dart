@@ -365,7 +365,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
   }
 
   void _navigateToOfferDetail(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -610,7 +610,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
   }
 
   void _showSortBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

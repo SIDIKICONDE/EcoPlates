@@ -480,8 +480,14 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                       controller: _quantityController,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: (value) {
+                        if (isEditMode && !_hasChanges && value != widget.item?.quantity.toString()) {
+                          setState(() => _hasChanges = true);
+                        }
+                      },
                       decoration: const InputDecoration(
                         labelText: 'Quantité *',
+                        hintText: 'Ex: 10',
                         prefixIcon: Icon(Icons.inventory_2_outlined),
                         border: OutlineInputBorder(),
                       ),

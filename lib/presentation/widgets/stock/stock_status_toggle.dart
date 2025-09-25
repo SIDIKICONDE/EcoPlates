@@ -15,6 +15,8 @@ class StockStatusToggle extends ConsumerStatefulWidget {
     super.key,
     this.showLabel = true,
     this.compactMode = false,
+    this.showLoading = false,
+    this.animate = false,
   });
 
   /// Article dont on modifie le statut
@@ -26,6 +28,12 @@ class StockStatusToggle extends ConsumerStatefulWidget {
   /// Mode compact (plus petit)
   final bool compactMode;
 
+  /// Afficher un indicateur de chargement pendant le toggle
+  final bool showLoading;
+
+  /// Activer les animations visuelles (label, conteneur) du toggle
+  final bool animate;
+
   @override
   ConsumerState<StockStatusToggle> createState() => _StockStatusToggleState();
 }
@@ -33,7 +41,7 @@ class StockStatusToggle extends ConsumerStatefulWidget {
 class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
   bool _isToggling = false;
 
-  /// Bascule le statut avec gestion d'erreur
+  /// Bascule le statut avec gestion d'erreur et timeout de sécurité
   Future<void> _toggleStatus() async {
     if (_isToggling) return;
 
@@ -42,7 +50,18 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
     });
 
     try {
-      await ref.read(stockItemsProvider.notifier).toggleStatus(widget.item.id);
+      // Timeout de sécurité de 1 seconde maximum
+      await ref
+          .read(stockItemsProvider.notifier)
+          .toggleStatus(widget.item.id)
+          .timeout(
+            const Duration(seconds: 1),
+            onTimeout: () {
+              throw Exception(
+                'Délai d\'attente dépassé pour le changement de statut',
+              );
+            },
+          );
     } catch (error) {
       if (mounted) {
         // Affiche un snackbar en cas d'erreur
@@ -51,10 +70,12 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
             content: Text(StockErrorMessages.getErrorMessage(error)),
             backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
     } finally {
+      // Garantit que le flag se remet toujours à false
       if (mounted) {
         setState(() {
           _isToggling = false;
@@ -109,17 +130,29 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
     bool compact = false,
   }) {
     if (_isToggling) {
-      return SizedBox(
-        width: compact ? 16 : 20,
-        height: compact ? 16 : 20,
-        child: CircularProgressIndicator(
-          strokeWidth: compact ? 2 : 2.5,
-          color: theme.colorScheme.primary,
-        ),
-      );
+      if (widget.showLoading) {
+        return SizedBox(
+          width: compact ? 16 : 20,
+          height: compact ? 16 : 20,
+          child: CircularProgressIndicator(
+            strokeWidth: compact ? 2 : 2.5,
+            color: theme.colorScheme.primary,
+          ),
+        );
+      } else {
+        // Afficher le switch désactivé sans animation
+        return Transform.scale(
+          scale: compact ? 0.8 : 1.0,
+          child: AdaptiveSwitch(
+            value: isActive,
+            onChanged: null,
+            activeColor: theme.colorScheme.primary,
+          ),
+        );
+      }
     }
 
-    return Transform.scale(
+    final switchWidget = Transform.scale(
       scale: compact ? 0.8 : 1.0,
       child: AdaptiveSwitch(
         value: isActive,
@@ -127,6 +160,16 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
         activeColor: theme.colorScheme.primary,
       ),
     );
+
+    if (widget.animate) {
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 150), // Animation plus rapide
+        curve: Curves.easeInOut,
+        child: switchWidget,
+      );
+    } else {
+      return switchWidget;
+    }
   }
 
   Widget _buildStatusLabel(
@@ -134,11 +177,13 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
     bool isActive, {
     bool compact = false,
   }) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: compact ? 6 : 8,
-        vertical: compact ? 2 : 4,
-      ),
+    final labelPadding = EdgeInsets.symmetric(
+      horizontal: compact ? 6 : 8,
+      vertical: compact ? 2 : 4,
+    );
+
+    final labelContainer = Container(
+      padding: labelPadding,
       decoration: BoxDecoration(
         color: isActive
             ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
@@ -177,5 +222,15 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
         ],
       ),
     );
+
+    if (widget.animate) {
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        child: labelContainer,
+      );
+    } else {
+      return labelContainer;
+    }
   }
 }

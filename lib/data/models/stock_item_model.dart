@@ -21,6 +21,7 @@ class StockItemModel {
     required this.status,
     required this.updatedAt,
     this.description,
+    this.lowStockThreshold,
   });
 
   /// Crée un modèle depuis un objet JSON
@@ -40,6 +41,7 @@ class StockItemModel {
       status: entity.status,
       updatedAt: entity.updatedAt,
       description: entity.description,
+      lowStockThreshold: entity.lowStockThreshold,
     );
   }
 
@@ -72,6 +74,10 @@ class StockItemModel {
   
   /// Description optionnelle de l'article
   final String? description;
+  
+  /// Seuil de stock faible (optionnel)
+  @JsonKey(defaultValue: null)
+  final int? lowStockThreshold;
 
   /// Convertit le modèle en objet JSON
   Map<String, dynamic> toJson() => _$StockItemModelToJson(this);
@@ -89,6 +95,7 @@ class StockItemModel {
       status: status,
       updatedAt: updatedAt,
       description: description,
+      lowStockThreshold: lowStockThreshold,
     );
   }
 
@@ -104,6 +111,7 @@ class StockItemModel {
     StockItemStatus? status,
     DateTime? updatedAt,
     String? description,
+    int? lowStockThreshold,
   }) {
     return StockItemModel(
       id: id ?? this.id,
@@ -116,6 +124,7 @@ class StockItemModel {
       status: status ?? this.status,
       updatedAt: updatedAt ?? this.updatedAt,
       description: description ?? this.description,
+      lowStockThreshold: lowStockThreshold ?? this.lowStockThreshold,
     );
   }
 

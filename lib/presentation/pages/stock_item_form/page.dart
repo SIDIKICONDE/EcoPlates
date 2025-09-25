@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
+import '../../widgets/stock/stock_threshold_field.dart';
 import 'modals.dart';
 import 'utils.dart';
-
 /// Page unifiée pour créer ou modifier un article de stock
 ///
 /// Si [item] est null, on est en mode création
@@ -29,9 +29,11 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
   late final TextEditingController _quantityController;
   late final TextEditingController _unitController;
   late final TextEditingController _descriptionController;
+  late final TextEditingController _thresholdController;
 
   late String? _selectedCategory;
   late StockItemStatus _selectedStatus;
+  late StockItemStatus _originalStatus;
   bool _isSubmitting = false;
   bool _hasChanges = false;
 
@@ -54,8 +56,12 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
     _descriptionController = TextEditingController(
       text: widget.item?.description ?? '',
     );
+    _thresholdController = TextEditingController(
+      text: widget.item?.lowStockThreshold?.toString() ?? '',
+    );
     _selectedCategory = widget.item?.category;
     _selectedStatus = widget.item?.status ?? StockItemStatus.active;
+    _originalStatus = widget.item?.status ?? StockItemStatus.active;
 
     // Écouter les changements seulement en mode édition
     if (isEditMode) {
@@ -64,6 +70,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
       _quantityController.addListener(_onFieldChanged);
       _unitController.addListener(_onFieldChanged);
       _descriptionController.addListener(_onFieldChanged);
+      _thresholdController.addListener(_onFieldChanged);
     }
   }
 
@@ -71,6 +78,17 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
     if (!_hasChanges) {
       setState(() {
         _hasChanges = true;
+      });
+    }
+  }
+
+  void _onStatusChanged(StockItemStatus status) {
+    if (_selectedStatus != status) {
+      setState(() {
+        _selectedStatus = status;
+        if (isEditMode) {
+          _hasChanges = true;
+        }
       });
     }
   }
@@ -83,6 +101,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
     _quantityController.dispose();
     _unitController.dispose();
     _descriptionController.dispose();
+    _thresholdController.dispose();
     super.dispose();
   }
 
@@ -99,7 +118,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
     }
 
     // En mode édition, si aucun changement, on retourne simplement
-    if (isEditMode && !_hasChanges) {
+    if (isEditMode && !_hasChanges && _selectedStatus == _originalStatus) {
       context.pop();
       return;
     }
@@ -121,6 +140,9 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
           description: _descriptionController.text.trim().isEmpty
               ? null
               : _descriptionController.text.trim(),
+          lowStockThreshold: _thresholdController.text.isEmpty
+              ? null
+              : int.tryParse(_thresholdController.text),
           updatedAt: DateTime.now(),
         );
 
@@ -149,6 +171,9 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
               description: _descriptionController.text.trim().isEmpty
                   ? null
                   : _descriptionController.text.trim(),
+              lowStockThreshold: _thresholdController.text.isEmpty
+                  ? null
+                  : int.tryParse(_thresholdController.text),
               status: _selectedStatus,
             );
 
@@ -408,7 +433,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 onTap: () => showStatusModal(
                   context,
                   _selectedStatus,
-                  (status) => setState(() => _selectedStatus = status),
+                  _onStatusChanged,
                   isEditMode,
                   () => setState(() => _hasChanges = true),
                 ),
@@ -481,7 +506,9 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       onChanged: (value) {
-                        if (isEditMode && !_hasChanges && value != widget.item?.quantity.toString()) {
+                        if (isEditMode &&
+                            !_hasChanges &&
+                            value != widget.item?.quantity.toString()) {
                           setState(() => _hasChanges = true);
                         }
                       },
@@ -543,6 +570,19 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                 ),
+              ),
+
+              const SizedBox(height: 16),
+              
+              // Seuil d'alerte de stock faible
+              StockThresholdField(
+                controller: _thresholdController,
+                unit: _unitController.text.isEmpty ? 'pièce' : _unitController.text,
+                onChanged: (_) {
+                  if (isEditMode && !_hasChanges) {
+                    setState(() => _hasChanges = true);
+                  }
+                },
               ),
 
               const SizedBox(height: 16),

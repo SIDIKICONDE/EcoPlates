@@ -16,6 +16,7 @@ class CreateStockItemUseCase {
   /// [quantity] : Quantité initiale
   /// [unit] : Unité de mesure
   /// [description] : Description optionnelle
+  /// [lowStockThreshold] : Seuil d'alerte de stock faible
   /// [status] : Statut de l'article (actif/inactif)
   /// 
   /// Retourne l'article créé avec son ID généré
@@ -27,6 +28,7 @@ class CreateStockItemUseCase {
     required int quantity,
     required String unit,
     String? description,
+    int? lowStockThreshold,
     StockItemStatus? status,
   }) async {
     // Validation des données
@@ -53,6 +55,10 @@ class CreateStockItemUseCase {
     if (unit.trim().isEmpty) {
       throw ArgumentError("L'unité ne peut pas être vide");
     }
+    
+    if (lowStockThreshold != null && lowStockThreshold < 0) {
+      throw ArgumentError('Le seuil d\'alerte ne peut pas être négatif');
+    }
 
     // Créer l'article avec un ID temporaire (sera remplacé par le repository)
     final newItem = StockItem(
@@ -65,6 +71,7 @@ class CreateStockItemUseCase {
       unit: unit.trim(),
       status: status ?? StockItemStatus.active,
       description: description?.trim(),
+      lowStockThreshold: lowStockThreshold,
       updatedAt: DateTime.now(),
     );
 

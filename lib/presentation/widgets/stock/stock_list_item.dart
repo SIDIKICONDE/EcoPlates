@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/entities/stock_item.dart';
 import '../../pages/stock_item_form/page.dart';
+import 'stock_alert_badge.dart';
 import 'stock_quantity_adjuster.dart';
 import 'stock_status_toggle.dart';
 
@@ -18,6 +19,7 @@ class StockListItem extends StatelessWidget {
     this.showDivider = true,
     this.showAnimations = true,
     this.compactMode = false,
+    this.dense = false,
   });
 
   /// Article à afficher
@@ -35,21 +37,27 @@ class StockListItem extends StatelessWidget {
   /// Mode compact pour affichage réduit
   final bool compactMode;
 
+  /// Mode dense pour écrans très étroits (paddings/tailles réduits)
+  final bool dense;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final padding = compactMode ? 12.0 : 16.0;
+    final basePadding = compactMode ? 12.0 : 16.0;
+    final padding = dense ? (compactMode ? 8.0 : 12.0) : basePadding;
 
     return Column(
       children: [
         Container(
           margin: EdgeInsets.symmetric(
-            horizontal: compactMode ? 8 : 12,
-            vertical: compactMode ? 4 : 6,
+            horizontal: dense ? (compactMode ? 6 : 8) : (compactMode ? 8 : 12),
+            vertical: dense ? (compactMode ? 3 : 4) : (compactMode ? 4 : 6),
           ),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(compactMode ? 12 : 16),
+            borderRadius: BorderRadius.circular(
+              dense ? (compactMode ? 10 : 14) : (compactMode ? 12 : 16),
+            ),
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.1),
               width: 0.5,
@@ -57,12 +65,16 @@ class StockListItem extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: theme.colorScheme.shadow.withValues(alpha: 0.05),
-                blurRadius: compactMode ? 4 : 8,
+                blurRadius: dense
+                    ? (compactMode ? 3 : 6)
+                    : (compactMode ? 4 : 8),
                 offset: const Offset(0, 2),
               ),
               BoxShadow(
                 color: theme.colorScheme.shadow.withValues(alpha: 0.02),
-                blurRadius: compactMode ? 8 : 16,
+                blurRadius: dense
+                    ? (compactMode ? 6 : 12)
+                    : (compactMode ? 8 : 16),
                 offset: const Offset(0, 4),
               ),
             ],
@@ -84,7 +96,11 @@ class StockListItem extends StatelessWidget {
                     // Informations principales de l'article
                     Expanded(child: _buildItemInfo(theme)),
 
-                    SizedBox(width: compactMode ? 8 : 12),
+                    SizedBox(
+                      width: dense
+                          ? (compactMode ? 4 : 8)
+                          : (compactMode ? 6 : 12),
+                    ),
 
                     // Contrôles (quantité et statut)
                     _buildItemControls(context, theme),
@@ -99,9 +115,15 @@ class StockListItem extends StatelessWidget {
   }
 
   Widget _buildItemInfo(ThemeData theme) {
-    final fontSize = compactMode ? 14.0 : 16.0;
-    final smallFontSize = compactMode ? 10.0 : 12.0;
-    final spacing = compactMode ? 2.0 : 4.0;
+    final fontSize = dense
+        ? (compactMode ? 13.0 : 15.0)
+        : (compactMode ? 14.0 : 16.0);
+    final smallFontSize = dense
+        ? (compactMode ? 9.0 : 11.0)
+        : (compactMode ? 10.0 : 12.0);
+    final spacing = dense
+        ? (compactMode ? 1.0 : 3.0)
+        : (compactMode ? 2.0 : 4.0);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,24 +149,31 @@ class StockListItem extends StatelessWidget {
               ),
             ),
 
-            // Badge rupture de stock avec animation
-            if (item.isOutOfStock) ...[
-              SizedBox(width: compactMode ? 4 : 8),
-              AnimatedScale(
-                scale: showAnimations ? 1.0 : 0.8,
-                duration: showAnimations
-                    ? const Duration(milliseconds: 300)
-                    : Duration.zero,
-                child: _buildOutOfStockBadge(theme),
+            // Badge d'alerte avec animation
+            SizedBox(
+              width: dense ? (compactMode ? 3 : 6) : (compactMode ? 4 : 8),
+            ),
+            AnimatedScale(
+              scale: showAnimations ? 1.0 : 0.8,
+              duration: showAnimations
+                  ? const Duration(milliseconds: 300)
+                  : Duration.zero,
+              child: StockAlertBadge(
+                alertLevel: item.alertLevel,
+                showLabel: !compactMode,
+                compact: compactMode || dense,
               ),
-            ],
+            ),
           ],
         ),
 
         SizedBox(height: spacing),
 
         // SKU et catégorie avec amélioration visuelle
-        Row(
+        Wrap(
+          spacing: compactMode ? 6 : 12,
+          runSpacing: compactMode ? 4 : 6,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Container(
               padding: EdgeInsets.symmetric(
@@ -159,6 +188,8 @@ class StockListItem extends StatelessWidget {
               ),
               child: Text(
                 item.sku,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: smallFontSize,
                   color: theme.colorScheme.onSurfaceVariant,
@@ -167,9 +198,6 @@ class StockListItem extends StatelessWidget {
                 ),
               ),
             ),
-
-            SizedBox(width: compactMode ? 6 : 12),
-
             Container(
               padding: EdgeInsets.symmetric(
                 horizontal: compactMode ? 6 : 8,
@@ -187,6 +215,8 @@ class StockListItem extends StatelessWidget {
               ),
               child: Text(
                 item.category,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: smallFontSize,
                   color: theme.colorScheme.primary,
@@ -197,10 +227,14 @@ class StockListItem extends StatelessWidget {
           ],
         ),
 
-        SizedBox(height: compactMode ? 4 : 8),
+        SizedBox(height: dense ? (compactMode ? 3 : 6) : (compactMode ? 4 : 8)),
 
         // Prix et dernière mise à jour avec amélioration
-        Row(
+        Wrap(
+          spacing: compactMode ? 8 : 12,
+          runSpacing: compactMode ? 4 : 6,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.spaceBetween,
           children: [
             Container(
               padding: EdgeInsets.symmetric(
@@ -237,9 +271,6 @@ class StockListItem extends StatelessWidget {
                 ],
               ),
             ),
-
-            const Spacer(),
-
             // Indicateur de dernière mise à jour avec icône
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -254,6 +285,8 @@ class StockListItem extends StatelessWidget {
                 SizedBox(width: compactMode ? 2 : 4),
                 Text(
                   _formatLastUpdate(item.updatedAt),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: smallFontSize,
                     color: theme.colorScheme.onSurfaceVariant.withValues(
@@ -268,7 +301,9 @@ class StockListItem extends StatelessWidget {
 
         // Description optionnelle avec animation
         if (item.description?.isNotEmpty ?? false) ...[
-          SizedBox(height: compactMode ? 4 : 6),
+          SizedBox(
+            height: dense ? (compactMode ? 3 : 5) : (compactMode ? 4 : 6),
+          ),
           AnimatedOpacity(
             opacity: showAnimations ? 0.8 : 1.0,
             duration: showAnimations
@@ -313,7 +348,7 @@ class StockListItem extends StatelessWidget {
           child: IconButton(
             icon: Icon(
               Icons.edit_outlined,
-              size: compactMode ? 18 : 20,
+              size: dense ? (compactMode ? 16 : 18) : (compactMode ? 18 : 20),
               color: theme.colorScheme.primary,
             ),
             onPressed: () {
@@ -326,8 +361,12 @@ class StockListItem extends StatelessWidget {
             },
             tooltip: 'Modifier',
             constraints: BoxConstraints(
-              minWidth: compactMode ? 32 : 40,
-              minHeight: compactMode ? 32 : 40,
+              minWidth: dense
+                  ? (compactMode ? 28 : 36)
+                  : (compactMode ? 32 : 40),
+              minHeight: dense
+                  ? (compactMode ? 28 : 36)
+                  : (compactMode ? 32 : 40),
             ),
             style: IconButton.styleFrom(
               backgroundColor: theme.colorScheme.primary.withValues(
@@ -340,17 +379,13 @@ class StockListItem extends StatelessWidget {
 
         SizedBox(height: compactMode ? 4 : 8),
 
-        // Toggle statut avec animation
-        AnimatedScale(
-          scale: showAnimations ? 1.0 : 0.95,
-          duration: showAnimations
-              ? const Duration(milliseconds: 200)
-              : Duration.zero,
-          child: StockStatusToggle(
-            item: item,
-            compactMode: compactMode,
-            showLabel: !compactMode,
-          ),
+        // Toggle statut sans animation
+        StockStatusToggle(
+          item: item,
+          compactMode: compactMode,
+          showLabel: !compactMode,
+          showLoading: false,
+          animate: false,
         ),
 
         SizedBox(height: compactMode ? 8 : 12),
@@ -364,45 +399,6 @@ class StockListItem extends StatelessWidget {
           child: StockQuantityAdjuster(item: item, compactMode: compactMode),
         ),
       ],
-    );
-  }
-
-  Widget _buildOutOfStockBadge(ThemeData theme) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: compactMode ? 6 : 8,
-        vertical: compactMode ? 3 : 4,
-      ),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(compactMode ? 8 : 12),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.error.withValues(alpha: 0.2),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.warning_rounded,
-            size: compactMode ? 12 : 14,
-            color: theme.colorScheme.onErrorContainer,
-          ),
-          SizedBox(width: compactMode ? 3 : 4),
-          Text(
-            'Rupture',
-            style: TextStyle(
-              fontSize: compactMode ? 10 : 11,
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onErrorContainer,
-            ),
-          ),
-        ],
-      ),
     );
   }
 

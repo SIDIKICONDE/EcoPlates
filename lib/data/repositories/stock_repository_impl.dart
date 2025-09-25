@@ -238,6 +238,7 @@ class StockRepositoryImpl implements StockRepository {
         status: StockItemStatus.active,
         updatedAt: now.subtract(const Duration(hours: 2)),
         description: 'Pommes Gala fraîches de producteurs locaux',
+        lowStockThreshold: 10, // Seuil configuré
       ),
       StockItemModel(
         id: 'fruit_002',
@@ -273,6 +274,7 @@ class StockRepositoryImpl implements StockRepository {
         unit: 'barquette',
         status: StockItemStatus.active,
         updatedAt: now.subtract(const Duration(minutes: 30)),
+        lowStockThreshold: 15, // Stock faible (12 < 15)
       ),
 
       // Plats préparés
@@ -287,6 +289,7 @@ class StockRepositoryImpl implements StockRepository {
         status: StockItemStatus.active,
         updatedAt: now.subtract(const Duration(hours: 4)),
         description: 'Lasagnes végétariennes maison',
+        lowStockThreshold: 10, // Stock faible (6 < 10)
       ),
       StockItemModel(
         id: 'plat_002',
@@ -349,6 +352,7 @@ class StockRepositoryImpl implements StockRepository {
         status: StockItemStatus.active,
         updatedAt: now.subtract(const Duration(minutes: 15)),
         description: 'Smoothie épinards, pomme, banane',
+        lowStockThreshold: 8, // Stock faible (7 < 8)
       ),
 
       // Articles épuisés ou problématiques

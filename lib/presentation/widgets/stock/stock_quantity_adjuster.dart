@@ -16,6 +16,7 @@ class StockQuantityAdjuster extends ConsumerStatefulWidget {
     this.maxQuantity = 999999,
     this.step = 1,
     this.compactMode = false,
+    this.showLoading = false,
   });
 
   /// Article dont on ajuste la quantité
@@ -33,6 +34,9 @@ class StockQuantityAdjuster extends ConsumerStatefulWidget {
   /// Mode compact (boutons plus petits)
   final bool compactMode;
 
+  /// Afficher un indicateur de chargement animé pendant l'ajustement
+  final bool showLoading;
+
   @override
   ConsumerState<StockQuantityAdjuster> createState() =>
       _StockQuantityAdjusterState();
@@ -41,7 +45,7 @@ class StockQuantityAdjuster extends ConsumerStatefulWidget {
 class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
   bool _isAdjusting = false;
 
-  /// Ajuste la quantité avec gestion d'erreur
+  /// Ajuste la quantité avec gestion d'erreur et timeout de sécurité
   Future<void> _adjustQuantity(int delta) async {
     if (_isAdjusting) return;
 
@@ -50,9 +54,18 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
     });
 
     try {
+      // Timeout de sécurité de 1 seconde maximum
       await ref
           .read(stockItemsProvider.notifier)
-          .adjustQuantity(widget.item.id, delta);
+          .adjustQuantity(widget.item.id, delta)
+          .timeout(
+            const Duration(seconds: 1),
+            onTimeout: () {
+              throw Exception(
+                'Délai d\'attente dépassé pour l\'ajustement de quantité',
+              );
+            },
+          );
     } catch (error) {
       if (mounted) {
         // Affiche un snackbar en cas d'erreur
@@ -61,10 +74,12 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             content: Text(StockErrorMessages.getErrorMessage(error)),
             backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
     } finally {
+      // Garantit que le flag se remet toujours à false
       if (mounted) {
         setState(() {
           _isAdjusting = false;
@@ -119,7 +134,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
           Container(
             constraints: const BoxConstraints(minWidth: 60),
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: _isAdjusting
+            child: (widget.showLoading && _isAdjusting)
                 ? SizedBox(
                     width: 16,
                     height: 16,
@@ -209,7 +224,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
         const SizedBox(width: 8),
 
         // Quantité compacte
-        if (_isAdjusting)
+        if (widget.showLoading && _isAdjusting)
           SizedBox(
             width: 16,
             height: 16,

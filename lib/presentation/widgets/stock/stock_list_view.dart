@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 import 'stock_list_item.dart';
+import 'stock_list_item_compact.dart';
 
 /// Widget principal affichant la liste des articles de stock
 ///
@@ -20,6 +21,7 @@ class StockListView extends ConsumerWidget {
     this.compactMode = false,
     this.enablePullToRefresh = true,
     this.enableInfiniteScroll = false,
+    this.dense,
   });
 
   /// Callback lors du tap sur un article
@@ -43,14 +45,18 @@ class StockListView extends ConsumerWidget {
   /// Active le scroll infini (pour futures fonctionnalités)
   final bool enableInfiniteScroll;
 
+  /// Force le mode dense si fourni; sinon auto (< 360px)
+  final bool? dense;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stockItemsAsync = ref.watch(stockItemsProvider);
+    final isCompactView = ref.watch(stockViewModeProvider);
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return stockItemsAsync.when(
-          data: (items) => _buildItemsList(context, ref, items, constraints),
+          data: (items) => _buildItemsList(context, ref, items, constraints, isCompactView),
           loading: () => _buildLoadingState(context, constraints),
           error: (error, stackTrace) =>
               _buildErrorState(context, ref, error, constraints),
@@ -64,7 +70,9 @@ class StockListView extends ConsumerWidget {
     WidgetRef ref,
     List<StockItem> items,
     BoxConstraints constraints,
+    bool isCompactView,
   ) {
+    final isDense = dense ?? (constraints.maxWidth < 360);
     if (items.isEmpty) {
       return _buildEmptyState(context, ref, constraints);
     }
@@ -87,13 +95,20 @@ class StockListView extends ConsumerWidget {
               ? Duration(milliseconds: 300 + (index * 50))
               : Duration.zero,
           curve: Curves.easeOutCubic,
-          child: StockListItem(
-            item: item,
-            showDivider: false,
-            showAnimations: showAnimations,
-            compactMode: compactMode,
-            onTap: onItemTap != null ? () => onItemTap!(item) : null,
-          ),
+          child: isCompactView
+              ? StockListItemCompact(
+                  item: item,
+                  dense: isDense,
+                  onTap: onItemTap != null ? () => onItemTap!(item) : null,
+                )
+              : StockListItem(
+                  item: item,
+                  showDivider: false,
+                  showAnimations: showAnimations,
+                  compactMode: compactMode,
+                  dense: isDense,
+                  onTap: onItemTap != null ? () => onItemTap!(item) : null,
+                ),
         );
       },
     );

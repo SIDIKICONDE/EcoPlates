@@ -22,7 +22,7 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
   bool _isOpen = false;
 
   // Catégories avec style
-  final List<CategoryItem> _categories = [
+  final List<CategoryItem> _categories = const [
     CategoryItem('Tous', Icons.grid_view_rounded, Colors.blueGrey),
     CategoryItem('Fruits', Icons.apple, Colors.orange),
     CategoryItem('Légumes', Icons.eco, Colors.green),
@@ -89,7 +89,7 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
               onTap: _toggleMenu,
               child: FadeTransition(
                 opacity: _fadeAnimation,
-                child: Container(
+                child: ColoredBox(
                   color: Colors.black.withValues(alpha: 0.5),
                   child: BackdropFilter(
                     filter: ColorFilter.mode(
@@ -306,9 +306,9 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
 
 // Classe pour représenter une catégorie
 class CategoryItem {
+  const CategoryItem(this.name, this.icon, this.color);
+  
   final String name;
   final IconData icon;
   final Color color;
-
-  const CategoryItem(this.name, this.icon, this.color);
 }

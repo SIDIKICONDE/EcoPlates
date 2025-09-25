@@ -94,6 +94,10 @@ dependencies:
   # Charts & Visualization
   fl_chart: ^0.69.0
 
+  # File Export & Sharing
+  csv: ^6.0.0
+  share_plus: ^10.0.2
+
   # Maps
   google_maps_flutter: ^2.8.0
 

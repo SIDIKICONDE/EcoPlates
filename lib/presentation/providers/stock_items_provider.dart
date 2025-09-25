@@ -11,6 +11,7 @@ import '../../domain/usecases/delete_stock_item_usecase.dart';
 import '../../domain/usecases/get_stock_items_usecase.dart';
 import '../../domain/usecases/update_stock_item_status_usecase.dart';
 import '../../domain/usecases/update_stock_item_usecase.dart';
+
 /// Provider pour le repository de stock
 final stockRepositoryProvider = Provider<StockRepository>((ref) {
   return StockRepositoryImpl();
@@ -22,14 +23,17 @@ final getStockItemsUseCaseProvider = Provider<GetStockItemsUseCase>((ref) {
 });
 
 /// Provider pour le use case d'ajustement des quantités
-final adjustStockQuantityUseCaseProvider = Provider<AdjustStockQuantityUseCase>((ref) {
-  return AdjustStockQuantityUseCase(ref.read(stockRepositoryProvider));
-});
+final adjustStockQuantityUseCaseProvider = Provider<AdjustStockQuantityUseCase>(
+  (ref) {
+    return AdjustStockQuantityUseCase(ref.read(stockRepositoryProvider));
+  },
+);
 
 /// Provider pour le use case de changement de statut
-final updateStockItemStatusUseCaseProvider = Provider<UpdateStockItemStatusUseCase>((ref) {
-  return UpdateStockItemStatusUseCase(ref.read(stockRepositoryProvider));
-});
+final updateStockItemStatusUseCaseProvider =
+    Provider<UpdateStockItemStatusUseCase>((ref) {
+      return UpdateStockItemStatusUseCase(ref.read(stockRepositoryProvider));
+    });
 
 /// Provider pour le use case de création d'article
 final createStockItemUseCaseProvider = Provider<CreateStockItemUseCase>((ref) {
@@ -95,14 +99,14 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
 
     // Écoute les changements de filtres avec debounce pour la recherche
     final filters = ref.watch(stockFiltersProvider);
-    
+
     // Annule le timer précédent s'il existe
     _debounceTimer?.cancel();
-    
+
     // Si c'est une recherche textuelle, on applique un debounce
     if (filters.searchQuery.isNotEmpty) {
       final completer = Completer<List<StockItem>>();
-      
+
       _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
         try {
           final result = await _loadItems(filters);
@@ -115,10 +119,10 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
           }
         }
       });
-      
+
       return completer.future;
     }
-    
+
     // Pour les autres filtres, on charge immédiatement
     return _loadItems(filters);
   }
@@ -126,7 +130,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
   /// Charge le tri sauvegardé dans SharedPreferences et l'applique au filtre
   Future<void> _loadPersistedSortIfAny() async {
     try {
-      // Evite un import direct ici en gardant la logique dans la page si besoin; 
+      // Evite un import direct ici en gardant la logique dans la page si besoin;
       // mais on peut accéder dynamiquement à shared_preferences via Function.apply? Non.
       // Solution simple: faire l'application côté UI. Ici on ne fait rien si non dispo.
     } catch (_) {
@@ -137,7 +141,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
   /// Charge les articles avec les filtres appliqués
   Future<List<StockItem>> _loadItems(StockFiltersState filters) async {
     final useCase = ref.read(getStockItemsUseCaseProvider);
-    
+
     try {
       return await useCase.call(
         filter: filters.toFilter(),
@@ -152,7 +156,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
   /// Ajuste la quantité d'un article
   Future<void> adjustQuantity(String itemId, int delta) async {
     final useCase = ref.read(adjustStockQuantityUseCaseProvider);
-    
+
     try {
       // Mise à jour optimiste : on met à jour l'état immédiatement
       final currentState = state.value;
@@ -167,20 +171,19 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
           }
           return item;
         }).toList();
-        
+
         state = AsyncData(updatedItems);
       }
-      
+
       // Puis on effectue la vraie mise à jour
       await useCase.call(itemId, delta);
-      
+
       // On recharge pour s'assurer de la cohérence
       await _refreshItems();
-      
     } catch (error) {
       // En cas d'erreur, on recharge les données depuis le serveur
       await _refreshItems();
-      
+
       // On relance l'erreur pour que l'UI puisse la gérer
       rethrow;
     }
@@ -189,7 +192,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
   /// Bascule le statut d'un article
   Future<void> toggleStatus(String itemId) async {
     final useCase = ref.read(updateStockItemStatusUseCaseProvider);
-    
+
     try {
       // Mise à jour optimiste
       final currentState = state.value;
@@ -199,25 +202,21 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
             final newStatus = item.status == StockItemStatus.active
                 ? StockItemStatus.inactive
                 : StockItemStatus.active;
-            return item.copyWith(
-              status: newStatus,
-              updatedAt: DateTime.now(),
-            );
+            return item.copyWith(status: newStatus, updatedAt: DateTime.now());
           }
           return item;
         }).toList();
-        
+
         state = AsyncData(updatedItems);
       }
-      
-      // Mise à jour réelle
+
+      // Mise à jour réelle (sans rechargement automatique pour plus de fluidité)
       await useCase.toggle(itemId);
-      
-      // Rechargement pour cohérence
-      await _refreshItems();
-      
+
+      // Note: On ne fait pas de rechargement automatique ici pour éviter les délais
+      // La mise à jour optimiste devrait être suffisante pour l'UX
     } catch (error) {
-      // En cas d'erreur, on recharge
+      // En cas d'erreur, on recharge pour restaurer l'état correct
       await _refreshItems();
       rethrow;
     }
@@ -226,7 +225,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
   /// Met à jour un article existant
   Future<void> updateItem(StockItem item) async {
     final useCase = ref.read(updateStockItemUseCaseProvider);
-    
+
     try {
       // Mise à jour optimiste
       final currentState = state.value;
@@ -237,16 +236,15 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
           }
           return currentItem;
         }).toList();
-        
+
         state = AsyncData(updatedItems);
       }
-      
+
       // Mise à jour réelle
       await useCase.call(item);
-      
+
       // Rechargement pour cohérence
       await _refreshItems();
-      
     } catch (error) {
       // En cas d'erreur, on recharge
       await _refreshItems();
@@ -263,6 +261,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
     required int quantity,
     required String unit,
     String? description,
+    int? lowStockThreshold,
     StockItemStatus? status,
   }) async {
     final useCase = ref.read(createStockItemUseCaseProvider);
@@ -277,6 +276,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
         quantity: quantity,
         unit: unit,
         description: description,
+        lowStockThreshold: lowStockThreshold,
         status: status,
       );
 
@@ -296,7 +296,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
   /// Supprime un article
   Future<void> deleteItem(String itemId) async {
     final useCase = ref.read(deleteStockItemUseCaseProvider);
-    
+
     try {
       // Suppression optimiste
       final currentState = state.value;
@@ -304,16 +304,15 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
         final updatedItems = currentState
             .where((item) => item.id != itemId)
             .toList();
-        
+
         state = AsyncData(updatedItems);
       }
-      
+
       // Suppression réelle
       await useCase.call(itemId);
-      
+
       // Rechargement pour cohérence
       await _refreshItems();
-      
     } catch (error) {
       // En cas d'erreur, on recharge
       await _refreshItems();
@@ -339,17 +338,15 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
 }
 
 /// Provider principal pour les articles de stock
-final stockItemsProvider = AsyncNotifierProvider<StockItemsNotifier, List<StockItem>>(() {
-  return StockItemsNotifier();
-});
+final stockItemsProvider =
+    AsyncNotifierProvider<StockItemsNotifier, List<StockItem>>(() {
+      return StockItemsNotifier();
+    });
 
 /// Provider pour le nombre total d'articles
 final stockItemsCountProvider = Provider<int>((ref) {
   final stockItems = ref.watch(stockItemsProvider);
-  return stockItems.maybeWhen(
-    data: (items) => items.length,
-    orElse: () => 0,
-  );
+  return stockItems.maybeWhen(data: (items) => items.length, orElse: () => 0);
 });
 
 /// Provider pour les articles en rupture de stock
@@ -365,9 +362,35 @@ final outOfStockItemsProvider = Provider<List<StockItem>>((ref) {
 final inactiveItemsProvider = Provider<List<StockItem>>((ref) {
   final stockItems = ref.watch(stockItemsProvider);
   return stockItems.maybeWhen(
-    data: (items) => items.where((item) => item.status == StockItemStatus.inactive).toList(),
+    data: (items) =>
+        items.where((item) => item.status == StockItemStatus.inactive).toList(),
     orElse: () => [],
   );
+});
+
+/// Provider pour les articles avec stock faible
+final lowStockItemsProvider = Provider<List<StockItem>>((ref) {
+  final stockItems = ref.watch(stockItemsProvider);
+  return stockItems.maybeWhen(
+    data: (items) => items.where((item) => item.isLowStock).toList(),
+    orElse: () => [],
+  );
+});
+
+/// Provider pour les articles nécessitant une alerte (stock faible ou rupture)
+final stockAlertItemsProvider = Provider<List<StockItem>>((ref) {
+  final stockItems = ref.watch(stockItemsProvider);
+  return stockItems.maybeWhen(
+    data: (items) => items.where((item) => 
+        item.alertLevel != StockAlertLevel.normal).toList(),
+    orElse: () => [],
+  );
+});
+
+/// Provider pour le mode d'affichage de la liste (compact ou détaillé)
+final stockViewModeProvider = StateProvider<bool>((ref) {
+  // true = vue compacte, false = vue détaillée
+  return false; // Par défaut, vue détaillée
 });
 
 /// Messages d'erreur localisés
@@ -375,20 +398,21 @@ class StockErrorMessages {
   static const String networkError = 'Problème de connexion réseau';
   static const String unknownError = "Une erreur inattendue s'est produite";
   static const String noItemsFound = 'Aucun article trouvé';
-  static const String adjustQuantityError = 'Impossible de modifier la quantité';
+  static const String adjustQuantityError =
+      'Impossible de modifier la quantité';
   static const String toggleStatusError = 'Impossible de changer le statut';
-  
+
   /// Retourne un message d'erreur localisé selon le type d'exception
   static String getErrorMessage(Object error) {
-    if (error.toString().contains('network') || 
+    if (error.toString().contains('network') ||
         error.toString().contains('connexion')) {
       return networkError;
     }
-    
+
     if (error is InvalidQuantityAdjustmentException) {
       return error.message;
     }
-    
+
     return unknownError;
   }
 }

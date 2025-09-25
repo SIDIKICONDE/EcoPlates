@@ -18,6 +18,7 @@ StockItemModel _$StockItemModelFromJson(Map<String, dynamic> json) =>
       status: $enumDecode(_$StockItemStatusEnumMap, json['status']),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       description: json['description'] as String?,
+      lowStockThreshold: (json['lowStockThreshold'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$StockItemModelToJson(StockItemModel instance) =>
@@ -32,6 +33,7 @@ Map<String, dynamic> _$StockItemModelToJson(StockItemModel instance) =>
       'status': _$StockItemStatusEnumMap[instance.status]!,
       'updatedAt': instance.updatedAt.toIso8601String(),
       'description': instance.description,
+      'lowStockThreshold': instance.lowStockThreshold,
     };
 
 const _$StockItemStatusEnumMap = {

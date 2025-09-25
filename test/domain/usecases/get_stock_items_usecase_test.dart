@@ -57,7 +57,6 @@ void main() {
       // Assert
       expect(result, sampleItems);
       verify(mockRepository.getStockItems(
-        filter: StockItemsFilter.none,
         sortBy: StockSortOption.nameAsc,
       ));
     });
@@ -77,7 +76,6 @@ void main() {
       // Assert
       expect(result, sampleItems);
       verify(mockRepository.getStockItems(
-        filter: const StockItemsFilter(searchQuery: null),
         sortBy: StockSortOption.nameAsc,
       ));
     });
@@ -98,7 +96,6 @@ void main() {
       expect(result, sampleItems);
       verify(mockRepository.getStockItems(
         filter: const StockItemsFilter(searchQuery: 'pommes'),
-        sortBy: StockSortOption.nameAsc,
       ));
     });
 
@@ -124,7 +121,6 @@ void main() {
           status: StockItemStatus.active,
           searchQuery: 'pommes',
         ),
-        sortBy: StockSortOption.nameAsc,
       ));
     });
 
@@ -143,7 +139,6 @@ void main() {
       // Assert
       expect(result, sampleItems);
       verify(mockRepository.getStockItems(
-        filter: StockItemsFilter.none,
         sortBy: StockSortOption.quantityDesc,
       ));
     });

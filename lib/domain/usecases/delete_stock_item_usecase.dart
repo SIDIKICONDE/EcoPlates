@@ -13,9 +13,9 @@ class DeleteStockItemUseCase {
   /// Retourne true si la suppression a réussi, false sinon
   Future<bool> call(String itemId) async {
     if (itemId.trim().isEmpty) {
-      throw ArgumentError('L\'ID de l\'article ne peut pas être vide');
+      throw ArgumentError("L'ID de l'article ne peut pas être vide");
     }
 
-    return await _repository.deleteItem(itemId);
+    return _repository.deleteItem(itemId);
   }
 }

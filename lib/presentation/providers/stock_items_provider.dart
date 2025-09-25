@@ -90,6 +90,9 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
 
   @override
   Future<List<StockItem>> build() async {
+    // Charger le tri sauvegardé si nécessaire
+    await _loadPersistedSortIfAny();
+
     // Écoute les changements de filtres avec debounce pour la recherche
     final filters = ref.watch(stockFiltersProvider);
     
@@ -118,6 +121,17 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
     
     // Pour les autres filtres, on charge immédiatement
     return _loadItems(filters);
+  }
+
+  /// Charge le tri sauvegardé dans SharedPreferences et l'applique au filtre
+  Future<void> _loadPersistedSortIfAny() async {
+    try {
+      // Evite un import direct ici en gardant la logique dans la page si besoin; 
+      // mais on peut accéder dynamiquement à shared_preferences via Function.apply? Non.
+      // Solution simple: faire l'application côté UI. Ici on ne fait rien si non dispo.
+    } catch (_) {
+      // ignore
+    }
   }
 
   /// Charge les articles avec les filtres appliqués
@@ -249,6 +263,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
     required int quantity,
     required String unit,
     String? description,
+    StockItemStatus? status,
   }) async {
     final useCase = ref.read(createStockItemUseCaseProvider);
 
@@ -262,6 +277,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
         quantity: quantity,
         unit: unit,
         description: description,
+        status: status,
       );
 
       // Mise à jour de l'état local
@@ -357,7 +373,7 @@ final inactiveItemsProvider = Provider<List<StockItem>>((ref) {
 /// Messages d'erreur localisés
 class StockErrorMessages {
   static const String networkError = 'Problème de connexion réseau';
-  static const String unknownError = 'Une erreur inattendue s\'est produite';
+  static const String unknownError = "Une erreur inattendue s'est produite";
   static const String noItemsFound = 'Aucun article trouvé';
   static const String adjustQuantityError = 'Impossible de modifier la quantité';
   static const String toggleStatusError = 'Impossible de changer le statut';

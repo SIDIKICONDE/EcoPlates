@@ -115,7 +115,7 @@ class _AddStockItemPageState extends ConsumerState<AddStockItemPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur : ${e.toString()}'),
+            content: Text('Erreur : ${e}'),
             backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
           ),
@@ -186,7 +186,7 @@ class _AddStockItemPageState extends ConsumerState<AddStockItemPage> {
                         controller: _nameController,
                         textCapitalization: TextCapitalization.words,
                         decoration: InputDecoration(
-                          labelText: 'Nom de l\'article *',
+                          labelText: "Nom de l'article *",
                           hintText: 'Ex: Pommes Gala',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -230,7 +230,7 @@ class _AddStockItemPageState extends ConsumerState<AddStockItemPage> {
 
                       // Catégorie
                       DropdownButtonFormField<String>(
-                        value: _selectedCategory,
+                        initialValue: _selectedCategory,
                         decoration: InputDecoration(
                           labelText: 'Catégorie *',
                           border: OutlineInputBorder(
@@ -348,7 +348,7 @@ class _AddStockItemPageState extends ConsumerState<AddStockItemPage> {
                           // Unité
                           Expanded(
                             child: DropdownButtonFormField<String>(
-                              value: _unitController.text,
+                              initialValue: _unitController.text,
                               decoration: InputDecoration(
                                 labelText: 'Unité *',
                                 border: OutlineInputBorder(
@@ -405,7 +405,7 @@ class _AddStockItemPageState extends ConsumerState<AddStockItemPage> {
                         decoration: InputDecoration(
                           labelText: 'Description',
                           hintText:
-                              'Informations complémentaires sur l\'article',
+                              "Informations complémentaires sur l'article",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),

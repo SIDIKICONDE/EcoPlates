@@ -11,7 +11,7 @@ import '../providers/favorites_provider.dart';
 /// - Image carrée à gauche, infos à droite
 /// - Badge "Favori" et bouton toggle pour retirer des favoris
 class FavoriteMerchantCard extends ConsumerWidget {
-  const FavoriteMerchantCard({super.key, required this.merchant, this.onTap});
+  const FavoriteMerchantCard({required this.merchant, super.key, this.onTap});
 
   final Merchant merchant;
   final VoidCallback? onTap;

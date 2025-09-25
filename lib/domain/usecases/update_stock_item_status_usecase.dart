@@ -26,7 +26,7 @@ class UpdateStockItemStatusUseCase {
       throw ArgumentError.value(
         itemId,
         'itemId',
-        'L\'identifiant de l\'article ne peut pas être vide',
+        "L'identifiant de l'article ne peut pas être vide",
       );
     }
 

@@ -34,7 +34,7 @@ class AdjustStockQuantityUseCase {
     // Validation des paramètres
     if (itemId.trim().isEmpty) {
       throw const InvalidQuantityAdjustmentException(
-        'L\'identifiant de l\'article ne peut pas être vide',
+        "L'identifiant de l'article ne peut pas être vide",
       );
     }
 

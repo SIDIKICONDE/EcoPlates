@@ -43,7 +43,7 @@ class GetStockItemsUseCase {
     
     // Si la recherche est vide, on la supprime
     if (searchQuery?.isEmpty ?? true) {
-      return filter.copyWith(searchQuery: null);
+      return filter.copyWith();
     }
     
     return filter.copyWith(searchQuery: searchQuery);

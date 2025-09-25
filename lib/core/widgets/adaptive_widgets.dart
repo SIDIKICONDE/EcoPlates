@@ -23,6 +23,7 @@ class AdaptiveScaffold extends StatelessWidget {
     super.key,
     this.appBar,
     this.floatingActionButton,
+    this.floatingActionButtonLocation,
     this.bottomNavigationBar,
     this.backgroundColor,
   });
@@ -30,6 +31,7 @@ class AdaptiveScaffold extends StatelessWidget {
   final Widget body;
   final PreferredSizeWidget? appBar;
   final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? bottomNavigationBar;
   final Color? backgroundColor;
 
@@ -37,24 +39,38 @@ class AdaptiveScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
       // iOS/macOS: Utiliser CupertinoPageScaffold
-      return CupertinoPageScaffold(
+      Widget scaffold = CupertinoPageScaffold(
         navigationBar: appBar is CupertinoNavigationBar
             ? appBar! as ObstructingPreferredSizeWidget
             : appBar != null
             ? CupertinoNavigationBar(
-                middle: (appBar! as AppBar).title,
-                backgroundColor: backgroundColor,
-              ) as ObstructingPreferredSizeWidget
+                    middle: (appBar! as AppBar).title,
+                    backgroundColor: backgroundColor,
+                  )
+                  as ObstructingPreferredSizeWidget
             : null,
         backgroundColor: backgroundColor,
         child: SafeArea(bottom: bottomNavigationBar == null, child: body),
       );
+
+      // Si on a un floatingActionButton, l'ajouter avec un Stack
+      if (floatingActionButton != null) {
+        scaffold = Stack(
+          children: [
+            scaffold,
+            Positioned(bottom: 16.0, right: 16.0, child: floatingActionButton!),
+          ],
+        );
+      }
+
+      return scaffold;
     } else {
       // Autres plateformes: Utiliser Scaffold Material
       return Scaffold(
         appBar: appBar,
         body: body,
         floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
         bottomNavigationBar: bottomNavigationBar,
         backgroundColor: backgroundColor,
       );
@@ -105,8 +121,8 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(
-      kToolbarHeight + (bottom?.preferredSize.height ?? 0));
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0));
 }
 
 /// Bouton adaptatif
@@ -334,19 +350,17 @@ class AdaptiveIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String? tooltip;
   final Color? color;
-  
+
   @override
   Widget build(BuildContext context) {
     if (PlatformUtils.shouldUseCupertino) {
       return CupertinoButton(
         padding: EdgeInsets.zero,
         onPressed: onPressed,
-        child: cupertinoIcon != null
-            ? Icon(cupertinoIcon, color: color)
-            : icon,
+        child: cupertinoIcon != null ? Icon(cupertinoIcon, color: color) : icon,
       );
     }
-    
+
     return IconButton(
       icon: icon,
       onPressed: onPressed,

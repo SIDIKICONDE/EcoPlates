@@ -69,7 +69,7 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
                 child: showLocationInstead
                     ? const Center(
                         child: LocationHeader(
-                          showIcon: true,
+                          
                         ),
                       )
                     : Text(

@@ -16,7 +16,7 @@ class UpdateStockItemUseCase {
   Future<StockItem> call(StockItem item) async {
     // Validation des données
     if (item.name.trim().isEmpty) {
-      throw ArgumentError('Le nom de l\'article ne peut pas être vide');
+      throw ArgumentError("Le nom de l'article ne peut pas être vide");
     }
 
     if (item.price <= 0) {
@@ -28,10 +28,10 @@ class UpdateStockItemUseCase {
     }
 
     if (item.unit.trim().isEmpty) {
-      throw ArgumentError('L\'unité ne peut pas être vide');
+      throw ArgumentError("L'unité ne peut pas être vide");
     }
 
     // Mise à jour via le repository
-    return await _repository.updateStockItem(item);
+    return _repository.updateStockItem(item);
   }
 }

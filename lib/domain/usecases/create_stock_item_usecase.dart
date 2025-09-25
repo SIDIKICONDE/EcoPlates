@@ -16,6 +16,7 @@ class CreateStockItemUseCase {
   /// [quantity] : Quantité initiale
   /// [unit] : Unité de mesure
   /// [description] : Description optionnelle
+  /// [status] : Statut de l'article (actif/inactif)
   /// 
   /// Retourne l'article créé avec son ID généré
   Future<StockItem> call({
@@ -26,10 +27,11 @@ class CreateStockItemUseCase {
     required int quantity,
     required String unit,
     String? description,
+    StockItemStatus? status,
   }) async {
     // Validation des données
     if (name.trim().isEmpty) {
-      throw ArgumentError('Le nom de l\'article ne peut pas être vide');
+      throw ArgumentError("Le nom de l'article ne peut pas être vide");
     }
 
     if (sku.trim().isEmpty) {
@@ -49,7 +51,7 @@ class CreateStockItemUseCase {
     }
 
     if (unit.trim().isEmpty) {
-      throw ArgumentError('L\'unité ne peut pas être vide');
+      throw ArgumentError("L'unité ne peut pas être vide");
     }
 
     // Créer l'article avec un ID temporaire (sera remplacé par le repository)
@@ -61,7 +63,7 @@ class CreateStockItemUseCase {
       price: price,
       quantity: quantity,
       unit: unit.trim(),
-      status: StockItemStatus.active,
+      status: status ?? StockItemStatus.active,
       description: description?.trim(),
       updatedAt: DateTime.now(),
     );

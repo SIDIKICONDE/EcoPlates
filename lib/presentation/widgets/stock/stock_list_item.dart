@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/stock_item.dart';
-import '../../pages/edit_stock_item_page.dart';
+import '../../pages/stock_item_form_page.dart';
 import 'stock_quantity_adjuster.dart';
 import 'stock_status_toggle.dart';
 
@@ -59,13 +59,11 @@ class StockListItem extends StatelessWidget {
                 color: theme.colorScheme.shadow.withValues(alpha: 0.05),
                 blurRadius: compactMode ? 4 : 8,
                 offset: const Offset(0, 2),
-                spreadRadius: 0,
               ),
               BoxShadow(
                 color: theme.colorScheme.shadow.withValues(alpha: 0.02),
                 blurRadius: compactMode ? 8 : 16,
                 offset: const Offset(0, 4),
-                spreadRadius: 0,
               ),
             ],
           ),
@@ -321,8 +319,8 @@ class StockListItem extends StatelessWidget {
             onPressed: () {
               // Navigation vers la page d'édition
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => EditStockItemPage(item: item),
+                MaterialPageRoute<Widget>(
+                  builder: (context) => StockItemFormPage(item: item),
                 ),
               );
             },

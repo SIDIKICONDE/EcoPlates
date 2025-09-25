@@ -149,7 +149,7 @@ class _EditStockItemPageState extends ConsumerState<EditStockItemPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur : ${e.toString()}'),
+            content: Text('Erreur : ${e}'),
             backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
           ),
@@ -168,7 +168,7 @@ class _EditStockItemPageState extends ConsumerState<EditStockItemPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Supprimer l\'article ?'),
+        title: const Text("Supprimer l'article ?"),
         content: Text(
           'Êtes-vous sûr de vouloir supprimer "${widget.item.name}" ?\n'
           'Cette action est irréversible.',
@@ -187,7 +187,7 @@ class _EditStockItemPageState extends ConsumerState<EditStockItemPage> {
       ),
     );
 
-    if (confirmed == true && mounted) {
+    if (confirmed ?? false && mounted) {
       try {
         // Suppression via le provider
         await ref.read(stockItemsProvider.notifier).deleteItem(widget.item.id);
@@ -206,7 +206,7 @@ class _EditStockItemPageState extends ConsumerState<EditStockItemPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Erreur lors de la suppression : ${e.toString()}'),
+              content: Text('Erreur lors de la suppression : ${e}'),
               backgroundColor: Theme.of(context).colorScheme.error,
               behavior: SnackBarBehavior.floating,
             ),
@@ -222,7 +222,7 @@ class _EditStockItemPageState extends ConsumerState<EditStockItemPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Modifier l\'article'),
+        title: const Text("Modifier l'article"),
         centerTitle: true,
         actions: [
           // Bouton de suppression
@@ -255,401 +255,167 @@ class _EditStockItemPageState extends ConsumerState<EditStockItemPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Informations non modifiables
-              Card(
-                margin: EdgeInsets.zero,
-                color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            size: 20,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Informations système',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      // SKU non modifiable
-                      Row(
-                        children: [
-                          Text(
-                            'SKU : ',
-                            style: TextStyle(
-                              color: theme.colorScheme.onSurfaceVariant,
-                              fontSize: 13,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surface,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: theme.colorScheme.outline.withOpacity(
-                                  0.3,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              widget.item.sku,
-                              style: const TextStyle(
-                                fontFamily: 'monospace',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      // Dernière mise à jour
-                      Text(
-                        'Dernière modification : ${_formatDateTime(widget.item.updatedAt)}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+              // Ligne infos système (simple)
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  const Icon(Icons.info_outline, size: 16),
+                  Text('SKU: ', style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 12)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                    ),
+                    child: Text(
+                      widget.item.sku,
+                      style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Dernière maj: ${_formatDateTime(widget.item.updatedAt)}',
+                    style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
               ),
 
               const SizedBox(height: 16),
 
-              // Section informations principales
-              Card(
-                margin: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Informations principales',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
+              // Nom
+              TextFormField(
+                controller: _nameController,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  labelText: "Nom de l'article *",
+                  prefixIcon: Icon(Icons.label_outline),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) return 'Le nom est requis';
+                  if (value.trim().length < 3) return 'Au moins 3 caractères';
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+              // Catégorie
+              DropdownButtonFormField<String>(
+                initialValue: _selectedCategory,
+                decoration: const InputDecoration(
+                  labelText: 'Catégorie *',
+                  prefixIcon: Icon(Icons.category_outlined),
+                  border: OutlineInputBorder(),
+                ),
+                items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value!;
+                    _hasChanges = true;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+              // Statut
+              DropdownButtonFormField<StockItemStatus>(
+                initialValue: _selectedStatus,
+                decoration: const InputDecoration(
+                  labelText: 'Statut',
+                  border: OutlineInputBorder(),
+                ),
+                items: StockItemStatus.values
+                    .map((s) => DropdownMenuItem(value: s, child: Text(s.label)))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedStatus = value!;
+                    _hasChanges = true;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+              // Prix
+              TextFormField(
+                controller: _priceController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                decoration: const InputDecoration(
+                  labelText: 'Prix (€) *',
+                  prefixIcon: Icon(Icons.euro),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) return 'Le prix est requis';
+                  final p = double.tryParse(value);
+                  if (p == null || p <= 0) return 'Prix invalide';
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+              // Quantité + Unité
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: TextFormField(
+                      controller: _quantityController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: const InputDecoration(
+                        labelText: 'Quantité *',
+                        prefixIcon: Icon(Icons.inventory_2_outlined),
+                        border: OutlineInputBorder(),
                       ),
-                      const SizedBox(height: 16),
-
-                      // Nom de l'article
-                      TextFormField(
-                        controller: _nameController,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                          labelText: 'Nom de l\'article *',
-                          hintText: 'Ex: Pommes Gala',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          prefixIcon: const Icon(Icons.label_outline),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Le nom est requis';
-                          }
-                          if (value.trim().length < 3) {
-                            return 'Le nom doit contenir au moins 3 caractères';
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Catégorie et Statut sur la même ligne
-                      Row(
-                        children: [
-                          // Catégorie
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              value: _selectedCategory,
-                              decoration: InputDecoration(
-                                labelText: 'Catégorie *',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                prefixIcon: const Icon(Icons.category_outlined),
-                              ),
-                              items: _categories.map((category) {
-                                return DropdownMenuItem(
-                                  value: category,
-                                  child: Text(category),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedCategory = value!;
-                                  _hasChanges = true;
-                                });
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          // Statut
-                          Expanded(
-                            child: DropdownButtonFormField<StockItemStatus>(
-                              value: _selectedStatus,
-                              decoration: InputDecoration(
-                                labelText: 'Statut',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                prefixIcon: Icon(
-                                  _selectedStatus == StockItemStatus.active
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color:
-                                      _selectedStatus == StockItemStatus.active
-                                      ? Colors.green
-                                      : Colors.orange,
-                                ),
-                              ),
-                              items: StockItemStatus.values.map((status) {
-                                return DropdownMenuItem(
-                                  value: status,
-                                  child: Text(status.label),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedStatus = value!;
-                                  _hasChanges = true;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) return 'Quantité requise';
+                        final q = int.tryParse(value);
+                        if (q == null || q < 0) return 'Quantité invalide';
+                        return null;
+                      },
+                    ),
                   ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      initialValue: _unitController.text,
+                      decoration: const InputDecoration(
+                        labelText: 'Unité *',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: _units.map((u) => DropdownMenuItem(value: u, child: Text(u))).toList(),
+                      onChanged: (v) {
+                        setState(() {
+                          _unitController.text = v ?? 'pièce';
+                          _hasChanges = true;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              // Description
+              TextFormField(
+                controller: _descriptionController,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  labelText: 'Description',
+                  border: OutlineInputBorder(),
                 ),
               ),
 
-              const SizedBox(height: 16),
-
-              // Section prix et stock
-              Card(
-                margin: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Prix et stock',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                          const Spacer(),
-                          // Indicateur de rupture de stock
-                          if (widget.item.isOutOfStock)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.errorContainer,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.warning,
-                                    size: 14,
-                                    color: theme.colorScheme.onErrorContainer,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Rupture de stock',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.onErrorContainer,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Prix
-                      TextFormField(
-                        controller: _priceController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d*\.?\d{0,2}'),
-                          ),
-                        ],
-                        decoration: InputDecoration(
-                          labelText: 'Prix unitaire (€) *',
-                          hintText: '0.00',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          prefixIcon: const Icon(Icons.euro),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Le prix est requis';
-                          }
-                          final price = double.tryParse(value);
-                          if (price == null || price <= 0) {
-                            return 'Prix invalide';
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Quantité et unité
-                      Row(
-                        children: [
-                          // Quantité
-                          Expanded(
-                            flex: 2,
-                            child: TextFormField(
-                              controller: _quantityController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              decoration: InputDecoration(
-                                labelText: 'Quantité en stock *',
-                                hintText: '0',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                prefixIcon: const Icon(
-                                  Icons.inventory_2_outlined,
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'La quantité est requise';
-                                }
-                                final qty = int.tryParse(value);
-                                if (qty == null || qty < 0) {
-                                  return 'Quantité invalide';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          // Unité
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              value: _unitController.text,
-                              decoration: InputDecoration(
-                                labelText: 'Unité *',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 16,
-                                ),
-                              ),
-                              items: _units.map((unit) {
-                                return DropdownMenuItem(
-                                  value: unit,
-                                  child: Text(unit),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _unitController.text = value ?? 'pièce';
-                                  _hasChanges = true;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Section description
-              Card(
-                margin: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Informations complémentaires',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Description
-                      TextFormField(
-                        controller: _descriptionController,
-                        maxLines: 4,
-                        textCapitalization: TextCapitalization.sentences,
-                        decoration: InputDecoration(
-                          labelText: 'Description',
-                          hintText:
-                              'Informations complémentaires sur l\'article',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          alignLabelWithHint: true,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 80), // Espace pour éviter le clavier
+              const SizedBox(height: 80),
             ],
           ),
         ),
@@ -662,7 +428,7 @@ class _EditStockItemPageState extends ConsumerState<EditStockItemPage> {
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 1) {
-      return 'À l\'instant';
+      return "À l'instant";
     } else if (difference.inMinutes < 60) {
       return 'Il y a ${difference.inMinutes} min';
     } else if (difference.inHours < 24) {

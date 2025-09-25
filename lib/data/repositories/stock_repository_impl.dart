@@ -329,7 +329,7 @@ class StockRepositoryImpl implements StockRepository {
       // Boissons
       StockItemModel(
         id: 'bois_001',
-        name: 'Jus d\'orange frais',
+        name: "Jus d'orange frais",
         sku: 'BOIS-JUS-001',
         category: 'Boissons',
         price: 3.80,

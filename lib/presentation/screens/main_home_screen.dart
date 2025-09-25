@@ -24,9 +24,9 @@ class MainHomeScreen extends ConsumerStatefulWidget {
 class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MinimalHeader(showLocationInstead: true),
-      body: const SingleChildScrollView(
+    return const Scaffold(
+      appBar: MinimalHeader(showLocationInstead: true),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

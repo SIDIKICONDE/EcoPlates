@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'geo_location_service.dart';
-
 import '../../../domain/entities/food_offer.dart';
+import 'geo_location_service.dart';
 
 /// Service pour gérer la carte Google Maps et les marqueurs d'offres
 class MapService {

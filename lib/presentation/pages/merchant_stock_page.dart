@@ -5,8 +5,12 @@ import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/stock_items_provider.dart';
 import '../widgets/stock/stock_filter_chips.dart';
 import '../widgets/stock/stock_list_view.dart';
+import '../widgets/stock/stock_category_floating_menu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../domain/repositories/stock_repository.dart';
 import '../widgets/stock/stock_search_bar.dart';
-import 'add_stock_item_page.dart';
+import 'stock_item_form_page.dart';
 
 /// Page principale de gestion de stock pour les marchands
 /// 
@@ -25,7 +29,7 @@ class MerchantStockPage extends ConsumerWidget {
     final outOfStockCount = ref.watch(outOfStockItemsProvider).length;
 
     return AdaptiveScaffold(
-      appBar: _buildAppBar(context, theme, stockCount, outOfStockCount),
+      appBar: _buildAppBar(context, ref, theme, stockCount, outOfStockCount),
       body: Column(
         children: [
           // En-tête avec recherche et filtres
@@ -39,18 +43,20 @@ class MerchantStockPage extends ConsumerWidget {
           ),
         ],
       ),
+      floatingActionButton: const StockCategoryFloatingMenu(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
   PreferredSizeWidget _buildAppBar(
     BuildContext context,
+    WidgetRef ref,
     ThemeData theme,
     int stockCount,
     int outOfStockCount,
   ) {
     return AdaptiveAppBar(
       title: const Text('Stock'),
-      centerTitle: true,
       actions: [
         // Bouton d'ajout d'article
         IconButton(
@@ -58,8 +64,8 @@ class MerchantStockPage extends ConsumerWidget {
           tooltip: 'Ajouter',
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const AddStockItemPage(),
+              MaterialPageRoute<void>(
+                builder: (_) => const StockItemFormPage(),
               ),
             );
           },
@@ -71,10 +77,10 @@ class MerchantStockPage extends ConsumerWidget {
         
         const SizedBox(width: 8),
         
-        // Menu d'actions (futur)
+        // Menu d'actions
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert),
-          onSelected: (value) => _handleMenuAction(value),
+          onSelected: (value) => _handleMenuAction(context, ref, value),
           itemBuilder: (context) => [
             const PopupMenuItem(
               value: 'refresh',
@@ -178,18 +184,56 @@ class MerchantStockPage extends ConsumerWidget {
     );
   }
 
-  void _handleMenuAction(String action) {
-    // TODO: Implémenter les actions du menu
+  void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
     switch (action) {
       case 'refresh':
         // L'actualisation est gérée par le pull-to-refresh dans StockListView
         break;
       case 'sort':
-        // TODO: Afficher un modal de tri
-        break;
+        _showSortSheet(context, ref);
       case 'export':
-        // TODO: Implémenter l'export des données
+        // À venir
         break;
+    }
+  }
+
+  Future<void> _showSortSheet(BuildContext context, WidgetRef ref) async {
+    final current = ref.read(stockFiltersProvider);
+
+    final selected = await showModalBottomSheet<StockSortOption>(
+      context: context,
+      builder: (ctx) {
+        const options = StockSortOption.values;
+        return SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              const ListTile(
+                title: Text('Trier par'),
+              ),
+              ...options.map((opt) => RadioListTile<StockSortOption>(
+                    title: Text(opt.label),
+                    value: opt,
+                    groupValue: current.sortBy,
+                    onChanged: (val) => Navigator.of(ctx).pop(val),
+                  )),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (selected != null && selected != current.sortBy) {
+      // Mettre à jour filtre
+      final notifier = ref.read(stockFiltersProvider.notifier);
+      notifier.state = current.copyWith(sortBy: selected);
+
+      // Persister
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('stock_sort_option', selected.name);
+
+      // Rafraîchir la liste
+      await ref.read(stockItemsProvider.notifier).refresh();
     }
   }
 

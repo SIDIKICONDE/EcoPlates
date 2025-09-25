@@ -101,4 +101,25 @@ class MockStockRepository extends _i1.Mock implements _i3.StockRepository {
             ),
           )
           as _i4.Future<_i2.StockItem>);
+
+  @override
+  _i4.Future<_i2.StockItem> createStockItem(_i2.StockItem? item) =>
+      (super.noSuchMethod(
+            Invocation.method(#createStockItem, [item]),
+            returnValue: _i4.Future<_i2.StockItem>.value(
+              _FakeStockItem_0(
+                this,
+                Invocation.method(#createStockItem, [item]),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.StockItem>);
+
+  @override
+  _i4.Future<bool> deleteItem(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteItem, [id]),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
 }

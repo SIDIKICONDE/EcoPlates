@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import '../../../core/services/video_pool_manager.dart';
+
 import '../../../core/services/video_background_service.dart';
+import '../../../core/services/video_pool_manager.dart';
 import '../../../domain/entities/video_preview.dart';
 
 /// API simple pour afficher/masquer le lecteur flottant via OverlayEntry

@@ -97,21 +97,16 @@ class UserLocationTextNotifier extends StateNotifier<UserLocationText> {
       if (address != null && mounted) {
         state = UserLocationText(
           address: address,
-          isLoading: false,
-          hasError: false,
         );
       } else if (mounted) {
         state = const UserLocationText(
           address: 'Position actuelle',
-          isLoading: false,
-          hasError: false,
         );
       }
     } catch (e) {
       if (mounted) {
         state = const UserLocationText(
           address: 'Erreur de localisation',
-          isLoading: false,
           hasError: true,
         );
       }

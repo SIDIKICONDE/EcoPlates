@@ -8,8 +8,7 @@ import '../../presentation/screens/all_brands_screen.dart';
 import '../../presentation/screens/all_urgent_offers_screen.dart';
 import '../../presentation/screens/main_home_screen.dart';
 import '../../presentation/screens/welcome_screen.dart';
-import '../../presentation/widgets/consumer_shell.dart';
-import '../../presentation/widgets/merchant_shell.dart';
+import '../../presentation/widgets/app_shell.dart';
 import '../constants/env_config.dart';
 import 'error_page.dart';
 import 'routes/public_routes.dart';
@@ -91,13 +90,14 @@ class AppRouter {
       // Routes publiques
       ...PublicRoutes.routes,
       
-      // Routes merchant avec shell et tab menu
+      // Shell unifié (consumer + merchant)
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
         builder: (context, state, child) {
-          return MerchantShell(child: child);
+          return AppShell(child: child);
         },
         routes: [
+          // Merchant routes (tabs)
           GoRoute(
             path: RouteConstants.merchantDashboard,
             name: RouteConstants.merchantDashboardName,
@@ -140,16 +140,8 @@ class AppRouter {
               return const MaterialPage(child: MainHomeScreen());
             },
           ),
-        ],
-      ),
 
-      // Routes consumer avec shell et tab menu
-      ShellRoute(
-        navigatorKey: GlobalKey<NavigatorState>(),
-        builder: (context, state, child) {
-          return ConsumerShell(child: child);
-        },
-        routes: [
+          // Consumer routes (tabs)
           GoRoute(
             path: RouteConstants.consumerDiscover,
             name: RouteConstants.consumerDiscoverName,

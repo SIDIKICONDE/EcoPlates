@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/merchant.dart';
+import 'favorites_provider.dart';
 
 /// Provider pour la liste des marchands partenaires
 final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
@@ -274,9 +275,12 @@ final merchantsProvider = FutureProvider<List<Merchant>>((ref) async {
 /// Provider pour filtrer les marchands favoris
 final favoriteMerchantsProvider = Provider<List<Merchant>>((ref) {
   final merchantsAsync = ref.watch(merchantsProvider);
+  final favoriteIds = ref.watch(favoriteMerchantIdsProvider);
   
   return merchantsAsync.when(
-    data: (merchants) => merchants.where((m) => m.isFavorite).toList(),
+    data: (merchants) => merchants
+        .where((m) => favoriteIds.contains(m.id))
+        .toList(),
     loading: () => [],
     error: (_, __) => [],
   );

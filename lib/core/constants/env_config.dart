@@ -9,11 +9,12 @@ class EnvConfig {
   static String get apiBaseUrl =>
       dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000/api/v1';
   static bool get useMockData => isDevelopment && !isBackendAvailable();
-  
+
   static bool isBackendAvailable() {
     // In development, we'll use mock data instead of requiring a backend
     return false;
   }
+
   static int get apiTimeout =>
       int.tryParse(dotenv.env['API_TIMEOUT'] ?? '30000') ?? 30000;
 
@@ -29,7 +30,8 @@ class EnvConfig {
 
   // APIs externes
   static String get googleMapsApiKey =>
-      dotenv.env['GOOGLE_MAPS_API_KEY'] ?? 'AIzaSyCt57yjJiwlrr81dQQusoPVwmKFTWWhR_k';
+      dotenv.env['GOOGLE_MAPS_API_KEY'] ??
+      'AIzaSyCt57yjJiwlrr81dQQusoPVwmKFTWWhR_k';
 
   static bool get isDevelopment => environment == 'development';
   static bool get isStaging => environment == 'staging';

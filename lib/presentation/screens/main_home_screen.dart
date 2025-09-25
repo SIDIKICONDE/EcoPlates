@@ -9,6 +9,7 @@ import '../widgets/home/sections/nearby_section.dart';
 import '../widgets/home/sections/recommended_section.dart';
 import '../widgets/home/sections/urgent_section.dart';
 import '../widgets/home/sections/videos_section.dart';
+import '../widgets/home/sections/favorites_merchants_section.dart';
 import '../widgets/minimal_header.dart';
 
 /// Page d'accueil principale type Too Good To Go
@@ -54,6 +55,9 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
 
             // Section des vidéos et astuces
             VideosSection(),
+
+            // Section des commerçants favoris (slider)
+            FavoritesMerchantsSection(),
 
             SizedBox(height: 16),
           ],

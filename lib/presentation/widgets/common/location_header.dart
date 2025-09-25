@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../pages/browse_page.dart';
+import '../../../core/router/routes/route_constants.dart';
 import '../../providers/browse_view_provider.dart';
 import '../../providers/location_state_provider.dart';
 import '../../providers/user_location_text_provider.dart';
@@ -137,10 +138,8 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
       // Ouvrir la page Browse avec la vue carte
       ref.read(browseViewModeProvider.notifier).state = BrowseViewMode.map;
 
-      // Naviguer vers la page Browse
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (context) => const BrowsePage()));
+      // Naviguer vers la page Parcourir via GoRouter (met à jour l'onglet)
+      context.go(RouteConstants.consumerBrowse);
     }
   }
 
@@ -220,12 +219,8 @@ class LocationOptionsSheet extends ConsumerWidget {
                 ref.read(browseViewModeProvider.notifier).state =
                     BrowseViewMode.map;
 
-                // Naviguer vers la page Browse
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (context) => const BrowsePage(),
-                  ),
-                );
+                // Naviguer vers la page Parcourir via GoRouter
+                context.go(RouteConstants.consumerBrowse);
               },
             ),
 

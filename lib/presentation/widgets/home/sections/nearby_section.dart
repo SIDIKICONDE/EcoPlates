@@ -15,145 +15,31 @@ class NearbySection extends ConsumerWidget {
     final nearbyOffersAsync = ref.watch(nearbyOffersProvider);
     final userLocation = ref.watch(userLocationProvider);
     final searchRadius = ref.watch(searchRadiusProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // En-tête de section avec localisation
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        // Icône de localisation animée
-                        TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0.8, end: 1),
-                          duration: const Duration(milliseconds: 1500),
-                          curve: Curves.easeInOut,
-                          builder: (context, scale, child) {
-                            return Transform.scale(
-                              scale: scale,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  Icons.location_on,
-                                  color: Theme.of(context).primaryColor,
-                                  size: 24,
-                                ),
-                              ),
-                            );
-                          },
-                          onEnd: () {},
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Près de chez vous',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              if (userLocation != null)
-                                Text(
-                                  '${userLocation.address} • ${searchRadius.toStringAsFixed(0)} km',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Bouton de filtre distance
-                  IconButton(
-                    onPressed: () => _showDistanceFilter(context, ref),
-                    icon: Icon(
-                      Icons.tune,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ],
+              const Expanded(
+                child: Text(
+                  'Près de chez vous',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
               ),
-              const SizedBox(height: 8),
-              // Carte interactive miniature
-              Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[200],
-                ),
-                child: Stack(
-                  children: [
-                    // Placeholder pour la carte
-                    // TODO(nearby): Intégrer Google Maps ou MapBox
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/2.3522,48.8566,13,0/600x240@2x?access_token=YOUR_MAPBOX_TOKEN',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stack) => Container(
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.map_outlined, size: 48, color: Colors.grey),
-                                SizedBox(height: 8),
-                                Text('Carte interactive', style: TextStyle(color: Colors.grey)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Overlay avec bouton
-                    Positioned(
-                      bottom: 8,
-                      right: 8,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          // TODO(nearby): Ouvrir vue carte complète
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Vue carte complète à venir'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.fullscreen, size: 18),
-                        label: const Text('Carte'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black87,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              // Bouton de filtre distance
+              IconButton(
+                onPressed: () => _showDistanceFilter(context, ref),
+                icon: Icon(Icons.tune, color: Theme.of(context).primaryColor),
               ),
             ],
           ),
         ),
-        
+
         // Liste des offres à proximité
         SizedBox(
           height: 280,
@@ -172,23 +58,17 @@ class NearbySection extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         'Aucune offre à proximité',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 16,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
                       ),
                       Text(
                         'Élargissez votre zone de recherche',
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey[500], fontSize: 14),
                       ),
                     ],
                   ),
                 );
               }
-              
+
               // Afficher les offres avec indicateur de distance
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -198,7 +78,7 @@ class NearbySection extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final offer = offers[index];
                   final distance = 0.3 + (index * 0.4); // Distance simulée
-                  
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: SizedBox(
@@ -218,7 +98,10 @@ class NearbySection extends ConsumerWidget {
                             top: 8,
                             right: 8,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.9),
                                 borderRadius: BorderRadius.circular(12),
@@ -258,18 +141,12 @@ class NearbySection extends ConsumerWidget {
                 },
               );
             },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red[400],
-                  ),
+                  Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
                   const SizedBox(height: 8),
                   Text(
                     'Erreur de chargement',
@@ -288,7 +165,7 @@ class NearbySection extends ConsumerWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
       ],
     );
@@ -330,7 +207,9 @@ class NearbySection extends ConsumerWidget {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.grey[50],
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -348,7 +227,11 @@ class NearbySection extends ConsumerWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
+                          Icon(
+                            Icons.location_on,
+                            size: 14,
+                            color: Colors.grey[600],
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'À 0.5 km • 8 min à pied',
@@ -368,7 +251,7 @@ class NearbySection extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             // Contenu de l'offre
             Expanded(
               child: SingleChildScrollView(
@@ -390,7 +273,7 @@ class NearbySection extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             // Barre de réservation
             Container(
               decoration: BoxDecoration(
@@ -455,10 +338,7 @@ class _DistanceFilterModalState extends State<_DistanceFilterModal> {
             children: [
               const Text(
                 'Distance maximale',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 '${_selectedRadius.toStringAsFixed(1)} km',

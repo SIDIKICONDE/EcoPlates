@@ -7,7 +7,7 @@ import '../../../core/widgets/adaptive_widgets.dart';
 import '../../providers/analytics_provider.dart';
 
 /// Barre d'app bar pour la page d'analyse des marchands
-/// 
+///
 /// Affiche le titre, le logo marchand et les actions rapides
 /// (rafraîchir, exporter, paramètres)
 class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -19,78 +19,162 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return AdaptiveAppBar(
       leading: const _MerchantLogo(),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.analytics,
-            size: 24,
-            color: theme.colorScheme.primary,
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.insights,
+              size: 20,
+              color: theme.colorScheme.primary,
+            ),
           ),
-          const SizedBox(width: 8),
-          const Text('Analyses'),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Business Insights',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.3,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              Text(
+                'Analytics Dashboard',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
       actions: [
-        // Bouton de rafraîchissement
-        IconButton(
-          icon: const Icon(Icons.refresh),
-          iconSize: 20,
-          tooltip: 'Actualiser',
-          onPressed: () => ref.refreshAnalytics(),
+        // Bouton de rafraîchissement amélioré
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.refresh),
+            iconSize: 20,
+            tooltip: 'Actualiser les données',
+            onPressed: () => ref.refreshAnalytics(),
+            style: IconButton.styleFrom(
+              padding: const EdgeInsets.all(8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
         ),
-        
-        // Menu d'actions
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert),
-          iconSize: 20,
-          tooltip: 'Actions',
-          onSelected: (value) => _handleMenuAction(context, ref, value),
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: 'export_pdf',
-              child: ListTile(
-                leading: Icon(Icons.picture_as_pdf, size: 18),
-                title: Text('Exporter PDF', style: TextStyle(fontSize: 14)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                dense: true,
-              ),
+
+        // Menu d'actions amélioré
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface.withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.3),
+              width: 1,
             ),
-            const PopupMenuItem(
-              value: 'export_excel',
-              child: ListTile(
-                leading: Icon(Icons.table_chart, size: 18),
-                title: Text('Exporter Excel', style: TextStyle(fontSize: 14)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                dense: true,
+          ),
+          child: PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            iconSize: 20,
+            tooltip: 'Actions',
+            onSelected: (value) => _handleMenuAction(context, ref, value),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'export_pdf',
+                child: ListTile(
+                  leading: Icon(
+                    Icons.picture_as_pdf,
+                    size: 18,
+                    color: Colors.red,
+                  ),
+                  title: const Text(
+                    'Exporter PDF',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                  dense: true,
+                ),
               ),
-            ),
-            const PopupMenuDivider(),
-            const PopupMenuItem(
-              value: 'settings',
-              child: ListTile(
-                leading: Icon(Icons.settings, size: 18),
-                title: Text('Paramètres', style: TextStyle(fontSize: 14)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                dense: true,
+              PopupMenuItem(
+                value: 'export_excel',
+                child: ListTile(
+                  leading: Icon(
+                    Icons.table_chart,
+                    size: 18,
+                    color: Colors.green,
+                  ),
+                  title: const Text(
+                    'Exporter Excel',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                  dense: true,
+                ),
               ),
-            ),
-            const PopupMenuItem(
-              value: 'help',
-              child: ListTile(
-                leading: Icon(Icons.help_outline, size: 18),
-                title: Text('Aide', style: TextStyle(fontSize: 14)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                dense: true,
+              const PopupMenuDivider(),
+              const PopupMenuItem(
+                value: 'settings',
+                child: ListTile(
+                  leading: Icon(
+                    Icons.settings,
+                    size: 18,
+                    color: Color(0xFF2196F3), // Bleu
+                  ),
+                  title: Text(
+                    'Paramètres',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                  dense: true,
+                ),
               ),
+              const PopupMenuItem(
+                value: 'help',
+                child: ListTile(
+                  leading: Icon(
+                    Icons.help_outline,
+                    size: 18,
+                    color: Color(0xFFFF9800), // Orange
+                  ),
+                  title: Text(
+                    'Aide',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                  dense: true,
+                ),
+              ),
+            ],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-          ],
+            elevation: 8,
+          ),
         ),
-        
-        const SizedBox(width: 4),
+
+        const SizedBox(width: 8),
       ],
     );
   }

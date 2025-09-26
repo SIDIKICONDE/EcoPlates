@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/user_reservations_provider.dart';
 import '../providers/offer_reservation_provider.dart';
+import '../providers/user_reservations_provider.dart';
 
 class MyReservationsPage extends ConsumerWidget {
   const MyReservationsPage({super.key});
@@ -21,7 +21,7 @@ class MyReservationsPage extends ConsumerWidget {
           : ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: reservations.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final r = reservations[index];
                 return Card(
@@ -49,7 +49,7 @@ class MyReservationsPage extends ConsumerWidget {
                               ),
                             );
                           }
-                        } catch (e) {
+                        } on Exception catch (e) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

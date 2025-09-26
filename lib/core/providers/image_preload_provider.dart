@@ -7,32 +7,45 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/image_cache_service.dart';
 
 /// Provider pour la stratégie de préchargement actuelle
-final preloadStrategyProvider = StateProvider<PreloadStrategy>((ref) {
-  // Écouter la connectivité pour adapter la stratégie
-  ref.watch(connectivityProvider).whenData((connectivityList) {
-    // Prendre le premier résultat de la liste
-    final connectivity = connectivityList.isNotEmpty
-        ? connectivityList.first
-        : ConnectivityResult.none;
+final preloadStrategyProvider =
+    NotifierProvider<PreloadStrategyNotifier, PreloadStrategy>(
+      PreloadStrategyNotifier.new,
+    );
 
-    final controller = ref.controller;
-    switch (connectivity) {
-      case ConnectivityResult.wifi:
-        controller.state = PreloadStrategy.aggressive;
-      case ConnectivityResult.mobile:
-        controller.state = PreloadStrategy.moderate;
-      case ConnectivityResult.none:
-        controller.state = PreloadStrategy.disabled;
-      case ConnectivityResult.bluetooth:
-      case ConnectivityResult.ethernet:
-      case ConnectivityResult.vpn:
-      case ConnectivityResult.other:
-        controller.state = PreloadStrategy.conservative;
-    }
-  });
+class PreloadStrategyNotifier extends Notifier<PreloadStrategy> {
+  @override
+  PreloadStrategy build() {
+    // Écouter la connectivité pour adapter la stratégie
+    ref.listen(connectivityProvider, (previous, connectivityAsync) {
+      connectivityAsync.whenData((connectivityList) {
+        // Prendre le premier résultat de la liste
+        final connectivity = connectivityList.isNotEmpty
+            ? connectivityList.first
+            : ConnectivityResult.none;
 
-  return PreloadStrategy.moderate; // Par défaut
-});
+        switch (connectivity) {
+          case ConnectivityResult.wifi:
+            state = PreloadStrategy.aggressive;
+          case ConnectivityResult.mobile:
+            state = PreloadStrategy.moderate;
+          case ConnectivityResult.none:
+            state = PreloadStrategy.disabled;
+          case ConnectivityResult.bluetooth:
+          case ConnectivityResult.ethernet:
+          case ConnectivityResult.vpn:
+          case ConnectivityResult.other:
+            state = PreloadStrategy.conservative;
+        }
+      });
+    });
+
+    return PreloadStrategy.moderate; // Par défaut
+  }
+
+  void updateStrategy(PreloadStrategy strategy) {
+    state = strategy;
+  }
+}
 
 /// Provider pour surveiller la connectivité
 final connectivityProvider = StreamProvider<List<ConnectivityResult>>((ref) {
@@ -280,7 +293,7 @@ class ImagePreloadManager {
           priority: request.priority,
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Erreur préchargement ${request.url}: $e');
     } finally {
       _preloadingUrls.remove(request.url);
@@ -348,13 +361,15 @@ mixin AutoPreloadImages<T extends StatefulWidget> on State<T> {
   }) {
     _preloadTimer?.cancel();
     _preloadTimer = Timer(debounce, () {
-      ref
-          .read(imagePreloadManagerProvider)
-          .preloadForList(
-            imageUrls: imageUrls,
-            visibleIndex: _lastVisibleIndex,
-            overrideSize: size,
-          );
+      unawaited(
+        ref
+            .read(imagePreloadManagerProvider)
+            .preloadForList(
+              imageUrls: imageUrls,
+              visibleIndex: _lastVisibleIndex,
+              overrideSize: size,
+            ),
+      );
     });
   }
 

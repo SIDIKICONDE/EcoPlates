@@ -35,7 +35,7 @@ class CacheConfig {
         defaultCacheManager.emptyCache(),
         thumbnailCacheManager.emptyCache(),
       ]);
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Erreur nettoyage cache: $e');
     }
   }

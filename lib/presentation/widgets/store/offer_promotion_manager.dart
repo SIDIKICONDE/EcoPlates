@@ -7,9 +7,9 @@ import '../../../domain/entities/food_offer.dart';
 /// Widget pour gérer les promotions d'une offre individuelle
 class OfferPromotionManager extends ConsumerStatefulWidget {
   const OfferPromotionManager({
-    super.key,
     required this.offer,
     this.onPromotionUpdated,
+    super.key,
   });
 
   final FoodOffer offer;
@@ -93,7 +93,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
               suffixText: '%',
               border: const OutlineInputBorder(),
               filled: true,
-              fillColor: theme.colorScheme.surfaceVariant.withValues(
+              fillColor: theme.colorScheme.surfaceContainerHighest.withValues(
                 alpha: 0.3,
               ),
             ),
@@ -345,11 +345,11 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur lors de l\'application de la promotion: $e'),
+            content: Text("Erreur lors de l'application de la promotion: $e"),
             backgroundColor: Colors.red,
           ),
         );
@@ -378,7 +378,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

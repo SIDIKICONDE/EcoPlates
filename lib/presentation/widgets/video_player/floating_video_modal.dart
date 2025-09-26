@@ -159,10 +159,10 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
       );
       _positionInitialized = true;
       // Initialisation contrôleur
-      _initController();
+      unawaited(_initController());
       _planHideControls();
       // Démarrer l'animation d'entrée
-      _entryController.forward();
+      unawaited(_entryController.forward());
     }
   }
 
@@ -190,7 +190,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
         setState(() {});
       });
       setState(() {});
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Erreur init lecteur flottant: $e');
     }
   }
@@ -201,7 +201,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
     _hideTimer?.cancel();
     _entryController.dispose();
     // Ne pas disposer: le pool gère la mémoire. Mettre en pause suffit.
-    _controller?.pause();
+    unawaited(_controller?.pause());
     super.dispose();
   }
 
@@ -212,17 +212,17 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
       _showBackgroundNotification();
     } else if (state == AppLifecycleState.resumed) {
       // L'app revient au premier plan
-      VideoBackgroundService().hideVideoNotification();
+      unawaited(VideoBackgroundService().hideVideoNotification());
     }
   }
 
   void _showBackgroundNotification() {
     if (_controller != null) {
-      VideoBackgroundService().showVideoNotification(
+      unawaited(VideoBackgroundService().showVideoNotification(
         title: widget.video.title,
         merchant: widget.video.merchantName,
         isPlaying: _controller!.value.isPlaying,
-      );
+      ));
     }
   }
 
@@ -230,9 +230,9 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
     final c = _controller;
     if (c == null) return;
     if (c.value.isPlaying) {
-      c.pause();
+      unawaited(c.pause());
     } else {
-      c.play();
+      unawaited(c.play());
     }
     setState(() {});
     _planHideControls();
@@ -240,13 +240,13 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
 
   void _toggleMute() {
     _muted = !_muted;
-    _controller?.setVolume(_muted ? 0 : 1);
+    unawaited(_controller?.setVolume(_muted ? 0 : 1));
     setState(() {});
     _planHideControls();
   }
 
   void _seek(double seconds) {
-    _controller?.seekTo(Duration(seconds: seconds.floor()));
+    unawaited(_controller?.seekTo(Duration(seconds: seconds.floor())));
   }
 
   void _onDrag(DragUpdateDetails d) {
@@ -567,7 +567,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
         Image.network(
           widget.video.thumbnailUrl,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => const ColoredBox(color: Colors.black),
+          errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
         ),
         const Center(
           child: CircularProgressIndicator(

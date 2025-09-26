@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/extensions/food_offer_extensions.dart';
@@ -24,7 +26,8 @@ class ListOfferCard extends StatefulWidget {
   State<ListOfferCard> createState() => _ListOfferCardState();
 }
 
-class _ListOfferCardState extends State<ListOfferCard> with SingleTickerProviderStateMixin {
+class _ListOfferCardState extends State<ListOfferCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _elevationAnimation;
@@ -36,20 +39,26 @@ class _ListOfferCardState extends State<ListOfferCard> with SingleTickerProvider
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1,
-      end: 0.97,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
-    _elevationAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    _scaleAnimation =
+        Tween<double>(
+          begin: 1,
+          end: 0.97,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeOutCubic,
+          ),
+        );
+    _elevationAnimation =
+        Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeOutCubic,
+          ),
+        );
   }
 
   @override
@@ -59,16 +68,17 @@ class _ListOfferCardState extends State<ListOfferCard> with SingleTickerProvider
   }
 
   void _handleTapDown(TapDownDetails details) {
-    _controller.forward();
+    unawaited(_controller.forward());
   }
 
   void _handleTapUp(TapUpDetails details) {
-    _controller.reverse();
+    unawaited(_controller.reverse());
   }
 
   void _handleTapCancel() {
-    _controller.reverse();
+    unawaited(_controller.reverse());
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -96,8 +106,8 @@ class _ListOfferCardState extends State<ListOfferCard> with SingleTickerProvider
                   BoxShadow(
                     color: Colors.black.withValues(
                       alpha: isDarkMode
-                        ? 0.3 + (0.1 * _elevationAnimation.value)
-                        : 0.08 + (0.06 * _elevationAnimation.value),
+                          ? 0.3 + (0.1 * _elevationAnimation.value)
+                          : 0.08 + (0.06 * _elevationAnimation.value),
                     ),
                     blurRadius: 10 + (8 * _elevationAnimation.value),
                     offset: Offset(0, 4 + (4 * _elevationAnimation.value)),

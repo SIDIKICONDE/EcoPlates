@@ -41,7 +41,9 @@ class OfferFormBasicFields extends ConsumerWidget {
             return null;
           },
           onChanged: (value) {
-            ref.read(offerFormProvider.notifier).updateTitle(value);
+            ref
+                .read<OfferFormNotifier>(offerFormProvider.notifier)
+                .updateTitle(value);
           },
         ),
 
@@ -70,7 +72,9 @@ class OfferFormBasicFields extends ConsumerWidget {
             return null;
           },
           onChanged: (value) {
-            ref.read(offerFormProvider.notifier).updateDescription(value);
+            ref
+                .read<OfferFormNotifier>(offerFormProvider.notifier)
+                .updateDescription(value);
           },
         ),
 
@@ -81,7 +85,7 @@ class OfferFormBasicFields extends ConsumerWidget {
           onTap: () => _showOfferTypeModal(context, ref, formState.type),
           child: InputDecorator(
             decoration: const InputDecoration(
-              labelText: 'Type d\'offre *',
+              labelText: "Type d'offre *",
               prefixIcon: Icon(Icons.restaurant_menu),
               border: OutlineInputBorder(),
               suffixIcon: Icon(Icons.arrow_drop_down),
@@ -97,7 +101,8 @@ class OfferFormBasicFields extends ConsumerWidget {
 
         // Catégorie alimentaire
         InkWell(
-          onTap: () => _showFoodCategoryModal(context, ref, formState.category),
+          onTap: () async =>
+              _showFoodCategoryModal(context, ref, formState.category),
           child: InputDecorator(
             decoration: const InputDecoration(
               labelText: 'Catégorie alimentaire *',
@@ -116,12 +121,12 @@ class OfferFormBasicFields extends ConsumerWidget {
     );
   }
 
-  void _showOfferTypeModal(
+  Future<void> _showOfferTypeModal(
     BuildContext context,
     WidgetRef ref,
     OfferType currentType,
-  ) {
-    showModalBottomSheet<void>(
+  ) async {
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) {
@@ -147,7 +152,9 @@ class OfferFormBasicFields extends ConsumerWidget {
                       title: Text(_getOfferTypeLabel(type)),
                       subtitle: Text(_getOfferTypeDescription(type)),
                       onTap: () {
-                        ref.read(offerFormProvider.notifier).updateType(type);
+                        ref
+                            .read<OfferFormNotifier>(offerFormProvider.notifier)
+                            .updateType(type);
                         Navigator.of(context).pop();
                       },
                     );
@@ -161,10 +168,10 @@ class OfferFormBasicFields extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     title: const Text('Type personnalisé'),
-                    subtitle: const Text('Définir votre propre type d\'offre'),
-                    onTap: () {
+                    subtitle: const Text("Définir votre propre type d'offre"),
+                    onTap: () async {
                       Navigator.of(context).pop();
-                      _showCustomTypeDialog(context, ref);
+                      await _showCustomTypeDialog(context, ref);
                     },
                   ),
                   // Espacement en bas
@@ -178,19 +185,22 @@ class OfferFormBasicFields extends ConsumerWidget {
     );
   }
 
-  void _showCustomTypeDialog(BuildContext context, WidgetRef ref) {
-    final TextEditingController controller = TextEditingController();
+  Future<void> _showCustomTypeDialog(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final controller = TextEditingController();
 
-    showDialog<void>(
+    await showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Type d\'offre personnalisé'),
+          title: const Text("Type d'offre personnalisé"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Entrez le nom de votre type d\'offre personnalisé :',
+                "Entrez le nom de votre type d'offre personnalisé :",
                 style: TextStyle(fontSize: 14),
               ),
               const SizedBox(height: 16),
@@ -199,7 +209,7 @@ class OfferFormBasicFields extends ConsumerWidget {
                 autofocus: true,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
-                  labelText: 'Type d\'offre',
+                  labelText: "Type d'offre",
                   hintText: 'Ex: Menu spécial, Box déjeuner...',
                   border: OutlineInputBorder(),
                 ),
@@ -207,10 +217,10 @@ class OfferFormBasicFields extends ConsumerWidget {
                   if (value.trim().isNotEmpty) {
                     // Pour l'instant, on utilise le type "autre" mais on stocke le nom personnalisé
                     ref
-                        .read(offerFormProvider.notifier)
+                        .read<OfferFormNotifier>(offerFormProvider.notifier)
                         .updateType(OfferType.autre);
                     ref
-                        .read(offerFormProvider.notifier)
+                        .read<OfferFormNotifier>(offerFormProvider.notifier)
                         .updateCustomType(value.trim());
                     Navigator.of(context).pop();
                   }
@@ -228,10 +238,10 @@ class OfferFormBasicFields extends ConsumerWidget {
                 if (controller.text.trim().isNotEmpty) {
                   // Pour l'instant, on utilise le type "autre" mais on stocke le nom personnalisé
                   ref
-                      .read(offerFormProvider.notifier)
+                      .read<OfferFormNotifier>(offerFormProvider.notifier)
                       .updateType(OfferType.autre);
                   ref
-                      .read(offerFormProvider.notifier)
+                      .read<OfferFormNotifier>(offerFormProvider.notifier)
                       .updateCustomType(controller.text.trim());
                   Navigator.of(context).pop();
                 }
@@ -244,10 +254,13 @@ class OfferFormBasicFields extends ConsumerWidget {
     );
   }
 
-  void _showCustomCategoryDialog(BuildContext context, WidgetRef ref) {
-    final TextEditingController controller = TextEditingController();
+  Future<void> _showCustomCategoryDialog(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final controller = TextEditingController();
 
-    showDialog<void>(
+    await showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -273,10 +286,10 @@ class OfferFormBasicFields extends ConsumerWidget {
                   if (value.trim().isNotEmpty) {
                     // Pour l'instant, on utilise la catégorie "autre" mais on stocke le nom personnalisé
                     ref
-                        .read(offerFormProvider.notifier)
+                        .read<OfferFormNotifier>(offerFormProvider.notifier)
                         .updateCategory(FoodCategory.autre);
                     ref
-                        .read(offerFormProvider.notifier)
+                        .read<OfferFormNotifier>(offerFormProvider.notifier)
                         .updateCustomCategory(value.trim());
                     Navigator.of(context).pop();
                   }
@@ -294,10 +307,10 @@ class OfferFormBasicFields extends ConsumerWidget {
                 if (controller.text.trim().isNotEmpty) {
                   // Pour l'instant, on utilise la catégorie "autre" mais on stocke le nom personnalisé
                   ref
-                      .read(offerFormProvider.notifier)
+                      .read<OfferFormNotifier>(offerFormProvider.notifier)
                       .updateCategory(FoodCategory.autre);
                   ref
-                      .read(offerFormProvider.notifier)
+                      .read<OfferFormNotifier>(offerFormProvider.notifier)
                       .updateCustomCategory(controller.text.trim());
                   Navigator.of(context).pop();
                 }
@@ -310,12 +323,12 @@ class OfferFormBasicFields extends ConsumerWidget {
     );
   }
 
-  void _showFoodCategoryModal(
+  Future<void> _showFoodCategoryModal(
     BuildContext context,
     WidgetRef ref,
     FoodCategory currentCategory,
-  ) {
-    showModalBottomSheet<void>(
+  ) async {
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) {
@@ -341,7 +354,7 @@ class OfferFormBasicFields extends ConsumerWidget {
                       title: Text(Categories.labelOf(category)),
                       onTap: () {
                         ref
-                            .read(offerFormProvider.notifier)
+                            .read<OfferFormNotifier>(offerFormProvider.notifier)
                             .updateCategory(category);
                         Navigator.of(context).pop();
                       },
@@ -357,9 +370,9 @@ class OfferFormBasicFields extends ConsumerWidget {
                     ),
                     title: const Text('Catégorie personnalisée'),
                     subtitle: const Text('Définir votre propre catégorie'),
-                    onTap: () {
+                    onTap: () async {
                       Navigator.of(context).pop();
-                      _showCustomCategoryDialog(context, ref);
+                      await _showCustomCategoryDialog(context, ref);
                     },
                   ),
                   // Espacement en bas
@@ -390,8 +403,8 @@ class OfferFormBasicFields extends ConsumerWidget {
       OfferType.plat => 'Plat préparé spécifique',
       OfferType.boulangerie => 'Produits de boulangerie et pâtisserie',
       OfferType.fruits => 'Fruits, légumes et produits frais',
-      OfferType.epicerie => 'Produits d\'épicerie générale',
-      OfferType.autre => 'Autre type d\'offre',
+      OfferType.epicerie => 'Produits d"épicerie générale',
+      OfferType.autre => "Autre type d'offre",
     };
   }
 }

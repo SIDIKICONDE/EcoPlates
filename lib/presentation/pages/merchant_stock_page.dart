@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,9 +24,9 @@ class MerchantStockPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return AdaptiveScaffold(
+    return const AdaptiveScaffold(
       appBar: MerchantStockAppBar(),
-      body: const Column(
+      body: Column(
         children: [
           // En-tête avec recherche et filtres
           _StockHeader(),
@@ -33,7 +35,7 @@ class MerchantStockPage extends ConsumerWidget {
           Expanded(child: _StockList()),
         ],
       ),
-      floatingActionButton: const StockCategoryFloatingMenu(),
+      floatingActionButton: StockCategoryFloatingMenu(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
@@ -77,8 +79,12 @@ class _StockList extends ConsumerWidget {
   }
 
   void _showItemDetails(BuildContext context, StockItem item) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => StockItemDetailPage(item: item)),
+    unawaited(
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => StockItemDetailPage(item: item),
+        ),
+      ),
     );
   }
 }

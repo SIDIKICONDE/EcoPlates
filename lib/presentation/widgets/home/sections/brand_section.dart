@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +16,7 @@ class BrandSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Récupérer les marques depuis le provider
     final brandsAsync = ref.watch(brandsProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,14 +36,14 @@ class BrandSection extends ConsumerWidget {
               TextButton(
                 onPressed: () {
                   // Navigation vers toutes les marques
-                  context.pushNamed(RouteConstants.allBrandsName);
+                  unawaited(context.pushNamed(RouteConstants.allBrandsName));
                 },
                 child: const Text('Voir tout'),
               ),
             ],
           ),
         ),
-        
+
         // Slider horizontal de cartes
         SizedBox(
           height: 100, // Hauteur ajustée pour les BrandCard
@@ -84,7 +86,7 @@ class BrandSection extends ConsumerWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
       ],
     );

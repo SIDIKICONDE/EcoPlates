@@ -46,7 +46,7 @@ class StockRepositoryImpl implements StockRepository {
     try {
       final model = _items.firstWhere((item) => item.id == id);
       return model.toEntity();
-    } catch (e) {
+    } on Exception catch (_) {
       return null;
     }
   }

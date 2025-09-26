@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
+
 /// Gestionnaire optimisé des vidéos avec pool de contrôleurs
-/// 
+///
 /// Permet de réutiliser les contrôleurs vidéo et d'optimiser
 /// les performances selon les directives EcoPlates
 class VideoPoolManager {
@@ -13,7 +14,7 @@ class VideoPoolManager {
 
   final Map<String, VideoPlayerController> _controllers = {};
   final Map<String, DateTime> _lastUsed = {};
-  
+
   static const int _maxPoolSize = 5;
   static const Duration _cacheTimeout = Duration(minutes: 5);
 
@@ -21,12 +22,12 @@ class VideoPoolManager {
   VideoPlayerController? getController(String videoUrl) {
     // Nettoie les contrôleurs expirés
     _cleanupExpiredControllers();
-    
+
     if (_controllers.containsKey(videoUrl)) {
       _lastUsed[videoUrl] = DateTime.now();
       return _controllers[videoUrl];
     }
-    
+
     return null;
   }
 
@@ -40,15 +41,15 @@ class VideoPoolManager {
     final controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
     _controllers[videoUrl] = controller;
     _lastUsed[videoUrl] = DateTime.now();
-    
+
     await controller.initialize();
     return controller;
   }
 
   /// Supprime tous les contrôleurs
-  void disposeAll() {
+  Future<void> disposeAll() async {
     for (final controller in _controllers.values) {
-      controller.dispose();
+      await controller.dispose();
     }
     _controllers.clear();
     _lastUsed.clear();
@@ -58,15 +59,15 @@ class VideoPoolManager {
   void _cleanupExpiredControllers() {
     final now = DateTime.now();
     final expiredKeys = <String>[];
-    
+
     for (final entry in _lastUsed.entries) {
       if (now.difference(entry.value) > _cacheTimeout) {
         expiredKeys.add(entry.key);
       }
     }
-    
+
     for (final key in expiredKeys) {
-      _controllers[key]?.dispose();
+      unawaited(_controllers[key]?.dispose());
       _controllers.remove(key);
       _lastUsed.remove(key);
     }
@@ -79,7 +80,7 @@ class VideoPoolManager {
       _lastUsed[videoUrl] = DateTime.now();
     } else {
       // Pool plein, dispose le contrôleur
-      controller.dispose();
+      unawaited(controller.dispose());
     }
   }
 
@@ -91,7 +92,7 @@ class VideoPoolManager {
         .reduce((a, b) => a.value.isBefore(b.value) ? a : b)
         .key;
 
-    _controllers[oldestKey]?.dispose();
+    unawaited(_controllers[oldestKey]?.dispose());
     _controllers.remove(oldestKey);
     _lastUsed.remove(oldestKey);
   }
@@ -110,7 +111,8 @@ class OptimizedVideoPlayer extends StatefulWidget {
   final String videoUrl;
   final String thumbnailUrl;
   final bool play;
-  final Widget Function(BuildContext context, VideoPlayerController? controller) builder;
+  final Widget Function(BuildContext context, VideoPlayerController? controller)
+  builder;
 
   @override
   State<OptimizedVideoPlayer> createState() => _OptimizedVideoPlayerState();
@@ -131,7 +133,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
   @override
   void didUpdateWidget(OptimizedVideoPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (widget.play != oldWidget.play) {
       if (widget.play) {
         unawaited(_initializeController());
@@ -150,21 +152,22 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
       final poolManager = VideoPoolManager(); // Singleton géré par Riverpod
 
       // Essaie d'obtenir un contrôleur existant du pool ou en crée un nouveau
-      _controller = poolManager.getController(widget.videoUrl) ??
+      _controller =
+          poolManager.getController(widget.videoUrl) ??
           await poolManager.createController(widget.videoUrl);
 
       if (_controller != null && mounted) {
-        _controller!.setLooping(true);
-        _controller!.setVolume(0); // Muet par défaut
+        unawaited(_controller!.setLooping(true));
+        unawaited(_controller!.setVolume(0)); // Muet par défaut
         await _controller!.play();
         if (mounted) {
           setState(() {});
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint("Erreur lors de l'initialisation de la vidéo: $e");
       // Nettoie en cas d'erreur selon les directives EcoPlates
-      _controller?.dispose();
+      unawaited(_controller?.dispose());
       _controller = null;
       if (mounted) {
         setState(() {});
@@ -175,7 +178,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
   }
 
   void _pauseController() {
-    _controller?.pause();
+    unawaited(_controller?.pause());
   }
 
   @override

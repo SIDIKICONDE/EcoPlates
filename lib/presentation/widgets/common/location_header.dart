@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -133,10 +135,10 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
 
     if (!locationState.isActive) {
       // Activer la localisation
-      ref.read(locationStateProvider.notifier).toggleLocation();
+      unawaited(ref.read(locationStateProvider.notifier).toggleLocation());
     } else {
       // Ouvrir la page Browse avec la vue carte
-      ref.read(browseViewModeProvider.notifier).state = BrowseViewMode.map;
+      ref.read(browseViewModeProvider.notifier).setMode(BrowseViewMode.map);
 
       // Naviguer vers la page Parcourir via GoRouter (met à jour l'onglet)
       context.go(RouteConstants.consumerBrowse);
@@ -144,10 +146,12 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
   }
 
   void _showOptionsMenu(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const LocationOptionsSheet(),
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const LocationOptionsSheet(),
+      ),
     );
   }
 }
@@ -216,8 +220,9 @@ class LocationOptionsSheet extends ConsumerWidget {
                 Navigator.pop(context);
 
                 // Ouvrir la page Browse avec la vue carte
-                ref.read(browseViewModeProvider.notifier).state =
-                    BrowseViewMode.map;
+                ref
+                    .read(browseViewModeProvider.notifier)
+                    .setMode(BrowseViewMode.map);
 
                 // Naviguer vers la page Parcourir via GoRouter
                 context.go(RouteConstants.consumerBrowse);
@@ -229,7 +234,9 @@ class LocationOptionsSheet extends ConsumerWidget {
               icon: Icons.refresh,
               title: 'Actualiser la position',
               onTap: () {
-                ref.read(userLocationTextProvider.notifier).refreshAddress();
+                unawaited(
+                  ref.read(userLocationTextProvider.notifier).refreshAddress(),
+                );
                 Navigator.pop(context);
               },
             ),
@@ -250,7 +257,9 @@ class LocationOptionsSheet extends ConsumerWidget {
               icon: Icons.location_off,
               title: 'Désactiver la localisation',
               onTap: () {
-                ref.read(locationStateProvider.notifier).toggleLocation();
+                unawaited(
+                  ref.read(locationStateProvider.notifier).toggleLocation(),
+                );
                 Navigator.pop(context);
               },
             ),

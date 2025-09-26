@@ -8,14 +8,14 @@ class OfferService {
   /// Crée une nouvelle offre
   Future<void> createOffer(FoodOffer offer) async {
     // Simulation d'un appel API
-    await Future.delayed(const Duration(seconds: 1));
+    await Future<void>.delayed(const Duration(seconds: 1));
     _offers.add(offer);
   }
 
   /// Met à jour une offre existante
   Future<void> updateOffer(String offerId, Map<String, dynamic> updates) async {
     // Simulation d'un appel API
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future<void>.delayed(const Duration(milliseconds: 500));
 
     final offerIndex = _offers.indexWhere((o) => o.id == offerId);
     if (offerIndex == -1) {
@@ -29,7 +29,7 @@ class OfferService {
   /// Supprime une offre
   Future<void> deleteOffer(String offerId) async {
     // Simulation d'un appel API
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
 
     final offerIndex = _offers.indexWhere((o) => o.id == offerId);
     if (offerIndex == -1) {
@@ -42,11 +42,11 @@ class OfferService {
   /// Récupère une offre par son ID
   Future<FoodOffer?> getOfferById(String offerId) async {
     // Simulation d'un appel API
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future<void>.delayed(const Duration(milliseconds: 200));
 
     try {
       return _offers.firstWhere((o) => o.id == offerId);
-    } catch (e) {
+    } on Exception catch (_) {
       return null;
     }
   }
@@ -54,7 +54,7 @@ class OfferService {
   /// Récupère toutes les offres d'un marchand
   Future<List<FoodOffer>> getOffersByMerchant(String merchantId) async {
     // Simulation d'un appel API
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
 
     return _offers.where((o) => o.merchantId == merchantId).toList();
   }
@@ -69,7 +69,7 @@ class OfferService {
     double? radiusKm,
   }) async {
     // Simulation d'un appel API
-    await Future.delayed(const Duration(milliseconds: 400));
+    await Future<void>.delayed(const Duration(milliseconds: 400));
 
     var results = _offers;
 

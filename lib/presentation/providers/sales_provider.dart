@@ -42,10 +42,38 @@ class SalesFilterState {
   }
 }
 
+/// Notifier pour les filtres de ventes
+class SalesFilterNotifier extends Notifier<SalesFilterState> {
+  @override
+  SalesFilterState build() {
+    return const SalesFilterState();
+  }
+
+  void updatePeriod(SalesPeriodFilter period) {
+    state = state.copyWith(period: period);
+  }
+
+  void updateStatus(SaleStatus? status) {
+    state = state.copyWith(status: status);
+  }
+
+  void updateDateRange(DateTime? startDate, DateTime? endDate) {
+    state = state.copyWith(startDate: startDate, endDate: endDate);
+  }
+
+  void updateSearchQuery(String query) {
+    state = state.copyWith(searchQuery: query);
+  }
+
+  void clearFilters() {
+    state = const SalesFilterState();
+  }
+}
+
 /// Provider pour les filtres de ventes
-final salesFilterProvider = StateProvider<SalesFilterState>((ref) {
-  return const SalesFilterState();
-});
+final salesFilterProvider = NotifierProvider<SalesFilterNotifier, SalesFilterState>(
+  SalesFilterNotifier.new,
+);
 
 /// Provider pour les ventes du marchand
 final salesProvider = AsyncNotifierProvider<SalesNotifier, List<Sale>>(() {

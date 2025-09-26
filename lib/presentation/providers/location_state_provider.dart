@@ -4,13 +4,20 @@ import 'package:geolocator/geolocator.dart';
 import '../../core/services/geo_location_service.dart';
 
 /// Provider centralisé pour gérer l'état de localisation dans toute l'application
-/// 
+///
 /// Synchronise l'état entre tous les boutons GPS de l'interface
-class LocationStateNotifier extends StateNotifier<LocationState> {
-  LocationStateNotifier(this.ref) : super(const LocationState());
-  
-  final Ref ref;
-  final _geoService = GeoLocationService.instance;
+class LocationStateNotifier extends Notifier<LocationState> {
+  final GeoLocationService _geoService = GeoLocationService.instance;
+
+  @override
+  LocationState build() {
+    ref.onDispose(() {
+      if (state.isActive) {
+        _geoService.stopLocationTracking();
+      }
+    });
+    return const LocationState();
+  }
 
   /// Active/désactive la localisation
   Future<void> toggleLocation() async {
@@ -21,15 +28,15 @@ class LocationStateNotifier extends StateNotifier<LocationState> {
     } else {
       // Activer
       state = state.copyWith(isActive: true, isLoading: true);
-      
+
       try {
         // Demander la position actuelle
         final position = await _geoService.getCurrentPosition();
-        
+
         if (position != null) {
           // Démarrer le tracking
           await _geoService.startLocationTracking();
-          
+
           state = state.copyWith(
             isActive: true,
             isLoading: false,
@@ -45,7 +52,7 @@ class LocationStateNotifier extends StateNotifier<LocationState> {
             errorMessage: "Impossible d'activer la localisation",
           );
         }
-      } catch (e) {
+      } on Exception catch (e) {
         state = state.copyWith(
           isActive: false,
           isLoading: false,
@@ -60,14 +67,6 @@ class LocationStateNotifier extends StateNotifier<LocationState> {
     if (state.isActive) {
       state = state.copyWith(currentPosition: position);
     }
-  }
-  
-  @override
-  void dispose() {
-    if (state.isActive) {
-      _geoService.stopLocationTracking();
-    }
-    super.dispose();
   }
 }
 
@@ -105,6 +104,7 @@ class LocationState {
 }
 
 /// Provider pour gérer l'état de localisation centralisé
-final locationStateProvider = StateNotifierProvider<LocationStateNotifier, LocationState>((ref) {
-  return LocationStateNotifier(ref);
-});
+final locationStateProvider =
+    NotifierProvider<LocationStateNotifier, LocationState>(
+      LocationStateNotifier.new,
+    );

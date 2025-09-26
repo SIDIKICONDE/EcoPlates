@@ -45,7 +45,7 @@ class StoreStatsCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Vue d\'ensemble',
+                  "Vue d'ensemble",
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: theme.colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
@@ -53,7 +53,7 @@ class StoreStatsCard extends ConsumerWidget {
                 ),
                 const Spacer(),
                 Text(
-                  'Aujourd\'hui',
+                  "Aujourd'hui",
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onPrimaryContainer.withValues(
                       alpha: 0.7,

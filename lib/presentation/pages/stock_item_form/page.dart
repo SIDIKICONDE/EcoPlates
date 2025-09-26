@@ -8,6 +8,7 @@ import '../../providers/stock_items_provider.dart';
 import '../../widgets/stock/stock_threshold_field.dart';
 import 'modals.dart';
 import 'utils.dart';
+
 /// Page unifiée pour créer ou modifier un article de stock
 ///
 /// Si [item] est null, on est en mode création
@@ -193,11 +194,11 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
       if (mounted) {
         context.pop();
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur : ${e}'),
+            content: Text('Erreur : $e'),
             backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
           ),
@@ -237,7 +238,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
       ),
     );
 
-    if (confirmed == true && mounted) {
+    if ((confirmed ?? false) && mounted) {
       try {
         await ref.read(stockItemsProvider.notifier).deleteItem(widget.item!.id);
 
@@ -251,11 +252,11 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
           );
           context.pop();
         }
-      } catch (e) {
+      } on Exception catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Erreur lors de la suppression : ${e}'),
+              content: Text('Erreur lors de la suppression : $e'),
               backgroundColor: Theme.of(context).colorScheme.error,
               behavior: SnackBarBehavior.floating,
             ),
@@ -405,8 +406,8 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                   context,
                   _selectedCategory,
                   (category) => setState(() => _selectedCategory = category),
-                  isEditMode,
                   () => setState(() => _hasChanges = true),
+                  isEditMode: isEditMode,
                 ),
                 child: InputDecorator(
                   decoration: const InputDecoration(
@@ -434,8 +435,8 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                   context,
                   _selectedStatus,
                   _onStatusChanged,
-                  isEditMode,
                   () => setState(() => _hasChanges = true),
+                  isEditMode: isEditMode,
                 ),
                 child: InputDecorator(
                   decoration: const InputDecoration(
@@ -536,8 +537,8 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                       onTap: () => showUnitModal(
                         context,
                         _unitController,
-                        isEditMode,
                         () => setState(() => _hasChanges = true),
+                        isEditMode: isEditMode,
                       ),
                       child: InputDecorator(
                         decoration: const InputDecoration(
@@ -573,11 +574,13 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
               ),
 
               const SizedBox(height: 16),
-              
+
               // Seuil d'alerte de stock faible
               StockThresholdField(
                 controller: _thresholdController,
-                unit: _unitController.text.isEmpty ? 'pièce' : _unitController.text,
+                unit: _unitController.text.isEmpty
+                    ? 'pièce'
+                    : _unitController.text,
                 onChanged: (_) {
                   if (isEditMode && !_hasChanges) {
                     setState(() => _hasChanges = true);

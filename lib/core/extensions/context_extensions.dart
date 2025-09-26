@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-
 import '../error/failures.dart';
 
 /// Extensions pour BuildContext pour faciliter l'affichage d'erreurs et de notifications
@@ -180,16 +180,18 @@ extension ContextExtensions on BuildContext {
   /// Affiche un loading dialog
   void showLoadingDialog([String? message]) {
     if (this is! Element || !(this as Element).mounted) return;
-    showDialog<void>(
-      context: this,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        content: Row(
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(width: 20),
-            Expanded(child: Text(message ?? 'Chargement...')),
-          ],
+    unawaited(
+      showDialog<void>(
+        context: this,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          content: Row(
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(width: 20),
+              Expanded(child: Text(message ?? 'Chargement...')),
+            ],
+          ),
         ),
       ),
     );
@@ -270,29 +272,27 @@ extension ContextExtensions on BuildContext {
   // === Méthodes privées ===
 
   Color _getErrorColor(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure _:
-        return Colors.orange;
-      case ValidationFailure _:
-        return Colors.amber;
-      case AuthenticationFailure _:
-      case AuthorizationFailure _:
-        return Colors.red;
-      case NotFoundFailure _:
-        return Colors.blue;
-      default:
-        return Colors.red;
+    if (failure is NetworkFailure) {
+      return Colors.orange;
+    } else if (failure is ValidationFailure) {
+      return Colors.amber;
+    } else if (failure is AuthenticationFailure ||
+        failure is AuthorizationFailure) {
+      return Colors.red;
+    } else if (failure is NotFoundFailure) {
+      return Colors.blue;
+    } else {
+      return Colors.red;
     }
   }
 
   Duration _getErrorDuration(Failure failure) {
-    switch (failure.runtimeType) {
-      case ValidationFailure _:
-        return const Duration(seconds: 4);
-      case NetworkFailure _:
-        return const Duration(seconds: 6);
-      default:
-        return const Duration(seconds: 3);
+    if (failure is ValidationFailure) {
+      return const Duration(seconds: 4);
+    } else if (failure is NetworkFailure) {
+      return const Duration(seconds: 6);
+    } else {
+      return const Duration(seconds: 3);
     }
   }
 }
@@ -301,7 +301,8 @@ extension ContextExtensions on BuildContext {
 class BottomSheetOption<T> {
   const BottomSheetOption({
     required this.title,
-    required this.value, this.subtitle,
+    required this.value,
+    this.subtitle,
     this.icon,
   });
 

@@ -10,17 +10,12 @@ enum AppMode {
   onboarding, // Mode onboarding (pas encore connecté)
 }
 
-/// Provider pour le mode actuel de l'application
-final appModeProvider = StateNotifierProvider<AppModeNotifier, AppMode>((ref) {
-  return AppModeNotifier();
-});
-
-/// Provider pour l'utilisateur actuel
-final currentUserProvider = StateProvider<User?>((ref) => null);
-
 /// Notifier pour gérer le mode de l'application
-class AppModeNotifier extends StateNotifier<AppMode> {
-  AppModeNotifier() : super(AppMode.consumer); // Démarrage direct en mode consommateur
+class AppModeNotifier extends Notifier<AppMode> {
+  @override
+  AppMode build() {
+    return AppMode.consumer; // Démarrage direct en mode consommateur
+  }
 
   /// Change le mode de l'application selon le type d'utilisateur
   void setModeFromUser(User user) {
@@ -44,6 +39,32 @@ class AppModeNotifier extends StateNotifier<AppMode> {
     state = mode;
   }
 }
+
+/// Notifier pour l'utilisateur actuel
+class CurrentUserNotifier extends Notifier<User?> {
+  @override
+  User? build() {
+    return null;
+  }
+
+  void setUser(User? user) {
+    state = user;
+  }
+
+  void clearUser() {
+    state = null;
+  }
+}
+
+/// Provider pour le mode actuel de l'application
+final appModeProvider = NotifierProvider<AppModeNotifier, AppMode>(
+  AppModeNotifier.new,
+);
+
+/// Provider pour l'utilisateur actuel
+final currentUserProvider = NotifierProvider<CurrentUserNotifier, User?>(
+  CurrentUserNotifier.new,
+);
 
 /// Provider pour déterminer si on doit afficher l'interface consommateur
 final isConsumerModeProvider = Provider<bool>((ref) {

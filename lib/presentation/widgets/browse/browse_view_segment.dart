@@ -44,7 +44,7 @@ class BrowseViewSegment extends ConsumerWidget {
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                ref.read(browseViewModeProvider.notifier).state = mode;
+                ref.read(browseViewModeProvider.notifier).setMode(mode);
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),

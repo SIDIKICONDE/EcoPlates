@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,7 +21,7 @@ class BrowseMapView extends ConsumerStatefulWidget {
 
 class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
   // Utiliser l'instance singleton pour éviter les reconstructions infinies
-  MapService get _mapService => MapService.instance;
+  MapService get _mapService => MapService();
 
   // Position initiale (Paris centre par défaut)
   static const LatLng _initialPosition = LatLng(48.8566, 2.3522);
@@ -49,7 +51,7 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
     _mapService.mapController = controller;
 
     // Essayer de centrer sur la position utilisateur en priorité
-    _tryCenterOnUserLocation();
+    unawaited(_tryCenterOnUserLocation());
   }
 
   Future<void> _tryCenterOnUserLocation() async {
@@ -65,7 +67,7 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
           await _mapService.showAllOffers(widget.offers);
         }
       }
-    } catch (e) {
+    } on Exception {
       // En cas d'erreur, montrer les offres si disponibles
       if (widget.offers.isNotEmpty) {
         await _mapService.showAllOffers(widget.offers);
@@ -78,12 +80,12 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
       // Activer automatiquement la localisation si elle n'est pas activée
       final isLocationActive = ref.read(isLocationActiveProvider);
       if (!isLocationActive) {
-        ref.read(isLocationActiveProvider.notifier).state = true;
+        ref.read(isLocationActiveProvider.notifier).set(value: true);
       }
 
       // Utiliser le provider pour centrer la carte et attendre le résultat
       await ref.read(centerMapOnUserProvider.future);
-    } catch (e) {
+    } on Exception {
       // Ne rien afficher en cas d'erreur de localisation
     }
   }

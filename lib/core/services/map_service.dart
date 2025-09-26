@@ -8,8 +8,11 @@ import 'geo_location_service.dart';
 
 /// Service pour gérer la carte Google Maps et les marqueurs d'offres
 class MapService {
-  /// Constructeur public (pour compatibilité)
-  factory MapService() => instance;
+  /// Constructeur public (singleton)
+  factory MapService() {
+    _instance ??= MapService._();
+    return _instance!;
+  }
 
   /// Constructeur privé pour singleton
   MapService._();
@@ -20,12 +23,6 @@ class MapService {
 
   /// Instance singleton
   static MapService? _instance;
-
-  /// Obtenir l'instance singleton
-  static MapService get instance {
-    _instance ??= MapService._();
-    return _instance!;
-  }
 
   /// Stream des marqueurs pour mettre à jour l'UI
   Stream<Set<Marker>> get markersStream => _markersController.stream;
@@ -83,7 +80,12 @@ class MapService {
           icon: _getMarkerIcon(offer),
           onTap: () {
             // Animation ou zoom sur le marqueur
-            _animateToMarker(offer.location.latitude, offer.location.longitude);
+            unawaited(
+              _animateToMarker(
+                offer.location.latitude,
+                offer.location.longitude,
+              ),
+            );
           },
         );
         _markers.add(marker);
@@ -189,7 +191,7 @@ class MapService {
 
   /// Libère les ressources
   void dispose() {
-    _markersController.close();
+    unawaited(_markersController.close());
     _mapController?.dispose();
   }
 

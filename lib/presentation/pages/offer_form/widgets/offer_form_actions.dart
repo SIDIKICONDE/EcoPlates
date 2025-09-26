@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +22,7 @@ class OfferFormActions extends ConsumerWidget {
           onTap: () => _showStatusModal(context, ref, formState.status),
           child: InputDecorator(
             decoration: const InputDecoration(
-              labelText: 'Statut de l\'offre',
+              labelText: "Statut de l'offre",
               prefixIcon: Icon(Icons.toggle_on),
               border: OutlineInputBorder(),
               suffixIcon: Icon(Icons.arrow_drop_down),
@@ -63,7 +64,9 @@ class OfferFormActions extends ConsumerWidget {
           ),
           onChanged: (value) {
             final time = int.tryParse(value) ?? 30;
-            ref.read(offerFormProvider.notifier).updatePreparationTime(time);
+            ref
+                .read<OfferFormNotifier>(offerFormProvider.notifier)
+                .updatePreparationTime(time);
           },
         ),
 
@@ -84,7 +87,9 @@ class OfferFormActions extends ConsumerWidget {
           ),
           onChanged: (value) {
             final co2 = int.tryParse(value) ?? 500;
-            ref.read(offerFormProvider.notifier).updateCo2Saved(co2);
+            ref
+                .read<OfferFormNotifier>(offerFormProvider.notifier)
+                .updateCo2Saved(co2);
           },
         ),
 
@@ -107,7 +112,9 @@ class OfferFormActions extends ConsumerWidget {
                 .map((tag) => tag.trim())
                 .where((tag) => tag.isNotEmpty)
                 .toList();
-            ref.read(offerFormProvider.notifier).updateTags(tags);
+            ref
+                .read<OfferFormNotifier>(offerFormProvider.notifier)
+                .updateTags(tags);
           },
         ),
       ],
@@ -119,7 +126,7 @@ class OfferFormActions extends ConsumerWidget {
     WidgetRef ref,
     OfferStatus currentStatus,
   ) {
-    showModalBottomSheet<void>(
+    unawaited(showModalBottomSheet<void>(
       context: context,
       builder: (context) {
         return SafeArea(
@@ -140,7 +147,9 @@ class OfferFormActions extends ConsumerWidget {
                 subtitle: Text(_getStatusDescription(status)),
                 trailing: isSelected ? const Icon(Icons.check) : null,
                 onTap: () {
-                  ref.read(offerFormProvider.notifier).updateStatus(status);
+                  ref
+                      .read<OfferFormNotifier>(offerFormProvider.notifier)
+                      .updateStatus(status);
                   Navigator.of(context).pop();
                 },
               );
@@ -148,7 +157,7 @@ class OfferFormActions extends ConsumerWidget {
           ),
         );
       },
-    );
+    ));
   }
 
   Color _getStatusColor(OfferStatus status) {

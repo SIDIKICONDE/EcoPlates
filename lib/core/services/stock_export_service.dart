@@ -49,21 +49,21 @@ class StockExportService {
       await file.writeAsString(csvData);
 
       // Vérifier que le fichier existe et a du contenu
-      final fileExists = await file.exists();
-      final fileLength = await file.length();
+      final fileExists = file.existsSync();
+      final fileLength = file.lengthSync();
       if (kDebugMode) {
         // Debug: File created: $fileExists, size: $fileLength bytes
       }
 
       if (!fileExists || fileLength == 0) {
-        throw Exception('Échec de création du fichier d\'export');
+        throw Exception("Échec de création du fichier d'export");
       }
 
       // Partager le fichier ou sauvegarder sur Windows
       if (kDebugMode) {
         // Debug: Sharing file
       }
-      
+
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         // Sur desktop, sauvegarder dans le dossier Documents
         await _saveToDesktop(file, fileName);
@@ -71,7 +71,7 @@ class StockExportService {
           // Debug: File saved to desktop
         }
       } else {
-        // Sur mobile, utiliser Share
+        // Sur mobile, utiliser SharePlus
         await Share.shareXFiles(
           [XFile(file.path)],
           text: 'Export des données de stock EcoPlates',
@@ -82,10 +82,9 @@ class StockExportService {
           // Debug: Share successful
         }
       }
-    } catch (error, stackTrace) {
+    } catch (error) {
       if (kDebugMode) {
         // Debug: Error in exportStockData: $error
-        // Debug: StackTrace: $stackTrace
       }
       rethrow;
     }
@@ -106,7 +105,10 @@ class StockExportService {
       'Dernière mise à jour',
     ];
 
-    final rows = items.map((item) {
+    final dataRows = items.map((item) {
+      final outOfStockText = item.isOutOfStock ? 'Oui' : 'Non';
+      final description = item.description ?? '';
+
       return [
         item.sku,
         item.name,
@@ -115,41 +117,42 @@ class StockExportService {
         item.unit,
         item.quantity.toString(),
         item.status.label,
-        item.isOutOfStock ? 'Oui' : 'Non',
-        item.description ?? '',
+        outOfStockText,
+        description,
         DateFormat('dd/MM/yyyy HH:mm').format(item.updatedAt),
       ];
     }).toList();
 
-    // Ajouter les en-têtes au début
-    rows.insert(0, headers);
+    // Créer la liste complète avec les en-têtes
+    final rows = [headers, ...dataRows];
 
     // Convertir en CSV
     return const ListToCsvConverter().convert(rows);
   }
-  
+
   /// Sauvegarde le fichier sur le bureau (Windows/Linux/macOS)
   Future<void> _saveToDesktop(File tempFile, String fileName) async {
     try {
       // Obtenir le répertoire Documents
-      final Directory? documentsDir = await getDownloadsDirectory();
+      final documentsDir = await getDownloadsDirectory();
       if (documentsDir == null) {
-        throw Exception('Impossible d\'accéder au dossier Téléchargements');
+        throw Exception("Impossible d'accéder au dossier Téléchargements");
       }
-      
+
       // Créer le fichier de destination
-      final destinationPath = '${documentsDir.path}${Platform.pathSeparator}$fileName';
+      final destinationPath =
+          '${documentsDir.path}${Platform.pathSeparator}$fileName';
       final destinationFile = File(destinationPath);
-      
+
       // Copier le fichier temporaire vers la destination
       await tempFile.copy(destinationPath);
-      
+
       if (kDebugMode) {
         print('DEBUG Service: Fichier sauvegardé dans: $destinationPath');
       }
-      
+
       // Vérifier que le fichier a bien été créé
-      if (!await destinationFile.exists()) {
+      if (!destinationFile.existsSync()) {
         throw Exception('Echec de la sauvegarde du fichier');
       }
     } catch (e) {

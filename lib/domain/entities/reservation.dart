@@ -4,8 +4,8 @@ class Reservation {
     required this.offerId,
     required this.title,
     required this.quantity,
-    this.stockItemId,
     required this.createdAt,
+    this.stockItemId,
   });
 
   final String id;

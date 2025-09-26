@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -43,11 +45,11 @@ class MerchantSection extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).push(
+                  unawaited(Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (context) => const AllMerchantsScreen(),
                     ),
-                  );
+                  ));
                 },
                 child: const Text('Voir tout'),
               ),

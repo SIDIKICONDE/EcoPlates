@@ -58,9 +58,7 @@ class SalesFilterChips extends ConsumerWidget {
               );
             }).toList(),
             onSelected: (period) {
-              ref.read(salesFilterProvider.notifier).state = filters.copyWith(
-                period: period,
-              );
+              ref.read(salesFilterProvider.notifier).updatePeriod(period);
             },
           ),
 
@@ -132,13 +130,9 @@ class SalesFilterChips extends ConsumerWidget {
             },
             onSelected: (value) {
               if (value is _StatusMenuCmd && value == _StatusMenuCmd.all) {
-                ref.read(salesFilterProvider.notifier).state = filters.copyWith(
-                  status: null,
-                );
+                ref.read(salesFilterProvider.notifier).updateStatus(null);
               } else if (value is SaleStatus) {
-                ref.read(salesFilterProvider.notifier).state = filters.copyWith(
-                  status: value,
-                );
+                ref.read(salesFilterProvider.notifier).updateStatus(value);
               }
             },
           ),
@@ -164,9 +158,7 @@ class SalesFilterChips extends ConsumerWidget {
               ),
               style: const TextStyle(fontSize: 14),
               onChanged: (value) {
-                ref.read(salesFilterProvider.notifier).state = filters.copyWith(
-                  searchQuery: value,
-                );
+                ref.read(salesFilterProvider.notifier).updateSearchQuery(value);
               },
             ),
           ),

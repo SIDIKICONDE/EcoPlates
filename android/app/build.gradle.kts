@@ -29,6 +29,12 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        // Inject Google Maps API key securely from local.properties or environment
+        val googleMapsApiKey: String = project.findProperty("googleMapsApiKey") as String? 
+            ?: System.getenv("GOOGLE_MAPS_API_KEY") 
+            ?: "GOOGLE_MAPS_API_KEY_NOT_CONFIGURED"
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsApiKey
     }
 
     buildTypes {
@@ -45,5 +51,5 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

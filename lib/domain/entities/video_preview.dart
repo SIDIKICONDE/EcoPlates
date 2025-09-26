@@ -38,9 +38,9 @@ class VideoPreview extends Equatable {
 
   /// Label sémantique pour l'accessibilité
   String get semanticLabel {
-    final buffer = StringBuffer();
-    buffer.write('Vidéo: $title par $merchantName. ');
-    buffer.write('Durée: ${_formatDuration(duration)}. ');
+    final buffer = StringBuffer()
+      ..write('Vidéo: $title par $merchantName. ')
+      ..write('Durée: ${_formatDuration(duration)}. ');
     if (viewCount > 0) {
       buffer.write('$viewCount vues. ');
     }

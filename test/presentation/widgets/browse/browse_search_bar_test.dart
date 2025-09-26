@@ -1,9 +1,26 @@
+import 'package:ecoplates/presentation/providers/browse_search_provider.dart';
+import 'package:ecoplates/presentation/widgets/browse/browse_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:ecoplates/presentation/providers/browse_search_provider.dart';
-import 'package:ecoplates/presentation/widgets/browse/browse_search_bar.dart';
+class TestSearchQueryNotifier extends SearchQueryNotifier {
+  TestSearchQueryNotifier(String initialState) {
+    state = initialState;
+  }
+}
+
+class TestBrowseFiltersNotifier extends BrowseFiltersNotifier {
+  TestBrowseFiltersNotifier(BrowseFilters initialState) {
+    state = initialState;
+  }
+}
+
+class TestLocationActiveNotifier extends LocationActiveNotifier {
+  TestLocationActiveNotifier(bool initialState) {
+    state = initialState;
+  }
+}
 
 void main() {
   group('BrowseSearchBar', () {
@@ -24,9 +41,13 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
-            isLocationActiveProvider.overrideWith((ref) => false),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseSearchBar())),
         ),
@@ -47,9 +68,13 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
-            isLocationActiveProvider.overrideWith((ref) => false),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseSearchBar())),
         ),
@@ -70,9 +95,15 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => 'test initial'),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
-            isLocationActiveProvider.overrideWith((ref) => false),
+            searchQueryProvider.overrideWith(
+              () => TestSearchQueryNotifier('test initial'),
+            ),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseSearchBar())),
         ),
@@ -92,11 +123,15 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
-              searchQueryProvider.overrideWith((ref) => ''),
-              browseFiltersProvider.overrideWith(
-                (ref) => const BrowseFilters(),
+              searchQueryProvider.overrideWith(
+                () => TestSearchQueryNotifier(''),
               ),
-              isLocationActiveProvider.overrideWith((ref) => true),
+              browseFiltersProvider.overrideWith(
+                () => TestBrowseFiltersNotifier(const BrowseFilters()),
+              ),
+              isLocationActiveProvider.overrideWith(
+                () => TestLocationActiveNotifier(true),
+              ),
             ],
             child: const MaterialApp(home: Scaffold(body: BrowseSearchBar())),
           ),
@@ -115,11 +150,16 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
-              searchQueryProvider.overrideWith((ref) => ''),
-              browseFiltersProvider.overrideWith(
-                (ref) => const BrowseFilters(minPrice: 5),
+              searchQueryProvider.overrideWith(
+                () => TestSearchQueryNotifier(''),
               ),
-              isLocationActiveProvider.overrideWith((ref) => false),
+              browseFiltersProvider.overrideWith(
+                () =>
+                    TestBrowseFiltersNotifier(const BrowseFilters(minPrice: 5)),
+              ),
+              isLocationActiveProvider.overrideWith(
+                () => TestLocationActiveNotifier(false),
+              ),
             ],
             child: const MaterialApp(home: Scaffold(body: BrowseSearchBar())),
           ),
@@ -138,15 +178,19 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
             browseFiltersProvider.overrideWith(
-              (ref) => const BrowseFilters(
-                minPrice: 5,
-                categories: ['diner'],
-                availableNow: true,
+              () => TestBrowseFiltersNotifier(
+                const BrowseFilters(
+                  minPrice: 5,
+                  categories: ['diner'],
+                  availableNow: true,
+                ),
               ),
             ),
-            isLocationActiveProvider.overrideWith((ref) => false),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseSearchBar())),
         ),
@@ -163,9 +207,13 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
-            isLocationActiveProvider.overrideWith((ref) => false),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseSearchBar())),
         ),
@@ -185,9 +233,13 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
-            isLocationActiveProvider.overrideWith((ref) => false),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseSearchBar())),
         ),

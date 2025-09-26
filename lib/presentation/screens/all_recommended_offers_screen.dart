@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -131,8 +133,11 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
     );
   }
 
-  void _navigateToOfferDetail(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet<void>(
+  Future<void> _navigateToOfferDetail(
+    BuildContext context,
+    FoodOffer offer,
+  ) async {
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -231,156 +236,161 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
   }
 
   void _showFilterBottomSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Filtrer les offres',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Filtres par catégorie
+                Text(
+                  'Catégorie',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    FilterChip(
+                      label: const Text('Boulangerie'),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('Fruits & Légumes'),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('Plats préparés'),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('Snacks'),
+                      onSelected: (selected) {},
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // Filtres par régime
+                Text(
+                  'Régime alimentaire',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    FilterChip(
+                      label: const Text('Végétarien'),
+                      avatar: const Icon(Icons.eco, size: 18),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('Vegan'),
+                      avatar: const Icon(Icons.spa, size: 18),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('Sans gluten'),
+                      onSelected: (selected) {},
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // Filtres par prix
+                Text('Prix', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    FilterChip(
+                      label: const Text('Gratuit'),
+                      avatar: const Icon(Icons.star, size: 18),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('< 5€'),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('5€ - 10€'),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('> 10€'),
+                      onSelected: (selected) {},
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 30),
+
+                // Boutons d'action
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          // Réinitialiser les filtres
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Réinitialiser'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Appliquer les filtres
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Filtres appliqués'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        child: const Text('Appliquer'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          );
+        },
       ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Filtrer les offres',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // Filtres par catégorie
-              Text('Catégorie', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  FilterChip(
-                    label: const Text('Boulangerie'),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('Fruits & Légumes'),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('Plats préparés'),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('Snacks'),
-                    onSelected: (selected) {},
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Filtres par régime
-              Text(
-                'Régime alimentaire',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  FilterChip(
-                    label: const Text('Végétarien'),
-                    avatar: const Icon(Icons.eco, size: 18),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('Vegan'),
-                    avatar: const Icon(Icons.spa, size: 18),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('Sans gluten'),
-                    onSelected: (selected) {},
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Filtres par prix
-              Text('Prix', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  FilterChip(
-                    label: const Text('Gratuit'),
-                    avatar: const Icon(Icons.star, size: 18),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('< 5€'),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('5€ - 10€'),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('> 10€'),
-                    onSelected: (selected) {},
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 30),
-
-              // Boutons d'action
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        // Réinitialiser les filtres
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Réinitialiser'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Appliquer les filtres
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Filtres appliqués'),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      child: const Text('Appliquer'),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        );
-      },
     );
   }
 }

@@ -142,9 +142,9 @@ class _OfferCardState extends State<OfferCard>
   }
 
   String _buildSemanticLabel() {
-    final buffer = StringBuffer();
-    buffer.write('${widget.offer.title} chez ${widget.offer.merchantName}. ');
-    buffer.write('Prix: ${widget.offer.priceText}. ');
+    final buffer = StringBuffer()
+      ..write('${widget.offer.title} chez ${widget.offer.merchantName}. ')
+      ..write('Prix: ${widget.offer.priceText}. ');
 
     if (widget.offer.isFree) {
       buffer.write('Offre gratuite. ');

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -74,9 +75,9 @@ class _StockCategoryFloatingMenuState
     setState(() {
       _isOpen = !_isOpen;
       if (_isOpen) {
-        _animationController.forward();
+        unawaited(_animationController.forward());
       } else {
-        _animationController.reverse();
+        unawaited(_animationController.reverse());
       }
     });
   }
@@ -155,9 +156,7 @@ class _StockCategoryFloatingMenuState
                                 // Mettre à jour le filtre en stockant le slug (ou vide pour 'Tous')
                                 ref
                                     .read(stockFiltersProvider.notifier)
-                                    .state = currentFilters.copyWith(
-                                  searchQuery: c.slug,
-                                );
+                                    .updateSearchQuery(c.slug);
                                 _toggleMenu();
                               },
                               child: Container(

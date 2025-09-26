@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,23 +50,21 @@ class ConsoleLogOutput {
   }
 
   String _formatMessage(LogEvent event) {
-    final buffer = StringBuffer();
-
-    // Header
-    buffer
+    final buffer = StringBuffer()
+      // Header
       ..write('${event.level.emoji} [${event.level.label}] ')
       ..write('${event.timestamp.toIso8601String()} ')
-      ..write('[${event.tag}] ');
-
-    // Message
-    buffer.writeln(event.message);
+      ..write('[${event.tag}] ')
+      // Message
+      ..writeln(event.message);
 
     // Extra data
     if (event.data.isNotEmpty) {
-      buffer.writeln('📊 Data:');
-      event.data.forEach((key, value) {
-        buffer.writeln('  $key: $value');
-      });
+      buffer
+        ..writeln('📊 Data:')
+        ..writeln(
+          event.data.entries.map((e) => '  ${e.key}: ${e.value}').join('\n'),
+        );
     }
 
     // Error details
@@ -121,7 +120,7 @@ class RemoteLogOutput {
   void log(LogEvent event) {
     // Envoyer seulement les logs d'erreur et plus graves
     if (event.level.index >= LogLevel.error.index) {
-      _sendToRemote(event);
+      unawaited(_sendToRemote(event));
     }
   }
 
@@ -139,7 +138,7 @@ class RemoteLogOutput {
       if (kDebugMode) {
         print('Would send to remote: ${event.toJson()}');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       // Ne pas faire échouer l'app si le logging échoue
       if (kDebugMode) {
         print('Failed to send log to remote: $e');
@@ -277,7 +276,7 @@ class LoggerService {
     for (final output in outputs) {
       try {
         output(event);
-      } catch (e) {
+      } on Exception catch (e) {
         // Ne pas faire échouer si un output échoue
         if (kDebugMode) {
           print('Log output failed: $e');

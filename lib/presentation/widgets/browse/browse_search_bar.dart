@@ -56,7 +56,7 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
               child: TextField(
                 controller: _searchController,
                 onChanged: (value) {
-                  ref.read(searchQueryProvider.notifier).state = value;
+                  ref.read(searchQueryProvider.notifier).update(value);
                 },
                 decoration: const InputDecoration(
                   hintText: 'Rechercher...',
@@ -97,13 +97,15 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                   // Activer automatiquement la localisation si elle n'est pas activée
                   final isLocationActive = ref.read(isLocationActiveProvider);
                   if (!isLocationActive) {
-                    ref.read(isLocationActiveProvider.notifier).state = true;
+                    ref
+                        .read(isLocationActiveProvider.notifier)
+                        .set(value: true);
                   }
 
                   try {
                     // Centrer automatiquement sur la position utilisateur
-                    await MapService.instance.centerOnUserLocation();
-                  } catch (e) {
+                    await MapService().centerOnUserLocation();
+                  } on Exception {
                     // Ne rien afficher en cas d'erreur de localisation
                   }
 

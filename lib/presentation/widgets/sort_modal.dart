@@ -25,44 +25,50 @@ class SortModal extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          
+
           // Options de tri dans un ListView
           Flexible(
             child: ListView(
               shrinkWrap: true,
               children: SortOption.values.map((option) {
-            final isSelected = currentSort == option;
-            
-            return ListTile(
-              leading: Icon(
-                option.icon,
-                color: isSelected ? Theme.of(context).primaryColor : Colors.grey[600],
-                size: 18,
-              ),
-              title: Text(
-                option.label,
-                style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  color: isSelected ? Theme.of(context).primaryColor : Colors.grey[800],
-                  fontSize: 14,
-                ),
-              ),
-              trailing: isSelected 
-                  ? Icon(
-                      Icons.check,
-                      color: Theme.of(context).primaryColor,
-                      size: 16,
-                    )
-                  : null,
-              onTap: () {
-                ref.read(sortOptionProvider.notifier).state = option;
-                Navigator.pop(context);
-              },
-              contentPadding: EdgeInsets.zero,
-              minVerticalPadding: 0,
-              dense: true,
-            );
-          }).toList(),
+                final isSelected = currentSort == option;
+
+                return ListTile(
+                  leading: Icon(
+                    option.icon,
+                    color: isSelected
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey[600],
+                    size: 18,
+                  ),
+                  title: Text(
+                    option.label,
+                    style: TextStyle(
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey[800],
+                      fontSize: 14,
+                    ),
+                  ),
+                  trailing: isSelected
+                      ? Icon(
+                          Icons.check,
+                          color: Theme.of(context).primaryColor,
+                          size: 16,
+                        )
+                      : null,
+                  onTap: () {
+                    ref.read(sortOptionProvider.notifier).setSortOption(option);
+                    Navigator.pop(context);
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  minVerticalPadding: 0,
+                  dense: true,
+                );
+              }).toList(),
             ),
           ),
         ],

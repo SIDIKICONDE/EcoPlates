@@ -77,7 +77,7 @@ class FavoriteMerchantCard extends ConsumerWidget {
                               width: 92,
                               height: 92,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
+                              errorBuilder: (_, _, _) => Container(
                                 width: 92,
                                 height: 92,
                                 color: Colors.grey[200],

@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/offer_reservation_provider.dart';
 
 import '../../domain/entities/food_offer.dart';
+import '../providers/offer_reservation_provider.dart';
 import '../providers/urgent_offers_provider.dart';
 import '../widgets/offer_card.dart';
 import '../widgets/offer_detail/index.dart';
@@ -366,11 +368,13 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
   }
 
   void _navigateToOfferDetail(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _buildOfferDetailModal(context, offer),
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => _buildOfferDetailModal(context, offer),
+      ),
     );
   }
 
@@ -552,7 +556,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                             try {
                               await ref
                                   .read(offerReservationProvider.notifier)
-                                  .reserve(offer: offer, quantity: 1);
+                                  .reserve(offer: offer);
                               if (context.mounted) {
                                 Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -579,12 +583,13 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                                   ),
                                 );
                               }
-                            } catch (e) {
+                            } on Exception catch (e) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.error,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.error,
                                     content: Text('Réservation impossible: $e'),
                                   ),
                                 );
@@ -632,197 +637,201 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
   }
 
   void _showSortBottomSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Trier par',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                ListTile(
+                  leading: const Icon(Icons.timer, color: Colors.red),
+                  title: const Text("Plus urgent d'abord"),
+                  subtitle: const Text('Offres qui expirent bientôt'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  selected: true,
+                  selectedTileColor: Colors.red[50],
+                ),
+                ListTile(
+                  leading: const Icon(Icons.location_on, color: Colors.blue),
+                  title: const Text('Plus proche'),
+                  subtitle: const Text('Distance la plus courte'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.euro, color: Colors.green),
+                  title: const Text('Prix le plus bas'),
+                  subtitle: const Text('Meilleures affaires'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.inventory, color: Colors.orange),
+                  title: const Text('Stock faible'),
+                  subtitle: const Text('Derniers articles disponibles'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
       ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Trier par',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              ListTile(
-                leading: const Icon(Icons.timer, color: Colors.red),
-                title: const Text("Plus urgent d'abord"),
-                subtitle: const Text('Offres qui expirent bientôt'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                selected: true,
-                selectedTileColor: Colors.red[50],
-              ),
-              ListTile(
-                leading: const Icon(Icons.location_on, color: Colors.blue),
-                title: const Text('Plus proche'),
-                subtitle: const Text('Distance la plus courte'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.euro, color: Colors.green),
-                title: const Text('Prix le plus bas'),
-                subtitle: const Text('Meilleures affaires'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.inventory, color: Colors.orange),
-                title: const Text('Stock faible'),
-                subtitle: const Text('Derniers articles disponibles'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 
   void _showFilterBottomSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      isScrollControlled: true,
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Filtrer les offres urgentes',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // Filtre par temps restant
-              Text(
-                'Temps restant',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  FilterChip(
-                    label: const Text('< 30 min'),
-                    avatar: const Icon(Icons.warning, size: 18),
-                    backgroundColor: Colors.red[50],
-                    selectedColor: Colors.red[200],
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('< 1h'),
-                    avatar: const Icon(Icons.timer, size: 18),
-                    backgroundColor: Colors.orange[50],
-                    selectedColor: Colors.orange[200],
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('< 2h'),
-                    backgroundColor: Colors.amber[50],
-                    selectedColor: Colors.amber[200],
-                    onSelected: (selected) {},
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Filtre par quantité
-              Text(
-                'Quantité disponible',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  FilterChip(
-                    label: const Text('Dernier article'),
-                    avatar: const Icon(Icons.looks_one, size: 18),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('< 3 restants'),
-                    avatar: const Icon(Icons.inventory_2, size: 18),
-                    onSelected: (selected) {},
-                  ),
-                  FilterChip(
-                    label: const Text('< 5 restants'),
-                    onSelected: (selected) {},
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 30),
-
-              // Boutons d'action
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Réinitialiser'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Filtres appliqués'),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        isScrollControlled: true,
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Filtrer les offres urgentes',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: const Text('Appliquer'),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        );
-      },
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Filtre par temps restant
+                Text(
+                  'Temps restant',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    FilterChip(
+                      label: const Text('< 30 min'),
+                      avatar: const Icon(Icons.warning, size: 18),
+                      backgroundColor: Colors.red[50],
+                      selectedColor: Colors.red[200],
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('< 1h'),
+                      avatar: const Icon(Icons.timer, size: 18),
+                      backgroundColor: Colors.orange[50],
+                      selectedColor: Colors.orange[200],
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('< 2h'),
+                      backgroundColor: Colors.amber[50],
+                      selectedColor: Colors.amber[200],
+                      onSelected: (selected) {},
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // Filtre par quantité
+                Text(
+                  'Quantité disponible',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    FilterChip(
+                      label: const Text('Dernier article'),
+                      avatar: const Icon(Icons.looks_one, size: 18),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('< 3 restants'),
+                      avatar: const Icon(Icons.inventory_2, size: 18),
+                      onSelected: (selected) {},
+                    ),
+                    FilterChip(
+                      label: const Text('< 5 restants'),
+                      onSelected: (selected) {},
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 30),
+
+                // Boutons d'action
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Réinitialiser'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Filtres appliqués'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        child: const Text('Appliquer'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

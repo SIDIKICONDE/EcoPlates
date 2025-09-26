@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/error/failures.dart';
 import '../../core/providers/injection_providers.dart';
 import '../../domain/entities/food_offer.dart';
+import '../../domain/entities/reservation.dart';
 import './offers_catalog_provider.dart';
 import './stock_items_provider.dart';
 import './user_reservations_provider.dart';
-import '../../domain/entities/reservation.dart';
 
 /// Contrôleur de réservation d'offres qui synchronise aussi le stock (Option 2)
 final offerReservationProvider =

@@ -26,8 +26,9 @@ class OfferFormPreferencesFields extends ConsumerWidget {
               label: 'Végétarien',
               icon: Icons.eco,
               isSelected: formState.isVegetarian,
-              onTap: () =>
-                  ref.read(offerFormProvider.notifier).toggleVegetarian(),
+              onTap: () => ref
+                  .read<OfferFormNotifier>(offerFormProvider.notifier)
+                  .toggleVegetarian(),
             ),
             _buildFoodPreferenceChip(
               context,
@@ -35,7 +36,9 @@ class OfferFormPreferencesFields extends ConsumerWidget {
               label: 'Végan',
               icon: Icons.grass,
               isSelected: formState.isVegan,
-              onTap: () => ref.read(offerFormProvider.notifier).toggleVegan(),
+              onTap: () => ref
+                  .read<OfferFormNotifier>(offerFormProvider.notifier)
+                  .toggleVegan(),
             ),
             _buildFoodPreferenceChip(
               context,
@@ -43,7 +46,9 @@ class OfferFormPreferencesFields extends ConsumerWidget {
               label: 'Halal',
               icon: Icons.mosque,
               isSelected: formState.isHalal,
-              onTap: () => ref.read(offerFormProvider.notifier).toggleHalal(),
+              onTap: () => ref
+                  .read<OfferFormNotifier>(offerFormProvider.notifier)
+                  .toggleHalal(),
             ),
           ],
         ),
@@ -78,7 +83,7 @@ class OfferFormPreferencesFields extends ConsumerWidget {
                   currentAllergens.remove(allergen);
                 }
                 ref
-                    .read(offerFormProvider.notifier)
+                    .read<OfferFormNotifier>(offerFormProvider.notifier)
                     .updateAllergens(currentAllergens);
               },
               backgroundColor: theme.colorScheme.surfaceContainerHighest
@@ -111,10 +116,10 @@ class OfferFormPreferencesFields extends ConsumerWidget {
                       !formState.allergens.contains(value.trim())) {
                     final currentAllergens = List<String>.from(
                       formState.allergens,
-                    );
-                    currentAllergens.add(value.trim());
+                    )
+                    ..add(value.trim());
                     ref
-                        .read(offerFormProvider.notifier)
+                        .read<OfferFormNotifier>(offerFormProvider.notifier)
                         .updateAllergens(currentAllergens);
                   }
                 },
@@ -191,10 +196,10 @@ class OfferFormPreferencesFields extends ConsumerWidget {
                       onDeleted: () {
                         final currentAllergens = List<String>.from(
                           formState.allergens,
-                        );
-                        currentAllergens.remove(allergen);
+                        )
+                        ..remove(allergen);
                         ref
-                            .read(offerFormProvider.notifier)
+                            .read<OfferFormNotifier>(offerFormProvider.notifier)
                             .updateAllergens(currentAllergens);
                       },
                     );

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../pages/stock_item_form/page.dart';
 import 'stock_alert_badge.dart';
@@ -353,11 +354,11 @@ class StockListItem extends StatelessWidget {
             ),
             onPressed: () {
               // Navigation vers la page d'édition
-              Navigator.of(context).push(
+              unawaited(Navigator.of(context).push(
                 MaterialPageRoute<Widget>(
                   builder: (context) => StockItemFormPage(item: item),
                 ),
-              );
+              ));
             },
             tooltip: 'Modifier',
             constraints: BoxConstraints(
@@ -384,8 +385,6 @@ class StockListItem extends StatelessWidget {
           item: item,
           compactMode: compactMode,
           showLabel: !compactMode,
-          showLoading: false,
-          animate: false,
         ),
 
         SizedBox(height: compactMode ? 8 : 12),

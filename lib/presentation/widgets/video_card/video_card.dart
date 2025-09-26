@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
@@ -54,10 +56,12 @@ class _VideoCardState extends State<VideoCard>
       ),
       vsync: this,
     );
-    _animationManager.registerAnimation(
-      id: 'video_card_${widget.video.id}',
-      controller: _animationController,
-      priority: true,
+    unawaited(
+      _animationManager.registerAnimation(
+        id: 'video_card_${widget.video.id}',
+        controller: _animationController,
+        priority: true,
+      ),
     );
     _scaleAnimation =
         Tween<double>(
@@ -73,7 +77,9 @@ class _VideoCardState extends State<VideoCard>
 
   @override
   void dispose() {
-    _animationManager.cancelAnimation('video_card_${widget.video.id}');
+    unawaited(
+      _animationManager.cancelAnimation('video_card_${widget.video.id}'),
+    );
     _animationController.dispose();
     super.dispose();
   }
@@ -81,18 +87,18 @@ class _VideoCardState extends State<VideoCard>
   void _onTapDown(TapDownDetails _) {
     HapticFeedback.lightImpact();
     setState(() => _isPressed = true);
-    _animationController.forward();
+    unawaited(_animationController.forward());
   }
 
   void _onTapUp(TapUpDetails _) {
     setState(() => _isPressed = false);
-    _animationController.reverse();
+    unawaited(_animationController.reverse());
     _handleTap();
   }
 
   void _onTapCancel() {
     setState(() => _isPressed = false);
-    _animationController.reverse();
+    unawaited(_animationController.reverse());
   }
 
   void _handleTap() {
@@ -115,7 +121,7 @@ class _VideoCardState extends State<VideoCard>
         onTapCancel: _onTapCancel,
         child: AnimatedBuilder(
           animation: _scaleAnimation,
-          builder: (_, __) => Transform.scale(
+          builder: (_, _) => Transform.scale(
             scale: _scaleAnimation.value,
             filterQuality: FilterQuality.high,
             child: Container(

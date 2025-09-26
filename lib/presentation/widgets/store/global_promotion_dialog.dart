@@ -296,7 +296,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

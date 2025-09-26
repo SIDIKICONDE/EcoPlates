@@ -5,6 +5,7 @@ import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/sales_provider.dart';
 import '../widgets/sales/sales_app_bar.dart';
 import '../widgets/sales/sales_filter_chips.dart';
+import '../widgets/sales/sales_header.dart';
 import '../widgets/sales/sales_list_view.dart';
 
 /// Page principale de gestion des ventes pour les marchands
@@ -23,6 +24,11 @@ class MerchantSalesPage extends ConsumerWidget {
         onRefresh: () => ref.read(salesProvider.notifier).refresh(),
         child: const CustomScrollView(
           slivers: [
+            // Header avec statistiques
+            SliverToBoxAdapter(
+              child: SalesHeader(),
+            ),
+            
             // Filtres
             SliverToBoxAdapter(
               child: Padding(

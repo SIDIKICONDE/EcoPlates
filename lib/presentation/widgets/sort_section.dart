@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/sort_provider.dart';
@@ -51,7 +52,7 @@ class SortSection extends ConsumerWidget {
   }
 
   void _showSortModal(BuildContext context) {
-    showModalBottomSheet<void>(
+    unawaited(showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -65,6 +66,6 @@ class SortSection extends ConsumerWidget {
         ),
         child: const SortModal(),
       ),
-    );
+    ));
   }
 }

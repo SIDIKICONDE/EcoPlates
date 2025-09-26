@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-
 import '../../core/utils/accessibility_helper.dart';
 import '../../core/utils/animation_manager.dart';
 import '../../domain/entities/merchant.dart';
@@ -40,11 +40,11 @@ class _MerchantCardState extends State<MerchantCard>
     );
 
     // Enregistrer l'animation dans le gestionnaire pour éviter les collisions
-    _animationManager.registerAnimation(
+    unawaited(_animationManager.registerAnimation(
       id: 'restaurant_card_${widget.merchant.id}',
       controller: _controller,
       priority: true,
-    );
+    ));
 
     _scaleAnimation = Tween<double>(
       begin: 1,
@@ -62,7 +62,7 @@ class _MerchantCardState extends State<MerchantCard>
 
   @override
   void dispose() {
-    _animationManager.cancelAnimation('restaurant_card_${widget.merchant.id}');
+    unawaited(_animationManager.cancelAnimation('restaurant_card_${widget.merchant.id}'));
     _controller.dispose();
     super.dispose();
   }
@@ -96,13 +96,13 @@ class _MerchantCardState extends State<MerchantCard>
   void _onTapDown() {
     if (!_animationsEnabled) return;
     setState(() => _isPressed = true);
-    _controller.forward();
+    unawaited(_controller.forward());
   }
 
   void _onTapUp() {
     setState(() => _isPressed = false);
     if (_animationsEnabled) {
-      _controller.reverse();
+      unawaited(_controller.reverse());
     }
     widget.onTap?.call();
   }
@@ -110,7 +110,7 @@ class _MerchantCardState extends State<MerchantCard>
   void _onTapCancel() {
     if (!_animationsEnabled) return;
     setState(() => _isPressed = false);
-    _controller.reverse();
+    unawaited(_controller.reverse());
   }
 
   Widget _buildCard(BuildContext context, bool isDarkMode) {

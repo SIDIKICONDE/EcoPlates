@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -63,9 +64,9 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
     setState(() {
       _isOpen = !_isOpen;
       if (_isOpen) {
-        _animationController.forward();
+        unawaited(_animationController.forward());
       } else {
-        _animationController.reverse();
+        unawaited(_animationController.reverse());
       }
     });
   }
@@ -225,17 +226,16 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          final currentFilters = ref.read(stockFiltersProvider);
           ref
               .read(stockFiltersProvider.notifier)
-              .state = currentFilters.copyWith(
-            // On stocke le slug (ou vide pour 'Tous') pour un traitement robuste
-            searchQuery: category.name == 'Tous'
-                ? ''
-                : (category.category != null
-                      ? Categories.slugOf(category.category!)
-                      : category.name),
-          );
+              .updateSearchQuery(
+                // On stocke le slug (ou vide pour 'Tous') pour un traitement robuste
+                category.name == 'Tous'
+                    ? ''
+                    : (category.category != null
+                          ? Categories.slugOf(category.category!)
+                          : category.name),
+              );
           _toggleMenu();
         },
         borderRadius: BorderRadius.circular(16),

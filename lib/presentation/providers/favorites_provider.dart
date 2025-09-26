@@ -1,16 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-/// Provider pour gérer la liste des IDs de marchands favoris
-final favoriteMerchantIdsProvider = StateNotifierProvider<FavoriteMerchantIdsNotifier, Set<String>>((ref) {
-  return FavoriteMerchantIdsNotifier();
-});
+import 'package:riverpod/src/providers/provider.dart';
 
 /// Notifier pour gérer l'état des favoris
-class FavoriteMerchantIdsNotifier extends StateNotifier<Set<String>> {
-  FavoriteMerchantIdsNotifier() : super({
+class FavoriteMerchantIdsNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() {
     // IDs initiaux des favoris (mock data)
-    'm1', 'm4', 'm7', 'm10', 'm13',
-  });
+    return {'m1', 'm4', 'm7', 'm10', 'm13'};
+  }
 
   /// Ajoute ou retire un marchand des favoris (toggle)
   void toggleFavorite(String merchantId) {
@@ -43,8 +40,18 @@ class FavoriteMerchantIdsNotifier extends StateNotifier<Set<String>> {
   }
 }
 
+/// Provider pour gérer la liste des IDs de marchands favoris
+final favoriteMerchantIdsProvider =
+    NotifierProvider<FavoriteMerchantIdsNotifier, Set<String>>(
+      FavoriteMerchantIdsNotifier.new,
+    );
+
 /// Provider pour vérifier si un marchand spécifique est favori
-final isMerchantFavoriteProvider = Provider.family<bool, String>((ref, merchantId) {
-  final favoriteIds = ref.watch(favoriteMerchantIdsProvider);
-  return favoriteIds.contains(merchantId);
-});
+final ProviderFamily<bool, String> isMerchantFavoriteProvider =
+    Provider.family<bool, String>((
+      ref,
+      merchantId,
+    ) {
+      final favoriteIds = ref.watch(favoriteMerchantIdsProvider);
+      return favoriteIds.contains(merchantId);
+    });

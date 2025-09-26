@@ -2,14 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/food_offer.dart';
 
-/// Source de vérité unique pour les offres (catalogue partagé)
-final offersCatalogProvider =
-    StateNotifierProvider<OffersCatalogNotifier, List<FoodOffer>>(
-      (ref) => OffersCatalogNotifier()..loadMockData(),
-    );
-
-class OffersCatalogNotifier extends StateNotifier<List<FoodOffer>> {
-  OffersCatalogNotifier() : super(const []);
+class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
+  @override
+  List<FoodOffer> build() {
+    loadMockData();
+    return const [];
+  }
 
   // Méthode pour obtenir l'heure actuelle arrondie à l'heure suivante
   DateTime _getCurrentRoundedHour() {
@@ -20,7 +18,6 @@ class OffersCatalogNotifier extends StateNotifier<List<FoodOffer>> {
       now.month,
       now.day,
       nextHour >= 24 ? 0 : nextHour,
-      0,
     );
   }
 
@@ -139,7 +136,6 @@ class OffersCatalogNotifier extends StateNotifier<List<FoodOffer>> {
         ),
         merchantAddress: '123 Rue de la Paix, 75001 Paris',
         tags: const ['Salades', 'Plats légers'],
-        isVegetarian: false,
         co2Saved: 650,
       ),
       FoodOffer(
@@ -222,7 +218,6 @@ class OffersCatalogNotifier extends StateNotifier<List<FoodOffer>> {
         category: FoodCategory.dessert,
         status: OfferStatus.expired,
         quantity: 0,
-        availableQuantity: 0,
         totalQuantity: 10,
         pickupStartTime: startTime4,
         pickupEndTime: endTime4,
@@ -278,3 +273,8 @@ class OffersCatalogNotifier extends StateNotifier<List<FoodOffer>> {
     state = List.unmodifiable(offers);
   }
 }
+
+/// Source de vérité unique pour les offres (catalogue partagé)
+final offersCatalogProvider = NotifierProvider<OffersCatalogNotifier, List<FoodOffer>>(
+  OffersCatalogNotifier.new,
+);

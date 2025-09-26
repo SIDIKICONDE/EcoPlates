@@ -51,6 +51,11 @@
 	<string>Cette application utilise votre localisation pour afficher les offres près de chez vous.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Cette application utilise votre localisation pour vous montrer les offres disponibles à proximité.</string>
+	
+	<!-- Google Maps API Key (injected securely via xcconfig) -->
+	<key>GMSApiKey</key>
+	<string>$(GOOGLE_MAPS_API_KEY)</string>
+	
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -107,11 +108,11 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
               TextButton(
                 onPressed: () {
                   // Navigation vers la page complète des offres urgentes
-                  Navigator.of(context).push(
+                  unawaited(Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (context) => const AllUrgentOffersScreen(),
                     ),
-                  );
+                  ));
                 },
                 child: const Text('Voir tout'),
               ),
@@ -216,12 +217,12 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
   }
 
   void _showOfferDetailModal(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet<void>(
+    unawaited(showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => _buildOfferDetailModal(context, offer),
-    );
+    ));
   }
 
   Widget _buildOfferDetailModal(BuildContext context, FoodOffer offer) {

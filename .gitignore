@@ -43,3 +43,20 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Secrets and sensitive configuration
+.env*
+environments/
+android/local.properties
+ios/Config/Secrets.xcconfig
+*.xcconfig
+**/APIKeys.plist
+
+# Platform-specific sensitive files
+android/key.properties
+ios/Runner/GoogleService-Info.plist
+ios/Runner/Config/
+
+# Firebase and other service configs
+google-services.json
+GoogleService-Info.plist

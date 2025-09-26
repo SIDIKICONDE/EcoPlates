@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,10 +7,10 @@ import 'package:go_router/go_router.dart';
 import '../../../core/router/routes/route_constants.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/store_offers_provider.dart';
+import '../widgets/store/global_promotion_dialog.dart';
 import '../widgets/store/store_filter_chips.dart';
 import '../widgets/store/store_offers_grid.dart';
 import '../widgets/store/store_search_bar.dart';
-import '../widgets/store/global_promotion_dialog.dart';
 
 /// Page principale de gestion de la boutique pour les marchands
 ///
@@ -198,7 +200,7 @@ class MerchantStorePage extends ConsumerWidget {
         radius: 16,
         backgroundColor: theme.colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
-        onBackgroundImageError: (_, __) {
+        onBackgroundImageError: (_, _) {
           // Fallback si l'image ne charge pas
         },
         child: Icon(
@@ -213,7 +215,7 @@ class MerchantStorePage extends ConsumerWidget {
   void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
     switch (action) {
       case 'refresh':
-        ref.read(storeOffersProvider.notifier).refresh();
+        unawaited(ref.read(storeOffersProvider.notifier).refresh());
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Actualisation en cours...'),
@@ -225,7 +227,7 @@ class MerchantStorePage extends ConsumerWidget {
       case 'bulk_actions':
         _showBulkActionsDialog(context, ref);
       case 'export':
-        _exportCatalog(context, ref);
+        unawaited(_exportCatalog(context, ref));
       case 'promotions':
         context.go(RouteConstants.merchantPromotions);
       case 'analytics':
@@ -242,91 +244,95 @@ class MerchantStorePage extends ConsumerWidget {
   void _showSortBottomSheet(BuildContext context, WidgetRef ref) {
     final currentSort = ref.read(storeFiltersProvider).sortBy;
 
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (context) {
-        return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'Trier les offres par',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              ...StoreSortOption.values.map((option) {
-                final isSelected = option == currentSort;
-                return ListTile(
-                  leading: Icon(
-                    isSelected
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : null,
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        builder: (context) {
+          return SafeArea(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Trier les offres par',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  title: Text(option.label),
-                  subtitle: Text(option.description),
-                  onTap: () {
-                    ref
-                        .read(storeFiltersProvider.notifier)
-                        .updateSortBy(option);
-                    Navigator.of(context).pop();
-                  },
-                );
-              }),
-            ],
-          ),
-        );
-      },
+                ),
+                ...StoreSortOption.values.map((option) {
+                  final isSelected = option == currentSort;
+                  return ListTile(
+                    leading: Icon(
+                      isSelected
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_unchecked,
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.primary
+                          : null,
+                    ),
+                    title: Text(option.label),
+                    subtitle: Text(option.description),
+                    onTap: () {
+                      ref
+                          .read(storeFiltersProvider.notifier)
+                          .updateSortBy(option);
+                      Navigator.of(context).pop();
+                    },
+                  );
+                }),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
   void _showBulkActionsDialog(BuildContext context, WidgetRef ref) {
-    showDialog<void>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Actions groupées'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.visibility_off),
-                title: const Text('Désactiver toutes les offres'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _confirmBulkAction(context, ref, 'deactivate_all');
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.local_offer),
-                title: const Text('Appliquer une promotion globale'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _showGlobalPromotionDialog(context, ref);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.update),
-                title: const Text('Mettre à jour les prix'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _showPriceUpdateDialog(context, ref);
-                },
+    unawaited(
+      showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Actions groupées'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.visibility_off),
+                  title: const Text('Désactiver toutes les offres'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _confirmBulkAction(context, ref, 'deactivate_all');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.local_offer),
+                  title: const Text('Appliquer une promotion globale'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showGlobalPromotionDialog(context, ref);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.update),
+                  title: const Text('Mettre à jour les prix'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showPriceUpdateDialog(context, ref);
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Fermer'),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Fermer'),
-            ),
-          ],
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -341,9 +347,11 @@ class MerchantStorePage extends ConsumerWidget {
   }
 
   void _showGlobalPromotionDialog(BuildContext context, WidgetRef ref) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => const GlobalPromotionDialog(),
+    unawaited(
+      showDialog<void>(
+        context: context,
+        builder: (context) => const GlobalPromotionDialog(),
+      ),
     );
   }
 
@@ -378,11 +386,11 @@ class MerchantStorePage extends ConsumerWidget {
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur lors de l\'export : $e'),
+            content: Text("Erreur lors de l'export : $e"),
             backgroundColor: Colors.red,
           ),
         );

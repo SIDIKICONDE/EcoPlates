@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Classe abstraite représentant une erreur/échec dans l'application
 abstract class Failure extends Equatable {
-
   const Failure(this.message, {this.code, this.details});
   final String message;
   final String? code;
@@ -29,7 +28,6 @@ class CacheFailure extends Failure {
 
 /// Erreur de validation des données
 class ValidationFailure extends Failure {
-
   const ValidationFailure(
     super.message, {
     super.code,
@@ -59,7 +57,6 @@ class BusinessFailure extends Failure {
 
 /// Ressource non trouvée (404)
 class NotFoundFailure extends Failure {
-
   const NotFoundFailure(
     super.message, {
     super.code,
@@ -86,7 +83,6 @@ class UnexpectedFailure extends Failure {
 
 /// Erreur de quota/limite dépassée
 class QuotaExceededFailure extends Failure {
-
   const QuotaExceededFailure(
     super.message, {
     super.code,
@@ -103,7 +99,6 @@ class QuotaExceededFailure extends Failure {
 
 /// Erreur de paiement
 class PaymentFailure extends Failure {
-
   const PaymentFailure(
     super.message, {
     super.code,
@@ -143,27 +138,26 @@ class AuthorizationFailure extends Failure {
 extension FailureExtension on Failure {
   /// Retourne un message utilisateur-friendly
   String get userMessage {
-    switch (runtimeType) {
-      case NetworkFailure _:
-        return 'Problème de connexion. Vérifiez votre connexion internet.';
-      case ServerFailure _:
-        return 'Erreur serveur. Veuillez réessayer plus tard.';
-      case AuthenticationFailure _:
-        return "Erreur d'authentification. Veuillez vous reconnecter.";
-      case PermissionFailure _:
-        return "Vous n'avez pas les permissions nécessaires.";
-      case ValidationFailure _:
-        return message;
-      case TimeoutFailure _:
-        return 'La requête a pris trop de temps. Veuillez réessayer.';
-      case NotFoundFailure _:
-        return 'Ressource non trouvée.';
-      case QuotaExceededFailure _:
-        return 'Limite dépassée. $message';
-      case PaymentFailure _:
-        return 'Erreur de paiement. $message';
-      default:
-        return "Une erreur inattendue s'est produite.";
+    if (this is NetworkFailure) {
+      return 'Problème de connexion. Vérifiez votre connexion internet.';
+    } else if (this is ServerFailure) {
+      return 'Erreur serveur. Veuillez réessayer plus tard.';
+    } else if (this is AuthenticationFailure) {
+      return "Erreur d'authentification. Veuillez vous reconnecter.";
+    } else if (this is PermissionFailure) {
+      return "Vous n'avez pas les permissions nécessaires.";
+    } else if (this is ValidationFailure) {
+      return message;
+    } else if (this is TimeoutFailure) {
+      return 'La requête a pris trop de temps. Veuillez réessayer.';
+    } else if (this is NotFoundFailure) {
+      return 'Ressource non trouvée.';
+    } else if (this is QuotaExceededFailure) {
+      return 'Limite dépassée. $message';
+    } else if (this is PaymentFailure) {
+      return 'Erreur de paiement. $message';
+    } else {
+      return "Une erreur inattendue s'est produite.";
     }
   }
 

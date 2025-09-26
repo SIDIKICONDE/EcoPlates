@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,7 +24,7 @@ class MerchantStockAppBar extends ConsumerWidget
     final stockCount = ref.watch(stockItemsCountProvider);
     final outOfStockCount = ref.watch(outOfStockItemsProvider).length;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     // Pour éviter l'overflow sur petits écrans
     final isSmallScreen = screenWidth < 400;
 
@@ -56,9 +58,13 @@ class MerchantStockAppBar extends ConsumerWidget
   }
 
   void _navigateToStockItemForm(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const StockItemFormPage()));
+    unawaited(
+      Navigator.of(
+        context,
+      ).push(
+        MaterialPageRoute<void>(builder: (_) => const StockItemFormPage()),
+      ),
+    );
   }
 }
 
@@ -77,7 +83,7 @@ class _MerchantLogo extends StatelessWidget {
         radius: 16,
         backgroundColor: Theme.of(context).colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
-        onBackgroundImageError: (_, __) {
+        onBackgroundImageError: (_, _) {
           // Fallback vers une icône si l'image ne charge pas
         },
         child: const Icon(Icons.store, size: 20, color: Colors.grey),
@@ -111,7 +117,9 @@ class _ViewModeSwitch extends ConsumerWidget {
             child: Switch(
               value: isCompactView,
               onChanged: (value) {
-                ref.read(stockViewModeProvider.notifier).state = value;
+                ref
+                    .read(stockViewModeProvider.notifier)
+                    .setCompact(isCompact: value);
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -179,7 +187,7 @@ class _ActionsMenu extends ConsumerWidget {
     final isSmallScreen = screenWidth < 400;
     final stockCount = ref.watch(stockItemsCountProvider);
     final outOfStockCount = ref.watch(outOfStockItemsProvider).length;
-    
+
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
       iconSize: 20,
@@ -187,76 +195,83 @@ class _ActionsMenu extends ConsumerWidget {
       onSelected: (value) => _handleMenuAction(context, ref, value),
       itemBuilder: (context) {
         return [
-        // Affichage des statistiques sur petits écrans
-        if (isSmallScreen && stockCount > 0)
-          PopupMenuItem(
-            enabled: false,
-            child: ListTile(
-              leading: Icon(Icons.inventory, size: 18, color: Theme.of(context).colorScheme.primary),
-              title: Text(
-                '$stockCount articles${outOfStockCount > 0 ? ' (• $outOfStockCount ruptures)' : ''}',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          // Affichage des statistiques sur petits écrans
+          if (isSmallScreen && stockCount > 0)
+            PopupMenuItem(
+              enabled: false,
+              child: ListTile(
+                leading: Icon(
+                  Icons.inventory,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                title: Text(
+                  '$stockCount articles${outOfStockCount > 0 ? ' (• $outOfStockCount ruptures)' : ''}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                dense: true,
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+            ),
+
+          // Switch de vue sur petits écrans
+          if (isSmallScreen)
+            PopupMenuItem(
+              value: 'toggle_view',
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final isCompactView = ref.watch(stockViewModeProvider);
+                  return ListTile(
+                    leading: Icon(
+                      isCompactView ? Icons.view_agenda : Icons.view_list,
+                      size: 18,
+                    ),
+                    title: Text(
+                      isCompactView ? 'Vue détaillée' : 'Vue compacte',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                    dense: true,
+                  );
+                },
+              ),
+            ),
+
+          // Séparateur si on a ajouté des éléments
+          if (isSmallScreen) const PopupMenuDivider(),
+
+          const PopupMenuItem(
+            value: 'refresh',
+            child: ListTile(
+              leading: Icon(Icons.refresh, size: 18),
+              title: Text('Actualiser', style: TextStyle(fontSize: 14)),
+              contentPadding: EdgeInsets.symmetric(horizontal: 8),
               dense: true,
             ),
           ),
-        
-        // Switch de vue sur petits écrans
-        if (isSmallScreen)
-          PopupMenuItem(
-            value: 'toggle_view',
-            child: Consumer(
-              builder: (context, ref, _) {
-                final isCompactView = ref.watch(stockViewModeProvider);
-                return ListTile(
-                  leading: Icon(
-                    isCompactView ? Icons.view_agenda : Icons.view_list, 
-                    size: 18
-                  ),
-                  title: Text(
-                    isCompactView ? 'Vue détaillée' : 'Vue compacte',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-                  dense: true,
-                );
-              }
+          const PopupMenuItem(
+            value: 'sort',
+            child: ListTile(
+              leading: Icon(Icons.sort, size: 18),
+              title: Text('Trier', style: TextStyle(fontSize: 14)),
+              contentPadding: EdgeInsets.symmetric(horizontal: 8),
+              dense: true,
             ),
           ),
-        
-        // Séparateur si on a ajouté des éléments
-        if (isSmallScreen) const PopupMenuDivider(),
-        
-        const PopupMenuItem(
-          value: 'refresh',
-          child: ListTile(
-            leading: Icon(Icons.refresh, size: 18),
-            title: Text('Actualiser', style: TextStyle(fontSize: 14)),
-            contentPadding: EdgeInsets.symmetric(horizontal: 8),
-            dense: true,
+          const PopupMenuItem(
+            value: 'export',
+            child: ListTile(
+              leading: Icon(Icons.download, size: 18),
+              title: Text('Exporter', style: TextStyle(fontSize: 14)),
+              contentPadding: EdgeInsets.symmetric(horizontal: 8),
+              dense: true,
+            ),
           ),
-        ),
-        const PopupMenuItem(
-          value: 'sort',
-          child: ListTile(
-            leading: Icon(Icons.sort, size: 18),
-            title: Text('Trier', style: TextStyle(fontSize: 14)),
-            contentPadding: EdgeInsets.symmetric(horizontal: 8),
-            dense: true,
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'export',
-          child: ListTile(
-            leading: Icon(Icons.download, size: 18),
-            title: Text('Exporter', style: TextStyle(fontSize: 14)),
-            contentPadding: EdgeInsets.symmetric(horizontal: 8),
-            dense: true,
-          ),
-        ),
-      ];
-      }
+        ];
+      },
     );
   }
 
@@ -264,7 +279,9 @@ class _ActionsMenu extends ConsumerWidget {
     if (action == 'toggle_view') {
       // Basculer le mode de vue
       final currentMode = ref.read(stockViewModeProvider);
-      ref.read(stockViewModeProvider.notifier).state = !currentMode;
+      ref
+          .read(stockViewModeProvider.notifier)
+          .setCompact(isCompact: !currentMode);
     } else {
       ref
           .read(merchantStockControllerProvider)

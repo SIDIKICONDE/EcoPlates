@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 /// Dialogue d'aide pour expliquer les options vidéo
@@ -5,10 +6,10 @@ class VideoHelpDialog extends StatelessWidget {
   const VideoHelpDialog({super.key});
 
   static void show(BuildContext context) {
-    showDialog<Widget>(
+    unawaited(showDialog<Widget>(
       context: context,
       builder: (context) => const VideoHelpDialog(),
-    );
+    ));
   }
 
   @override

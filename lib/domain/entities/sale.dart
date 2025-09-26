@@ -7,16 +7,16 @@ part 'sale.g.dart';
 
 /// Statut d'une vente
 enum SaleStatus {
-  pending,    // En attente de récupération
-  confirmed,  // Confirmée par le client
-  collected,  // Récupérée
-  cancelled,  // Annulée
-  refunded,   // Remboursée
+  pending, // En attente de récupération
+  confirmed, // Confirmée par le client
+  collected, // Récupérée
+  cancelled, // Annulée
+  refunded, // Remboursée
 }
 
 /// Entité représentant une vente/commande
 @freezed
-class Sale with _$Sale {
+abstract class Sale with _$Sale {
   const factory Sale({
     required String id,
     required String merchantId,
@@ -41,7 +41,7 @@ class Sale with _$Sale {
 
 /// Item d'une vente
 @freezed
-class SaleItem with _$SaleItem {
+abstract class SaleItem with _$SaleItem {
   const factory SaleItem({
     required String offerId,
     required String offerTitle,
@@ -51,32 +51,35 @@ class SaleItem with _$SaleItem {
     required double totalPrice,
   }) = _SaleItem;
 
-  factory SaleItem.fromJson(Map<String, dynamic> json) => _$SaleItemFromJson(json);
+  factory SaleItem.fromJson(Map<String, dynamic> json) =>
+      _$SaleItemFromJson(json);
 }
 
 /// Extension pour les méthodes utilitaires
 extension SaleExtensions on Sale {
   /// Vérifie si la vente est en cours
-  bool get isActive => status == SaleStatus.pending || status == SaleStatus.confirmed;
-  
+  bool get isActive =>
+      status == SaleStatus.pending || status == SaleStatus.confirmed;
+
   /// Vérifie si la vente est terminée
   bool get isCompleted => status == SaleStatus.collected;
-  
+
   /// Vérifie si la vente est annulée
-  bool get isCancelled => status == SaleStatus.cancelled || status == SaleStatus.refunded;
-  
+  bool get isCancelled =>
+      status == SaleStatus.cancelled || status == SaleStatus.refunded;
+
   /// Obtient le temps restant pour la récupération (si applicable)
   Duration? get remainingTime {
     if (!isActive) return null;
-    
+
     // On suppose que le client a 2h pour récupérer sa commande
     final deadline = createdAt.add(const Duration(hours: 2));
     final now = DateTime.now();
-    
+
     if (now.isAfter(deadline)) return Duration.zero;
     return deadline.difference(now);
   }
-  
+
   /// Obtient le pourcentage d'économie réalisé
   double get savingsPercentage {
     if (totalAmount == 0) return 0;
@@ -100,7 +103,7 @@ extension SaleStatusExtensions on SaleStatus {
         return 'Remboursée';
     }
   }
-  
+
   /// Obtient la couleur associée au statut
   String get colorHex {
     switch (this) {

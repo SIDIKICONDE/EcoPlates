@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,11 +39,11 @@ class StockItemDetailPage extends ConsumerWidget {
             tooltip: 'Modifier',
             icon: const Icon(Icons.edit),
             onPressed: () {
-              Navigator.of(context).push(
+              unawaited(Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => StockItemFormPage(item: currentItem),
                 ),
-              );
+              ));
             },
           ),
         ],
@@ -179,18 +181,22 @@ class _StatsCard extends StatelessWidget {
               Icon(
                 Icons.update,
                 size: 14,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.6,
+                ),
               ),
               const SizedBox(width: 4),
               Text(
                 _formatLastUpdate(item.updatedAt),
                 style: TextStyle(
                   fontSize: 12,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.7,
+                  ),
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -223,7 +229,7 @@ class _AlertThresholdCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -247,7 +253,7 @@ class _AlertThresholdCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Seuil d\'alerte configuré',
+                  "Seuil d'alerte configuré",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -348,7 +354,6 @@ class _ActionsSection extends StatelessWidget {
             children: [
               StockStatusToggle(
                 item: item,
-                showLabel: true,
               ),
               StockQuantityAdjuster(
                 item: item,
@@ -358,9 +363,11 @@ class _ActionsSection extends StatelessWidget {
           const SizedBox(height: 12),
           FilledButton.icon(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => StockItemFormPage(item: item),
+              unawaited(
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => StockItemFormPage(item: item),
+                  ),
                 ),
               );
             },

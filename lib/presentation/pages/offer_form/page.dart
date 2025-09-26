@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/offer_form_provider.dart';
-import 'widgets/offer_form_fields.dart';
 import 'widgets/offer_form_actions.dart';
+import 'widgets/offer_form_fields.dart';
 import 'widgets/offer_form_images.dart';
+import 'widgets/offer_form_preferences.dart';
 import 'widgets/offer_form_price_quantity.dart';
 import 'widgets/offer_form_schedule.dart';
-import 'widgets/offer_form_preferences.dart';
 
 /// Widget amélioré pour les sections du formulaire avec icône et titre
 class _FormSection extends StatelessWidget {
@@ -46,112 +45,113 @@ class _FormSection extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 24),
         decoration: BoxDecoration(
           color: isCurrent
-              ? colorScheme.primaryContainer.withOpacity(0.1)
+              ? colorScheme.primaryContainer.withValues(alpha: 0.1)
               : colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isCurrent
-                ? colorScheme.primary.withOpacity(0.4)
-                : colorScheme.outline.withOpacity(0.2),
+                ? colorScheme.primary.withValues(alpha: 0.4)
+                : colorScheme.outline.withValues(alpha: 0.2),
             width: isCurrent ? 2 : 1,
           ),
           boxShadow: [
             BoxShadow(
               color: isCurrent
-                  ? colorScheme.primary.withOpacity(0.1)
-                  : colorScheme.shadow.withOpacity(0.05),
+                  ? colorScheme.primary.withValues(alpha: 0.1)
+                  : colorScheme.shadow.withValues(alpha: 0.05),
               blurRadius: isCurrent ? 12 : 8,
               offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header de la section
-          Container(
-            padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isCurrent
-                ? colorScheme.primary.withOpacity(0.1)
-                : colorScheme.surfaceContainerHighest.withOpacity(0.3),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-          ),
-            child: Row(
-              children: [
-                // Icône avec statut
-                Container(
-                  padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: isCompleted
-                      ? colorScheme.primary.withValues(alpha: 0.1)
-                      : colorScheme.surfaceContainerHighest,
-                  shape: BoxShape.circle,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header de la section
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isCurrent
+                    ? colorScheme.primary.withOpacity(0.1)
+                    : colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
                 ),
-                  child: Icon(
-                    icon,
-                    color: isCompleted
-                        ? colorScheme.primary
-                        : colorScheme.onSurfaceVariant,
-                    size: 20,
+              ),
+              child: Row(
+                children: [
+                  // Icône avec statut
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isCompleted
+                          ? colorScheme.primary.withValues(alpha: 0.1)
+                          : colorScheme.surfaceContainerHighest,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      icon,
+                      color: isCompleted
+                          ? colorScheme.primary
+                          : colorScheme.onSurfaceVariant,
+                      size: 20,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                // Titre et sous-titre
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            title,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: colorScheme.onSurface,
-                            ),
-                          ),
-                          if (isRequired) ...[
-                            const SizedBox(width: 4),
+                  const SizedBox(width: 12),
+                  // Titre et sous-titre
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
                             Text(
-                              '*',
-                              style: TextStyle(
-                                color: colorScheme.error,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              title,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: colorScheme.onSurface,
                               ),
                             ),
+                            if (isRequired) ...[
+                              const SizedBox(width: 4),
+                              Text(
+                                '*',
+                                style: TextStyle(
+                                  color: colorScheme.error,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ],
-                        ],
-                      ),
-                      if (subtitle != null)
-                        Text(
-                          subtitle!,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
                         ),
-                    ],
+                        if (subtitle != null)
+                          Text(
+                            subtitle!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                // Indicateur de statut
-                if (isCompleted)
-                  Icon(
-                    Icons.check_circle,
-                    color: colorScheme.primary,
-                    size: 20,
-                  ),
-              ],
+                  // Indicateur de statut
+                  if (isCompleted)
+                    Icon(
+                      Icons.check_circle,
+                      color: colorScheme.primary,
+                      size: 20,
+                    ),
+                ],
+              ),
             ),
-          ),
-          // Contenu de la section
-          Padding(padding: const EdgeInsets.all(16), child: child),
-        ],
+            // Contenu de la section
+            Padding(padding: const EdgeInsets.all(16), child: child),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
 
@@ -334,11 +334,11 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
       if (mounted) {
         context.pop();
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur : ${e.toString()}'),
+            content: Text('Erreur : $e'),
             backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
           ),
@@ -376,7 +376,7 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
       ),
     );
 
-    if (confirmed == true && mounted) {
+    if ((confirmed ?? false) && mounted) {
       try {
         await ref
             .read(offerFormProvider.notifier)
@@ -392,11 +392,11 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
           );
           context.pop();
         }
-      } catch (e) {
+      } on Exception catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Erreur lors de la suppression : ${e}'),
+              content: Text('Erreur lors de la suppression : $e'),
               backgroundColor: Theme.of(context).colorScheme.error,
               behavior: SnackBarBehavior.floating,
             ),
@@ -412,7 +412,9 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
     int totalFields = 6; // Images, titre, description, type, catégorie, prix
 
     // Images (requis)
-    if (state.images.isNotEmpty) completedFields++;
+    if (state.images.isNotEmpty) {
+      completedFields++;
+    }
 
     // Titre (requis)
     if (state.title.trim().isNotEmpty && state.title.trim().length >= 5) {
@@ -426,14 +428,19 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
     }
 
     // Type (requis)
-    if (state.type != OfferType.panier) completedFields++; // Changé du défaut
+    if (state.type != OfferType.panier) {
+      completedFields++; // Changé du défaut
+    }
 
     // Catégorie (requis)
-    if (state.category != FoodCategory.dejeuner)
+    if (state.category != FoodCategory.dejeuner) {
       completedFields++; // Changé du défaut
+    }
 
     // Prix (requis)
-    if (state.originalPrice > 0) completedFields++;
+    if (state.originalPrice > 0) {
+      completedFields++;
+    }
 
     return completedFields / totalFields;
   }
@@ -506,13 +513,14 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                   // Section Images
                   _FormSection(
                     icon: Icons.photo_camera,
-                    title: 'Photo de l\'offre',
+                    title: "Photo de l'offre",
                     subtitle:
                         'Ajoutez une belle image pour attirer les clients',
                     isRequired: true,
                     isCompleted: formState.images.isNotEmpty,
                     isCurrent: _currentSection == FormSection.images,
-                    onSectionTap: () => setState(() => _currentSection = FormSection.images),
+                    onSectionTap: () =>
+                        setState(() => _currentSection = FormSection.images),
                     child: const OfferFormImages(),
                   ),
 
@@ -520,14 +528,15 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                   _FormSection(
                     icon: Icons.description,
                     title: 'Informations de base',
-                    subtitle: 'Titre, description et type d\'offre',
+                    subtitle: "Titre, description et type d'offre",
                     isRequired: true,
                     isCompleted:
                         formState.title.trim().isNotEmpty &&
                         formState.description.trim().isNotEmpty &&
                         formState.type != OfferType.panier,
                     isCurrent: _currentSection == FormSection.basicInfo,
-                    onSectionTap: () => setState(() => _currentSection = FormSection.basicInfo),
+                    onSectionTap: () =>
+                        setState(() => _currentSection = FormSection.basicInfo),
                     child: const OfferFormBasicFields(),
                   ),
 
@@ -540,7 +549,9 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                     isCompleted:
                         formState.originalPrice > 0 && formState.quantity > 0,
                     isCurrent: _currentSection == FormSection.priceQuantity,
-                    onSectionTap: () => setState(() => _currentSection = FormSection.priceQuantity),
+                    onSectionTap: () => setState(
+                      () => _currentSection = FormSection.priceQuantity,
+                    ),
                     child: const OfferFormPriceQuantityFields(),
                   ),
 
@@ -555,7 +566,8 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                         formState.pickupStartTime != null &&
                         formState.pickupEndTime != null,
                     isCurrent: _currentSection == FormSection.schedule,
-                    onSectionTap: () => setState(() => _currentSection = FormSection.schedule),
+                    onSectionTap: () =>
+                        setState(() => _currentSection = FormSection.schedule),
                     child: const OfferFormScheduleFields(),
                   ),
 
@@ -564,13 +576,14 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                     icon: Icons.restaurant_menu,
                     title: 'Préférences alimentaires',
                     subtitle: 'Informations sur les régimes et allergènes',
-                    isRequired: false,
                     isCompleted:
                         formState.isVegetarian ||
                         formState.isVegan ||
                         formState.allergens.isNotEmpty,
                     isCurrent: _currentSection == FormSection.preferences,
-                    onSectionTap: () => setState(() => _currentSection = FormSection.preferences),
+                    onSectionTap: () => setState(
+                      () => _currentSection = FormSection.preferences,
+                    ),
                     child: const OfferFormPreferencesFields(),
                   ),
 
@@ -579,10 +592,10 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                     icon: Icons.settings,
                     title: 'Paramètres avancés',
                     subtitle: 'Tags, statut et options supplémentaires',
-                    isRequired: false,
                     isCompleted: formState.tags.isNotEmpty,
                     isCurrent: _currentSection == FormSection.actions,
-                    onSectionTap: () => setState(() => _currentSection = FormSection.actions),
+                    onSectionTap: () =>
+                        setState(() => _currentSection = FormSection.actions),
                     child: const OfferFormActions(),
                   ),
 
@@ -608,9 +621,7 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                   scale: canSave ? 1.0 : 0.8,
                   duration: const Duration(milliseconds: 300),
                   child: FloatingActionButton.extended(
-                    onPressed: canSave && !_isSubmitting
-                        ? () => _submitForm()
-                        : null,
+                    onPressed: canSave && !_isSubmitting ? _submitForm : null,
                     backgroundColor: canSave
                         ? theme.colorScheme.primary
                         : theme.colorScheme.surfaceContainerHighest,
@@ -639,10 +650,10 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.3),
+          color: theme.colorScheme.outline.withValues(alpha: 0.3),
         ),
       ),
       child: Column(

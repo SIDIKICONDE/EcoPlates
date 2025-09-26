@@ -367,61 +367,57 @@ class MerchantErrorHandler {
 
   /// Retourne l'icône appropriée pour le type d'erreur
   static IconData _getErrorIcon(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure _:
-        return Icons.wifi_off;
-      case AuthenticationFailure _:
-        return Icons.lock_outline;
-      case PermissionFailure _:
-        return Icons.block;
-      case ValidationFailure _:
-        return Icons.warning_amber;
-      case PaymentFailure _:
-        return Icons.credit_card_off;
-      case TimeoutFailure _:
-        return Icons.timer_off;
-      default:
-        return Icons.error_outline;
+    if (failure is NetworkFailure) {
+      return Icons.wifi_off;
+    } else if (failure is AuthenticationFailure) {
+      return Icons.lock_outline;
+    } else if (failure is PermissionFailure) {
+      return Icons.block;
+    } else if (failure is ValidationFailure) {
+      return Icons.warning_amber;
+    } else if (failure is PaymentFailure) {
+      return Icons.credit_card_off;
+    } else if (failure is TimeoutFailure) {
+      return Icons.timer_off;
+    } else {
+      return Icons.error_outline;
     }
   }
 
   /// Retourne la couleur appropriée pour le type d'erreur
   static Color _getErrorColor(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure _:
-      case TimeoutFailure _:
-        return Colors.orange;
-      case AuthenticationFailure _:
-      case PermissionFailure _:
-        return Colors.red;
-      case ValidationFailure _:
-        return Colors.amber;
-      case PaymentFailure _:
-        return Colors.deepOrange;
-      default:
-        return Colors.red;
+    if (failure is NetworkFailure || failure is TimeoutFailure) {
+      return Colors.orange;
+    } else if (failure is AuthenticationFailure ||
+        failure is PermissionFailure) {
+      return Colors.red;
+    } else if (failure is ValidationFailure) {
+      return Colors.amber;
+    } else if (failure is PaymentFailure) {
+      return Colors.deepOrange;
+    } else {
+      return Colors.red;
     }
   }
 
   /// Retourne le titre approprié pour le type d'erreur
   static String _getErrorTitle(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure _:
-        return 'Erreur de connexion';
-      case AuthenticationFailure _:
-        return "Erreur d'authentification";
-      case PermissionFailure _:
-        return 'Accès refusé';
-      case ValidationFailure _:
-        return 'Données invalides';
-      case PaymentFailure _:
-        return 'Erreur de paiement';
-      case TimeoutFailure _:
-        return 'Délai dépassé';
-      case BusinessFailure _:
-        return 'Erreur métier';
-      default:
-        return 'Erreur';
+    if (failure is NetworkFailure) {
+      return 'Erreur de connexion';
+    } else if (failure is AuthenticationFailure) {
+      return "Erreur d'authentification";
+    } else if (failure is PermissionFailure) {
+      return 'Accès refusé';
+    } else if (failure is ValidationFailure) {
+      return 'Données invalides';
+    } else if (failure is PaymentFailure) {
+      return 'Erreur de paiement';
+    } else if (failure is TimeoutFailure) {
+      return 'Délai dépassé';
+    } else if (failure is BusinessFailure) {
+      return 'Erreur métier';
+    } else {
+      return 'Erreur';
     }
   }
 }

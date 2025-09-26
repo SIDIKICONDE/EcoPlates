@@ -62,11 +62,11 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             const Duration(seconds: 1),
             onTimeout: () {
               throw Exception(
-                'Délai d\'attente dépassé pour l\'ajustement de quantité',
+                "Délai d'attente dépassé pour l'ajustement de quantité",
               );
             },
           );
-    } catch (error) {
+    } on Exception catch (error) {
       if (mounted) {
         // Affiche un snackbar en cas d'erreur
         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -60,7 +62,7 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
           const SnackBar(content: Text('Export des ventes en cours...')),
         );
       case 'refresh':
-        ref.read(salesProvider.notifier).refresh();
+        unawaited(ref.read(salesProvider.notifier).refresh());
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Actualisation en cours...')),
         );
@@ -83,7 +85,7 @@ class _MerchantLogo extends StatelessWidget {
         radius: 16,
         backgroundColor: Theme.of(context).colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
-        onBackgroundImageError: (_, __) {
+        onBackgroundImageError: (_, _) {
           // Fallback vers une icône si l'image ne charge pas
         },
         child: const Icon(Icons.store, size: 20, color: Colors.grey),

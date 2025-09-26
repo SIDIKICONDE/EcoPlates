@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers/offer_reservation_provider.dart';
 
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/nearby_offers_provider.dart';
+import '../../../providers/offer_reservation_provider.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
 import 'categories_section.dart';
@@ -14,10 +16,11 @@ class NearbySection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nearbyOffersAsync = ref.watch(nearbyOffersProvider);
+    final allOffers = ref.watch(nearbyOffersProvider);
     // Watch providers to trigger rebuilds when they change
-    ref.watch(userLocationProvider);
-    ref.watch(searchRadiusProvider);
+    ref
+      ..watch(userLocationProvider)
+      ..watch(searchRadiusProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,129 +49,7 @@ class NearbySection extends ConsumerWidget {
         // Liste des offres à proximité
         SizedBox(
           height: 280,
-          child: nearbyOffersAsync.when(
-            data: (allOffers) {
-              // Filtrer les offres selon la catégorie sélectionnée
-              final offers = ref.watch(filterOffersByCategoryProvider(allOffers));
-              if (offers.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.location_off_outlined,
-                        size: 48,
-                        color: Colors.grey[400],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Aucune offre à proximité',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                      ),
-                      Text(
-                        'Élargissez votre zone de recherche',
-                        style: TextStyle(color: Colors.grey[500], fontSize: 14),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              // Afficher les offres avec indicateur de distance
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                physics: const BouncingScrollPhysics(),
-                itemCount: offers.length,
-                itemBuilder: (context, index) {
-                  final offer = offers[index];
-final distance = offer.distanceKm ?? (0.3 + (index * 0.4)); // Distance réelle si disponible
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: SizedBox(
-                      width: 340,
-                      child: Stack(
-                        children: [
-                          OfferCard(
-                            offer: offer,
-                            compact: true,
-                            distance: distance,
-                            onTap: () {
-                              _showOfferDetailModal(context, offer);
-                            },
-                          ),
-                          // Badge distance en haut à droite
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.9),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.directions_walk,
-                                    size: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-'${(distance * 15).round()} min',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[700],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Erreur de chargement',
-                    style: TextStyle(color: Colors.red[700]),
-                  ),
-                  const SizedBox(height: 8),
-                  TextButton.icon(
-                    onPressed: () {
-                      ref.invalidate(nearbyOffersProvider);
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Réessayer'),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child: _buildOffersList(context, ref, allOffers),
         ),
 
         const SizedBox(height: 16),
@@ -176,151 +57,266 @@ final distance = offer.distanceKm ?? (0.3 + (index * 0.4)); // Distance réelle 
     );
   }
 
+  Widget _buildOffersList(
+    BuildContext context,
+    WidgetRef ref,
+    List<FoodOffer> allOffers,
+  ) {
+    // Filtrer les offres selon la catégorie sélectionnée
+    final offers = ref.watch(filterOffersByCategoryProvider(allOffers));
+
+    if (offers.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.location_off_outlined,
+              size: 48,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Aucune offre à proximité',
+              style: TextStyle(color: Colors.grey[600], fontSize: 16),
+            ),
+            Text(
+              'Élargissez votre zone de recherche',
+              style: TextStyle(color: Colors.grey[500], fontSize: 14),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Afficher les offres avec indicateur de distance
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      physics: const BouncingScrollPhysics(),
+      itemCount: offers.length,
+      itemBuilder: (context, index) {
+        final offer = offers[index];
+        final distance =
+            offer.distanceKm ??
+            (0.3 + (index * 0.4)); // Distance réelle si disponible
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: SizedBox(
+            width: 340,
+            child: Stack(
+              children: [
+                OfferCard(
+                  offer: offer,
+                  compact: true,
+                  distance: distance,
+                  onTap: () {
+                    _showOfferDetailModal(context, offer);
+                  },
+                ),
+                // Badge distance en haut à droite
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.directions_walk,
+                          size: 14,
+                          color: Colors.grey[700],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${(distance * 15).round()} min',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showDistanceFilter(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => _DistanceFilterModal(
-        currentRadius: ref.read(searchRadiusProvider),
-        onRadiusChanged: (newRadius) {
-          ref.read(searchRadiusProvider.notifier).state = newRadius;
-          Navigator.pop(context);
-          // Rafraîchir les offres
-          ref.invalidate(nearbyOffersProvider);
-        },
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) => _DistanceFilterModal(
+          currentRadius: ref.read(searchRadiusProvider),
+          onRadiusChanged: (newRadius) {
+            ref.read(searchRadiusProvider.notifier).updateRadius(newRadius);
+            Navigator.pop(context);
+            // Rafraîchir les offres
+            ref.invalidate(nearbyOffersProvider);
+          },
+        ),
       ),
     );
   }
 
   void _showOfferDetailModal(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.9,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            // Header avec indicateur de distance
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+          height: MediaQuery.of(context).size.height * 0.9,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              // Header avec indicateur de distance
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        offer.merchantName,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on,
-                            size: 14,
-                            color: Colors.grey[600],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          offer.merchantName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'À 0.5 km • 8 min à pied',
-                            style: TextStyle(
-                              fontSize: 12,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              size: 14,
                               color: Colors.grey[600],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-            ),
-
-            // Contenu de l'offre
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    OfferInfoSection(offer: offer),
-                    const SizedBox(height: 24),
-                    OfferDetailsSection(offer: offer),
-                    const SizedBox(height: 24),
-                    OfferAddressSection(offer: offer),
-                    const SizedBox(height: 24),
-                    OfferBadgesSection(offer: offer),
-                    const SizedBox(height: 24),
-                    OfferMetadataSection(offer: offer),
-                    const SizedBox(height: 100),
+                            const SizedBox(width: 4),
+                            Text(
+                              'À 0.5 km • 8 min à pied',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
                   ],
                 ),
               ),
-            ),
 
-            // Barre de réservation
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(top: BorderSide(color: Colors.grey[200]!)),
+              // Contenu de l'offre
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      OfferInfoSection(offer: offer),
+                      const SizedBox(height: 24),
+                      OfferDetailsSection(offer: offer),
+                      const SizedBox(height: 24),
+                      OfferAddressSection(offer: offer),
+                      const SizedBox(height: 24),
+                      OfferBadgesSection(offer: offer),
+                      const SizedBox(height: 24),
+                      OfferMetadataSection(offer: offer),
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                ),
               ),
-              child: Consumer(
-                builder: (context, ref, _) {
-                  return OfferReservationBar(
-                    offer: offer,
-                    isReserving: false,
-                    onReserve: () async {
-                      try {
-                        await ref
-                            .read(offerReservationProvider.notifier)
-                            .reserve(offer: offer, quantity: 1);
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: Colors.green,
-                              content: Text('✅ "${offer.title}" réservé avec succès !'),
-                              duration: const Duration(seconds: 3),
-                            ),
-                          );
+
+              // Barre de réservation
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(top: BorderSide(color: Colors.grey[200]!)),
+                ),
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    return OfferReservationBar(
+                      offer: offer,
+                      isReserving: false,
+                      onReserve: () async {
+                        try {
+                          await ref
+                              .read(offerReservationProvider.notifier)
+                              .reserve(offer: offer);
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.green,
+                                content: Text(
+                                  '✅ "${offer.title}" réservé avec succès !',
+                                ),
+                                duration: const Duration(seconds: 3),
+                              ),
+                            );
+                          }
+                        } on Exception catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.error,
+                                content: Text('Réservation impossible: $e'),
+                              ),
+                            );
+                          }
                         }
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: Theme.of(context).colorScheme.error,
-                              content: Text('Réservation impossible: $e'),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  );
-                },
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

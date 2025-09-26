@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -70,7 +72,6 @@ class StockListItemCompact extends ConsumerWidget {
                           // Indicateur de stock avec alerte
                           StockIndicator(
                             item: item,
-                            showQuantity: true,
                             compact: dense,
                           ),
                         ],
@@ -193,14 +194,14 @@ class StockListItemCompact extends ConsumerWidget {
           ),
         );
       case 'toggle':
-        _toggleStatus(context, ref);
+        unawaited(_toggleStatus(context, ref));
     }
   }
 
   Future<void> _toggleStatus(BuildContext context, WidgetRef ref) async {
     try {
       await ref.read(stockItemsProvider.notifier).toggleStatus(item.id);
-    } catch (error) {
+    } on Exception catch (error) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

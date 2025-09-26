@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,9 +12,11 @@ import 'offer_promotion_manager.dart';
 class StoreOfferActionsDialog {
   /// Affiche le dialogue des actions pour une offre
   static void show(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (context) => _OfferActionsSheet(offer: offer),
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        builder: (context) => _OfferActionsSheet(offer: offer),
+      ),
     );
   }
 }
@@ -74,11 +77,13 @@ class _OfferActionsSheet extends ConsumerWidget {
             title: Text(offer.isAvailable ? 'Désactiver' : 'Activer'),
             onTap: () {
               // Capturer la référence avant la navigation
-              final storeOffersNotifier = ref.read(storeOffersProvider.notifier);
+              final storeOffersNotifier = ref.read(
+                storeOffersProvider.notifier,
+              );
               final offerId = offer.id;
-              
+
               Navigator.of(context).pop();
-              storeOffersNotifier.toggleOfferStatus(offerId);
+              unawaited(storeOffersNotifier.toggleOfferStatus(offerId));
             },
           ),
           ListTile(
@@ -94,10 +99,7 @@ class _OfferActionsSheet extends ConsumerWidget {
             leading: const Icon(Icons.local_offer),
             title: const Text('Gérer la promotion'),
             onTap: () {
-              // Capturer les références nécessaires avant la navigation
-              final navigator = Navigator.of(context);
-              
-              navigator.pop();
+              Navigator.of(context).pop();
               _PromotionDialog.show(context, ref, offer);
             },
           ),
@@ -121,7 +123,7 @@ class _OfferActionsSheet extends ConsumerWidget {
 /// Classe utilitaire pour le dialogue de promotion
 class _PromotionDialog {
   static void show(BuildContext context, WidgetRef ref, FoodOffer offer) {
-    showDialog<void>(
+    unawaited(showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -133,17 +135,17 @@ class _PromotionDialog {
           ),
         ),
       ),
-    );
+    ));
   }
 }
 
 /// Classe utilitaire pour le dialogue de confirmation de suppression
 class _DeleteConfirmationDialog {
   static void show(BuildContext context, FoodOffer offer) {
-    showDialog<void>(
+    unawaited(showDialog<void>(
       context: context,
       builder: (context) => _DeleteConfirmationDialogWidget(offer: offer),
-    );
+    ));
   }
 }
 
@@ -171,7 +173,7 @@ class _DeleteConfirmationDialogWidget extends ConsumerWidget {
             final storeOffersNotifier = ref.read(storeOffersProvider.notifier);
             final offerTitle = offer.title;
             final offerId = offer.id;
-            
+
             // Fermer le dialogue immédiatement
             navigator.pop();
 
@@ -188,7 +190,7 @@ class _DeleteConfirmationDialogWidget extends ConsumerWidget {
                   ),
                 );
               }
-            } catch (error) {
+            } on Exception catch (error) {
               // En cas d'erreur, afficher un message d'erreur
               if (context.mounted) {
                 scaffoldMessenger.showSnackBar(

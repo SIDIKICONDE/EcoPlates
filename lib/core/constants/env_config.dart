@@ -26,9 +26,17 @@ class EnvConfig {
   static String get buildNumber => dotenv.env['BUILD_NUMBER'] ?? '1';
 
   // APIs externes
-  static String get googleMapsApiKey =>
-      dotenv.env['GOOGLE_MAPS_API_KEY'] ??
-      'AIzaSyCt57yjJiwlrr81dQQusoPVwmKFTWWhR_k';
+  static String get googleMapsApiKey {
+    final key = dotenv.env['GOOGLE_MAPS_API_KEY'];
+    if (key == null || key.isEmpty) {
+      throw Exception(
+        'GOOGLE_MAPS_API_KEY not found in environment configuration. '
+        'Please ensure your .env file is properly configured. '
+        'See .env.example for reference.'
+      );
+    }
+    return key;
+  }
 
   static bool get isDevelopment => environment == 'development';
   static bool get isStaging => environment == 'staging';

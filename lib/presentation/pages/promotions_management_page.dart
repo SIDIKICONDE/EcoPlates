@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -333,9 +334,10 @@ class PromotionsManagementPage extends ConsumerWidget {
   }
 
   void _showGlobalPromotionDialog(BuildContext context) {
-    showDialog<void>(
+    unawaited(showDialog<void>(
       context: context,
       builder: (context) => const GlobalPromotionDialog(),
+    ),
     );
   }
 
@@ -343,7 +345,6 @@ class PromotionsManagementPage extends ConsumerWidget {
     switch (action) {
       case 'clear_all':
         _showClearAllPromotionsDialog(context, ref);
-        break;
       case 'stats':
         // TODO: Navigation vers page de statistiques détaillées
         ScaffoldMessenger.of(context).showSnackBar(
@@ -352,12 +353,11 @@ class PromotionsManagementPage extends ConsumerWidget {
             backgroundColor: Colors.blue,
           ),
         );
-        break;
     }
   }
 
   void _showClearAllPromotionsDialog(BuildContext context, WidgetRef ref) {
-    showDialog<void>(
+    unawaited(showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Supprimer toutes les promotions'),
@@ -387,7 +387,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                     ),
                   );
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -405,6 +405,6 @@ class PromotionsManagementPage extends ConsumerWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

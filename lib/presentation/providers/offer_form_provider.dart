@@ -135,15 +135,11 @@ class OfferFormState {
   bool get isFree => discountedPrice == 0;
 }
 
-/// Provider pour l'état du formulaire d'offre
-final offerFormProvider =
-    StateNotifierProvider<OfferFormNotifier, OfferFormState>(
-      (ref) => OfferFormNotifier(ref),
-    );
-
-class OfferFormNotifier extends StateNotifier<OfferFormState> {
-  OfferFormNotifier(this.ref) : super(const OfferFormState());
-  final Ref ref;
+class OfferFormNotifier extends Notifier<OfferFormState> {
+  @override
+  OfferFormState build() {
+    return const OfferFormState();
+  }
 
   /// Réinitialise le formulaire avec des valeurs par défaut
   void resetForm() {
@@ -284,7 +280,7 @@ class OfferFormNotifier extends StateNotifier<OfferFormState> {
       final position = await _getCurrentLocation();
 
       if (position == null) {
-        throw Exception('Impossible d\'obtenir la position actuelle');
+        throw Exception("Impossible d'obtenir la position actuelle");
       }
 
       final offer = FoodOffer(
@@ -348,15 +344,15 @@ class OfferFormNotifier extends StateNotifier<OfferFormState> {
       // Récupère l'offre existante depuis le catalogue
       final catalog = ref.read(offersCatalogProvider);
       final existingIndex = catalog.indexWhere((o) => o.id == offerId);
-      
+
       if (existingIndex == -1) {
         throw Exception(
-          'Cette offre n\'existe plus dans le catalogue. '
+          "Cette offre n'existe plus dans le catalogue. "
           'Elle a peut-être été supprimée par un autre utilisateur. '
           'Veuillez actualiser la page et réessayer.',
         );
       }
-      
+
       final existing = catalog[existingIndex];
 
       final updated = existing.copyWith(
@@ -401,7 +397,7 @@ class OfferFormNotifier extends StateNotifier<OfferFormState> {
 
   /// Obtient la position actuelle
   Future<Position?> _getCurrentLocation() async {
-    return await GeoLocationService.instance.getCurrentPosition();
+    return GeoLocationService.instance.getCurrentPosition();
   }
 
   /// Combine une date et une heure
@@ -409,3 +405,8 @@ class OfferFormNotifier extends StateNotifier<OfferFormState> {
     return DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
 }
+
+/// Provider pour l'état du formulaire d'offre
+final offerFormProvider = NotifierProvider<OfferFormNotifier, OfferFormState>(
+  OfferFormNotifier.new,
+);

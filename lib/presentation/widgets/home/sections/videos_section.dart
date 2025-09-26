@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,10 +41,12 @@ class VideosSection extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => const AllVideosPage(),
+                  unawaited(
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => const AllVideosPage(),
+                      ),
                     ),
                   );
                 },
@@ -159,11 +163,11 @@ class VideosSection extends ConsumerWidget {
       final seconds = int.tryParse(parts[1]) ?? 0;
       return Duration(minutes: minutes, seconds: seconds);
     }
-    return const Duration();
+    return Duration.zero;
   }
 
   void _showVideoModal(BuildContext context, VideoPreview video) {
     // Utiliser la fonction fournie par le module video_player
-    showFloatingVideoModal(context, video);
+    unawaited(showFloatingVideoModal(context, video));
   }
 }

@@ -5,18 +5,18 @@ import '../../../domain/entities/stock_item.dart';
 /// Badge pour afficher le niveau d'alerte d'un article de stock
 class StockAlertBadge extends StatelessWidget {
   const StockAlertBadge({
-    super.key,
     required this.alertLevel,
     this.showLabel = true,
     this.compact = false,
+    super.key,
   });
 
   /// Niveau d'alerte à afficher
   final StockAlertLevel alertLevel;
-  
+
   /// Afficher le label texte à côté de l'icône
   final bool showLabel;
-  
+
   /// Mode compact (tailles réduites)
   final bool compact;
 
@@ -29,7 +29,7 @@ class StockAlertBadge extends StatelessWidget {
     final theme = Theme.of(context);
     final color = _getColor(theme);
     final icon = _getIcon();
-    
+
     final iconSize = compact ? 14.0 : 16.0;
     final fontSize = compact ? 10.0 : 12.0;
     final padding = compact
@@ -96,18 +96,18 @@ class StockAlertBadge extends StatelessWidget {
 /// Indicateur de stock avec quantité et alerte
 class StockIndicator extends StatelessWidget {
   const StockIndicator({
-    super.key,
     required this.item,
     this.showQuantity = true,
     this.compact = false,
+    super.key,
   });
 
   /// Article de stock
   final StockItem item;
-  
+
   /// Afficher la quantité
   final bool showQuantity;
-  
+
   /// Mode compact
   final bool compact;
 
@@ -115,7 +115,7 @@ class StockIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final fontSize = compact ? 11.0 : 13.0;
-    
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -128,8 +128,8 @@ class StockIndicator extends StatelessWidget {
               color: item.isOutOfStock
                   ? theme.colorScheme.error
                   : item.isLowStock
-                      ? Colors.orange
-                      : theme.colorScheme.onSurfaceVariant,
+                  ? Colors.orange
+                  : theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(width: 8),

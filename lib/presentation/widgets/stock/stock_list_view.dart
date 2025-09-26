@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -56,7 +58,8 @@ class StockListView extends ConsumerWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return stockItemsAsync.when(
-          data: (items) => _buildItemsList(context, ref, items, constraints, isCompactView),
+          data: (items) =>
+              _buildItemsList(context, ref, items, constraints, isCompactView),
           loading: () => _buildLoadingState(context, constraints),
           error: (error, stackTrace) =>
               _buildErrorState(context, ref, error, constraints),
@@ -260,7 +263,7 @@ class StockListView extends ConsumerWidget {
                   : Duration.zero,
               child: FilledButton.icon(
                 onPressed: () {
-                  ref.read(stockItemsProvider.notifier).refresh();
+                  unawaited(ref.read(stockItemsProvider.notifier).refresh());
                 },
                 icon: const Icon(Icons.refresh_rounded),
                 label: const Text('Réessayer'),
@@ -366,8 +369,10 @@ class StockListView extends ConsumerWidget {
                     : Duration.zero,
                 child: OutlinedButton.icon(
                   onPressed: () {
-                    ref.read(stockFiltersProvider.notifier).state =
-                        const StockFiltersState();
+                    ref
+                        .read(stockFiltersProvider.notifier)
+                        .updateStatusFilter(null);
+                    const StockFiltersState();
                   },
                   icon: const Icon(Icons.clear_rounded),
                   label: const Text('Effacer les filtres'),

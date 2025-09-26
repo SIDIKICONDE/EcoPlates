@@ -57,7 +57,7 @@ class CreateStockItemUseCase {
     }
     
     if (lowStockThreshold != null && lowStockThreshold < 0) {
-      throw ArgumentError('Le seuil d\'alerte ne peut pas être négatif');
+      throw ArgumentError("Le seuil d'alerte ne peut pas être négatif");
     }
 
     // Créer l'article avec un ID temporaire (sera remplacé par le repository)

@@ -12,7 +12,7 @@ class AllMealsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mealsAsync = ref.watch(mealsProvider);
+    final meals = ref.watch(mealsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -20,10 +20,8 @@ class AllMealsScreen extends ConsumerWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: mealsAsync.when(
-        data: (meals) {
-          if (meals.isEmpty) {
-            return Center(
+      body: meals.isEmpty
+          ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -45,55 +43,32 @@ class AllMealsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            itemCount: meals.length,
-            itemBuilder: (context, index) {
-              final meal = meals[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: OfferCard(
-                  offer: meal,
-                  distance: 0.8 + (index * 0.3), // Distance simulée
-                  onTap: () {
-                    _showMealDetailModal(context, meal);
-                  },
-                ),
-              );
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
-              const SizedBox(height: 16),
-              Text(
-                'Erreur de chargement',
-                style: TextStyle(color: Colors.red[700], fontSize: 18),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: () {
-                  ref.invalidate(mealsProvider);
-                },
-                icon: const Icon(Icons.refresh),
-                label: const Text('Réessayer'),
-              ),
-            ],
-          ),
-        ),
-      ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              itemCount: meals.length,
+              itemBuilder: (context, index) {
+                final meal = meals[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: OfferCard(
+                    offer: meal,
+                    distance: 0.8 + (index * 0.3), // Distance simulée
+                    onTap: () {
+                      _showMealDetailModal(context, meal);
+                    },
+                  ),
+                );
+              },
+            ),
     );
   }
 
-  void _showMealDetailModal(BuildContext context, FoodOffer meal) {
-    showModalBottomSheet<void>(
+  Future<void> _showMealDetailModal(
+    BuildContext context,
+    FoodOffer meal,
+  ) async {
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

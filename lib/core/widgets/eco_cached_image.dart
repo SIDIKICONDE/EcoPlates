@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -116,7 +117,7 @@ class _EcoCachedImageState extends ConsumerState<EcoCachedImage>
       errorWidget: (context, url, error) =>
           widget.errorWidget ?? _buildDefaultErrorWidget(context, error),
       imageBuilder: (context, imageProvider) {
-        _controller.forward();
+        unawaited(_controller.forward());
         return FadeTransition(
           opacity: _animation,
           child: Container(

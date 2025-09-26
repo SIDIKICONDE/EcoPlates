@@ -1,14 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/reservation.dart';
 
-/// Liste simple des réservations utilisateur (dev/mock)
-final userReservationsProvider =
-    StateNotifierProvider<UserReservationsNotifier, List<Reservation>>(
-  (ref) => UserReservationsNotifier(),
-);
-
-class UserReservationsNotifier extends StateNotifier<List<Reservation>> {
-  UserReservationsNotifier() : super(const []);
+class UserReservationsNotifier extends Notifier<List<Reservation>> {
+  @override
+  List<Reservation> build() {
+    return const [];
+  }
 
   void add(Reservation reservation) {
     state = [reservation, ...state];
@@ -26,3 +23,9 @@ class UserReservationsNotifier extends StateNotifier<List<Reservation>> {
     }
   }
 }
+
+/// Liste simple des réservations utilisateur (dev/mock)
+final userReservationsProvider =
+    NotifierProvider<UserReservationsNotifier, List<Reservation>>(
+      UserReservationsNotifier.new,
+    );

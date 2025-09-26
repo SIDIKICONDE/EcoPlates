@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 /// Champ de saisie pour configurer le seuil d'alerte de stock faible
 class StockThresholdField extends StatefulWidget {
   const StockThresholdField({
-    super.key,
     required this.controller,
     required this.unit,
     this.onChanged,
     this.enabled = true,
+    super.key,
   });
 
   /// Contrôleur pour la valeur du seuil
@@ -95,7 +95,7 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
               const SizedBox(height: 16),
               
               Text(
-                'Seuil d\'alerte',
+                "Seuil d'alerte",
                 style: TextStyle(
                   fontSize: 12,
                   color: theme.colorScheme.onSurfaceVariant,

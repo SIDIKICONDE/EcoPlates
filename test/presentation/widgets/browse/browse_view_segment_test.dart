@@ -1,11 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:ecoplates/core/enums/sort_options.dart';
 import 'package:ecoplates/presentation/providers/browse_view_provider.dart';
 import 'package:ecoplates/presentation/providers/sort_provider.dart';
 import 'package:ecoplates/presentation/widgets/browse/browse_view_segment.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+class TestBrowseViewModeNotifier extends BrowseViewModeNotifier {
+  TestBrowseViewModeNotifier(BrowseViewMode initialState) {
+    state = initialState;
+  }
+}
+
+class TestSortOptionNotifier extends SortOptionNotifier {
+  TestSortOptionNotifier(SortOption initialState) {
+    state = initialState;
+  }
+}
 
 void main() {
   group('BrowseViewSegment', () {
@@ -26,8 +37,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            browseViewModeProvider.overrideWith((ref) => BrowseViewMode.list),
-            sortOptionProvider.overrideWith((ref) => SortOption.distance),
+            browseViewModeProvider.overrideWith(
+              () => TestBrowseViewModeNotifier(BrowseViewMode.list),
+            ),
+            sortOptionProvider.overrideWith(
+              () => TestSortOptionNotifier(SortOption.distance),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseViewSegment())),
         ),
@@ -47,8 +62,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            browseViewModeProvider.overrideWith((ref) => BrowseViewMode.list),
-            sortOptionProvider.overrideWith((ref) => SortOption.distance),
+            browseViewModeProvider.overrideWith(
+              () => TestBrowseViewModeNotifier(BrowseViewMode.list),
+            ),
+            sortOptionProvider.overrideWith(
+              () => TestSortOptionNotifier(SortOption.distance),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseViewSegment())),
         ),
@@ -69,10 +88,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            browseViewModeProvider.overrideWith((ref) {
-              return currentMode;
-            }),
-            sortOptionProvider.overrideWith((ref) => SortOption.distance),
+            browseViewModeProvider.overrideWith(
+              () => TestBrowseViewModeNotifier(currentMode),
+            ),
+            sortOptionProvider.overrideWith(
+              () => TestSortOptionNotifier(SortOption.distance),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseViewSegment())),
         ),
@@ -96,10 +117,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            browseViewModeProvider.overrideWith((ref) {
-              return currentMode;
-            }),
-            sortOptionProvider.overrideWith((ref) => SortOption.distance),
+            browseViewModeProvider.overrideWith(
+              () => TestBrowseViewModeNotifier(currentMode),
+            ),
+            sortOptionProvider.overrideWith(
+              () => TestSortOptionNotifier(SortOption.distance),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseViewSegment())),
         ),
@@ -119,8 +142,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            browseViewModeProvider.overrideWith((ref) => BrowseViewMode.list),
-            sortOptionProvider.overrideWith((ref) => SortOption.distance),
+            browseViewModeProvider.overrideWith(
+              () => TestBrowseViewModeNotifier(BrowseViewMode.list),
+            ),
+            sortOptionProvider.overrideWith(
+              () => TestSortOptionNotifier(SortOption.distance),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseViewSegment())),
         ),
@@ -135,8 +162,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            browseViewModeProvider.overrideWith((ref) => BrowseViewMode.list),
-            sortOptionProvider.overrideWith((ref) => SortOption.distance),
+            browseViewModeProvider.overrideWith(
+              () => TestBrowseViewModeNotifier(BrowseViewMode.list),
+            ),
+            sortOptionProvider.overrideWith(
+              () => TestSortOptionNotifier(SortOption.distance),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseViewSegment())),
         ),
@@ -162,8 +193,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            browseViewModeProvider.overrideWith((ref) => BrowseViewMode.map),
-            sortOptionProvider.overrideWith((ref) => SortOption.distance),
+            browseViewModeProvider.overrideWith(
+              () => TestBrowseViewModeNotifier(BrowseViewMode.map),
+            ),
+            sortOptionProvider.overrideWith(
+              () => TestSortOptionNotifier(SortOption.distance),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseViewSegment())),
         ),
@@ -186,8 +221,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            browseViewModeProvider.overrideWith((ref) => BrowseViewMode.list),
-            sortOptionProvider.overrideWith((ref) => SortOption.distance),
+            browseViewModeProvider.overrideWith(
+              () => TestBrowseViewModeNotifier(BrowseViewMode.list),
+            ),
+            sortOptionProvider.overrideWith(
+              () => TestSortOptionNotifier(SortOption.distance),
+            ),
           ],
           child: const MaterialApp(home: Scaffold(body: BrowseViewSegment())),
         ),

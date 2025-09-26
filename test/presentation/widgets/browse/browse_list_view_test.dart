@@ -8,6 +8,18 @@ import 'package:ecoplates/presentation/providers/brand_provider.dart';
 import 'package:ecoplates/presentation/providers/browse_search_provider.dart';
 import 'package:ecoplates/presentation/widgets/browse/browse_list_view.dart';
 
+class TestBrowseFiltersNotifier extends BrowseFiltersNotifier {
+  TestBrowseFiltersNotifier(BrowseFilters initialState) {
+    state = initialState;
+  }
+}
+
+class TestSearchQueryNotifier extends SearchQueryNotifier {
+  TestSearchQueryNotifier(String initialState) {
+    state = initialState;
+  }
+}
+
 void main() {
   group('BrowseListView', () {
     late ProviderContainer container;
@@ -102,8 +114,10 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
           child: MaterialApp(
@@ -126,8 +140,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => 'croissant'),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
+            searchQueryProvider.overrideWith(
+              () => TestSearchQueryNotifier('croissant'),
+            ),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
           child: MaterialApp(
@@ -148,8 +166,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => 'boulangerie'),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
+            searchQueryProvider.overrideWith(
+              () => TestSearchQueryNotifier('boulangerie'),
+            ),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
           child: MaterialApp(
@@ -170,9 +192,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
             browseFiltersProvider.overrideWith(
-              (ref) => const BrowseFilters(minPrice: 5),
+              () => TestBrowseFiltersNotifier(const BrowseFilters(minPrice: 5)),
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
@@ -194,9 +216,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
             browseFiltersProvider.overrideWith(
-              (ref) => const BrowseFilters(maxPrice: 5),
+              () => TestBrowseFiltersNotifier(const BrowseFilters(maxPrice: 5)),
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
@@ -218,9 +240,11 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
             browseFiltersProvider.overrideWith(
-              (ref) => const BrowseFilters(freeOnly: true),
+              () => TestBrowseFiltersNotifier(
+                const BrowseFilters(freeOnly: true),
+              ),
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
@@ -242,9 +266,11 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
             browseFiltersProvider.overrideWith(
-              (ref) => const BrowseFilters(categories: ['diner']),
+              () => TestBrowseFiltersNotifier(
+                const BrowseFilters(categories: ['diner']),
+              ),
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
@@ -264,9 +290,11 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
             browseFiltersProvider.overrideWith(
-              (ref) => const BrowseFilters(dietaryPreferences: ['vegetarian']),
+              () => TestBrowseFiltersNotifier(
+                const BrowseFilters(dietaryPreferences: ['vegetarian']),
+              ),
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
@@ -286,9 +314,11 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
             browseFiltersProvider.overrideWith(
-              (ref) => const BrowseFilters(dietaryPreferences: ['vegan']),
+              () => TestBrowseFiltersNotifier(
+                const BrowseFilters(dietaryPreferences: ['vegan']),
+              ),
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
@@ -310,8 +340,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => 'recherche inexistante'),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
+            searchQueryProvider.overrideWith(
+              () => TestSearchQueryNotifier('recherche inexistante'),
+            ),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
           child: MaterialApp(
@@ -333,8 +367,10 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
-            browseFiltersProvider.overrideWith((ref) => const BrowseFilters()),
+            searchQueryProvider.overrideWith(() => TestSearchQueryNotifier('')),
+            browseFiltersProvider.overrideWith(
+              () => TestBrowseFiltersNotifier(const BrowseFilters()),
+            ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
           child: const MaterialApp(

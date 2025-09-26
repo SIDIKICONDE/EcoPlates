@@ -201,7 +201,7 @@ class OfferCardContent extends StatelessWidget {
       final end =
           '${offer.pickupEndTime.hour.toString().padLeft(2, '0')}:${offer.pickupEndTime.minute.toString().padLeft(2, '0')}';
       return '$start - $end';
-    } catch (e) {
+    } on Exception catch (_) {
       return 'Horaire à définir';
     }
   }

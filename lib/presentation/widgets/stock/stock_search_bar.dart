@@ -71,10 +71,7 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
     // Démarre un nouveau timer
     _debounceTimer = Timer(widget.debounceDuration, () {
       // Met à jour les filtres seulement après le délai
-      final currentFilters = ref.read(stockFiltersProvider);
-      ref.read(stockFiltersProvider.notifier).state = currentFilters.copyWith(
-        searchQuery: query.trim(),
-      );
+      ref.read(stockFiltersProvider.notifier).updateSearchQuery(query.trim());
     });
   }
 
@@ -83,10 +80,7 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
     _debounceTimer?.cancel();
 
     // Met à jour immédiatement pour effacer la recherche
-    final currentFilters = ref.read(stockFiltersProvider);
-    ref.read(stockFiltersProvider.notifier).state = currentFilters.copyWith(
-      searchQuery: '',
-    );
+    ref.read(stockFiltersProvider.notifier).updateSearchQuery('');
   }
 
   @override

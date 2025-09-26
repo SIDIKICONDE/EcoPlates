@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers/offer_reservation_provider.dart';
 
 import '../../../../domain/entities/food_offer.dart';
+import '../../../providers/offer_reservation_provider.dart';
 import '../../../providers/recommended_offers_provider.dart';
 import '../../../screens/all_recommended_offers_screen.dart';
 import '../../offer_card.dart';
@@ -48,9 +50,12 @@ class RecommendedSection extends ConsumerWidget {
               ),
               TextButton.icon(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (context) => const AllRecommendedOffersScreen(),
+                  unawaited(
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (context) =>
+                            const AllRecommendedOffersScreen(),
+                      ),
                     ),
                   );
                 },
@@ -83,47 +88,49 @@ class RecommendedSection extends ConsumerWidget {
           child: recommendedOffersAsync.when(
             data: (allOffers) {
               // Filtrer les offres selon la catégorie sélectionnée
-              final offers = ref.watch(filterOffersByCategoryProvider(allOffers));
-              
+              final offers = ref.watch(
+                filterOffersByCategoryProvider(allOffers),
+              );
+
               return offers.isEmpty
                   ? _buildEmptyState(context)
                   : ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: _horizontalPadding - _cardSpacing / 2,
-                    ),
-                    physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics(),
-                    ),
-                    itemCount: offers.length,
-                    itemBuilder: (context, index) {
-                      final offer = offers[index];
-                      return AnimatedContainer(
-                        duration: Duration(milliseconds: 300 + (index * 50)),
-                        curve: Curves.easeOutCubic,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: _cardSpacing / 2,
-                        ),
-                        child: SizedBox(
-                          width: _cardWidth,
-                          child: Material(
-                            elevation: 2,
-                            shadowColor: colorScheme.shadow.withValues(
-                              alpha: 0.1,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            child: OfferCard(
-                              offer: offer,
-                              compact: true,
-                              distance: 1.2 + (index * 0.3),
-                              onTap: () =>
-                                  _showOfferDetailModal(context, offer),
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: _horizontalPadding - _cardSpacing / 2,
+                      ),
+                      physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
+                      itemCount: offers.length,
+                      itemBuilder: (context, index) {
+                        final offer = offers[index];
+                        return AnimatedContainer(
+                          duration: Duration(milliseconds: 300 + (index * 50)),
+                          curve: Curves.easeOutCubic,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: _cardSpacing / 2,
+                          ),
+                          child: SizedBox(
+                            width: _cardWidth,
+                            child: Material(
+                              elevation: 2,
+                              shadowColor: colorScheme.shadow.withValues(
+                                alpha: 0.1,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                              child: OfferCard(
+                                offer: offer,
+                                compact: true,
+                                distance: 1.2 + (index * 0.3),
+                                onTap: () =>
+                                    _showOfferDetailModal(context, offer),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        );
+                      },
+                    );
             },
             loading: () => _buildLoadingState(context),
             error: (error, stack) => _buildErrorState(context, ref),
@@ -257,12 +264,14 @@ class RecommendedSection extends ConsumerWidget {
   }
 
   void _showOfferDetailModal(BuildContext context, FoodOffer offer) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      useSafeArea: true,
-      builder: (context) => _buildOfferDetailModal(context, offer),
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        useSafeArea: true,
+        builder: (context) => _buildOfferDetailModal(context, offer),
+      ),
     );
   }
 
@@ -408,12 +417,12 @@ class RecommendedSection extends ConsumerWidget {
                           try {
                             await ref
                                 .read(offerReservationProvider.notifier)
-                                .reserve(offer: offer, quantity: 1);
+                                .reserve(offer: offer);
                             if (context.mounted) {
                               Navigator.pop(context);
                               _showReservationConfirmation(context, offer);
                             }
-                          } catch (e) {
+                          } on Exception catch (e) {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -504,7 +513,7 @@ class _AnimatedSectionState extends State<_AnimatedSection>
 
     Future.delayed(Duration(milliseconds: widget.delay), () {
       if (mounted) {
-        _controller.forward();
+        unawaited(_controller.forward());
       }
     });
   }

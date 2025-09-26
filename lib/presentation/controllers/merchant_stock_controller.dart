@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,7 @@ class MerchantStockController {
 
   /// Actualise la liste des articles en stock
   void refreshStock(BuildContext context, WidgetRef ref) {
-    ref.read(stockItemsProvider.notifier).refresh();
+    unawaited(ref.read(stockItemsProvider.notifier).refresh());
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Actualisation en cours...')));
@@ -27,7 +28,7 @@ class MerchantStockController {
     final selected = await showModalBottomSheet<StockSortOption>(
       context: context,
       builder: (ctx) {
-        final options = StockSortOption.values;
+        const options = StockSortOption.values;
         return SafeArea(
           child: ListView(
             shrinkWrap: true,
@@ -55,8 +56,7 @@ class MerchantStockController {
 
     if (selected != null && selected != current.sortBy) {
       // Mettre à jour filtre
-      final notifier = ref.read(stockFiltersProvider.notifier);
-      notifier.state = current.copyWith(sortBy: selected);
+      ref.read(stockFiltersProvider.notifier).updateSortBy(selected);
 
       // Persister
       final prefs = await SharedPreferences.getInstance();
@@ -125,7 +125,7 @@ class MerchantStockController {
           ),
         );
       }
-    } catch (error) {
+    } on Exception catch (error) {
       // Afficher l'erreur avec plus de détails
       debugPrint('Erreur export: $error');
       if (context.mounted) {
@@ -134,10 +134,9 @@ class MerchantStockController {
             content: Text(
               error.toString().contains('accéder au dossier')
                   ? "Impossible d'accéder au dossier Téléchargements"
-                  : "Erreur lors de l'export: ${error.toString()}",
+                  : "Erreur lors de l'export: $error",
             ),
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
           ),
         );
       }
@@ -150,9 +149,9 @@ class MerchantStockController {
       case 'refresh':
         refreshStock(context, ref);
       case 'sort':
-        showSortSheet(context, ref);
+        unawaited(showSortSheet(context, ref));
       case 'export':
-        exportStockData(context, ref);
+        unawaited(exportStockData(context, ref));
     }
   }
 }

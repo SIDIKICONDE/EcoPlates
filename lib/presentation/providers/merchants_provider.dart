@@ -282,6 +282,6 @@ final favoriteMerchantsProvider = Provider<List<Merchant>>((ref) {
         .where((m) => favoriteIds.contains(m.id))
         .toList(),
     loading: () => [],
-    error: (_, __) => [],
+    error: (_, _) => [],
   );
 });

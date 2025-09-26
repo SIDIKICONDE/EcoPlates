@@ -14,11 +14,11 @@ class UserLocationText {
     this.isLoading = false,
     this.hasError = false,
   });
-  
+
   final String address;
   final bool isLoading;
   final bool hasError;
-  
+
   UserLocationText copyWith({
     String? address,
     bool? isLoading,
@@ -33,86 +33,85 @@ class UserLocationText {
 }
 
 /// Notifier pour gérer l'état de la localisation textuelle
-class UserLocationTextNotifier extends StateNotifier<UserLocationText> {
-  UserLocationTextNotifier(this.ref) : super(const UserLocationText()) {
-    _init();
-  }
-  
-  final Ref ref;
-  final _geocodingService = GeocodingService.instance;
+class UserLocationTextNotifier extends Notifier<UserLocationText> {
+  final GeocodingService _geocodingService = GeocodingService.instance;
   StreamSubscription<Position>? _positionSubscription;
   Timer? _debounceTimer;
-  
+
+  @override
+  UserLocationText build() {
+    _init();
+    return const UserLocationText();
+  }
+
   void _init() {
     // Écouter les changements d'état de localisation
     ref.listen(locationStateProvider, (previous, next) {
       if (next.isActive && next.currentPosition != null) {
-        _updateAddressFromPosition(next.currentPosition!);
-        _startListeningToPositionChanges();
+        unawaited(_updateAddressFromPosition(next.currentPosition!));
+        unawaited(_startListeningToPositionChanges());
       } else if (!next.isActive) {
         _stopListeningToPositionChanges();
         state = const UserLocationText(address: 'Activer la localisation');
       }
     });
-    
+
     // Vérifier l'état initial
     final locationState = ref.read(locationStateProvider);
     if (locationState.isActive && locationState.currentPosition != null) {
-      _updateAddressFromPosition(locationState.currentPosition!);
-      _startListeningToPositionChanges();
+      unawaited(_updateAddressFromPosition(locationState.currentPosition!));
+      unawaited(_startListeningToPositionChanges());
     }
   }
-  
-  void _startListeningToPositionChanges() {
-    _positionSubscription?.cancel();
-    
+
+  Future<void> _startListeningToPositionChanges() async {
+    await _positionSubscription?.cancel();
+
     // Écouter les changements de position
     _positionSubscription = GeoLocationService.instance.positionStream.listen(
       (position) {
         // Debouncer pour éviter trop d'appels API
         _debounceTimer?.cancel();
         _debounceTimer = Timer(const Duration(seconds: 3), () {
-          _updateAddressFromPosition(position);
+          unawaited(_updateAddressFromPosition(position));
         });
       },
     );
   }
-  
+
   void _stopListeningToPositionChanges() {
-    _positionSubscription?.cancel();
+    unawaited(_positionSubscription?.cancel());
     _positionSubscription = null;
     _debounceTimer?.cancel();
     _debounceTimer = null;
   }
-  
+
   Future<void> _updateAddressFromPosition(Position position) async {
     state = state.copyWith(isLoading: true, hasError: false);
-    
+
     try {
       final address = await _geocodingService.getAddressFromCoordinates(
         position.latitude,
         position.longitude,
       );
-      
-      if (address != null && mounted) {
+
+      if (address != null) {
         state = UserLocationText(
           address: address,
         );
-      } else if (mounted) {
+      } else {
         state = const UserLocationText(
           address: 'Position actuelle',
         );
       }
-    } catch (e) {
-      if (mounted) {
-        state = const UserLocationText(
-          address: 'Erreur de localisation',
-          hasError: true,
-        );
-      }
+    } on Exception {
+      state = const UserLocationText(
+        address: 'Erreur de localisation',
+        hasError: true,
+      );
     }
   }
-  
+
   /// Met à jour manuellement l'adresse
   Future<void> refreshAddress() async {
     final locationState = ref.read(locationStateProvider);
@@ -120,15 +119,14 @@ class UserLocationTextNotifier extends StateNotifier<UserLocationText> {
       await _updateAddressFromPosition(locationState.currentPosition!);
     }
   }
-  
-  @override
+
   void dispose() {
     _stopListeningToPositionChanges();
-    super.dispose();
   }
 }
 
 /// Provider pour la localisation textuelle de l'utilisateur
-final userLocationTextProvider = StateNotifierProvider<UserLocationTextNotifier, UserLocationText>((ref) {
-  return UserLocationTextNotifier(ref);
-});
+final userLocationTextProvider =
+    NotifierProvider<UserLocationTextNotifier, UserLocationText>(
+      UserLocationTextNotifier.new,
+    );

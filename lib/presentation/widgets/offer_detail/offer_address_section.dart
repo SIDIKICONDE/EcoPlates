@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../domain/entities/food_offer.dart';
@@ -51,8 +53,10 @@ class OfferAddressSection extends StatelessWidget {
                         );
 
                         try {
-                          context.push('/merchant-profile/$merchantId');
-                        } catch (e) {
+                          unawaited(
+                            context.push('/merchant-profile/$merchantId'),
+                          );
+                        } on Exception catch (e) {
                           debugPrint('❌ Erreur navigation: $e');
                           // Fallback: afficher un message ou naviguer vers une page d'erreur
                           ScaffoldMessenger.of(context).showSnackBar(

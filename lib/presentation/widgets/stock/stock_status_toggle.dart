@@ -58,11 +58,11 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
             const Duration(seconds: 1),
             onTimeout: () {
               throw Exception(
-                'Délai d\'attente dépassé pour le changement de statut',
+                "Délai d'attente dépassé pour le changement de statut",
               );
             },
           );
-    } catch (error) {
+    } on Exception catch (error) {
       if (mounted) {
         // Affiche un snackbar en cas d'erreur
         ScaffoldMessenger.of(context).showSnackBar(

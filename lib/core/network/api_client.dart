@@ -3,21 +3,20 @@ import '../constants/env_config.dart';
 
 /// Client API pour les appels HTTP
 class ApiClient {
-  factory ApiClient({Dio? dio})
-  {
+  factory ApiClient({Dio? dio}) {
     return ApiClient._internal(
       dio ??
-      Dio(
-        BaseOptions(
-          baseUrl: EnvConfig.apiBaseUrl,
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ),
-      ),
+          Dio(
+            BaseOptions(
+              baseUrl: EnvConfig.apiBaseUrl,
+              connectTimeout: const Duration(seconds: 30),
+              receiveTimeout: const Duration(seconds: 30),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+            ),
+          ),
     );
   }
 
@@ -168,12 +167,12 @@ class ApiClient {
     try {
       final response = await _dio.head<dynamic>('/health');
       return response.statusCode == 200;
-    } catch (e) {
+    } on Exception {
       // En cas d'erreur, on peut aussi essayer avec un endpoint simple
       try {
         final response = await _dio.get<dynamic>('/ping');
         return response.statusCode == 200;
-      } catch (e) {
+      } on Exception catch (_) {
         return false;
       }
     }

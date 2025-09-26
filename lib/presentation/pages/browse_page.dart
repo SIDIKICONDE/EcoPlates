@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -93,7 +95,7 @@ class BrowsePage extends ConsumerWidget {
   }
   
   void _showFiltersModal(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet<void>(
+    unawaited(showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -127,8 +129,7 @@ class BrowsePage extends ConsumerWidget {
                     children: [
                       TextButton(
                         onPressed: () {
-                          ref.read(browseFiltersProvider.notifier).state = 
-                              const BrowseFilters();
+                          ref.read(browseFiltersProvider.notifier).clearFilters();
                           Navigator.pop(context);
                         },
                         child: const Text('Réinitialiser'),
@@ -190,17 +191,16 @@ class BrowsePage extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ));
   }
   
   void _toggleLocation(BuildContext context, WidgetRef ref) {
-    final isActive = ref.read(isLocationActiveProvider);
-    final newState = !isActive;
-
-    ref.read(isLocationActiveProvider.notifier).state = newState;
+    final wasActive = ref.read(isLocationActiveProvider);
+    ref.read(isLocationActiveProvider.notifier).toggle();
+    final isNowActive = !wasActive;
 
     // Si la localisation est activée et qu'on est en mode carte, centrer sur l'utilisateur
-    if (newState && ref.read(browseViewModeProvider) == BrowseViewMode.map) {
+    if (isNowActive && ref.read(browseViewModeProvider) == BrowseViewMode.map) {
       ref.invalidate(centerMapOnUserProvider); // Déclenche le centrage
     }
   }

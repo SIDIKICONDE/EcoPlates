@@ -83,10 +83,35 @@ class StockFiltersState {
   }
 }
 
+/// Notifier pour l'état des filtres
+class StockFiltersNotifier extends Notifier<StockFiltersState> {
+  @override
+  StockFiltersState build() {
+    return const StockFiltersState();
+  }
+
+  void updateSearchQuery(String query) {
+    state = state.copyWith(searchQuery: query);
+  }
+
+  void updateStatusFilter(StockItemStatus? status) {
+    state = state.copyWith(statusFilter: status);
+  }
+
+  void updateSortBy(StockSortOption sortBy) {
+    state = state.copyWith(sortBy: sortBy);
+  }
+
+  void clearFilters() {
+    state = const StockFiltersState();
+  }
+}
+
 /// Provider pour l'état des filtres
-final stockFiltersProvider = StateProvider<StockFiltersState>((ref) {
-  return const StockFiltersState();
-});
+final stockFiltersProvider =
+    NotifierProvider<StockFiltersNotifier, StockFiltersState>(
+      StockFiltersNotifier.new,
+    );
 
 /// Notifier pour la gestion des articles de stock
 class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
@@ -133,7 +158,7 @@ class StockItemsNotifier extends AsyncNotifier<List<StockItem>> {
       // Evite un import direct ici en gardant la logique dans la page si besoin;
       // mais on peut accéder dynamiquement à shared_preferences via Function.apply? Non.
       // Solution simple: faire l'application côté UI. Ici on ne fait rien si non dispo.
-    } catch (_) {
+    } on Exception catch (_) {
       // ignore
     }
   }
@@ -381,17 +406,34 @@ final lowStockItemsProvider = Provider<List<StockItem>>((ref) {
 final stockAlertItemsProvider = Provider<List<StockItem>>((ref) {
   final stockItems = ref.watch(stockItemsProvider);
   return stockItems.maybeWhen(
-    data: (items) => items.where((item) => 
-        item.alertLevel != StockAlertLevel.normal).toList(),
+    data: (items) => items
+        .where((item) => item.alertLevel != StockAlertLevel.normal)
+        .toList(),
     orElse: () => [],
   );
 });
 
+/// Notifier pour le mode d'affichage de la liste
+class StockViewModeNotifier extends Notifier<bool> {
+  @override
+  bool build() {
+    // false = vue détaillée (par défaut)
+    return false;
+  }
+
+  void toggle() {
+    state = !state;
+  }
+
+  void setCompact({required bool isCompact}) {
+    state = isCompact;
+  }
+}
+
 /// Provider pour le mode d'affichage de la liste (compact ou détaillé)
-final stockViewModeProvider = StateProvider<bool>((ref) {
-  // true = vue compacte, false = vue détaillée
-  return false; // Par défaut, vue détaillée
-});
+final stockViewModeProvider = NotifierProvider<StockViewModeNotifier, bool>(
+  StockViewModeNotifier.new,
+);
 
 /// Messages d'erreur localisés
 class StockErrorMessages {

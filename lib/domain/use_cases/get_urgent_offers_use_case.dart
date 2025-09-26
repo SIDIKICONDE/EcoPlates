@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import '../../core/error/failures.dart';
@@ -32,11 +33,11 @@ class GetUrgentOffersUseCase {
         return Left(failure);
       },
       // En cas de succès, appliquer les filtres métier
-      (offers) {
+      (offers) async {
         final filteredOffers = _filterUrgentOffers(offers, params);
 
         // Mettre en cache pour le mode offline
-        repository.cacheOffers(filteredOffers);
+        unawaited(repository.cacheOffers(filteredOffers));
 
         return Right(filteredOffers);
       },

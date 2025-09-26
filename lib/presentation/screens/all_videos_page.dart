@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/video_preview.dart';
@@ -30,9 +32,11 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              showSearch(
-                context: context,
-                delegate: _VideoSearchDelegate(ref: ref),
+              unawaited(
+                showSearch(
+                  context: context,
+                  delegate: _VideoSearchDelegate(ref: ref),
+                ),
               );
             },
           ),
@@ -127,7 +131,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                       return VideoCard(
                         video: video,
                         onTap: () {
-                          showFloatingVideoModal(context, video);
+                          unawaited(showFloatingVideoModal(context, video));
                         },
                       );
                     },
@@ -221,7 +225,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
       final seconds = int.tryParse(parts[1]) ?? 0;
       return Duration(minutes: minutes, seconds: seconds);
     }
-    return const Duration();
+    return Duration.zero;
   }
 }
 
@@ -321,7 +325,7 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
                   child: Image.network(
                     video.thumbnailUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    errorBuilder: (_, _, _) => Container(
                       color: Colors.grey[300],
                       child: const Icon(Icons.broken_image),
                     ),
@@ -336,14 +340,14 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
               subtitle: Text('${video.merchantName} • ${video.viewCount} vues'),
               onTap: () {
                 close(context, null);
-                showFloatingVideoModal(context, video);
+                unawaited(showFloatingVideoModal(context, video));
               },
             );
           },
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) =>
+      error: (_, _) =>
           const Center(child: Text('Erreur lors du chargement des vidéos')),
     );
   }
@@ -355,6 +359,6 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
       final seconds = int.tryParse(parts[1]) ?? 0;
       return Duration(minutes: minutes, seconds: seconds);
     }
-    return const Duration();
+    return Duration.zero;
   }
 }

@@ -151,14 +151,10 @@ class StockFilterChips extends ConsumerWidget {
     StockFilterOption option,
     bool selected,
   ) {
-    final currentFilters = ref.read(stockFiltersProvider);
-
     // Si on désélectionne, on revient au filtre "Tous"
     final newStatusFilter = selected ? option.statusFilter : null;
 
-    ref.read(stockFiltersProvider.notifier).state = currentFilters.copyWith(
-      statusFilter: newStatusFilter,
-    );
+    ref.read(stockFiltersProvider.notifier).updateStatusFilter(newStatusFilter);
   }
 
   /// Calcule le nombre d'articles pour chaque filtre

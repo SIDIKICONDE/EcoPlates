@@ -7,6 +7,12 @@ import 'package:ecoplates/domain/entities/food_offer.dart';
 import 'package:ecoplates/presentation/providers/browse_search_provider.dart';
 import 'package:ecoplates/presentation/widgets/browse/browse_map_view.dart';
 
+class TestLocationActiveNotifier extends LocationActiveNotifier {
+  TestLocationActiveNotifier(bool initialState) {
+    state = initialState;
+  }
+}
+
 void main() {
   group('BrowseMapView', () {
     late ProviderContainer container;
@@ -57,7 +63,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            isLocationActiveProvider.overrideWith((ref) => false),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
             centerMapOnUserProvider.overrideWith((ref) => Future.value()),
           ],
           child: MaterialApp(
@@ -82,7 +90,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            isLocationActiveProvider.overrideWith((ref) => true),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(true),
+            ),
             centerMapOnUserProvider.overrideWith((ref) => Future.value()),
           ],
           child: MaterialApp(
@@ -104,7 +114,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            isLocationActiveProvider.overrideWith((ref) => false),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
             centerMapOnUserProvider.overrideWith((ref) => Future.value()),
           ],
           child: MaterialApp(
@@ -126,7 +138,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            isLocationActiveProvider.overrideWith((ref) => false),
+            isLocationActiveProvider.overrideWith(
+              () => TestLocationActiveNotifier(false),
+            ),
             centerMapOnUserProvider.overrideWith((ref) => Future.value()),
           ],
           child: MaterialApp(

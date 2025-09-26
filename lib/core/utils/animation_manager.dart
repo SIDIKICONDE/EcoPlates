@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -79,8 +80,8 @@ class AnimationManager {
       if (task.controller.isDismissed || task.controller.isAnimating) return;
 
       try {
-        task.controller.forward();
-      } catch (e) {
+        unawaited(task.controller.forward());
+      } on Exception catch (_) {
         // L'animation a été disposée entre-temps, la retirer des actives
         _activeAnimations.remove(task.id);
         _processQueue();
@@ -109,7 +110,7 @@ class AnimationManager {
     if (controller != null && !controller.isDismissed) {
       try {
         controller.stop();
-      } catch (e) {
+      } on Exception catch (_) {
         // Controller déjà disposé, continuer
       }
       _activeAnimations.remove(id);
@@ -132,7 +133,7 @@ class AnimationManager {
         if (!controller.isDismissed) {
           controller.dispose();
         }
-      } catch (e) {
+      } on Exception catch (_) {
         // Controller déjà disposé, continuer
       }
     }
@@ -168,11 +169,11 @@ mixin ManagedAnimationMixin on TickerProviderStateMixin {
     );
     
     _registeredAnimations.add(id);
-    _animationManager.registerAnimation(
+    unawaited(_animationManager.registerAnimation(
       id: id,
       controller: controller,
       priority: priority,
-    );
+    ));
     
     return controller;
   }
@@ -181,7 +182,7 @@ mixin ManagedAnimationMixin on TickerProviderStateMixin {
   void dispose() {
     // Nettoyer toutes les animations enregistrées
     for (final id in _registeredAnimations) {
-      _animationManager.cancelAnimation(id);
+      unawaited(_animationManager.cancelAnimation(id));
     }
     super.dispose();
   }

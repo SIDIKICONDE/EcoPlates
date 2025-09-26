@@ -20,9 +20,7 @@ class CardBackground extends StatelessWidget {
     return Stack(
       children: [
         // Image de fond
-        SizedBox(
-          height: double.infinity,
-          width: double.infinity,
+        SizedBox.expand(
           child: imageUrl != null
               ? CachedNetworkImage(
                   imageUrl: imageUrl!,

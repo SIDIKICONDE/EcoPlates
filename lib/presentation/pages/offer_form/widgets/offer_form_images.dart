@@ -68,7 +68,6 @@ class OfferFormImages extends ConsumerWidget {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.3),
-              style: BorderStyle.solid,
               width: 2,
             ),
           ),
@@ -100,8 +99,11 @@ class OfferFormImages extends ConsumerWidget {
     );
   }
 
-  void _showImageSourceDialog(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet<void>(
+  Future<void> _showImageSourceDialog(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    await showModalBottomSheet<void>(
       context: context,
       builder: (context) {
         return SafeArea(
@@ -118,17 +120,17 @@ class OfferFormImages extends ConsumerWidget {
               ListTile(
                 leading: const Icon(Icons.camera_alt),
                 title: const Text('Prendre une photo'),
-                onTap: () {
+                onTap: () async {
                   Navigator.of(context).pop();
-                  _pickImage(ref, ImageSource.camera);
+                  await _pickImage(ref, ImageSource.camera);
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library),
                 title: const Text('Choisir depuis la galerie'),
-                onTap: () {
+                onTap: () async {
                   Navigator.of(context).pop();
-                  _pickImage(ref, ImageSource.gallery);
+                  await _pickImage(ref, ImageSource.gallery);
                 },
               ),
               const SizedBox(height: 8),
@@ -153,9 +155,11 @@ class OfferFormImages extends ConsumerWidget {
         // TODO: Upload l'image vers le serveur et obtenir l'URL
         // Pour l'instant, on simule avec l'URI locale
         // Remplacer l'image existante par la nouvelle
-        ref.read(offerFormProvider.notifier).updateImages([image.path]);
+        ref.read<OfferFormNotifier>(offerFormProvider.notifier).updateImages([
+          image.path,
+        ]);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       // Gestion d'erreur à implémenter
       debugPrint("Erreur lors de la sélection d'image: $e");
     }
@@ -325,7 +329,7 @@ class OfferFormImages extends ConsumerWidget {
 
   void _removeImage(WidgetRef ref, int index) {
     // Supprimer toutes les images (puisqu'il n'y en a qu'une)
-    ref.read(offerFormProvider.notifier).updateImages([]);
+    ref.read<OfferFormNotifier>(offerFormProvider.notifier).updateImages([]);
   }
 
   Widget _buildImageWidget(String imageUrl) {
@@ -353,7 +357,7 @@ class OfferFormImages extends ConsumerWidget {
             ),
           );
         }
-      } catch (e) {
+      } on Exception {
         // En cas d'erreur, afficher un placeholder
         return Container(
           color: Colors.grey[200],
@@ -366,7 +370,7 @@ class OfferFormImages extends ConsumerWidget {
       }
     } else {
       // Pour les URLs réseau, utiliser EcoCachedImage
-      return EcoCachedImage(imageUrl: imageUrl, fit: BoxFit.cover);
+      return EcoCachedImage(imageUrl: imageUrl);
     }
   }
 
@@ -387,7 +391,7 @@ class OfferFormImages extends ConsumerWidget {
         ],
       ),
       child: ClipOval(
-        child: Container(
+        child: ColoredBox(
           color: theme.colorScheme.primary.withValues(alpha: 0.1),
           child: Icon(Icons.store, color: theme.colorScheme.primary, size: 28),
         ),

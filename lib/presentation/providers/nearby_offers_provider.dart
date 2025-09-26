@@ -3,7 +3,7 @@ import '../../domain/entities/food_offer.dart';
 import 'offers_catalog_provider.dart';
 
 /// Provider pour les offres proches (vraie distance si position dispo)
-final nearbyOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
+final nearbyOffersProvider = Provider<List<FoodOffer>>((ref) {
   final offers = ref.watch(offersCatalogProvider);
   final userLoc = ref.watch(userLocationProvider);
   final radiusKm = ref.watch(searchRadiusProvider);
@@ -27,10 +27,36 @@ final nearbyOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
 });
 
 /// Provider pour la position actuelle de l'utilisateur
-final userLocationProvider = StateProvider<({double lat, double lon, String address})?>((ref) {
-  // Position mock : Centre de Paris
-  return (lat: 48.8566, lon: 2.3522, address: 'Paris, France');
-});
+final userLocationProvider = NotifierProvider<UserLocationNotifier, ({double lat, double lon, String address})?>(
+  UserLocationNotifier.new,
+);
+
+class UserLocationNotifier extends Notifier<({double lat, double lon, String address})?> {
+  @override
+  ({double lat, double lon, String address})? build() {
+    // Position mock : Centre de Paris
+    return (lat: 48.8566, lon: 2.3522, address: 'Paris, France');
+  }
+  
+  void updateLocation(double lat, double lon, String address) {
+    state = (lat: lat, lon: lon, address: address);
+  }
+  
+  void clearLocation() {
+    state = null;
+  }
+}
 
 /// Provider pour la distance maximale de recherche (en km)
-final searchRadiusProvider = StateProvider<double>((ref) => 2.0);
+final searchRadiusProvider = NotifierProvider<SearchRadiusNotifier, double>(
+  SearchRadiusNotifier.new,
+);
+
+class SearchRadiusNotifier extends Notifier<double> {
+  @override
+  double build() => 2;
+  
+  void updateRadius(double radius) {
+    state = radius.clamp(0.5, 50.0); // Limiter entre 500m et 50km
+  }
+}

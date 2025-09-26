@@ -134,6 +134,6 @@ final popularVideosProvider = Provider<List<VideoData>>((ref) {
   return videosAsync.when(
     data: (videos) => videos.where((v) => v.views > 10000).toList(),
     loading: () => [],
-    error: (_, __) => [],
+    error: (_, _) => [],
   );
 });

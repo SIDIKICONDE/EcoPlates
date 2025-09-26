@@ -407,7 +407,7 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
         merchantLogo: 'https://via.placeholder.com/100',
         availableQuantity: urgent ? 1 : 3 + (index % 5),
         totalQuantity: 10,
-        tags: index % 2 == 0 ? ['Végétarien'] : ['Sans gluten'],
+        tags: index.isEven ? ['Végétarien'] : ['Sans gluten'],
         allergens: index % 3 == 0 ? ['Gluten', 'Lactose'] : [],
         nutritionalInfo: {
           'calories': '${200 + index * 50} kcal',

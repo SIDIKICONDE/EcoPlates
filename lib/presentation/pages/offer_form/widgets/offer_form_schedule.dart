@@ -402,8 +402,8 @@ class OfferFormScheduleFields extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 '• Les horaires doivent être dans la journée (entre 6h et 22h)\n'
-                '• L\'heure de fin doit être après l\'heure de début\n'
-                '• Prévoyez au moins 1 heure d\'écart minimum\n'
+                "• L'heure de fin doit être après l'heure de début\n"
+                "• Prévoyez au moins 1 heure d'écart minimum\n"
                 '• Pensez aux heures de pointe pour maximiser les collectes',
                 style: TextStyle(
                   fontSize: 12,
@@ -444,7 +444,7 @@ class OfferFormScheduleFields extends ConsumerWidget {
       final startMinutes = start.hour * 60 + start.minute;
       final endMinutes = end.hour * 60 + end.minute;
       if (endMinutes - startMinutes < 60) {
-        return 'Au moins 1 heure d\'écart entre début et fin';
+        return "Au moins 1 heure d'écart entre début et fin";
       }
     }
 

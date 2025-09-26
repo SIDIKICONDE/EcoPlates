@@ -65,14 +65,11 @@ class StoreFiltersState {
   }
 }
 
-/// Provider pour le mode d'affichage
-final storeViewModeProvider =
-    StateNotifierProvider<StoreViewModeNotifier, StoreViewMode>(
-      (ref) => StoreViewModeNotifier(),
-    );
-
-class StoreViewModeNotifier extends StateNotifier<StoreViewMode> {
-  StoreViewModeNotifier() : super(StoreViewMode.grid);
+class StoreViewModeNotifier extends Notifier<StoreViewMode> {
+  @override
+  StoreViewMode build() {
+    return StoreViewMode.grid;
+  }
 
   void toggle() {
     state = state == StoreViewMode.grid
@@ -85,14 +82,11 @@ class StoreViewModeNotifier extends StateNotifier<StoreViewMode> {
   }
 }
 
-/// Provider pour les filtres
-final storeFiltersProvider =
-    StateNotifierProvider<StoreFiltersNotifier, StoreFiltersState>(
-      (ref) => StoreFiltersNotifier(),
-    );
-
-class StoreFiltersNotifier extends StateNotifier<StoreFiltersState> {
-  StoreFiltersNotifier() : super(const StoreFiltersState());
+class StoreFiltersNotifier extends Notifier<StoreFiltersState> {
+  @override
+  StoreFiltersState build() {
+    return const StoreFiltersState();
+  }
 
   void updateSearchQuery(String query) {
     state = state.copyWith(searchQuery: query);
@@ -194,7 +188,7 @@ class StoreOffersNotifier extends AsyncNotifier<List<FoodOffer>> {
       case OfferDisplayMode.inactiveOnly:
         filtered = filtered.where((offer) => !offer.isAvailable).toList();
       case OfferDisplayMode.all:
-        // Ne rien filtrer
+      // Ne rien filtrer
     }
 
     // Filtre par promotions
@@ -359,7 +353,7 @@ final activePromotionsCountProvider = Provider<int>((ref) {
 });
 
 /// Provider pour les catégories disponibles dans le store
-/// 
+///
 /// Retourne les catégories centralisées qui sont réellement utilisées
 /// par les offres actuellement affichées dans le store
 final availableCategoriesProvider = Provider<List<FoodCategory>>((ref) {
@@ -374,9 +368,7 @@ final availableCategoriesProvider = Provider<List<FoodCategory>>((ref) {
   }
 
   // Retourner dans l'ordre logique (petit-déjeuner, déjeuner, etc.)
-  return Categories.ordered
-      .where(availableCategories.contains)
-      .toList();
+  return Categories.ordered.where(availableCategories.contains).toList();
 });
 
 /// Provider pour les labels des catégories disponibles (pour compatibilité)
@@ -462,3 +454,13 @@ class StoreStats {
 final inactiveOffersCountProvider = Provider<int>((ref) {
   return ref.watch(storeStatsProvider).inactiveOffers;
 });
+
+/// Provider pour le mode d'affichage de la boutique
+final storeViewModeProvider = NotifierProvider<StoreViewModeNotifier, StoreViewMode>(
+  StoreViewModeNotifier.new,
+);
+
+/// Provider pour les filtres de la boutique
+final storeFiltersProvider = NotifierProvider<StoreFiltersNotifier, StoreFiltersState>(
+  StoreFiltersNotifier.new,
+);

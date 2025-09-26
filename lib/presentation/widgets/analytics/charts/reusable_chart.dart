@@ -213,29 +213,27 @@ class _ReusableChartState extends State<ReusableChart> {
           ),
         ],
       ),
-      child: Column(
-        children: [
-          // Grille de fond avec barres et ligne optionnelle
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                // Calculer la largeur dynamique en fonction du nombre de points
-                final calculatedWidth = ChartConstants.calculateTotalWidth(
-                  points.length,
-                );
-                // Utiliser la largeur du conteneur si elle est plus grande
-                final chartWidth = calculatedWidth > constraints.maxWidth
-                    ? calculatedWidth
-                    : constraints.maxWidth;
-
-                return SingleChildScrollView(
-                  controller: _scrollController,
-                  scrollDirection: Axis.horizontal,
-                  physics: chartWidth > constraints.maxWidth
-                      ? const AlwaysScrollableScrollPhysics()
-                      : const NeverScrollableScrollPhysics(),
-                  child: SizedBox(
-                    width: chartWidth,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Calculer la largeur dynamique en fonction du nombre de points
+          final calculatedWidth = ChartConstants.calculateTotalWidth(points.length);
+          // Utiliser la largeur du conteneur si elle est plus grande
+          final chartWidth = calculatedWidth > constraints.maxWidth 
+              ? calculatedWidth 
+              : constraints.maxWidth;
+          
+          return SingleChildScrollView(
+            controller: _scrollController,
+            scrollDirection: Axis.horizontal,
+            physics: chartWidth > constraints.maxWidth 
+                ? const AlwaysScrollableScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
+            child: SizedBox(
+              width: chartWidth,
+              child: Column(
+                children: [
+                  // Grille de fond avec barres et ligne optionnelle
+                  Expanded(
                     child: Stack(
                       children: [
                         // Grille de fond
@@ -280,33 +278,11 @@ class _ReusableChartState extends State<ReusableChart> {
                       ],
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          // Labels des périodes en bas
-          const SizedBox(height: ChartConstants.gridToLabelsSpacing),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              // Utiliser la même largeur que le graphique au-dessus
-              final calculatedWidth = ChartConstants.calculateTotalWidth(
-                points.length,
-              );
-              final chartWidth = calculatedWidth > constraints.maxWidth
-                  ? calculatedWidth
-                  : constraints.maxWidth;
-
-              return SingleChildScrollView(
-                controller: _scrollController,
-                scrollDirection: Axis.horizontal,
-                physics: chartWidth > constraints.maxWidth
-                    ? const AlwaysScrollableScrollPhysics()
-                    : const NeverScrollableScrollPhysics(),
-                child: SizedBox(
-                  width: chartWidth,
-                  child: chartWidth > calculatedWidth
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  // Labels des périodes en bas
+                  const SizedBox(height: ChartConstants.gridToLabelsSpacing),
+                  if (chartWidth > calculatedWidth)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: points
                               .map(
                                 (point) => Flexible(
@@ -332,8 +308,9 @@ class _ReusableChartState extends State<ReusableChart> {
                                 ),
                               )
                               .toList(),
-                        )
-                      : Padding(
+                    )
+                  else
+                    Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: ChartConstants.barSpacing / 2,
                           ),
@@ -361,11 +338,11 @@ class _ReusableChartState extends State<ReusableChart> {
                                 .toList(),
                           ),
                         ),
-                ),
-              );
-            },
-          ),
-        ],
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

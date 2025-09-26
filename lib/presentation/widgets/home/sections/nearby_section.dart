@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../providers/offer_reservation_provider.dart';
 
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/nearby_offers_provider.dart';
@@ -284,17 +285,37 @@ final distance = offer.distanceKm ?? (0.3 + (index * 0.4)); // Distance réelle 
                 color: Colors.white,
                 border: Border(top: BorderSide(color: Colors.grey[200]!)),
               ),
-              child: OfferReservationBar(
-                offer: offer,
-                isReserving: false,
-                onReserve: () {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.green,
-                      content: Text('✅ "${offer.title}" réservé avec succès !'),
-                      duration: const Duration(seconds: 3),
-                    ),
+              child: Consumer(
+                builder: (context, ref, _) {
+                  return OfferReservationBar(
+                    offer: offer,
+                    isReserving: false,
+                    onReserve: () async {
+                      try {
+                        await ref
+                            .read(offerReservationProvider.notifier)
+                            .reserve(offer: offer, quantity: 1);
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.green,
+                              content: Text('✅ "${offer.title}" réservé avec succès !'),
+                              duration: const Duration(seconds: 3),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Theme.of(context).colorScheme.error,
+                              content: Text('Réservation impossible: $e'),
+                            ),
+                          );
+                        }
+                      }
+                    },
                   );
                 },
               ),

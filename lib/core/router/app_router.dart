@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../domain/entities/food_offer.dart';
 
 import '../../presentation/pages/browse_page.dart';
+import '../../presentation/pages/merchant_sales_page.dart';
 import '../../presentation/pages/merchant_stock_page.dart';
 import '../../presentation/pages/merchant_store_page.dart';
 import '../../presentation/pages/offer_form/page.dart';
@@ -142,7 +143,7 @@ class AppRouter {
             path: RouteConstants.merchantSales,
             name: RouteConstants.merchantSalesName,
             pageBuilder: (context, state) {
-              return const MaterialPage(child: MainHomeScreen());
+              return const MaterialPage(child: MerchantSalesPage());
             },
           ),
           GoRoute(

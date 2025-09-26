@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../providers/offer_reservation_provider.dart';
 
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/recommended_offers_provider.dart';
@@ -396,12 +397,38 @@ class RecommendedSection extends ConsumerWidget {
             ),
             child: SafeArea(
               top: false,
-              child: OfferReservationBar(
-                offer: offer,
-                isReserving: false,
-                onReserve: () {
-                  Navigator.pop(context);
-                  _showReservationConfirmation(context, offer);
+              child: Builder(
+                builder: (context) {
+                  return Consumer(
+                    builder: (context, ref, _) {
+                      return OfferReservationBar(
+                        offer: offer,
+                        isReserving: false,
+                        onReserve: () async {
+                          try {
+                            await ref
+                                .read(offerReservationProvider.notifier)
+                                .reserve(offer: offer, quantity: 1);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              _showReservationConfirmation(context, offer);
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: colorScheme.error,
+                                  content: Text(
+                                    'Réservation impossible: $e',
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      );
+                    },
+                  );
                 },
               ),
             ),

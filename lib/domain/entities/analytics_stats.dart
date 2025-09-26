@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 /// Entité représentant les statistiques d'analyse pour un commerçant
-/// 
+///
 /// Contient toutes les données nécessaires pour afficher les KPIs
 /// et graphiques sur la page d'analyse marchande
 class AnalyticsStats extends Equatable {
@@ -65,27 +65,31 @@ class AnalyticsStats extends Equatable {
   /// Nombre total d'avis clients
   final int totalReviews;
 
+  /// Données du funnel de conversion
+  final List<FunnelStep> conversionFunnel;
+
   /// Comparaison avec la période précédente (optionnel)
   final PeriodComparison? previousPeriodComparison;
 
   @override
   List<Object?> get props => [
-        period,
-        totalRevenue,
-        totalOrders,
-        averageOrderValue,
-        conversionRate,
-        totalCommissions,
-        revenueData,
-        ordersData,
-        commissionData,
-        topProducts,
-        categoryBreakdown,
+    period,
+    totalRevenue,
+    totalOrders,
+    averageOrderValue,
+    conversionRate,
+    totalCommissions,
+    revenueData,
+    ordersData,
+    commissionData,
+    topProducts,
+    categoryBreakdown,
         customerSatisfactionData,
         ratingDistribution,
         totalReviews,
+        conversionFunnel,
         previousPeriodComparison,
-      ];
+  ];
 }
 
 /// Énumération des périodes d'analyse disponibles
@@ -203,6 +207,35 @@ class CategoryData extends Equatable {
   List<Object> get props => [name, value, percentage, color];
 }
 
+/// Étape du funnel de conversion
+class FunnelStep extends Equatable {
+  const FunnelStep({
+    required this.step,
+    required this.label,
+    required this.count,
+    required this.percentage,
+    required this.color,
+  });
+
+  /// Numéro de l'étape (1, 2, 3, etc.)
+  final int step;
+
+  /// Label descriptif de l'étape
+  final String label;
+
+  /// Nombre d'utilisateurs à cette étape
+  final int count;
+
+  /// Pourcentage par rapport à l'étape précédente
+  final double percentage;
+
+  /// Couleur pour l'affichage
+  final int color;
+
+  @override
+  List<Object> get props => [step, label, count, percentage, color];
+}
+
 /// Données de répartition des notes clients (1-5 étoiles)
 class RatingData extends Equatable {
   const RatingData({
@@ -257,9 +290,9 @@ class PeriodComparison extends Equatable {
 
   @override
   List<Object> get props => [
-        revenueGrowth,
-        ordersGrowth,
-        averageOrderGrowth,
-        conversionRateGrowth,
-      ];
+    revenueGrowth,
+    ordersGrowth,
+    averageOrderGrowth,
+    conversionRateGrowth,
+  ];
 }

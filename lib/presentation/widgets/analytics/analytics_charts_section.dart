@@ -52,6 +52,11 @@ class AnalyticsChartsSection extends ConsumerWidget {
 
         const SizedBox(height: 24),
 
+        // Graphique du funnel de conversion
+        ConversionFunnelChart(analytics: analytics),
+
+        const SizedBox(height: 24),
+
         // Top produits et catégories sur une ligne (responsive)
         BottomChartsSection(analytics: analytics),
 

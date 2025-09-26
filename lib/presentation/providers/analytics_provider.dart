@@ -43,7 +43,10 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
   final now = DateTime.now();
 
   // Générer des données en fonction de la période
-  final (revenueData, ordersData, commissionData) = _generateTimeSeriesData(period, now);
+  final (revenueData, ordersData, commissionData) = _generateTimeSeriesData(
+    period,
+    now,
+  );
 
   return AnalyticsStats(
     period: period,
@@ -60,6 +63,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
     customerSatisfactionData: _generateCustomerSatisfactionData(period, now),
     ratingDistribution: _generateRatingDistribution(),
     totalReviews: _getTotalReviews(period),
+    conversionFunnel: _generateConversionFunnel(),
     previousPeriodComparison: _generatePeriodComparison(period),
   );
 }
@@ -97,7 +101,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
             date: hour,
           ),
         );
-        
+
         commissionData.add(
           DataPoint(
             label: '${hour.hour}h',
@@ -131,7 +135,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
             date: day,
           ),
         );
-        
+
         commissionData.add(
           DataPoint(
             label: weekdays[i],
@@ -164,7 +168,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
             date: week,
           ),
         );
-        
+
         commissionData.add(
           DataPoint(
             label: 'Sem ${i + 1}',
@@ -211,7 +215,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
             date: month,
           ),
         );
-        
+
         commissionData.add(
           DataPoint(
             label: months[i],
@@ -367,34 +371,46 @@ List<CategoryData> _generateCategoryBreakdown() {
 }
 
 /// Génère les données d'évolution de la satisfaction client
-List<DataPoint> _generateCustomerSatisfactionData(AnalyticsPeriod period, DateTime now) {
+List<DataPoint> _generateCustomerSatisfactionData(
+  AnalyticsPeriod period,
+  DateTime now,
+) {
   final points = <DataPoint>[];
-  final count = period == AnalyticsPeriod.day ? 24 : period == AnalyticsPeriod.week ? 7 : period == AnalyticsPeriod.month ? 30 : 12;
+  final count = period == AnalyticsPeriod.day
+      ? 24
+      : period == AnalyticsPeriod.week
+      ? 7
+      : period == AnalyticsPeriod.month
+      ? 30
+      : 12;
 
   for (var i = 0; i < count; i++) {
     final date = period == AnalyticsPeriod.day
         ? DateTime(now.year, now.month, now.day, i)
         : period == AnalyticsPeriod.week
-            ? now.subtract(Duration(days: count - 1 - i))
-            : period == AnalyticsPeriod.month
-                ? now.subtract(Duration(days: count - 1 - i))
-                : DateTime(now.year, i + 1);
+        ? now.subtract(Duration(days: count - 1 - i))
+        : period == AnalyticsPeriod.month
+        ? now.subtract(Duration(days: count - 1 - i))
+        : DateTime(now.year, i + 1);
 
     // Note moyenne entre 3.8 et 4.8 avec variations réalistes
     final baseRating = 4.2;
     final variation = (i % 3 - 1) * 0.3; // Variation périodique
     final rating = (baseRating + variation + (i * 0.1) % 0.6).clamp(3.5, 4.8);
 
-    points.add(DataPoint(
-      label: period == AnalyticsPeriod.day
-          ? '${i}h'
-          : period == AnalyticsPeriod.week
-              ? 'J${i + 1}'
-              : period == AnalyticsPeriod.month
-                  ? '${i + 1}'
-                  : _getMonthName(i + 1),
-      value: rating,
-    ));
+    points.add(
+      DataPoint(
+        label: period == AnalyticsPeriod.day
+            ? '${i}h'
+            : period == AnalyticsPeriod.week
+            ? 'J${i + 1}'
+            : period == AnalyticsPeriod.month
+            ? '${i + 1}'
+            : _getMonthName(i + 1),
+        value: rating,
+        date: date,
+      ),
+    );
   }
 
   return points;
@@ -402,9 +418,9 @@ List<DataPoint> _generateCustomerSatisfactionData(AnalyticsPeriod period, DateTi
 
 /// Génère la répartition des notes clients (1-5 étoiles)
 List<RatingData> _generateRatingDistribution() {
-  final total = 2847; // Nombre total d'avis simulé
+  const total = 2847; // Nombre total d'avis simulé
 
-  return [
+  return const [
     RatingData(
       stars: 5,
       count: 1842,
@@ -438,6 +454,54 @@ List<RatingData> _generateRatingDistribution() {
   ];
 }
 
+/// Génère les données du funnel de conversion
+List<FunnelStep> _generateConversionFunnel() {
+  return const [
+    FunnelStep(
+      step: 1,
+      label: 'Visiteurs App/Web',
+      count: 15420,
+      percentage: 100.0,
+      color: 0xFF9E9E9E, // Gris
+    ),
+    FunnelStep(
+      step: 2,
+      label: 'Consultation menu',
+      count: 12336,
+      percentage: 80.0,
+      color: 0xFF2196F3, // Bleu
+    ),
+    FunnelStep(
+      step: 3,
+      label: 'Ajout au panier',
+      count: 4928,
+      percentage: 40.0,
+      color: 0xFFFF9800, // Orange
+    ),
+    FunnelStep(
+      step: 4,
+      label: 'Validation commande',
+      count: 2957,
+      percentage: 60.0,
+      color: 0xFFFF6F00, // Orange foncé
+    ),
+    FunnelStep(
+      step: 5,
+      label: 'Paiement réussi',
+      count: 2650,
+      percentage: 89.6,
+      color: 0xFF4CAF50, // Vert
+    ),
+    FunnelStep(
+      step: 6,
+      label: 'Livraison terminée',
+      count: 2385,
+      percentage: 90.0,
+      color: 0xFF2E7D32, // Vert foncé
+    ),
+  ];
+}
+
 /// Calcule le nombre total d'avis pour la période
 int _getTotalReviews(AnalyticsPeriod period) {
   switch (period) {
@@ -454,7 +518,20 @@ int _getTotalReviews(AnalyticsPeriod period) {
 
 /// Helper pour obtenir le nom du mois
 String _getMonthName(int month) {
-  const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+  const months = [
+    'Jan',
+    'Fév',
+    'Mar',
+    'Avr',
+    'Mai',
+    'Jun',
+    'Jul',
+    'Aoû',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Déc',
+  ];
   return months[month - 1];
 }
 

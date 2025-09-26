@@ -51,7 +51,6 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
                     color: isSelected
                         ? theme.colorScheme.primary
                         : theme.colorScheme.outline,
-                    width: 1,
                   ),
                   labelStyle: TextStyle(
                     color: isSelected

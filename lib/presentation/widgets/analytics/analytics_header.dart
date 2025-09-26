@@ -62,9 +62,7 @@ class AnalyticsHeader extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // Grille des KPIs
-          isWide
-              ? _buildWideLayout(context, analytics)
-              : _buildCompactLayout(context, analytics),
+          if (isWide) _buildWideLayout(context, analytics) else _buildCompactLayout(context, analytics),
         ],
       ),
     );
@@ -76,7 +74,7 @@ class AnalyticsHeader extends ConsumerWidget {
         Expanded(
           child: _buildKpiCard(
             context,
-            'Chiffre d\'affaires',
+            "Chiffre d'affaires",
             _formatCurrency(analytics.totalRevenue),
             Icons.euro,
             analytics.previousPeriodComparison?.revenueGrowth,

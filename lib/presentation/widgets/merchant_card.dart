@@ -40,11 +40,13 @@ class _MerchantCardState extends State<MerchantCard>
     );
 
     // Enregistrer l'animation dans le gestionnaire pour éviter les collisions
-    unawaited(_animationManager.registerAnimation(
-      id: 'restaurant_card_${widget.merchant.id}',
-      controller: _controller,
-      priority: true,
-    ));
+    unawaited(
+      _animationManager.registerAnimation(
+        id: 'restaurant_card_${widget.merchant.id}',
+        controller: _controller,
+        priority: true,
+      ),
+    );
 
     _scaleAnimation = Tween<double>(
       begin: 1,
@@ -62,7 +64,11 @@ class _MerchantCardState extends State<MerchantCard>
 
   @override
   void dispose() {
-    unawaited(_animationManager.cancelAnimation('restaurant_card_${widget.merchant.id}'));
+    unawaited(
+      _animationManager.cancelAnimation(
+        'restaurant_card_${widget.merchant.id}',
+      ),
+    );
     _controller.dispose();
     super.dispose();
   }
@@ -72,10 +78,21 @@ class _MerchantCardState extends State<MerchantCard>
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
+    // Build comprehensive accessibility description
+    final accessibilityLabel = AccessibilityHelper.buildMerchantLabel(
+      name: widget.merchant.name,
+      rating: widget.merchant.rating,
+      category: widget.merchant.category,
+      isOpen: true, // TODO: get from merchant data
+      hasDiscount: widget.merchant.discountPercentage > 0,
+      discountPercentage: widget.merchant.discountPercentage,
+    );
+
     return Semantics(
       button: true,
-      label: 'Commerçant ${widget.merchant.name}',
-      hint: 'Toucher pour voir les détails',
+      label: accessibilityLabel,
+      hint: 'Double-tap to view details',
+      onTapHint: 'Opens ${widget.merchant.name} details',
       child: GestureDetector(
         onTapDown: (_) => _onTapDown(),
         onTapUp: (_) => _onTapUp(),

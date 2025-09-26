@@ -1,0 +1,90 @@
+{
+  "@@locale": "en",
+  "appTitle": "EcoPlates",
+  
+  "home": "Home",
+  "search": "Search",
+  "favorites": "Favorites",
+  "profile": "Profile",
+  "settings": "Settings",
+  
+  "welcomeMessage": "Welcome to EcoPlates",
+  "searchPlaceholder": "Search for a restaurant or dish",
+  
+  "nearYou": "Near you",
+  "popularDishes": "Popular dishes",
+  "categories": "Categories",
+  "offers": "Offers",
+  
+  "addToFavorites": "Add to favorites",
+  "removeFromFavorites": "Remove from favorites",
+  
+  "restaurant": "Restaurant",
+  "cuisine": "Cuisine",
+  "rating": "Rating",
+  "reviews": "Reviews",
+  "distance": "Distance",
+  "deliveryTime": "Delivery time",
+  "minimumOrder": "Minimum order",
+  
+  "openNow": "Open now",
+  "closedNow": "Closed",
+  "opensAt": "Opens at {time}",
+  
+  "discount": "{percentage}% off",
+  
+  "freeDelivery": "Free delivery",
+  "newRestaurant": "New",
+  
+  "noResults": "No results found",
+  "tryAgain": "Try again",
+  "loading": "Loading...",
+  "error": "An error occurred",
+  
+  "filterBy": "Filter by",
+  "sortBy": "Sort by",
+  "apply": "Apply",
+  "reset": "Reset",
+  "cancel": "Cancel",
+  
+  "loginTitle": "Login",
+  "signupTitle": "Sign up",
+  "email": "Email",
+  "password": "Password",
+  "forgotPassword": "Forgot password?",
+  "login": "Login",
+  "signup": "Sign up",
+  "orContinueWith": "Or continue with",
+  
+  "profileName": "Name",
+  "profileEmail": "Email",
+  "profilePhone": "Phone",
+  "editProfile": "Edit profile",
+  "logout": "Logout",
+  
+  "orderHistory": "Order history",
+  "addresses": "My addresses",
+  "paymentMethods": "Payment methods",
+  "notifications": "Notifications",
+  "help": "Help",
+  "about": "About",
+  
+  "addToCart": "Add to cart",
+  "viewCart": "View cart",
+  "checkout": "Checkout",
+  "total": "Total",
+  "subtotal": "Subtotal",
+  "deliveryFee": "Delivery fee",
+  "tax": "Tax",
+  
+  "emptyCart": "Your cart is empty",
+  "emptyFavorites": "You don't have any favorites yet",
+  
+  "confirmOrder": "Confirm order",
+  "orderConfirmed": "Order confirmed",
+  "trackOrder": "Track order",
+  
+  "rateExperience": "Rate your experience",
+  "writeReview": "Write a review",
+  "submitReview": "Submit review"
+}

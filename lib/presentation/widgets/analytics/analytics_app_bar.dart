@@ -136,7 +136,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
   }
 
   void _performExport(BuildContext context, String format) {
-    // TODO: Implémenter l'export réel
+    // TODO(export): Implémenter l'export réel
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Export $format en cours...'),
@@ -193,7 +193,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // TODO: Navigation vers les paramètres
+                // TODO(settings): Navigation vers les paramètres
               },
               child: const Text('Paramètres'),
             ),
@@ -237,7 +237,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   '🔄 Périodes',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 5),
                 Text('• 24h: Données horaires'),
                 Text('• 7j: Données journalières'),
                 Text('• 30j: Données hebdomadaires'),
@@ -272,7 +272,7 @@ class _MerchantLogo extends StatelessWidget {
         radius: 16,
         backgroundColor: Theme.of(context).colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
-        onBackgroundImageError: (_, __) {
+        onBackgroundImageError: (_, error) {
           // Fallback vers une icône si l'image ne charge pas
         },
         child: const Icon(Icons.analytics, size: 20, color: Colors.grey),

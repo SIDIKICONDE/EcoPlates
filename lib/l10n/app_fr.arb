@@ -1,0 +1,108 @@
+{
+  "@@locale": "fr",
+  "appTitle": "EcoPlates",
+  "@appTitle": {
+    "description": "Le titre de l'application"
+  },
+
+  "home": "Accueil",
+  "search": "Rechercher",
+  "favorites": "Favoris",
+  "profile": "Profil",
+  "settings": "Paramètres",
+
+  "welcomeMessage": "Bienvenue sur EcoPlates",
+  "searchPlaceholder": "Rechercher un restaurant ou un plat",
+
+  "nearYou": "Près de vous",
+  "popularDishes": "Plats populaires",
+  "categories": "Catégories",
+  "offers": "Offres",
+
+  "addToFavorites": "Ajouter aux favoris",
+  "removeFromFavorites": "Retirer des favoris",
+
+  "restaurant": "Restaurant",
+  "cuisine": "Cuisine",
+  "rating": "Note",
+  "reviews": "Avis",
+  "distance": "Distance",
+  "deliveryTime": "Temps de livraison",
+  "minimumOrder": "Commande minimum",
+
+  "openNow": "Ouvert maintenant",
+  "closedNow": "Fermé",
+  "opensAt": "Ouvre à {time}",
+  "@opensAt": {
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "10:00"
+      }
+    }
+  },
+
+  "discount": "{percentage}% de réduction",
+  "@discount": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+
+  "freeDelivery": "Livraison gratuite",
+  "newRestaurant": "Nouveau",
+
+  "noResults": "Aucun résultat trouvé",
+  "tryAgain": "Réessayer",
+  "loading": "Chargement...",
+  "error": "Une erreur s'est produite",
+
+  "filterBy": "Filtrer par",
+  "sortBy": "Trier par",
+  "apply": "Appliquer",
+  "reset": "Réinitialiser",
+  "cancel": "Annuler",
+
+  "loginTitle": "Connexion",
+  "signupTitle": "Inscription",
+  "email": "Email",
+  "password": "Mot de passe",
+  "forgotPassword": "Mot de passe oublié ?",
+  "login": "Se connecter",
+  "signup": "S'inscrire",
+  "orContinueWith": "Ou continuer avec",
+
+  "profileName": "Nom",
+  "profileEmail": "Email",
+  "profilePhone": "Téléphone",
+  "editProfile": "Modifier le profil",
+  "logout": "Se déconnecter",
+
+  "orderHistory": "Historique des commandes",
+  "addresses": "Mes adresses",
+  "paymentMethods": "Moyens de paiement",
+  "notifications": "Notifications",
+  "help": "Aide",
+  "about": "À propos",
+
+  "addToCart": "Ajouter au panier",
+  "viewCart": "Voir le panier",
+  "checkout": "Commander",
+  "total": "Total",
+  "subtotal": "Sous-total",
+  "deliveryFee": "Frais de livraison",
+  "tax": "Taxes",
+
+  "emptyCart": "Votre panier est vide",
+  "emptyFavorites": "Vous n'avez pas encore de favoris",
+
+  "confirmOrder": "Confirmer la commande",
+  "orderConfirmed": "Commande confirmée",
+  "trackOrder": "Suivre la commande",
+
+  "rateExperience": "Noter votre expérience",
+  "writeReview": "Écrire un avis",
+  "submitReview": "Envoyer l'avis"
+}

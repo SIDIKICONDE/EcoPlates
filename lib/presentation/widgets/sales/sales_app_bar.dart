@@ -13,72 +13,10 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stats = ref.watch(salesStatsProvider);
-    final todayCount = (stats['todayCount'] as int?) ?? 0;
-    final todayRevenue = (stats['todayRevenue'] as double?) ?? 0.0;
-
     return AdaptiveAppBar(
       leading: const _MerchantLogo(),
       title: const Text('Ventes'),
       actions: [
-        // Badge du nombre de ventes du jour
-        Container(
-          margin: const EdgeInsets.only(right: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.shopping_bag,
-                size: 16,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                '$todayCount',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // CA du jour
-        Container(
-          margin: const EdgeInsets.only(right: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.euro,
-                size: 16,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                '${todayRevenue.toStringAsFixed(0)}€',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
-            ],
-          ),
-        ),
-
         // Menu d'actions
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert),
@@ -117,7 +55,7 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
   void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
     switch (action) {
       case 'export':
-        // TODO: Implémenter l'export des ventes
+        // TODO(merchant): Implémenter l'export des ventes
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Export des ventes en cours...')),
         );

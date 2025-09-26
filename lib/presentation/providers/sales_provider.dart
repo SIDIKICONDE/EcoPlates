@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/food_offer.dart';
 import '../../domain/entities/sale.dart';
 
+/// Sentinelle interne pour détecter l'absence de valeur dans copyWith
+const Object _unset = Object();
+
 /// Filtre pour les ventes
 enum SalesPeriodFilter { today, week, month, custom }
 
@@ -24,14 +27,14 @@ class SalesFilterState {
 
   SalesFilterState copyWith({
     SalesPeriodFilter? period,
-    SaleStatus? status,
+    Object? status = _unset,
     DateTime? startDate,
     DateTime? endDate,
     String? searchQuery,
   }) {
     return SalesFilterState(
       period: period ?? this.period,
-      status: status ?? this.status,
+      status: identical(status, _unset) ? this.status : status as SaleStatus?,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       searchQuery: searchQuery ?? this.searchQuery,
@@ -55,10 +58,10 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
     // Simuler un chargement depuis une API
     await Future<void>.delayed(const Duration(seconds: 1));
 
-    // Écouter les changements de filtres
-    ref.watch(salesFilterProvider);
+    // Écouter les changements de filtres et régénérer la liste
+    final filters = ref.watch(salesFilterProvider);
 
-    return _generateMockSales();
+    return _generateMockSales(filters);
   }
 
   /// Rafraîchit les ventes
@@ -91,8 +94,7 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
   }
 
   /// Génère des ventes fictives pour la démo
-  List<Sale> _generateMockSales() {
-    final filters = ref.read(salesFilterProvider);
+  List<Sale> _generateMockSales(SalesFilterState filters) {
     final now = DateTime.now();
 
     // Base de ventes fictives
@@ -249,65 +251,6 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
     return filteredSales;
   }
 }
-
-/// Provider pour les statistiques de ventes
-final salesStatsProvider = Provider<Map<String, dynamic>>((ref) {
-  final salesAsync = ref.watch(salesProvider);
-
-  return salesAsync.when(
-    data: (sales) {
-      final today = DateTime.now();
-      final todaySales = sales
-          .where(
-            (s) =>
-                s.createdAt.day == today.day &&
-                s.createdAt.month == today.month &&
-                s.createdAt.year == today.year,
-          )
-          .toList();
-
-      final completedSales = sales
-          .where((s) => s.status == SaleStatus.collected)
-          .toList();
-
-      return {
-        'todayCount': todaySales.length,
-        'todayRevenue': todaySales.fold(
-          0.0,
-          (sum, sale) => sum + sale.finalAmount,
-        ),
-        'averageBasket': sales.isEmpty
-            ? 0.0
-            : sales.fold(0.0, (sum, sale) => sum + sale.finalAmount) /
-                  sales.length,
-        'conversionRate': sales.isEmpty
-            ? 0
-            : (completedSales.length / sales.length * 100).round(),
-        'totalRevenue': sales.fold(0.0, (sum, sale) => sum + sale.finalAmount),
-        'totalSavings': sales.fold(
-          0.0,
-          (sum, sale) => sum + sale.discountAmount,
-        ),
-      };
-    },
-    loading: () => {
-      'todayCount': 0,
-      'todayRevenue': 0.0,
-      'averageBasket': 0.0,
-      'conversionRate': 0,
-      'totalRevenue': 0.0,
-      'totalSavings': 0.0,
-    },
-    error: (_, __) => {
-      'todayCount': 0,
-      'todayRevenue': 0.0,
-      'averageBasket': 0.0,
-      'conversionRate': 0,
-      'totalRevenue': 0.0,
-      'totalSavings': 0.0,
-    },
-  );
-});
 
 /// Extensions pour les filtres
 extension SalesPeriodFilterExtensions on SalesPeriodFilter {

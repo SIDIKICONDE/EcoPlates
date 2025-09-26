@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/sale.dart';
 import '../../providers/sales_provider.dart';
 
+/// Valeurs du menu statut
+enum _StatusMenuCmd { all }
+
 /// Chips de filtrage pour les ventes
 class SalesFilterChips extends ConsumerWidget {
   const SalesFilterChips({super.key});
@@ -64,7 +67,7 @@ class SalesFilterChips extends ConsumerWidget {
           const SizedBox(width: 8),
 
           // Filtre par statut
-          PopupMenuButton<SaleStatus?>(
+          PopupMenuButton<Object>(
             offset: const Offset(0, 40),
             child: Chip(
               label: Row(
@@ -94,13 +97,14 @@ class SalesFilterChips extends ConsumerWidget {
               ),
             ),
             itemBuilder: (context) {
-              final items = <PopupMenuEntry<SaleStatus?>>[
-                const PopupMenuItem<SaleStatus?>(
+              final items = <PopupMenuEntry<Object>>[
+                const PopupMenuItem<Object>(
+                  value: _StatusMenuCmd.all,
                   child: Text('Tous les statuts'),
                 ),
                 const PopupMenuDivider(),
                 ...SaleStatus.values.map((status) {
-                  return PopupMenuItem<SaleStatus?>(
+                  return PopupMenuItem<Object>(
                     value: status,
                     child: Row(
                       children: [
@@ -126,10 +130,16 @@ class SalesFilterChips extends ConsumerWidget {
 
               return items;
             },
-            onSelected: (status) {
-              ref.read(salesFilterProvider.notifier).state = filters.copyWith(
-                status: status,
-              );
+            onSelected: (value) {
+              if (value is _StatusMenuCmd && value == _StatusMenuCmd.all) {
+                ref.read(salesFilterProvider.notifier).state = filters.copyWith(
+                  status: null,
+                );
+              } else if (value is SaleStatus) {
+                ref.read(salesFilterProvider.notifier).state = filters.copyWith(
+                  status: value,
+                );
+              }
             },
           ),
 

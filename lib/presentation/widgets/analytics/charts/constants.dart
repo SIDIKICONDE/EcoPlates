@@ -10,16 +10,16 @@ class ChartConstants {
   static const double chartContainerHeight = 200;
 
   /// Largeur d'une barre dans le graphique
-  static const double barWidth = 32;
+  static const double barWidth = 24;
 
   /// Largeur d'un label sous les barres (doit correspondre à barWidth)
-  static const double labelWidth = 32;
+  static const double labelWidth = 24;
 
   /// Espacement entre les barres
   static const double barSpacing = 8;
 
   /// Hauteur maximale des barres (en pixels)
-  static const double maxBarHeight = 120;
+  static const double maxBarHeight = 100;
 
   /// Hauteur minimale des barres (pour éviter les barres invisibles)
   static const double minBarHeight = 4;

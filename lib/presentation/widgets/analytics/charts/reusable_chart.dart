@@ -220,16 +220,18 @@ class _ReusableChartState extends State<ReusableChart> {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 // Calculer la largeur dynamique en fonction du nombre de points
-                final calculatedWidth = ChartConstants.calculateTotalWidth(points.length);
+                final calculatedWidth = ChartConstants.calculateTotalWidth(
+                  points.length,
+                );
                 // Utiliser la largeur du conteneur si elle est plus grande
-                final chartWidth = calculatedWidth > constraints.maxWidth 
-                    ? calculatedWidth 
+                final chartWidth = calculatedWidth > constraints.maxWidth
+                    ? calculatedWidth
                     : constraints.maxWidth;
-                
+
                 return SingleChildScrollView(
                   controller: _scrollController,
                   scrollDirection: Axis.horizontal,
-                  physics: chartWidth > constraints.maxWidth 
+                  physics: chartWidth > constraints.maxWidth
                       ? const AlwaysScrollableScrollPhysics()
                       : const NeverScrollableScrollPhysics(),
                   child: SizedBox(
@@ -287,15 +289,17 @@ class _ReusableChartState extends State<ReusableChart> {
           LayoutBuilder(
             builder: (context, constraints) {
               // Utiliser la même largeur que le graphique au-dessus
-              final calculatedWidth = ChartConstants.calculateTotalWidth(points.length);
-              final chartWidth = calculatedWidth > constraints.maxWidth 
-                  ? calculatedWidth 
+              final calculatedWidth = ChartConstants.calculateTotalWidth(
+                points.length,
+              );
+              final chartWidth = calculatedWidth > constraints.maxWidth
+                  ? calculatedWidth
                   : constraints.maxWidth;
-              
+
               return SingleChildScrollView(
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
-                physics: chartWidth > constraints.maxWidth 
+                physics: chartWidth > constraints.maxWidth
                     ? const AlwaysScrollableScrollPhysics()
                     : const NeverScrollableScrollPhysics(),
                 child: SizedBox(
@@ -305,16 +309,25 @@ class _ReusableChartState extends State<ReusableChart> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: points
                               .map(
-                                (point) => SizedBox(
-                                  width: ChartConstants.barWidth + 20,
-                                  child: Text(
-                                    point.label,
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      fontSize: ChartConstants.labelFontSize,
-                                      color: theme.colorScheme.onSurfaceVariant,
+                                (point) => Flexible(
+                                  child: Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: ChartConstants.barWidth + 20,
                                     ),
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
+                                    child: Text(
+                                      point.label,
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            fontSize:
+                                                ChartConstants.labelFontSize,
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
                                   ),
                                 ),
                               )
@@ -332,10 +345,14 @@ class _ReusableChartState extends State<ReusableChart> {
                                     width: ChartConstants.barWidth,
                                     child: Text(
                                       point.label,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        fontSize: ChartConstants.labelFontSize,
-                                        color: theme.colorScheme.onSurfaceVariant,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            fontSize:
+                                                ChartConstants.labelFontSize,
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
                                       textAlign: TextAlign.center,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -370,28 +387,42 @@ class _ReusableChartState extends State<ReusableChart> {
 
     final barColor = barColors[pointIndex % barColors.length];
 
+    // Calculer si la barre est suffisamment haute pour afficher le texte au-dessus
+    final clampedBarHeight = barHeight.clamp(
+      ChartConstants.minBarHeight,
+      ChartConstants.maxBarHeight,
+    );
+    final availableSpaceForText =
+        ChartConstants.chartContainerHeight -
+        ChartConstants.chartVerticalPadding * 2 -
+        ChartConstants.gridToLabelsSpacing -
+        clampedBarHeight -
+        ChartConstants.valueToBarSpacing;
+
+    // Ne montrer le texte que s'il y a au moins 15px d'espace disponible
+    final showValueText = availableSpaceForText >= 15;
+
     return SizedBox(
       width: ChartConstants.barWidth,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // Valeur au-dessus de la barre
-          Text(
-            widget.config.valueFormatter(point.value),
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontSize: ChartConstants.valueFontSize,
-              fontWeight: FontWeight.w600,
-              color: barColor,
+          // Valeur au-dessus de la barre (seulement si espace suffisant)
+          if (showValueText)
+            Text(
+              widget.config.valueFormatter(point.value),
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: ChartConstants.valueFontSize,
+                fontWeight: FontWeight.w600,
+                color: barColor,
+              ),
             ),
-          ),
-          const SizedBox(height: ChartConstants.valueToBarSpacing),
+          if (showValueText)
+            const SizedBox(height: ChartConstants.valueToBarSpacing),
           // Barre verticale avec dégradé
           Container(
-            width: ChartConstants.barWidth - ChartConstants.barSpacing,
-            height: barHeight.clamp(
-              ChartConstants.minBarHeight,
-              ChartConstants.maxBarHeight,
-            ),
+            width: ChartConstants.barWidth,
+            height: clampedBarHeight,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,

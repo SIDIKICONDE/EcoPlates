@@ -11,7 +11,16 @@ class EnvConfig {
   static bool get useMockData => isDevelopment && !isBackendAvailable();
 
   static bool isBackendAvailable() {
-    // In development, we'll use mock data instead of requiring a backend
+    // Determine backend availability from environment variables or environment
+    final envValue = dotenv.env['BACKEND_AVAILABLE'];
+    if (envValue != null) {
+      final normalized = envValue.toLowerCase().trim();
+      return normalized == 'true' || normalized == '1' || normalized == 'yes';
+    }
+    // Default: backend available in staging/production, disabled in dev unless explicitly enabled
+    if (isStaging || isProduction) {
+      return true;
+    }
     return false;
   }
 

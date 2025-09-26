@@ -74,7 +74,7 @@ enum AnalyticsPeriod {
   String get label {
     switch (this) {
       case AnalyticsPeriod.day:
-        return 'Aujourd\'hui';
+        return "Aujourd'hui";
       case AnalyticsPeriod.week:
         return 'Cette semaine';
       case AnalyticsPeriod.month:

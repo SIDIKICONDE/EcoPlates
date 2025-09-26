@@ -4,39 +4,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/analytics_stats.dart';
 
 /// Provider pour la période d'analyse sélectionnée
-/// 
-/// Utilisé pour filtrer les données analytiques par période
-final analyticsPeriodProvider = StateProvider<AnalyticsPeriod>((ref) {
-  return AnalyticsPeriod.week; // Période par défaut
-});
+final analyticsPeriodProvider = NotifierProvider<AnalyticsPeriodNotifier, AnalyticsPeriod>(
+  AnalyticsPeriodNotifier.new,
+);
+
+class AnalyticsPeriodNotifier extends Notifier<AnalyticsPeriod> {
+  @override
+  AnalyticsPeriod build() => AnalyticsPeriod.week;
+
+  void update(AnalyticsPeriod period) => state = period;
+}
 
 /// Provider pour les statistiques d'analyse
-/// 
 /// Charge les données en fonction de la période sélectionnée
 final analyticsStatsProvider = FutureProvider<AnalyticsStats>((ref) async {
   final period = ref.watch(analyticsPeriodProvider);
   
   // Simuler un appel API avec délai
-  await Future.delayed(const Duration(milliseconds: 800));
+  await Future<void>.delayed(const Duration(milliseconds: 800));
   
-  // TODO: Remplacer par l'appel réel à l'API
+  // TODO(analytics): Remplacer par l'appel réel à l'API
   return _generateMockData(period);
 });
-
-/// Provider pour le rafraîchissement des données analytics
-/// 
-/// Permet de forcer le rechargement des statistiques
-final analyticsRefreshProvider = StateProvider<int>((ref) => 0);
 
 /// Extension pour rafraîchir les analytics
 extension AnalyticsRefresh on WidgetRef {
   /// Rafraîchit les données d'analytics
   Future<void> refreshAnalytics() async {
-    // Invalider les données pour forcer le rechargement
     invalidate(analyticsStatsProvider);
-    
-    // Incrémenter le compteur de rafraîchissement
-    read(analyticsRefreshProvider.notifier).state++;
   }
 }
 
@@ -77,8 +72,8 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
       // Données horaires pour aujourd'hui
       for (var i = 0; i < 24; i++) {
         final hour = now.subtract(Duration(hours: 23 - i));
-        final revenue = 50 + (i * 15) + (i % 3 * 20);
-        final orders = 2 + (i ~/ 4) + (i % 2);
+        final revenue = 50.0 + (i * 15.0) + (i % 3 * 20.0);
+        final orders = 2.0 + (i ~/ 4).toDouble() + (i % 2).toDouble();
         
         revenueData.add(DataPoint(
           label: '${hour.hour}h',
@@ -98,8 +93,8 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
       final weekdays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
       for (var i = 0; i < 7; i++) {
         final day = now.subtract(Duration(days: 6 - i));
-        final revenue = 300 + (i * 50) + (i % 2 * 100);
-        final orders = 15 + (i * 5) + (i % 3 * 3);
+        final revenue = 300.0 + (i * 50.0) + (i % 2 * 100.0);
+        final orders = 15.0 + (i * 5.0) + (i % 3 * 3.0);
         
         revenueData.add(DataPoint(
           label: weekdays[i],
@@ -118,8 +113,8 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
       // Données hebdomadaires pour le mois
       for (var i = 0; i < 4; i++) {
         final week = now.subtract(Duration(days: (3 - i) * 7));
-        final revenue = 1200 + (i * 200) + (i % 2 * 300);
-        final orders = 80 + (i * 15) + (i % 3 * 10);
+        final revenue = 1200.0 + (i * 200.0) + (i % 2 * 300.0);
+        final orders = 80.0 + (i * 15.0) + (i % 3 * 10.0);
         
         revenueData.add(DataPoint(
           label: 'S${i + 1}',
@@ -140,8 +135,8 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
                      'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
       for (var i = 0; i < 12; i++) {
         final month = DateTime(now.year, i + 1);
-        final revenue = 4000 + (i * 300) + (i % 4 * 500);
-        final orders = 250 + (i * 20) + (i % 3 * 30);
+        final revenue = 4000.0 + (i * 300.0) + (i % 4 * 500.0);
+        final orders = 250.0 + (i * 20.0) + (i % 3 * 30.0);
         
         revenueData.add(DataPoint(
           label: months[i],

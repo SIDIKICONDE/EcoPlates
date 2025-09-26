@@ -1,5 +1,7 @@
 export 'bottom_charts_section.dart';
 export 'categories_chart.dart';
+export 'commissions_chart.dart';
+export 'customer_satisfaction_chart.dart';
 export 'loading_error_section.dart';
 export 'orders_chart.dart';
 export 'revenue_chart.dart';

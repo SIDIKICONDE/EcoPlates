@@ -10,6 +10,7 @@ import 'charts/charts.dart';
 /// Affiche :
 /// - Graphique d'évolution des revenus
 /// - Graphique des ventes par période
+/// - Graphique des commissions payées
 /// - Top des produits les plus vendus
 /// - Répartition par catégories
 class AnalyticsChartsSection extends ConsumerWidget {
@@ -38,6 +39,16 @@ class AnalyticsChartsSection extends ConsumerWidget {
 
         // Graphique des commandes
         OrdersChart(analytics: analytics),
+
+        const SizedBox(height: 24),
+
+        // Graphique des commissions
+        CommissionsChart(analytics: analytics),
+
+        const SizedBox(height: 24),
+
+        // Graphique de satisfaction client
+        CustomerSatisfactionChart(analytics: analytics),
 
         const SizedBox(height: 24),
 

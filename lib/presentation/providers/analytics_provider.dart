@@ -43,7 +43,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
   final now = DateTime.now();
 
   // Générer des données en fonction de la période
-  final (revenueData, ordersData) = _generateTimeSeriesData(period, now);
+  final (revenueData, ordersData, commissionData) = _generateTimeSeriesData(period, now);
 
   return AnalyticsStats(
     period: period,
@@ -51,21 +51,27 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
     totalOrders: _getTotalOrders(period),
     averageOrderValue: _getAverageOrderValue(period),
     conversionRate: _getConversionRate(period),
+    totalCommissions: _getTotalCommissions(period),
     revenueData: revenueData,
     ordersData: ordersData,
+    commissionData: commissionData,
     topProducts: _generateTopProducts(),
     categoryBreakdown: _generateCategoryBreakdown(),
+    customerSatisfactionData: _generateCustomerSatisfactionData(period, now),
+    ratingDistribution: _generateRatingDistribution(),
+    totalReviews: _getTotalReviews(period),
     previousPeriodComparison: _generatePeriodComparison(period),
   );
 }
 
 /// Génère des données de série temporelle pour les graphiques
-(List<DataPoint>, List<DataPoint>) _generateTimeSeriesData(
+(List<DataPoint>, List<DataPoint>, List<DataPoint>) _generateTimeSeriesData(
   AnalyticsPeriod period,
   DateTime now,
 ) {
   final revenueData = <DataPoint>[];
   final ordersData = <DataPoint>[];
+  final commissionData = <DataPoint>[];
 
   switch (period) {
     case AnalyticsPeriod.day:
@@ -74,6 +80,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
         final hour = now.subtract(Duration(hours: 23 - i));
         final revenue = 50.0 + (i * 15.0) + (i % 3 * 20.0);
         final orders = 2.0 + (i ~/ 4) + (i % 2);
+        final commission = revenue * 0.15; // 15% de commission
 
         revenueData.add(
           DataPoint(
@@ -87,6 +94,14 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
           DataPoint(
             label: '${hour.hour}h',
             value: orders,
+            date: hour,
+          ),
+        );
+        
+        commissionData.add(
+          DataPoint(
+            label: '${hour.hour}h',
+            value: commission,
             date: hour,
           ),
         );
@@ -99,6 +114,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
         final day = now.subtract(Duration(days: 6 - i));
         final revenue = 300.0 + (i * 50.0) + (i % 2 * 100.0);
         final orders = 15.0 + (i * 5.0) + (i % 3 * 3.0);
+        final commission = revenue * 0.15; // 15% de commission
 
         revenueData.add(
           DataPoint(
@@ -112,6 +128,14 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
           DataPoint(
             label: weekdays[i],
             value: orders,
+            date: day,
+          ),
+        );
+        
+        commissionData.add(
+          DataPoint(
+            label: weekdays[i],
+            value: commission,
             date: day,
           ),
         );
@@ -123,10 +147,11 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
         final week = now.subtract(Duration(days: (3 - i) * 7));
         final revenue = 1200.0 + (i * 200.0) + (i % 2 * 300.0);
         final orders = 80.0 + (i * 15.0) + (i % 3 * 10.0);
+        final commission = revenue * 0.15; // 15% de commission
 
         revenueData.add(
           DataPoint(
-            label: 'S${i + 1}',
+            label: 'Sem ${i + 1}',
             value: revenue,
             date: week,
           ),
@@ -134,8 +159,16 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
 
         ordersData.add(
           DataPoint(
-            label: 'S${i + 1}',
+            label: 'Sem ${i + 1}',
             value: orders,
+            date: week,
+          ),
+        );
+        
+        commissionData.add(
+          DataPoint(
+            label: 'Sem ${i + 1}',
+            value: commission,
             date: week,
           ),
         );
@@ -161,6 +194,7 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
         final month = DateTime(now.year, i + 1);
         final revenue = 4000.0 + (i * 300.0) + (i % 4 * 500.0);
         final orders = 250.0 + (i * 20.0) + (i % 3 * 30.0);
+        final commission = revenue * 0.15; // 15% de commission
 
         revenueData.add(
           DataPoint(
@@ -177,10 +211,18 @@ AnalyticsStats _generateMockData(AnalyticsPeriod period) {
             date: month,
           ),
         );
+        
+        commissionData.add(
+          DataPoint(
+            label: months[i],
+            value: commission,
+            date: month,
+          ),
+        );
       }
   }
 
-  return (revenueData, ordersData);
+  return (revenueData, ordersData, commissionData);
 }
 
 /// Calcule le chiffre d'affaires total pour la période
@@ -230,6 +272,11 @@ double _getConversionRate(AnalyticsPeriod period) {
     case AnalyticsPeriod.year:
       return 3.9;
   }
+}
+
+/// Calcule le total des commissions pour la période (15% du CA)
+double _getTotalCommissions(AnalyticsPeriod period) {
+  return _getTotalRevenue(period) * 0.15;
 }
 
 /// Génère les données des produits les plus vendus
@@ -319,7 +366,98 @@ List<CategoryData> _generateCategoryBreakdown() {
   ];
 }
 
-/// Génère la comparaison avec la période précédente
+/// Génère les données d'évolution de la satisfaction client
+List<DataPoint> _generateCustomerSatisfactionData(AnalyticsPeriod period, DateTime now) {
+  final points = <DataPoint>[];
+  final count = period == AnalyticsPeriod.day ? 24 : period == AnalyticsPeriod.week ? 7 : period == AnalyticsPeriod.month ? 30 : 12;
+
+  for (var i = 0; i < count; i++) {
+    final date = period == AnalyticsPeriod.day
+        ? DateTime(now.year, now.month, now.day, i)
+        : period == AnalyticsPeriod.week
+            ? now.subtract(Duration(days: count - 1 - i))
+            : period == AnalyticsPeriod.month
+                ? now.subtract(Duration(days: count - 1 - i))
+                : DateTime(now.year, i + 1);
+
+    // Note moyenne entre 3.8 et 4.8 avec variations réalistes
+    final baseRating = 4.2;
+    final variation = (i % 3 - 1) * 0.3; // Variation périodique
+    final rating = (baseRating + variation + (i * 0.1) % 0.6).clamp(3.5, 4.8);
+
+    points.add(DataPoint(
+      label: period == AnalyticsPeriod.day
+          ? '${i}h'
+          : period == AnalyticsPeriod.week
+              ? 'J${i + 1}'
+              : period == AnalyticsPeriod.month
+                  ? '${i + 1}'
+                  : _getMonthName(i + 1),
+      value: rating,
+    ));
+  }
+
+  return points;
+}
+
+/// Génère la répartition des notes clients (1-5 étoiles)
+List<RatingData> _generateRatingDistribution() {
+  final total = 2847; // Nombre total d'avis simulé
+
+  return [
+    RatingData(
+      stars: 5,
+      count: 1842,
+      percentage: 64.7,
+      color: 0xFF4CAF50, // Vert
+    ),
+    RatingData(
+      stars: 4,
+      count: 654,
+      percentage: 23.0,
+      color: 0xFF8BC34A, // Vert clair
+    ),
+    RatingData(
+      stars: 3,
+      count: 234,
+      percentage: 8.2,
+      color: 0xFFFF9800, // Orange
+    ),
+    RatingData(
+      stars: 2,
+      count: 78,
+      percentage: 2.7,
+      color: 0xFFFF5722, // Rouge-orange
+    ),
+    RatingData(
+      stars: 1,
+      count: 39,
+      percentage: 1.4,
+      color: 0xFFF44336, // Rouge
+    ),
+  ];
+}
+
+/// Calcule le nombre total d'avis pour la période
+int _getTotalReviews(AnalyticsPeriod period) {
+  switch (period) {
+    case AnalyticsPeriod.day:
+      return 47;
+    case AnalyticsPeriod.week:
+      return 234;
+    case AnalyticsPeriod.month:
+      return 892;
+    case AnalyticsPeriod.year:
+      return 2847;
+  }
+}
+
+/// Helper pour obtenir le nom du mois
+String _getMonthName(int month) {
+  const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+  return months[month - 1];
+}
+
 PeriodComparison _generatePeriodComparison(AnalyticsPeriod period) {
   // Générer des variations réalistes
   return const PeriodComparison(

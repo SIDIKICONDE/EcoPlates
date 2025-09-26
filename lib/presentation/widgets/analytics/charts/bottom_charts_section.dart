@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../domain/entities/analytics_stats.dart';
 import 'categories_chart.dart';
+import 'customer_satisfaction_chart.dart';
 import 'top_products_chart.dart';
 
 class BottomChartsSection extends StatelessWidget {
@@ -26,6 +27,8 @@ class BottomChartsSection extends StatelessWidget {
             Expanded(child: TopProductsChart(analytics: analytics)),
             const SizedBox(width: 16),
             Expanded(child: CategoriesChart(analytics: analytics)),
+            const SizedBox(width: 16),
+            Expanded(child: RatingDistributionChart(analytics: analytics)),
           ],
         ),
       );
@@ -35,6 +38,8 @@ class BottomChartsSection extends StatelessWidget {
           TopProductsChart(analytics: analytics),
           const SizedBox(height: 24),
           CategoriesChart(analytics: analytics),
+          const SizedBox(height: 24),
+          RatingDistributionChart(analytics: analytics),
         ],
       );
     }

@@ -11,10 +11,15 @@ class AnalyticsStats extends Equatable {
     required this.totalOrders,
     required this.averageOrderValue,
     required this.conversionRate,
+    required this.totalCommissions,
     required this.revenueData,
     required this.ordersData,
+    required this.commissionData,
     required this.topProducts,
     required this.categoryBreakdown,
+    required this.customerSatisfactionData,
+    required this.ratingDistribution,
+    required this.totalReviews,
     this.previousPeriodComparison,
   });
 
@@ -33,17 +38,32 @@ class AnalyticsStats extends Equatable {
   /// Taux de conversion (%)
   final double conversionRate;
 
+  /// Total des commissions payées à la plateforme sur la période
+  final double totalCommissions;
+
   /// Données de revenus pour les graphiques en ligne
   final List<DataPoint> revenueData;
 
   /// Données de commandes pour les graphiques en barres
   final List<DataPoint> ordersData;
 
+  /// Données de commissions pour les graphiques
+  final List<DataPoint> commissionData;
+
   /// Top 5 des produits les plus vendus
   final List<TopProduct> topProducts;
 
   /// Répartition par catégories pour le graphique en secteurs
   final List<CategoryData> categoryBreakdown;
+
+  /// Évolution de la satisfaction client (notes moyennes)
+  final List<DataPoint> customerSatisfactionData;
+
+  /// Répartition des notes clients (1-5 étoiles)
+  final List<RatingData> ratingDistribution;
+
+  /// Nombre total d'avis clients
+  final int totalReviews;
 
   /// Comparaison avec la période précédente (optionnel)
   final PeriodComparison? previousPeriodComparison;
@@ -55,10 +75,15 @@ class AnalyticsStats extends Equatable {
         totalOrders,
         averageOrderValue,
         conversionRate,
+        totalCommissions,
         revenueData,
         ordersData,
+        commissionData,
         topProducts,
         categoryBreakdown,
+        customerSatisfactionData,
+        ratingDistribution,
+        totalReviews,
         previousPeriodComparison,
       ];
 }
@@ -176,6 +201,31 @@ class CategoryData extends Equatable {
 
   @override
   List<Object> get props => [name, value, percentage, color];
+}
+
+/// Données de répartition des notes clients (1-5 étoiles)
+class RatingData extends Equatable {
+  const RatingData({
+    required this.stars,
+    required this.count,
+    required this.percentage,
+    required this.color,
+  });
+
+  /// Nombre d'étoiles (1-5)
+  final int stars;
+
+  /// Nombre d'avis pour cette note
+  final int count;
+
+  /// Pourcentage du total
+  final double percentage;
+
+  /// Couleur pour l'affichage
+  final int color;
+
+  @override
+  List<Object> get props => [stars, count, percentage, color];
 }
 
 /// Comparaison avec la période précédente

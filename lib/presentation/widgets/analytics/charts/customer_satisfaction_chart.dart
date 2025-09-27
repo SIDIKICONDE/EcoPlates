@@ -43,6 +43,7 @@ class RatingDistributionChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -113,10 +114,12 @@ class RatingDistributionChart extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Distribution des notes
-          ...analytics.ratingDistribution.map((rating) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: _buildRatingBar(rating, context),
-          )),
+          ...analytics.ratingDistribution.map(
+            (rating) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: _buildRatingBar(rating, context),
+            ),
+          ),
         ],
       ),
     );
@@ -134,7 +137,9 @@ class RatingDistributionChart extends StatelessWidget {
               size: 14,
               color: index < rating.stars
                   ? Color(rating.color)
-                  : Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                  : Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
             ),
           ),
         ),

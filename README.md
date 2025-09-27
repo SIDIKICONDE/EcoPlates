@@ -58,6 +58,30 @@ EcoPlates follows clean architecture principles with:
 - **Storage**: Flutter Secure Storage
 - **Testing**: flutter_test, Mockito, Patrol
 
+## 📐 Responsive Design
+
+Un système responsive unifié est disponible.
+
+```dart
+import 'package:ecoplates/core/responsive/responsive.dart';
+
+// Type d'appareil
+final type = context.deviceType; // DeviceType.mobile/tablet/desktop/desktopLarge
+
+// Valeur selon device
+final padding = context.responsiveValue(mobile: 12.0, tablet: 16.0, desktop: 20.0);
+
+// UI spécifique par device
+return ResponsiveLayout(
+  mobile: (_) => MobileView(),
+  tablet: (_) => TabletView(),
+  desktop: (_) => DesktopView(),
+  desktopLarge: (_) => DesktopLargeView(),
+);
+```
+
+Astuce: utilisez `isMobileDevice`, `isTabletDevice`, `isDesktopDevice`, `isDesktopLargeDevice` pour des conditions rapides.
+
 ## 🔧 Development
 
 ### Prerequisites

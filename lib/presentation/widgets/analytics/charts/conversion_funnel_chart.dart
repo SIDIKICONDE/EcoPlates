@@ -97,7 +97,7 @@ class ConversionFunnelChart extends StatelessWidget {
               const minWidth = 60.0;
 
               return SizedBox(
-                height: 250, // Réduire la hauteur pour éviter l'overflowr
+                height: 220, // Ajuster la hauteur pour éviter l'overflow
                 child: Stack(
                   alignment: Alignment.center,
                   children: analytics.conversionFunnel.reversed.map((step) {
@@ -112,7 +112,7 @@ class ConversionFunnelChart extends StatelessWidget {
 
                     return Positioned(
                       top:
-                          reversedIndex * 35.0, // Réduire l'espacement vertical
+                          reversedIndex * 30.0, // Espacement optimisé
                       child: _buildFunnelStep(
                         step,
                         stepWidth,
@@ -257,10 +257,10 @@ class ConversionFunnelChart extends StatelessWidget {
               // Ligne de connexion vers l'étape suivante (sauf dernière)
               if (!isLast)
                 Positioned(
-                  bottom: -12,
+                  bottom: -8,
                   child: Container(
                     width: 2,
-                    height: 12,
+                    height: 8,
                     color: Color(step.color).withValues(alpha: 0.6),
                   ),
                 ),

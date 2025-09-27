@@ -60,7 +60,7 @@ EcoPlates follows clean architecture principles with:
 
 ## 📐 Responsive Design
 
-Un système responsive unifié est disponible.
+Un système responsive unifié est disponible avec support des grilles adaptatives.
 
 ```dart
 import 'package:ecoplates/core/responsive/responsive.dart';
@@ -77,6 +77,26 @@ return ResponsiveLayout(
   tablet: (_) => TabletView(),
   desktop: (_) => DesktopView(),
   desktopLarge: (_) => DesktopLargeView(),
+);
+
+// Grille responsive auto-adaptative
+return ResponsiveGrid(
+  config: ResponsiveGridConfig(
+    mobile: 1,        // 1 colonne mobile
+    tablet: 2,        // 2 colonnes tablette
+    desktop: 3,       // 3 colonnes desktop
+    desktopLarge: 4,  // 4 colonnes grand desktop
+    spacing: 12.0,
+    aspectRatio: 1.0,
+  ),
+  children: itemList,
+);
+
+// Grille avec nombre fixe de colonnes
+return itemList.toFixedGrid(
+  crossAxisCount: 3,
+  spacing: 8.0,
+  aspectRatio: 1.2,
 );
 ```
 

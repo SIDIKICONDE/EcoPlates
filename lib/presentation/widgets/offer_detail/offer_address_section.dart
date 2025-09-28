@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 
 /// Section dédiée à l'adresse de récupération
@@ -13,37 +15,58 @@ class OfferAddressSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey[200]!),
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.disabled,
+          ),
+          width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+        ),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Adresse principale avec icône simple
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.grey[600], size: 20),
-              const SizedBox(width: 8),
+              Icon(
+                Icons.location_on,
+                color: Theme.of(context).colorScheme.onSurface.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                ),
+                size: EcoPlatesDesignTokens.size.indicator(context),
+              ),
+              SizedBox(width: context.scaleXS_SM_MD_LG),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       offer.location.address,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                      style: TextStyle(
+                        fontSize: EcoPlatesDesignTokens.typography.text(
+                          context,
+                        ),
+                        fontWeight: EcoPlatesDesignTokens.typography.semiBold,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
                     Text(
                       '${offer.location.postalCode} ${offer.location.city}',
-                      style: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                      style: TextStyle(
+                        fontSize: EcoPlatesDesignTokens.typography.hint(
+                          context,
+                        ),
+                        color: Theme.of(context).colorScheme.onSurface
+                            .withValues(
+                              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                            ),
+                      ),
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: context.scaleXXS_XS_SM_MD),
                     GestureDetector(
                       onTap: () {
                         // Navigation vers le profil du marchand
@@ -78,17 +101,21 @@ class OfferAddressSection extends StatelessWidget {
                           Text(
                             "Plus d'informations sur le marchand",
                             style: TextStyle(
-                              fontSize: 13,
-                              color: Theme.of(context).primaryColor,
+                              fontSize: EcoPlatesDesignTokens.typography.hint(
+                                context,
+                              ),
+                              color: Theme.of(context).colorScheme.primary,
                               fontStyle: FontStyle.italic,
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: context.scaleXXS_XS_SM_MD),
                           Icon(
                             Icons.arrow_forward_ios,
-                            size: 12,
-                            color: Theme.of(context).primaryColor,
+                            size:
+                                EcoPlatesDesignTokens.size.indicator(context) /
+                                2,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ],
                       ),

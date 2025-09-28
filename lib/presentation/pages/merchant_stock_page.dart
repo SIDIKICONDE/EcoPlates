@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/design_tokens.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../../domain/entities/stock_item.dart';
 import '../widgets/stock/merchant_stock_app_bar.dart';
@@ -47,21 +48,28 @@ class _StockHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const DecoratedBox(
-      decoration: BoxDecoration(
+    return DecoratedBox(
+      decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.black12, width: 0.5)),
       ),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(
+          EcoPlatesDesignTokens.spacing.dialogGap(context),
+        ),
         child: Column(
           children: [
             // Barre de recherche
-            StockSearchBar(),
+            const StockSearchBar(),
 
-            SizedBox(height: 16),
+            SizedBox(
+              height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+            ),
 
             // Chips de filtrage
-            Align(alignment: Alignment.centerLeft, child: StockFilterChips()),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: StockFilterChips(),
+            ),
           ],
         ),
       ),

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../core/error/failures.dart';
@@ -69,25 +68,26 @@ final getUrgentOffersUseCaseProvider = Provider<GetUrgentOffersUseCase>((ref) {
 });
 
 /// Provider pour récupérer les offres urgentes avec gestion d'état
-final urgentOffersStateProvider = FutureProvider.autoDispose<List<FoodOffer>>((
-  ref,
-) async {
-  final GetUrgentOffersUseCase useCase = ref.watch(
-    getUrgentOffersUseCaseProvider,
-  );
+final FutureProvider<List<FoodOffer>> urgentOffersStateProvider =
+    FutureProvider.autoDispose<List<FoodOffer>>((
+      ref,
+    ) async {
+      final useCase = ref.watch(
+        getUrgentOffersUseCaseProvider,
+      );
 
-  // Paramètres par défaut (peut être personnalisé via un autre provider)
-  const UrgentOffersParams params = UrgentOffersParams(
-    maxDistanceKm: 5,
-  );
+      // Paramètres par défaut (peut être personnalisé via un autre provider)
+      const params = UrgentOffersParams(
+        maxDistanceKm: 5,
+      );
 
-  final Either<Failure, List<FoodOffer>> result = await useCase(params);
+      final result = await useCase(params);
 
-  return result.fold(
-    (Failure failure) => throw Exception(failure.userMessage),
-    (List<FoodOffer> offers) => offers,
-  );
-});
+      return result.fold(
+        (Failure failure) => throw Exception(failure.userMessage),
+        (List<FoodOffer> offers) => offers,
+      );
+    });
 
 /// Provider pour la synchronisation offline
 final syncOfflineDataProvider = FutureProvider<void>((ref) async {
@@ -177,7 +177,7 @@ final appInitializationProvider = FutureProvider<bool>((ref) async {
     // Enregistrer les adapters Hive (si nécessaire)
     // Hive.registerAdapter(FoodOfferModelAdapter());
 
-    // Nettoyer le cache au démarrage
+    // Nettoyer le cache expiré au démarrage
     final localDataSource = ref.read(foodOfferLocalDataSourceProvider);
     await localDataSource.cleanExpiredData();
 

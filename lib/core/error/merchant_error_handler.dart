@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../responsive/design_tokens.dart';
 import 'failures.dart';
 
 /// Gestionnaire d'erreurs centralisé pour le côté commerçant
@@ -285,11 +287,13 @@ class MerchantErrorHandler {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isRecoverable ? Colors.orange : Colors.red,
+        backgroundColor: isRecoverable
+            ? EcoPlatesDesignTokens.errorColorNetwork(context)
+            : EcoPlatesDesignTokens.errorColorGeneral(context),
         action: isRecoverable
             ? SnackBarAction(
                 label: 'Réessayer',
-                textColor: Colors.white,
+                textColor: EcoPlatesDesignTokens.colors.textPrimary,
                 onPressed: () {
                   // Trigger retry logic
                 },
@@ -317,10 +321,10 @@ class MerchantErrorHandler {
           children: [
             Icon(
               _getErrorIcon(failure),
-              color: _getErrorColor(failure),
-              size: 24,
+              color: _getErrorColor(context, failure),
+              size: EcoPlatesDesignTokens.errorIconSize,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: EcoPlatesDesignTokens.errorDialogSpacing),
             Text(title ?? _getErrorTitle(failure)),
           ],
         ),
@@ -330,22 +334,26 @@ class MerchantErrorHandler {
           children: [
             Text(failure.userMessage),
             if (failure.code != null) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: EcoPlatesDesignTokens.errorDialogSpacing),
               Text(
                 'Code: ${failure.code}',
-                style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: EcoPlatesDesignTokens.errorTextSecondary(context),
+                ),
               ),
             ],
             if (failure is ValidationFailure &&
                 failure.fieldErrors != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: EcoPlatesDesignTokens.errorDialogFieldSpacing),
               ...failure.fieldErrors!.entries.map(
                 (entry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
+                  padding: EdgeInsets.only(
+                    bottom: EcoPlatesDesignTokens.errorFieldErrorSpacing,
+                  ),
                   child: Text(
                     '• ${entry.key}: ${entry.value.join(', ')}',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.red,
+                      color: EcoPlatesDesignTokens.errorFieldText(context),
                     ),
                   ),
                 ),
@@ -385,18 +393,18 @@ class MerchantErrorHandler {
   }
 
   /// Retourne la couleur appropriée pour le type d'erreur
-  static Color _getErrorColor(Failure failure) {
+  static Color _getErrorColor(BuildContext context, Failure failure) {
     if (failure is NetworkFailure || failure is TimeoutFailure) {
-      return Colors.orange;
+      return EcoPlatesDesignTokens.errorColorNetwork(context);
     } else if (failure is AuthenticationFailure ||
         failure is PermissionFailure) {
-      return Colors.red;
+      return EcoPlatesDesignTokens.errorColorAuth(context);
     } else if (failure is ValidationFailure) {
-      return Colors.amber;
+      return EcoPlatesDesignTokens.errorColorValidation(context);
     } else if (failure is PaymentFailure) {
-      return Colors.deepOrange;
+      return EcoPlatesDesignTokens.errorColorPayment(context);
     } else {
-      return Colors.red;
+      return EcoPlatesDesignTokens.errorColorGeneral(context);
     }
   }
 

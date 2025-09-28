@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/design_tokens.dart';
+
 import '../../domain/entities/food_offer.dart';
 import '../providers/recommended_offers_provider.dart';
 import '../widgets/offer_card.dart';
@@ -14,7 +16,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final offersAsync = ref.watch(recommendedOffersProvider);
+    final offers = ref.watch(recommendedOffersProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,26 +32,29 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: offersAsync.when(
-        data: (offers) {
+      body: Builder(
+        builder: (context) {
           if (offers.isEmpty) {
             return _buildEmptyState(context);
           }
 
           return RefreshIndicator(
             onRefresh: () async {
-              // Forcer le rechargement des offres
+              // TODO: Brancher sur un provider de refresh réseau si disponible
+              // Force rebuild via notifier
               ref.invalidate(recommendedOffersProvider);
-              // Attendre que le provider se recharge
-              await ref.read(recommendedOffersProvider.future);
             },
             child: ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(
+                EcoPlatesDesignTokens.spacing.dialogGap(context),
+              ),
               itemCount: offers.length,
               itemBuilder: (context, index) {
                 final offer = offers[index];
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: EdgeInsets.only(
+                    bottom: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                  ),
                   child: OfferCard(
                     offer: offer,
                     compact: true,
@@ -63,8 +68,6 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => _buildErrorState(context, ref, error),
       ),
     );
   }
@@ -74,19 +77,27 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.local_offer_outlined, size: 80, color: Colors.grey[400]),
-          const SizedBox(height: 16),
+          Icon(
+            Icons.local_offer_outlined,
+            size: EcoPlatesDesignTokens.layout.emptyStateIconSize,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
           Text(
             'Aucune offre disponible',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
           Text(
             'Revenez plus tard pour découvrir\nde nouvelles offres anti-gaspi',
-            style: TextStyle(color: Colors.grey[600], fontSize: 16),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 24),
+          SizedBox(
+            height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+          ),
           OutlinedButton.icon(
             onPressed: () {
               Navigator.pop(context);
@@ -99,39 +110,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, WidgetRef ref, Object error) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
-            const SizedBox(height: 16),
-            Text(
-              'Erreur lors du chargement',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: TextStyle(color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                // Forcer le rechargement
-                ref.invalidate(recommendedOffersProvider);
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Réessayer'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // _buildErrorState supprimé: provider devenu synchrone
 
   Future<void> _navigateToOfferDetail(
     BuildContext context,
@@ -147,20 +126,26 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
 
   Widget _buildOfferDetailModal(BuildContext context, FoodOffer offer) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      height:
+          MediaQuery.of(context).size.height *
+          EcoPlatesDesignTokens.layout.modalHeightFactor(context),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+        ),
       ),
       child: Column(
         children: [
           // Header de la modal
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(
+              EcoPlatesDesignTokens.spacing.dialogGap(context),
+            ),
             decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
+              color: Theme.of(context).colorScheme.surfaceContainerLowest,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
               ),
             ),
             child: Row(
@@ -183,30 +168,50 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(
+                EcoPlatesDesignTokens.spacing.dialogGap(context),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Informations principales
                   OfferInfoSection(offer: offer),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Détails pratiques
                   OfferDetailsSection(offer: offer),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Adresse
                   OfferAddressSection(offer: offer),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Badges allergènes
                   OfferBadgesSection(offer: offer),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Métadonnées
                   OfferMetadataSection(offer: offer),
-                  const SizedBox(
-                    height: 100,
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
                   ), // Espace pour la barre de réservation
                 ],
               ),
@@ -239,12 +244,16 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
     unawaited(
       showModalBottomSheet<void>(
         context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+          ),
         ),
         builder: (context) {
           return Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(
+              EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,17 +273,21 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                ),
 
                 // Filtres par catégorie
                 Text(
                   'Catégorie',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.microGap(context),
+                ),
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: EcoPlatesDesignTokens.spacing.xxs,
+                  runSpacing: EcoPlatesDesignTokens.spacing.xxs,
                   children: [
                     FilterChip(
                       label: const Text('Boulangerie'),
@@ -295,26 +308,36 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                ),
 
                 // Filtres par régime
                 Text(
                   'Régime alimentaire',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.microGap(context),
+                ),
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: EcoPlatesDesignTokens.spacing.xxs,
+                  runSpacing: EcoPlatesDesignTokens.spacing.xxs,
                   children: [
                     FilterChip(
                       label: const Text('Végétarien'),
-                      avatar: const Icon(Icons.eco, size: 18),
+                      avatar: Icon(
+                        Icons.eco,
+                        size: EcoPlatesDesignTokens.typography.label(context),
+                      ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
                       label: const Text('Vegan'),
-                      avatar: const Icon(Icons.spa, size: 18),
+                      avatar: Icon(
+                        Icons.spa,
+                        size: EcoPlatesDesignTokens.typography.label(context),
+                      ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
@@ -324,18 +347,25 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                ),
 
                 // Filtres par prix
                 Text('Prix', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 12),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.microGap(context),
+                ),
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: EcoPlatesDesignTokens.spacing.xxs,
+                  runSpacing: EcoPlatesDesignTokens.spacing.xxs,
                   children: [
                     FilterChip(
                       label: const Text('Gratuit'),
-                      avatar: const Icon(Icons.star, size: 18),
+                      avatar: Icon(
+                        Icons.star,
+                        size: EcoPlatesDesignTokens.typography.label(context),
+                      ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
@@ -353,7 +383,9 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                   ],
                 ),
 
-                const SizedBox(height: 30),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+                ),
 
                 // Boutons d'action
                 Row(
@@ -367,7 +399,9 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                         child: const Text('Réinitialiser'),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(
+                      width: EcoPlatesDesignTokens.spacing.microGap(context),
+                    ),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -385,7 +419,9 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.microGap(context),
+                ),
               ],
             ),
           );

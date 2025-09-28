@@ -221,4 +221,141 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get submitReview => 'Envoyer l\'avis';
+
+  @override
+  String get merchantProfileTitle => 'Profil Marchand';
+
+  @override
+  String get merchantId => 'ID Marchand';
+
+  @override
+  String get businessName => 'Nom du commerce';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get contactInfo => 'Informations de contact';
+
+  @override
+  String get address => 'Adresse';
+
+  @override
+  String get phone => 'Téléphone';
+
+  @override
+  String get openingHours => 'Horaires d\'ouverture';
+
+  @override
+  String get category => 'Catégorie';
+
+  @override
+  String get edit => 'Modifier';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String get viewOnMap => 'Voir sur la carte';
+
+  @override
+  String get callBusiness => 'Appeler';
+
+  @override
+  String get emailBusiness => 'Email';
+
+  @override
+  String get closed => 'Fermé';
+
+  @override
+  String get monday => 'Lundi';
+
+  @override
+  String get tuesday => 'Mardi';
+
+  @override
+  String get wednesday => 'Mercredi';
+
+  @override
+  String get thursday => 'Jeudi';
+
+  @override
+  String get friday => 'Vendredi';
+
+  @override
+  String get saturday => 'Samedi';
+
+  @override
+  String get sunday => 'Dimanche';
+
+  @override
+  String get bakery => 'Boulangerie';
+
+  @override
+  String get grocery => 'Épicerie';
+
+  @override
+  String get cafe => 'Café';
+
+  @override
+  String get supermarket => 'Supermarché';
+
+  @override
+  String get profileUpdated => 'Profil mis à jour avec succès';
+
+  @override
+  String get profileUpdateError => 'Échec de la mise à jour du profil';
+
+  @override
+  String get offerFormPreferencesVegetarian => 'Végétarien';
+
+  @override
+  String get offerFormPreferencesVegan => 'Végan';
+
+  @override
+  String get offerFormPreferencesHalal => 'Halal';
+
+  @override
+  String get offerFormPreferencesAllergens => 'Allergènes';
+
+  @override
+  String get offerFormPreferencesCustomAllergen => 'Allergène personnalisé';
+
+  @override
+  String get offerFormPreferencesCustomAllergenHint =>
+      'Ex: Sulfites, colorants...';
+
+  @override
+  String get offerFormPreferencesDeclaredAllergens => 'Allergènes déclarés';
+
+  @override
+  String get offerFormPreferencesImportantInfo => 'Informations importantes';
+
+  @override
+  String get offerFormPreferencesAllergenInfoText =>
+      'Déclaration optionnelle mais recommandée pour la sécurité des clients allergiques.';
+
+  @override
+  String get offerFormPreferencesFeatureToImplement =>
+      'Fonctionnalité à implémenter';
+
+  @override
+  String get offerFormPageEditOffer => 'Modifier l\'offre';
+
+  @override
+  String get offerFormPageNewOffer => 'Nouvelle offre';
+
+  @override
+  String get offerFormPageSave => 'Enregistrer';
+
+  @override
+  String get offerFormPageSaving => 'Sauvegarde...';
+
+  @override
+  String offerFormPageSaveProgress(Object percentage) {
+    return 'Sauvegarder ($percentage%)';
+  }
+
+  @override
+  String get offerFormPageDelete => 'Supprimer';
 }

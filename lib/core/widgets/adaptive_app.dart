@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/env_config.dart';
-import '../themes/app_theme.dart';
 import '../themes/cupertino_theme.dart';
+import '../themes/eco_theme.dart';
 
 /// Widget adaptatif qui sélectionne automatiquement le bon thème selon la plateforme
 class AdaptiveApp extends StatelessWidget {
@@ -45,8 +46,8 @@ class AdaptiveApp extends StatelessWidget {
       return MaterialApp.router(
         title: 'EcoPlates',
         debugShowCheckedModeBanner: !EnvConfig.isProduction,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        theme: EcoTheme.lightTheme,
+        darkTheme: EcoTheme.darkTheme,
         routerConfig: router,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

@@ -1,6 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/responsive/design_tokens.dart';
+import '../../../core/services/image_cache_service.dart';
+import '../../../core/widgets/eco_cached_image.dart';
 import 'category_helper.dart';
 
 /// Widget pour l'image de fond avec placeholder et gradient overlay
@@ -22,34 +24,44 @@ class CardBackground extends StatelessWidget {
         // Image de fond
         SizedBox.expand(
           child: imageUrl != null
-              ? CachedNetworkImage(
+              ? EcoCachedImage(
                   imageUrl: imageUrl!,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => ColoredBox(
+                  size: ImageSize.large,
+                  placeholder: ColoredBox(
                     color: isDarkMode
-                        ? Colors.grey.shade800
-                        : Colors.grey.shade200,
-                    child: const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                        ? Theme.of(context).colorScheme.surfaceContainerHighest
+                        : Theme.of(context).colorScheme.surfaceContainerLowest,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: EcoPlatesDesignTokens
+                            .layout
+                            .loadingIndicatorStrokeWidth,
+                      ),
                     ),
                   ),
-                  errorWidget: (context, url, error) => _buildFallback(),
+                  errorWidget: _buildFallback(context),
                 )
-              : _buildFallback(),
+              : _buildFallback(context),
         ),
         // Gradient overlay
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.black.withValues(alpha: 0.65),
-                Colors.black.withValues(alpha: 0.25),
+                EcoPlatesDesignTokens.colors.overlayBlack.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                ),
+                EcoPlatesDesignTokens.colors.overlayBlack.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.subtle,
+                ),
                 Colors.transparent,
                 Colors.transparent,
                 Colors.transparent,
-                Colors.black.withValues(alpha: 0.7),
+                EcoPlatesDesignTokens.colors.overlayBlack.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                ),
               ],
-              stops: const [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+              stops: EcoPlatesDesignTokens.layout.analyticsGradientStops,
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
             ),
@@ -59,19 +71,28 @@ class CardBackground extends StatelessWidget {
     );
   }
 
-  Widget _buildFallback() {
+  Widget _buildFallback(BuildContext context) {
     final color = CategoryHelper.getCategoryColor(category);
     final icon = CategoryHelper.getCategoryIcon(category);
 
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [color, color.withValues(alpha: 0.7)],
+          colors: [
+            color,
+            color.withValues(alpha: EcoPlatesDesignTokens.opacity.almostOpaque),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
       ),
-      child: Icon(icon, size: 60, color: Colors.white.withValues(alpha: 0.3)),
+      child: Icon(
+        icon,
+        size: EcoPlatesDesignTokens.size.modalIcon(context),
+        color: Colors.white.withValues(
+          alpha: EcoPlatesDesignTokens.opacity.subtle,
+        ),
+      ),
     );
   }
 }

@@ -31,7 +31,9 @@ abstract class Sale with _$Sale {
     required SaleStatus status,
     required String paymentMethod,
     String? paymentTransactionId,
-    String? qrCode,
+    String? qrCode, // Deprecated - use secureQrEnabled instead
+    @Default(false) bool secureQrEnabled,
+    String? totpSecretId,
     String? notes,
     Map<String, dynamic>? metadata,
   }) = _Sale;

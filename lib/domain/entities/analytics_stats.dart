@@ -20,6 +20,7 @@ class AnalyticsStats extends Equatable {
     required this.customerSatisfactionData,
     required this.ratingDistribution,
     required this.totalReviews,
+    required this.conversionFunnel,
     this.previousPeriodComparison,
   });
 
@@ -84,11 +85,11 @@ class AnalyticsStats extends Equatable {
     commissionData,
     topProducts,
     categoryBreakdown,
-        customerSatisfactionData,
-        ratingDistribution,
-        totalReviews,
-        conversionFunnel,
-        previousPeriodComparison,
+    customerSatisfactionData,
+    ratingDistribution,
+    totalReviews,
+    conversionFunnel,
+    previousPeriodComparison,
   ];
 }
 

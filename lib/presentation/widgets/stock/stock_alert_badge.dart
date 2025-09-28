@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/responsive/responsive.dart';
 import '../../../domain/entities/stock_item.dart';
 
 /// Badge pour afficher le niveau d'alerte d'un article de stock
@@ -30,20 +31,34 @@ class StockAlertBadge extends StatelessWidget {
     final color = _getColor(theme);
     final icon = _getIcon();
 
-    final iconSize = compact ? 14.0 : 16.0;
-    final fontSize = compact ? 10.0 : 12.0;
+    final iconSize = compact
+        ? context.scaleXS_SM_MD_LG
+        : context.scaleIconStandard;
+    final fontSize = compact
+        ? EcoPlatesDesignTokens.typography.hint(context)
+        : EcoPlatesDesignTokens.typography.modalContent(context);
     final padding = compact
-        ? const EdgeInsets.symmetric(horizontal: 6, vertical: 2)
-        : const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
+        ? EdgeInsets.symmetric(
+            horizontal: context.scaleXXS_XS_SM_MD,
+            vertical: context.scaleXXS_XS_SM_MD,
+          )
+        : EdgeInsets.symmetric(
+            horizontal: context.scaleSM_MD_LG_XL,
+            vertical: context.scaleXXS_XS_SM_MD,
+          );
 
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(compact ? 8 : 12),
+        color: color.withValues(alpha: DesignConstants.opacityVeryTransparent),
+        borderRadius: BorderRadius.circular(
+          compact
+              ? EcoPlatesDesignTokens.radius.xs
+              : EcoPlatesDesignTokens.radius.md,
+        ),
         border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 0.5,
+          color: color.withValues(alpha: DesignConstants.opacitySubtle),
+          width: DesignConstants.zeroPointFive,
         ),
       ),
       child: Row(
@@ -55,7 +70,7 @@ class StockAlertBadge extends StatelessWidget {
             color: color,
           ),
           if (showLabel) ...[
-            const SizedBox(width: 4),
+            SizedBox(width: context.scaleXXS_XS_SM_MD),
             Text(
               alertLevel.label,
               style: TextStyle(
@@ -114,7 +129,9 @@ class StockIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final fontSize = compact ? 11.0 : 13.0;
+    final fontSize = compact
+        ? EcoPlatesDesignTokens.typography.hint(context)
+        : EcoPlatesDesignTokens.typography.modalContent(context);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -132,7 +149,7 @@ class StockIndicator extends StatelessWidget {
                   : theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleSM_MD_LG_XL),
         ],
         StockAlertBadge(
           alertLevel: item.alertLevel,

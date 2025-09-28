@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
+import '../../../core/responsive/context_responsive_extensions.dart';
 import '../../../core/services/map_service.dart';
 import '../../providers/browse_search_provider.dart';
 
@@ -38,19 +40,28 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
     final isLocationActive = ref.watch(isLocationActiveProvider);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      padding: const EdgeInsets.all(6),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.scaleMD_LG_XL_XXL,
+        vertical: context.scaleXXS_XS_SM_MD,
+      ),
+      padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
       child: Row(
         children: [
           // Champ de recherche
           Expanded(
             child: Container(
-              height: 40,
+              height: EcoPlatesDesignTokens.size.buttonHeight(context),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.8),
-                borderRadius: BorderRadius.circular(12),
+                color: Colors.white.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                ),
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.md,
+                ),
                 border: Border.all(
-                  color: Colors.grey[300]!.withValues(alpha: 0.5),
+                  color: Colors.grey[300]!.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.disabled,
+                  ),
                 ),
               ),
               child: TextField(
@@ -58,39 +69,50 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                 onChanged: (value) {
                   ref.read(searchQueryProvider.notifier).update(value);
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Rechercher...',
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  ),
                   border: InputBorder.none,
-                  prefixIcon: Icon(Icons.search, color: Colors.grey, size: 18),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                    size: context.scaleIconStandard,
+                  ),
                   prefixIconConstraints: BoxConstraints(
-                    minWidth: 36,
-                    minHeight: 18,
+                    minWidth: context.scaleLG_XL_XXL_XXXL,
+                    minHeight: context.scaleSM_MD_LG_XL,
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
+                    horizontal: context.scaleXXS_XS_SM_MD,
+                    vertical: context.scaleXXS_XS_SM_MD,
                   ),
                 ),
               ),
             ),
           ),
 
-          const SizedBox(width: 6),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
 
           // Bouton GPS
           Container(
-            height: 40,
-            width: 40,
+            height: EcoPlatesDesignTokens.size.buttonHeight(context),
+            width: EcoPlatesDesignTokens.size.buttonHeight(context),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(
+                EcoPlatesDesignTokens.radius.md,
+              ),
               border: Border.all(color: Colors.grey[300]!),
             ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.md,
+                ),
                 onTap: () async {
                   FocusScope.of(context).unfocus();
 
@@ -115,28 +137,34 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                   isLocationActive ? Icons.near_me : Icons.near_me_outlined,
                   color: isLocationActive
                       ? Theme.of(context).primaryColor
-                      : Colors.grey[700],
-                  size: 18,
+                      : Theme.of(context).colorScheme.onSurface.withValues(
+                          alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                        ),
+                  size: context.scaleIconStandard,
                 ),
               ),
             ),
           ),
 
-          const SizedBox(width: 6),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
 
           // Bouton Filtres avec badge
           Container(
-            height: 40,
-            width: 40,
+            height: EcoPlatesDesignTokens.size.buttonHeight(context),
+            width: EcoPlatesDesignTokens.size.buttonHeight(context),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(
+                EcoPlatesDesignTokens.radius.md,
+              ),
               border: Border.all(color: Colors.grey[300]!),
             ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.md,
+                ),
                 onTap: () {
                   FocusScope.of(context).unfocus();
                   widget.onFilterTap?.call();
@@ -150,17 +178,23 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                             : Icons.tune_outlined,
                         color: filters.hasActiveFilters
                             ? Theme.of(context).primaryColor
-                            : Colors.grey[700],
-                        size: 18,
+                            : Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(
+                                alpha: EcoPlatesDesignTokens
+                                    .opacity
+                                    .gradientPrimary,
+                              ),
+                        size: context.scaleIconStandard,
                       ),
                     ),
                     if (filters.activeFiltersCount > 0)
                       Positioned(
-                        top: 6,
-                        right: 6,
+                        top: context.scaleXXS_XS_SM_MD,
+                        right: context.scaleXXS_XS_SM_MD,
                         child: Container(
-                          width: 14,
-                          height: 14,
+                          width: context.scaleSM_MD_LG_XL,
+                          height: context.scaleSM_MD_LG_XL,
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
                             shape: BoxShape.circle,
@@ -168,9 +202,9 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                           child: Center(
                             child: Text(
                               '${filters.activeFiltersCount}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 9,
+                                fontSize: context.scaleXXS_XS_SM_MD,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

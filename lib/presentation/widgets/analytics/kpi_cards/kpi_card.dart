@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/design_tokens.dart' hide Animation;
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Widget de chargement avec effet shimmer pour les cartes KPI
@@ -19,14 +22,16 @@ class _KpiCardShimmerState extends State<KpiCardShimmer>
   void initState() {
     super.initState();
     _shimmerController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: EcoPlatesDesignTokens.analyticsCharts.kpiCardShimmerDuration,
       vsync: this,
     )..repeat();
 
     _shimmerAnimation =
         Tween<double>(
-          begin: -1.0,
-          end: 1.0,
+          begin: EcoPlatesDesignTokens
+              .analyticsCharts
+              .kpiCardShimmerAnimationBegin,
+          end: EcoPlatesDesignTokens.analyticsCharts.kpiCardShimmerAnimationEnd,
         ).animate(
           CurvedAnimation(
             parent: _shimmerController,
@@ -51,67 +56,147 @@ class _KpiCardShimmerState extends State<KpiCardShimmer>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Colors.grey[300]!,
-                Colors.grey[100]!,
-                Colors.grey[300]!,
-              ],
+              colors:
+                  EcoPlatesDesignTokens.analyticsCharts.kpiCardShimmerColors,
               stops: [
                 0.0,
                 _shimmerAnimation.value.abs(),
                 1.0,
               ],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(
+              EcoPlatesDesignTokens.analyticsCharts.kpiCardShimmerBorderRadius,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+                color: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerShadowColor
+                    .withValues(
+                      alpha: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .kpiCardShimmerShadowAlpha,
+                    ),
+                blurRadius: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerShadowBlurRadius,
+                offset: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerShadowOffset,
               ),
             ],
           ),
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(
+            EcoPlatesDesignTokens.analyticsCharts.kpiCardPadding(context),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   Container(
-                    width: 34,
-                    height: 34,
+                    width: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShimmerIconSize,
+                    height: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShimmerIconHeight,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.5),
+                      color: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .kpiCardShimmerIconBackgroundColor
+                          .withValues(
+                            alpha: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .kpiCardShimmerIconBackgroundAlpha,
+                          ),
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShimmerHeaderHorizontalSpacing,
+                  ),
                   Container(
-                    height: 12,
-                    width: 70,
+                    height: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShimmerTitleHeight,
+                    width: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShimmerTitleWidth,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(6),
+                      color: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .kpiCardShimmerIconBackgroundColor
+                          .withValues(
+                            alpha: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .kpiCardShimmerBarBackgroundAlpha,
+                          ),
+                      borderRadius: BorderRadius.circular(
+                        EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .kpiCardShimmerTitleBorderRadius,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerVerticalSpacing,
+              ),
               Container(
-                height: 24,
-                width: 100,
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerValueHeight,
+                width: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerValueWidth,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(4),
+                  color: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .kpiCardShimmerIconBackgroundColor
+                      .withValues(
+                        alpha: EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .kpiCardShimmerBarBackgroundAlpha,
+                      ),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShimmerValueBorderRadius,
+                  ),
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerVerticalSpacingSmall,
+              ),
               Container(
-                height: 16,
-                width: 50,
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerGrowthHeight,
+                width: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .kpiCardShimmerGrowthWidth,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(8),
+                  color: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .kpiCardShimmerIconBackgroundColor
+                      .withValues(
+                        alpha: EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .kpiCardShimmerBarBackgroundAlphaLow,
+                      ),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShimmerGrowthBorderRadius,
+                  ),
                 ),
               ),
             ],
@@ -169,14 +254,15 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: EcoPlatesDesignTokens.analyticsCharts.kpiCardAnimationDuration,
       vsync: this,
     );
 
     _scaleAnimation =
         Tween<double>(
-          begin: 1.0,
-          end: 1.02,
+          begin:
+              EcoPlatesDesignTokens.analyticsCharts.kpiCardScaleAnimationBegin,
+          end: EcoPlatesDesignTokens.analyticsCharts.kpiCardScaleAnimationEnd,
         ).animate(
           CurvedAnimation(
             parent: _animationController,
@@ -186,8 +272,9 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
 
     _glowAnimation =
         Tween<double>(
-          begin: 0.0,
-          end: 8.0,
+          begin:
+              EcoPlatesDesignTokens.analyticsCharts.kpiCardGlowAnimationBegin,
+          end: EcoPlatesDesignTokens.analyticsCharts.kpiCardGlowAnimationEnd,
         ).animate(
           CurvedAnimation(
             parent: _animationController,
@@ -203,15 +290,15 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
   }
 
   void _onTapDown(TapDownDetails details) {
-    _animationController.forward();
+    unawaited(_animationController.forward());
   }
 
   void _onTapUp(TapUpDetails details) {
-    _animationController.reverse();
+    unawaited(_animationController.reverse());
   }
 
   void _onTapCancel() {
-    _animationController.reverse();
+    unawaited(_animationController.reverse());
   }
 
   @override
@@ -232,18 +319,40 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
                 end: Alignment.bottomRight,
                 colors: widget.config.gradientColors,
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(
+                EcoPlatesDesignTokens.analyticsCharts.kpiCardBorderRadius(
+                  context,
+                ),
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: widget.config.primaryColor.withValues(alpha: 0.3),
-                  blurRadius: 12 + _glowAnimation.value,
-                  offset: const Offset(0, 6),
+                  color: widget.config.primaryColor.withValues(
+                    alpha: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShadowPrimaryAlpha,
+                  ),
+                  blurRadius:
+                      EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .kpiCardShadowPrimaryBlurRadius +
+                      _glowAnimation.value,
+                  offset: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .kpiCardShadowPrimaryOffset,
                   spreadRadius: _glowAnimation.value / 2,
                 ),
                 BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+                  color: theme.colorScheme.shadow.withValues(
+                    alpha: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .kpiCardShadowSecondaryAlpha,
+                  ),
+                  blurRadius: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .kpiCardShadowSecondaryBlurRadius,
+                  offset: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .kpiCardShadowSecondaryOffset,
                 ),
               ],
             ),
@@ -253,14 +362,32 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
                 onTapDown: _onTapDown,
                 onTapUp: _onTapUp,
                 onTapCancel: _onTapCancel,
-                borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                  padding: const EdgeInsets.all(16),
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.analyticsCharts.kpiCardBorderRadius(
+                    context,
+                  ),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(
+                    EcoPlatesDesignTokens.analyticsCharts.kpiCardPadding(
+                      context,
+                    ),
+                  ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(
+                      EcoPlatesDesignTokens.analyticsCharts.kpiCardBorderRadius(
+                        context,
+                      ),
+                    ),
                     border: Border.all(
-                      color: widget.config.primaryColor.withValues(alpha: 0.2),
-                      width: 1.5,
+                      color: widget.config.primaryColor.withValues(
+                        alpha: EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .kpiCardBorderAlpha,
+                      ),
+                      width: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .kpiCardBorderWidth,
                     ),
                   ),
                   child: Column(
@@ -271,34 +398,65 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
                         children: [
                           // Icône avec cercle coloré
                           Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: EdgeInsets.all(
+                              EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .kpiCardIconPadding,
+                            ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.9),
+                              color: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .kpiCardTitleColor
+                                  .withValues(
+                                    alpha: EcoPlatesDesignTokens
+                                        .analyticsCharts
+                                        .kpiCardIconBackgroundAlpha,
+                                  ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
                                   color: widget.config.primaryColor.withValues(
-                                    alpha: 0.3,
+                                    alpha: EcoPlatesDesignTokens
+                                        .analyticsCharts
+                                        .kpiCardIconShadowAlpha,
                                   ),
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 2),
+                                  blurRadius: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .kpiCardIconShadowBlurRadius,
+                                  offset: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .kpiCardIconShadowOffset,
                                 ),
                               ],
                             ),
                             child: Icon(
                               widget.config.icon,
-                              size: 18,
+                              size: EcoPlatesDesignTokens.analyticsCharts
+                                  .kpiCardIconSize(context),
                               color: widget.config.primaryColor,
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(
+                            width: EcoPlatesDesignTokens.analyticsCharts
+                                .kpiCardHeaderHorizontalSpacing(context),
+                          ),
                           Expanded(
                             child: Text(
                               _getTitle(context),
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: Colors.white.withValues(alpha: 0.9),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
+                                color: EcoPlatesDesignTokens
+                                    .analyticsCharts
+                                    .kpiCardTitleColor
+                                    .withValues(
+                                      alpha: EcoPlatesDesignTokens
+                                          .analyticsCharts
+                                          .kpiCardTitleAlpha,
+                                    ),
+                                fontSize: EcoPlatesDesignTokens.analyticsCharts
+                                    .kpiCardTitleFontSize(context),
+                                fontWeight: EcoPlatesDesignTokens
+                                    .analyticsCharts
+                                    .kpiCardTitleWeight,
                               ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -307,7 +465,10 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
                         ],
                       ),
 
-                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: EcoPlatesDesignTokens.analyticsCharts
+                            .kpiCardHeaderVerticalSpacing(context),
+                      ),
 
                       // Valeur principale
                       FittedBox(
@@ -316,10 +477,22 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
                         child: Text(
                           widget.config.getValue(widget.analytics),
                           style: theme.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 22,
-                            color: Colors.white,
-                            letterSpacing: -0.5,
+                            fontWeight: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .kpiCardValueWeight,
+                            fontSize: EcoPlatesDesignTokens.analyticsCharts
+                                .kpiCardValueFontSize(context),
+                            color: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .kpiCardValueColor
+                                .withValues(
+                                  alpha: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .kpiCardValueAlpha,
+                                ),
+                            letterSpacing: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .kpiCardValueLetterSpacing,
                           ),
                         ),
                       ),
@@ -327,18 +500,40 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
                       // Indicateur de croissance
                       if (growthPercentage != null &&
                           isPositiveGrowth != null) ...[
-                        const SizedBox(height: 6),
+                        SizedBox(
+                          height: EcoPlatesDesignTokens.analyticsCharts
+                              .kpiCardValueVerticalSpacing(context),
+                        ),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 3,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: EcoPlatesDesignTokens.analyticsCharts
+                                .kpiCardGrowthHorizontalPadding(context),
+                            vertical: EcoPlatesDesignTokens.analyticsCharts
+                                .kpiCardGrowthVerticalPadding(context),
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(12),
+                            color: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .kpiCardGrowthBackgroundColor
+                                .withValues(
+                                  alpha: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .kpiCardGrowthBackgroundAlpha,
+                                ),
+                            borderRadius: BorderRadius.circular(
+                              EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .kpiCardGrowthBorderRadius,
+                            ),
                             border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.3),
-                              width: 1,
+                              color: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .kpiCardGrowthBorderColor
+                                  .withValues(
+                                    alpha: EcoPlatesDesignTokens
+                                        .analyticsCharts
+                                        .kpiCardGrowthBorderAlpha,
+                                  ),
                             ),
                           ),
                           child: Row(
@@ -348,16 +543,38 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
                                 isPositiveGrowth
                                     ? Icons.trending_up
                                     : Icons.trending_down,
-                                size: 14,
-                                color: Colors.white,
+                                size: EcoPlatesDesignTokens.analyticsCharts
+                                    .kpiCardTrendIconSize(context),
+                                color: EcoPlatesDesignTokens
+                                    .analyticsCharts
+                                    .kpiCardGrowthTextColor
+                                    .withValues(
+                                      alpha: EcoPlatesDesignTokens
+                                          .analyticsCharts
+                                          .kpiCardGrowthAlpha,
+                                    ),
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(
+                                width: EcoPlatesDesignTokens.analyticsCharts
+                                    .kpiCardGrowthInnerSpacing(context),
+                              ),
                               Text(
                                 '${growthPercentage.abs().toStringAsFixed(1)}%',
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 11,
+                                  color: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .kpiCardGrowthTextColor
+                                      .withValues(
+                                        alpha: EcoPlatesDesignTokens
+                                            .analyticsCharts
+                                            .kpiCardGrowthAlpha,
+                                      ),
+                                  fontWeight: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .kpiCardGrowthWeight,
+                                  fontSize: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .kpiCardGrowthFontSize(context),
                                 ),
                               ),
                             ],
@@ -377,7 +594,9 @@ class _KpiCardState extends State<KpiCard> with SingleTickerProviderStateMixin {
 
   String _getTitle(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isCompact = screenWidth <= 768;
+    final isCompact =
+        screenWidth <=
+        EcoPlatesDesignTokens.analyticsCharts.kpiCardCompactTitleBreakpoint;
     return isCompact && widget.config.compactTitle != null
         ? widget.config.compactTitle!
         : widget.config.title;

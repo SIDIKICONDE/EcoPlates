@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/services/promotion_service.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -46,12 +47,14 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     final hasPromotion = widget.offer.discountPercentage > 0;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          color: theme.colorScheme.outline.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+          ),
         ),
       ),
       child: Column(
@@ -65,7 +68,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: context.scaleXXS_XS_SM_MD),
               Text(
                 hasPromotion ? 'Promotion active' : 'Ajouter une promotion',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -74,12 +77,12 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
           // Prix actuel
-          _buildPriceInfo(theme),
+          _buildPriceInfo(context, theme),
 
-          const SizedBox(height: 16),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
           // Champ de réduction
           TextFormField(
@@ -104,9 +107,10 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
           const SizedBox(height: 16),
 
           // Aperçu du prix réduit
-          if (_discountController.text.isNotEmpty) _buildPricePreview(theme),
+          if (_discountController.text.isNotEmpty)
+            _buildPricePreview(context, theme),
 
-          const SizedBox(height: 16),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
           // Boutons d'action
           Row(
@@ -122,16 +126,18 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: context.scaleXXS_XS_SM_MD),
               ],
               Expanded(
                 child: FilledButton.icon(
                   onPressed: _isLoading ? null : _applyPromotion,
                   icon: _isLoading
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                      ? SizedBox(
+                          width: EcoPlatesDesignTokens.size.icon(context),
+                          height: EcoPlatesDesignTokens.size.icon(context),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                          ),
                         )
                       : const Icon(Icons.save),
                   label: Text(hasPromotion ? 'Modifier' : 'Appliquer'),
@@ -144,12 +150,14 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     );
   }
 
-  Widget _buildPriceInfo(ThemeData theme) {
+  Widget _buildPriceInfo(BuildContext context, ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(8),
+        color: theme.colorScheme.primaryContainer.withValues(
+          alpha: EcoPlatesDesignTokens.opacity.subtle,
+        ),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +168,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -180,7 +188,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
             ],
           ),
           if (widget.offer.originalPrice != widget.offer.discountedPrice) ...[
-            const SizedBox(height: 4),
+            SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -206,26 +214,26 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     );
   }
 
-  Widget _buildPricePreview(ThemeData theme) {
+  Widget _buildPricePreview(BuildContext context, ThemeData theme) {
     final discountText = _discountController.text;
     if (discountText.isEmpty) return const SizedBox.shrink();
 
     final discount = double.tryParse(discountText);
     if (discount == null || discount <= 0 || discount > 90) {
       return Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
         decoration: BoxDecoration(
           color: theme.colorScheme.errorContainer,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xs),
         ),
         child: Row(
           children: [
             Icon(
               Icons.warning,
-              size: 16,
+              size: EcoPlatesDesignTokens.size.icon(context),
               color: theme.colorScheme.onErrorContainer,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: context.scaleXXS_XS_SM_MD),
             Text(
               'Pourcentage invalide (1-90%)',
               style: theme.textTheme.bodySmall?.copyWith(
@@ -241,10 +249,12 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     final savings = widget.offer.originalPrice - newPrice;
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
       decoration: BoxDecoration(
-        color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(8),
+        color: theme.colorScheme.secondaryContainer.withValues(
+          alpha: EcoPlatesDesignTokens.opacity.subtle,
+        ),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +266,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
               color: theme.colorScheme.onSecondaryContainer,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: context.scaleXXS_XS_SM_MD),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

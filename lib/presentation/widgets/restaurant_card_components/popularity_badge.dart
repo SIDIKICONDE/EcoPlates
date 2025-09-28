@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/design_tokens.dart';
 
 /// Badge pour indiquer qu'un restaurant est populaire
 class PopularityBadge extends StatelessWidget {
@@ -7,32 +8,38 @@ class PopularityBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
+      padding: EdgeInsets.symmetric(
+        horizontal: context.scaleXS_SM_MD_LG,
+        vertical: context.scaleXXS_XS_SM_MD,
       ),
       decoration: BoxDecoration(
-        color: Colors.amber,
-        borderRadius: BorderRadius.circular(20),
+        color: EcoPlatesDesignTokens.colors.snackbarWarning,
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xxl),
         boxShadow: [
           BoxShadow(
-            color: Colors.amber.withValues(alpha: 0.5),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: EcoPlatesDesignTokens.colors.snackbarWarning.withValues(
+              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+            ),
+            blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
+            offset: EcoPlatesDesignTokens.elevation.standardOffset,
           ),
         ],
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.star, size: 14, color: Colors.white),
-          SizedBox(width: 4),
+          Icon(
+            Icons.star,
+            size: EcoPlatesDesignTokens.size.indicator(context),
+            color: Colors.white,
+          ),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
           Text(
             'POPULAIRE',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
+              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              fontWeight: EcoPlatesDesignTokens.typography.bold,
             ),
           ),
         ],

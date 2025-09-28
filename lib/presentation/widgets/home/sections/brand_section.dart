@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/responsive/design_tokens.dart';
 import '../../../../core/router/routes/route_constants.dart';
 import '../../../providers/brand_provider.dart';
 import '../../brand_card.dart';
@@ -22,15 +23,20 @@ class BrandSection extends ConsumerWidget {
       children: [
         // En-tête de section
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+          padding: EdgeInsets.fromLTRB(
+            context.scaleMD_LG_XL_XXL,
+            0,
+            context.scaleMD_LG_XL_XXL,
+            context.scaleXXS_XS_SM_MD,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Grandes Enseignes',
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
+                  fontWeight: EcoPlatesDesignTokens.typography.bold,
                 ),
               ),
               TextButton(
@@ -46,19 +52,24 @@ class BrandSection extends ConsumerWidget {
 
         // Slider horizontal de cartes
         SizedBox(
-          height: 100, // Hauteur ajustée pour les BrandCard
+          height:
+              EcoPlatesDesignTokens.layout.merchantCardHeight(context) * 0.5,
           child: brandsAsync.when(
             data: (brands) => ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.scaleMD_LG_XL_XXL,
+              ),
               physics: const BouncingScrollPhysics(),
               itemCount: brands.length,
               itemBuilder: (context, index) {
                 final brand = brands[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.scaleXXS_XS_SM_MD,
+                  ),
                   child: SizedBox(
-                    width: 320, // Largeur fixe pour les cartes horizontales
+                    width: MediaQuery.of(context).size.width * 0.85,
                     child: BrandCard(
                       brand: brand,
                       onTap: () {
@@ -81,13 +92,17 @@ class BrandSection extends ConsumerWidget {
             error: (error, stack) => Center(
               child: Text(
                 'Erreur: $error',
-                style: TextStyle(color: Colors.red[700]),
+                style: TextStyle(
+                  color: EcoPlatesDesignTokens.colors.snackbarError,
+                ),
               ),
             ),
           ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(
+          height: context.scaleMD_LG_XL_XXL,
+        ),
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/router/routes/route_constants.dart';
 import '../../providers/browse_view_provider.dart';
 import '../../providers/location_state_provider.dart';
@@ -44,11 +45,18 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
-          color: _isPressed ? Colors.grey[100] : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          color: _isPressed
+              ? Theme.of(context).colorScheme.surfaceContainerHighest
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(
+            EcoPlatesDesignTokens.radius.md,
+          ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: EdgeInsets.symmetric(
+            horizontal: context.scaleMD_LG_XL_XXL,
+            vertical: context.scaleXS_SM_MD_LG,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -57,12 +65,12 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                   locationState.isActive
                       ? Icons.location_on
                       : Icons.location_off,
-                  size: 20,
+                  size: context.scaleIconStandard,
                   color: locationState.isActive
                       ? theme.primaryColor
                       : Colors.grey,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: context.scaleSM_MD_LG_XL),
               ],
 
               Flexible(
@@ -76,10 +84,17 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                           style:
                               widget.style ??
                               theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
+                                fontWeight:
+                                    EcoPlatesDesignTokens.typography.semiBold,
                                 color: locationState.isActive
-                                    ? Colors.black87
-                                    : Colors.grey[600],
+                                    ? Theme.of(context).colorScheme.onSurface
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withValues(
+                                        alpha: EcoPlatesDesignTokens
+                                            .opacity
+                                            .almostOpaque,
+                                      ),
                               ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -87,18 +102,26 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                 ),
               ),
 
-              const SizedBox(width: 8),
+              SizedBox(width: context.scaleSM_MD_LG_XL),
               Text(
                 'emplacement choisi',
                 style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w400,
+                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                  ),
+                  fontWeight: EcoPlatesDesignTokens.typography.regular,
                 ),
               ),
 
-              const SizedBox(width: 4),
-              Icon(Icons.arrow_drop_down, size: 20, color: Colors.grey[600]),
+              SizedBox(width: context.scaleXXS_XS_SM_MD),
+              Icon(
+                Icons.arrow_drop_down,
+                size: context.scaleIconStandard,
+                color: Theme.of(context).colorScheme.onSurface.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                ),
+              ),
             ],
           ),
         ),
@@ -111,19 +134,25 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: 12,
-          height: 12,
+          width: context.scaleSM_MD_LG_XL,
+          height: context.scaleSM_MD_LG_XL,
           child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
+            strokeWidth: DesignConstants.two,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).colorScheme.onSurface.withValues(
+                alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+              ),
+            ),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: context.scaleSM_MD_LG_XL),
         Text(
           'Recherche...',
           style: TextStyle(
-            color: Colors.grey[600],
-            fontWeight: FontWeight.w500,
+            color: Theme.of(context).colorScheme.onSurface.withValues(
+              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+            ),
+            fontWeight: EcoPlatesDesignTokens.typography.medium,
           ),
         ),
       ],
@@ -166,10 +195,12 @@ class LocationOptionsSheet extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(
+          EcoPlatesDesignTokens.radius.xxl,
+        ),
       ),
       child: SafeArea(
         child: Column(
@@ -177,16 +208,18 @@ class LocationOptionsSheet extends ConsumerWidget {
           children: [
             // Poignée
             Container(
-              margin: const EdgeInsets.only(top: 12),
-              width: 40,
-              height: 4,
+              margin: EdgeInsets.only(top: context.scaleMD_LG_XL_XXL),
+              width: context.scaleLG_XL_XXL_XXXL,
+              height: DesignConstants.four,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(
+                  DesignConstants.two,
+                ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: context.scaleLG_XL_XXL_XXXL),
 
             // Titre
             Text(
@@ -196,11 +229,13 @@ class LocationOptionsSheet extends ConsumerWidget {
               ),
             ),
 
-            const SizedBox(height: 8),
+            SizedBox(height: context.scaleXS_SM_MD_LG),
 
             // Adresse actuelle
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.scaleLG_XL_XXL_XXXL,
+              ),
               child: Text(
                 locationText.address,
                 style: theme.textTheme.bodyLarge,
@@ -208,7 +243,7 @@ class LocationOptionsSheet extends ConsumerWidget {
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: context.scaleLG_XL_XXL_XXXL * 1.5),
 
             // Options
             _buildOption(
@@ -264,7 +299,7 @@ class LocationOptionsSheet extends ConsumerWidget {
               },
             ),
 
-            const SizedBox(height: 8),
+            SizedBox(height: context.scaleXS_SM_MD_LG),
           ],
         ),
       ),
@@ -284,15 +319,24 @@ class LocationOptionsSheet extends ConsumerWidget {
       child: InkWell(
         onTap: enabled ? onTap : null,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: EdgeInsets.symmetric(
+            horizontal: context.scaleLG_XL_XXL_XXXL,
+            vertical: context.scaleMD_LG_XL_XXL,
+          ),
           child: Row(
             children: [
               Icon(
                 icon,
-                color: enabled ? Colors.grey[700] : Colors.grey[400],
-                size: 24,
+                color: enabled
+                    ? Theme.of(context).colorScheme.onSurface.withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                      )
+                    : Theme.of(context).colorScheme.onSurface.withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                      ),
+                size: context.scaleLG_XL_XXL_XXXL,
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: context.scaleMD_LG_XL_XXL),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,16 +344,35 @@ class LocationOptionsSheet extends ConsumerWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: enabled ? Colors.black87 : Colors.grey[400],
+                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                          context,
+                        ),
+                        fontWeight: EcoPlatesDesignTokens.typography.medium,
+                        color: enabled
+                            ? Theme.of(context).colorScheme.onSurface
+                            : Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(
+                                alpha: EcoPlatesDesignTokens
+                                    .opacity
+                                    .veryTransparent,
+                              ),
                       ),
                     ),
                     if (subtitle != null) ...[
-                      const SizedBox(height: 2),
+                      SizedBox(height: context.scaleXXS_XS_SM_MD),
                       Text(
                         subtitle,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: EcoPlatesDesignTokens.typography.hint(
+                            context,
+                          ),
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withValues(
+                                alpha:
+                                    EcoPlatesDesignTokens.opacity.almostOpaque,
+                              ),
+                        ),
                       ),
                     ],
                   ],

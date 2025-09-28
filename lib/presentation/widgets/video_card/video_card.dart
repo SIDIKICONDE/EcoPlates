@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../core/responsive/design_tokens.dart';
+import '../../../core/services/image_cache_service.dart';
 import '../../../core/services/video_pool_manager.dart';
 import '../../../core/utils/animation_manager.dart';
+import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/video_preview.dart';
 import 'constants.dart';
 
@@ -84,8 +87,8 @@ class _VideoCardState extends State<VideoCard>
     super.dispose();
   }
 
-  void _onTapDown(TapDownDetails _) {
-    HapticFeedback.lightImpact();
+  Future<void> _onTapDown(TapDownDetails _) async {
+    await HapticFeedback.lightImpact();
     setState(() => _isPressed = true);
     unawaited(_animationController.forward());
   }
@@ -196,70 +199,69 @@ class _VideoCardState extends State<VideoCard>
           return Stack(
             fit: StackFit.expand,
             children: [
-              Image.network(
-                widget.video.thumbnailUrl,
-                fit: BoxFit.cover,
-                alignment: alignment,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          if (isDark) Colors.grey[900]! else Colors.grey[300]!,
-                          if (isDark) Colors.grey[800]! else Colors.grey[200]!,
-                        ],
-                      ),
+              EcoCachedImage(
+                imageUrl: widget.video.thumbnailUrl,
+                size: ImageSize.small,
+                // On reproduit le placeholder gradient
+                placeholder: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        if (isDark) Colors.grey[900]! else Colors.grey[300]!,
+                        if (isDark) Colors.grey[800]! else Colors.grey[200]!,
+                      ],
                     ),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white30,
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
+                  ),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      color: Colors.white30,
                     ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          if (isDark) Colors.grey[900]! else Colors.grey[300]!,
-                          if (isDark) Colors.grey[800]! else Colors.grey[200]!,
-                        ],
-                      ),
+                  ),
+                ),
+                errorWidget: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        if (isDark) Colors.grey[900]! else Colors.grey[300]!,
+                        if (isDark) Colors.grey[800]! else Colors.grey[200]!,
+                      ],
                     ),
-                    child: Center(
-                      child: Icon(
-                        Icons.broken_image,
-                        color: isDark ? Colors.white30 : Colors.black26,
-                        size: 48,
-                      ),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.broken_image,
+                      color: isDark ? Colors.white30 : Colors.black26,
+                      size: EcoPlatesDesignTokens.size.icon(context) * 3,
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
               // Icône play overlay sur le thumbnail (taille adaptée)
               Center(
                 child: Container(
-                  width: (widget.height ?? _defaultHeight) <= 150 ? 24 : 48,
-                  height: (widget.height ?? _defaultHeight) <= 150 ? 24 : 48,
+                  width: (widget.height ?? _defaultHeight) <= 150
+                      ? EcoPlatesDesignTokens.size.minTouchTarget / 2
+                      : EcoPlatesDesignTokens.size.minTouchTarget,
+                  height: (widget.height ?? _defaultHeight) <= 150
+                      ? EcoPlatesDesignTokens.size.minTouchTarget / 2
+                      : EcoPlatesDesignTokens.size.minTouchTarget,
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.6),
+                    color: Colors.black.withValues(
+                      alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                    ),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.play_arrow,
                     color: Colors.white,
-                    size: (widget.height ?? _defaultHeight) <= 150 ? 16 : 32,
+                    size: (widget.height ?? _defaultHeight) <= 150
+                        ? EcoPlatesDesignTokens.size.icon(context)
+                        : EcoPlatesDesignTokens.size.icon(context) * 2,
                   ),
                 ),
               ),
@@ -281,14 +283,14 @@ class _VideoCardState extends State<VideoCard>
           ),
           child: Center(
             child: widget.play
-                ? const CircularProgressIndicator(
-                    strokeWidth: 2,
+                ? CircularProgressIndicator(
+                    strokeWidth: 3,
                     color: Colors.white30,
                   )
                 : Icon(
                     Icons.play_circle_outline,
                     color: isDark ? Colors.white30 : Colors.black26,
-                    size: 48,
+                    size: EcoPlatesDesignTokens.size.icon(context) * 3,
                   ),
           ),
         );
@@ -336,12 +338,14 @@ class _VideoCardState extends State<VideoCard>
           style: theme.textTheme.bodyMedium?.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.w600,
-            fontSize: 14,
+            fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
             shadows: [
               Shadow(
-                offset: const Offset(0, 1),
-                blurRadius: 3,
-                color: Colors.black.withValues(alpha: 0.8),
+                offset: EcoPlatesDesignTokens.elevation.standardOffset,
+                blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
+                color: Colors.black.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                ),
               ),
             ],
           ),

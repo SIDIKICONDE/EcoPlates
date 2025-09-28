@@ -4,11 +4,10 @@ import '../../domain/entities/food_offer.dart';
 import '../../domain/services/offer_selection_service.dart';
 import 'offers_catalog_provider.dart';
 
-/// Provider pour les offres urgentes à sauver (branché sur le catalogue central)
-final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
+/// Provider synchrone pour les offres urgentes (évite les rechargements)
+final urgentOffersProvider = Provider<List<FoodOffer>>((ref) {
   final offers = ref.watch(offersCatalogProvider);
 
-  // Sélectionner les offres disponibles et urgentes
   final urgent =
       offers
           .where((o) => o.isAvailable && OfferSelectionService.isUrgent(o))
@@ -19,6 +18,5 @@ final urgentOffersProvider = FutureProvider<List<FoodOffer>>((ref) async {
           return sb.compareTo(sa);
         });
 
-  // Limiter à un top N (ex. 10)
   return urgent.take(10).toList();
 });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/design_tokens.dart';
 import '../../domain/entities/food_offer.dart';
 import '../providers/meals_provider.dart';
 import '../widgets/offer_card.dart';
@@ -27,30 +28,45 @@ class AllMealsScreen extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.restaurant_outlined,
-                    size: 64,
-                    color: Colors.grey[400],
+                    size: EcoPlatesDesignTokens.layout.emptyStateIconSize,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                  ),
                   Text(
                     'Aucun repas disponible',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 18),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.microGap(context),
+                  ),
                   Text(
                     'Revenez plus tard pour découvrir de nouveaux repas',
-                    style: TextStyle(color: Colors.grey[500], fontSize: 14),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(
+                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                vertical: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              ),
               itemCount: meals.length,
               itemBuilder: (context, index) {
                 final meal = meals[index];
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: EdgeInsets.only(
+                    bottom: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                  ),
                   child: OfferCard(
                     offer: meal,
                     distance: 0.8 + (index * 0.3), // Distance simulée
@@ -78,20 +94,26 @@ class AllMealsScreen extends ConsumerWidget {
 
   Widget _buildMealDetailModal(BuildContext context, FoodOffer meal) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      height:
+          MediaQuery.of(context).size.height *
+          EcoPlatesDesignTokens.layout.modalHeightFactor(context),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+        ),
       ),
       child: Column(
         children: [
           // Header de la modal
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(
+              EcoPlatesDesignTokens.spacing.dialogGap(context),
+            ),
             decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
+              color: Theme.of(context).colorScheme.surfaceContainerLowest,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
               ),
             ),
             child: Row(
@@ -102,15 +124,16 @@ class AllMealsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'Repas complet',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: EcoPlatesDesignTokens.typography.bold,
                       ),
                     ),
                     Text(
                       'À récupérer : ${_formatPickupTime(meal)}',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -125,33 +148,59 @@ class AllMealsScreen extends ConsumerWidget {
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(
+                EcoPlatesDesignTokens.spacing.dialogGap(context),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Informations principales
                   OfferInfoSection(offer: meal),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Composition du repas
-                  _buildMealComposition(meal),
-                  const SizedBox(height: 24),
+                  _buildMealComposition(context, meal),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Détails pratiques
                   OfferDetailsSection(offer: meal),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Adresse
                   OfferAddressSection(offer: meal),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Badges allergènes
                   OfferBadgesSection(offer: meal),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
 
                   // Métadonnées
                   OfferMetadataSection(offer: meal),
-                  const SizedBox(height: 100),
+                  SizedBox(
+                    height:
+                        EcoPlatesDesignTokens.spacing.sectionSpacing(context) *
+                        3,
+                  ),
                 ],
               ),
             ),
@@ -160,8 +209,12 @@ class AllMealsScreen extends ConsumerWidget {
           // Barre de réservation
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Colors.grey[200]!)),
+              color: Theme.of(context).colorScheme.surface,
+              border: Border(
+                top: BorderSide(
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                ),
+              ),
             ),
             child: OfferReservationBar(
               offer: meal,
@@ -183,69 +236,89 @@ class AllMealsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildMealComposition(FoodOffer meal) {
+  Widget _buildMealComposition(BuildContext context, FoodOffer meal) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Composition du repas',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: EcoPlatesDesignTokens.typography.bold,
+          ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(
+            EcoPlatesDesignTokens.spacing.interfaceGap(context),
+          ),
           decoration: BoxDecoration(
-            color: Colors.orange[50],
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.orange[200]!),
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            borderRadius: BorderRadius.circular(
+              EcoPlatesDesignTokens.radius.md,
+            ),
+            border: Border.all(color: Theme.of(context).colorScheme.secondary),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.restaurant_menu,
-                    size: 20,
-                    color: Colors.orange,
+                    size: EcoPlatesDesignTokens.size.icon(context),
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: EcoPlatesDesignTokens.spacing.microGap(context),
+                  ),
                   Expanded(
                     child: Text(
                       meal.description,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: EcoPlatesDesignTokens.typography.medium,
                       ),
                     ),
                   ),
                 ],
               ),
               if (meal.isVegetarian) ...[
-                const SizedBox(height: 8),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.microGap(context),
+                ),
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: EcoPlatesDesignTokens.spacing.microGap(
+                          context,
+                        ),
+                        vertical: EcoPlatesDesignTokens.spacing.xxs,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green[100],
-                        borderRadius: BorderRadius.circular(16),
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(
+                          EcoPlatesDesignTokens.radius.sm,
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.eco, size: 14, color: Colors.green[700]),
-                          const SizedBox(width: 4),
+                          Icon(
+                            Icons.eco,
+                            size: EcoPlatesDesignTokens.typography.label(
+                              context,
+                            ),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          SizedBox(width: EcoPlatesDesignTokens.spacing.xxs),
                           Text(
                             'Végétarien',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.green[700],
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight:
+                                      EcoPlatesDesignTokens.typography.medium,
+                                ),
                           ),
                         ],
                       ),

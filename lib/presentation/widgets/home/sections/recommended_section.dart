@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/providers/image_preload_provider.dart';
+import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/offer_reservation_provider.dart';
 import '../../../providers/recommended_offers_provider.dart';
@@ -12,18 +14,44 @@ import '../../offer_detail/index.dart';
 import 'categories_section.dart';
 
 /// Section des offres recommandées avec style Material 3
-class RecommendedSection extends ConsumerWidget {
+class RecommendedSection extends ConsumerStatefulWidget {
   const RecommendedSection({super.key});
 
-  static const double _horizontalPadding = 20;
-  static const double _sectionSpacing = 24;
-  static const double _cardHeight = 280;
-  static const double _cardWidth = 340;
-  static const double _cardSpacing = 12;
+  @override
+  ConsumerState<RecommendedSection> createState() => _RecommendedSectionState();
+}
+
+class _RecommendedSectionState extends ConsumerState<RecommendedSection>
+    with AutoPreloadImages {
+  final ScrollController _scrollController = ScrollController();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final recommendedOffersAsync = ref.watch(recommendedOffersProvider);
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.hasClients) {
+      final itemWidth =
+          (MediaQuery.of(context).size.width * 0.85) + context.scaleXS_SM_MD_LG;
+      final scrollOffset = _scrollController.offset;
+      final visibleIndexValue = (scrollOffset / itemWidth).round();
+      visibleIndex = visibleIndexValue;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final recommendedOffers = ref.watch(recommendedOffersProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -32,19 +60,20 @@ class RecommendedSection extends ConsumerWidget {
       children: [
         // En-tête de section avec style amélioré
         Container(
-          padding: const EdgeInsets.fromLTRB(
-            _horizontalPadding,
-            _sectionSpacing / 2,
-            _horizontalPadding - 8,
-            16,
+          padding: EdgeInsets.fromLTRB(
+            context.scaleMD_LG_XL_XXL,
+            context.scaleLG_XL_XXL_XXXL / 2,
+            context.scaleMD_LG_XL_XXL - context.scaleXS_SM_MD_LG,
+            context.scaleMD_LG_XL_XXL,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Recommandé pour vous',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
+                  fontWeight: EcoPlatesDesignTokens.typography.semiBold,
                   color: colorScheme.onSurface,
                 ),
               ),
@@ -61,20 +90,21 @@ class RecommendedSection extends ConsumerWidget {
                 },
                 icon: Icon(
                   Icons.arrow_forward_ios_rounded,
-                  size: 16,
+                  size: EcoPlatesDesignTokens.size.indicator(context),
                   color: colorScheme.primary,
                 ),
                 label: Text(
                   'Voir tout',
-                  style: theme.textTheme.labelLarge?.copyWith(
+                  style: TextStyle(
+                    fontSize: EcoPlatesDesignTokens.typography.text(context),
                     color: colorScheme.primary,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: EcoPlatesDesignTokens.typography.medium,
                   ),
                 ),
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.scaleMD_LG_XL_XXL,
+                    vertical: context.scaleXS_SM_MD_LG,
                   ),
                 ),
               ),
@@ -84,140 +114,74 @@ class RecommendedSection extends ConsumerWidget {
 
         // Liste horizontale d'offres avec animations
         SizedBox(
-          height: _cardHeight,
-          child: recommendedOffersAsync.when(
-            data: (allOffers) {
-              // Filtrer les offres selon la catégorie sélectionnée
+          height: EcoPlatesDesignTokens.layout.merchantCardHeight(context),
+          child: Builder(
+            builder: (context) {
               final offers = ref.watch(
-                filterOffersByCategoryProvider(allOffers),
+                filterOffersByCategoryProvider(recommendedOffers),
               );
 
-              return offers.isEmpty
-                  ? _buildEmptyState(context)
-                  : ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: _horizontalPadding - _cardSpacing / 2,
+              if (offers.isEmpty) {
+                return _buildEmptyState(context);
+              }
+
+              // Démarrer le préchargement des images proches de l'index visible
+              final imageUrls = offers
+                  .where((o) => o.images.isNotEmpty)
+                  .map((o) => o.images.first)
+                  .toList();
+              startAutoPreload(imageUrls: imageUrls, ref: ref);
+
+              return ListView.builder(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(
+                  horizontal:
+                      context.scaleMD_LG_XL_XXL - context.scaleXS_SM_MD_LG / 2,
+                ),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
+                itemCount: offers.length,
+                itemBuilder: (context, index) {
+                  final offer = offers[index];
+                  return AnimatedContainer(
+                    duration: Duration(milliseconds: 300 + (index * 50)),
+                    curve: Curves.easeOutCubic,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.scaleXS_SM_MD_LG / 2,
+                    ),
+                    child: SizedBox(
+                      width:
+                          MediaQuery.of(context).size.width *
+                          (MediaQuery.of(context).orientation ==
+                                  Orientation.landscape
+                              ? 0.9
+                              : 0.85),
+                      child: OfferCard(
+                        offer: offer,
+                        compact: true,
+                        distance:
+                            DesignConstants.baseDistance +
+                            (index * DesignConstants.distanceIncrement),
+                        onTap: () => _showOfferDetailModal(context, offer),
                       ),
-                      physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
-                      ),
-                      itemCount: offers.length,
-                      itemBuilder: (context, index) {
-                        final offer = offers[index];
-                        return AnimatedContainer(
-                          duration: Duration(milliseconds: 300 + (index * 50)),
-                          curve: Curves.easeOutCubic,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: _cardSpacing / 2,
-                          ),
-                          child: SizedBox(
-                            width: _cardWidth,
-                            child: Material(
-                              elevation: 2,
-                              shadowColor: colorScheme.shadow.withValues(
-                                alpha: 0.1,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                              child: OfferCard(
-                                offer: offer,
-                                compact: true,
-                                distance: 1.2 + (index * 0.3),
-                                onTap: () =>
-                                    _showOfferDetailModal(context, offer),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
+                    ),
+                  );
+                },
+              );
             },
-            loading: () => _buildLoadingState(context),
-            error: (error, stack) => _buildErrorState(context, ref),
           ),
         ),
 
-        const SizedBox(height: _sectionSpacing),
+        SizedBox(height: context.scaleLG_XL_XXL_XXXL),
       ],
     );
   }
 
-  Widget _buildLoadingState(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
-            strokeWidth: 3,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Chargement des recommandations...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // _buildLoadingState supprimé: provider devenu synchrone
 
-  Widget _buildErrorState(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: colorScheme.errorContainer,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.error_outline_rounded,
-                size: 48,
-                color: colorScheme.onErrorContainer,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Impossible de charger les offres',
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Vérifiez votre connexion internet',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: () => ref.invalidate(recommendedOffersProvider),
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Réessayer'),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // _buildErrorState supprimé: provider devenu synchrone
 
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
@@ -225,34 +189,38 @@ class RecommendedSection extends ConsumerWidget {
 
     return Center(
       child: Container(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.xxxl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.xxl),
               decoration: BoxDecoration(
                 color: colorScheme.primaryContainer,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.restaurant_menu_rounded,
-                size: 48,
+                size: EcoPlatesDesignTokens.size.modalIcon(context),
                 color: colorScheme.onPrimaryContainer,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.scaleMD_LG_XL_XXL),
             Text(
               'Aucune recommandation',
-              style: theme.textTheme.titleMedium?.copyWith(
+              style: TextStyle(
+                fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                  context,
+                ),
                 color: colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
+                fontWeight: EcoPlatesDesignTokens.typography.medium,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: context.scaleXS_SM_MD_LG),
             Text(
               'Revenez plus tard pour découvrir de nouvelles offres',
-              style: theme.textTheme.bodyMedium?.copyWith(
+              style: TextStyle(
+                fontSize: EcoPlatesDesignTokens.typography.text(context),
                 color: colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
@@ -282,14 +250,20 @@ class RecommendedSection extends ConsumerWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      height: mediaQuery.size.height * 0.9,
+      height:
+          mediaQuery.size.height *
+          EcoPlatesDesignTokens.layout.modalHeightFactor(context),
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
+        ),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withValues(alpha: 0.1),
-            blurRadius: 20,
+            color: colorScheme.shadow.withValues(
+              alpha: EcoPlatesDesignTokens.opacity.subtle,
+            ),
+            blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
             offset: const Offset(0, -4),
           ),
         ],
@@ -298,22 +272,33 @@ class RecommendedSection extends ConsumerWidget {
         children: [
           // Indicateur de glissement
           Container(
-            margin: const EdgeInsets.only(top: 8),
-            width: 40,
-            height: 4,
+            margin: EdgeInsets.only(top: context.scaleXS_SM_MD_LG),
+            width: EcoPlatesDesignTokens.layout.modalHandleWidth,
+            height: EcoPlatesDesignTokens.layout.modalHandleHeight,
             decoration: BoxDecoration(
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(2),
+              color: colorScheme.onSurfaceVariant.withValues(
+                alpha: EcoPlatesDesignTokens.opacity.subtle,
+              ),
+              borderRadius: BorderRadius.circular(
+                EcoPlatesDesignTokens.radius.xs,
+              ),
             ),
           ),
 
           // Header de la modal avec style Material 3
           Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 16, 16),
+            padding: EdgeInsets.fromLTRB(
+              EcoPlatesDesignTokens.spacing.xxxl,
+              context.scaleMD_LG_XL_XXL,
+              context.scaleMD_LG_XL_XXL,
+              context.scaleMD_LG_XL_XXL,
+            ),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(24),
+              color: colorScheme.surfaceContainerHighest.withValues(
+                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              ),
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
               ),
             ),
             child: Row(
@@ -322,8 +307,11 @@ class RecommendedSection extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     "Détails de l'offre",
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+                    style: TextStyle(
+                      fontSize: EcoPlatesDesignTokens.typography.titleSize(
+                        context,
+                      ),
+                      fontWeight: EcoPlatesDesignTokens.typography.semiBold,
                       color: colorScheme.onSurface,
                     ),
                   ),
@@ -336,7 +324,7 @@ class RecommendedSection extends ConsumerWidget {
                   onPressed: () => Navigator.pop(context),
                   style: IconButton.styleFrom(
                     backgroundColor: colorScheme.surface,
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
                   ),
                 ),
               ],
@@ -346,7 +334,10 @@ class RecommendedSection extends ConsumerWidget {
           // Contenu scrollable avec animations
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: EcoPlatesDesignTokens.spacing.xxxl,
+                vertical: context.scaleMD_LG_XL_XXL,
+              ),
               physics: const BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,36 +347,36 @@ class RecommendedSection extends ConsumerWidget {
                     delay: 0,
                     child: OfferInfoSection(offer: offer),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: context.scaleLG_XL_XXL_XXXL),
 
                   // Détails pratiques
                   _AnimatedSection(
                     delay: 100,
                     child: OfferDetailsSection(offer: offer),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: context.scaleLG_XL_XXL_XXXL),
 
                   // Adresse
                   _AnimatedSection(
                     delay: 200,
                     child: OfferAddressSection(offer: offer),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: context.scaleLG_XL_XXL_XXXL),
 
                   // Badges allergènes
                   _AnimatedSection(
                     delay: 300,
                     child: OfferBadgesSection(offer: offer),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: context.scaleLG_XL_XXL_XXXL),
 
                   // Métadonnées
                   _AnimatedSection(
                     delay: 400,
                     child: OfferMetadataSection(offer: offer),
                   ),
-                  const SizedBox(
-                    height: 120,
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.layout.mainContainerMinWidth,
                   ), // Espace pour la barre de réservation
                 ],
               ),
@@ -398,8 +389,10 @@ class RecommendedSection extends ConsumerWidget {
               color: colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow.withValues(alpha: 0.1),
-                  blurRadius: 10,
+                  color: colorScheme.shadow.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.subtle,
+                  ),
+                  blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
                   offset: const Offset(0, -2),
                 ),
               ],
@@ -454,7 +447,7 @@ class RecommendedSection extends ConsumerWidget {
         content: Row(
           children: [
             Icon(Icons.check_circle_rounded, color: colorScheme.onPrimary),
-            const SizedBox(width: 12),
+            SizedBox(width: context.scaleMD_LG_XL_XXL),
             Expanded(
               child: Text(
                 'Réservation pour "${offer.title}" confirmée !',
@@ -465,7 +458,9 @@ class RecommendedSection extends ConsumerWidget {
         ),
         backgroundColor: colorScheme.primary,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
+        ),
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
           label: 'Voir',

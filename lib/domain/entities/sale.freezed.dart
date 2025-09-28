@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Sale {
 
- String get id; String get merchantId; String get customerId; String get customerName; List<SaleItem> get items; double get totalAmount; double get discountAmount; double get finalAmount; DateTime get createdAt; DateTime? get collectedAt; SaleStatus get status; String get paymentMethod; String? get paymentTransactionId; String? get qrCode; String? get notes; Map<String, dynamic>? get metadata;
+ String get id; String get merchantId; String get customerId; String get customerName; List<SaleItem> get items; double get totalAmount; double get discountAmount; double get finalAmount; DateTime get createdAt; DateTime? get collectedAt; SaleStatus get status; String get paymentMethod; String? get paymentTransactionId; String? get qrCode;// Deprecated - use secureQrEnabled instead
+ bool get secureQrEnabled; String? get totpSecretId; String? get notes; Map<String, dynamic>? get metadata;
 /// Create a copy of Sale
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $SaleCopyWith<Sale> get copyWith => _$SaleCopyWithImpl<Sale>(this as Sale, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Sale&&(identical(other.id, id) || other.id == id)&&(identical(other.merchantId, merchantId) || other.merchantId == merchantId)&&(identical(other.customerId, customerId) || other.customerId == customerId)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.finalAmount, finalAmount) || other.finalAmount == finalAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.collectedAt, collectedAt) || other.collectedAt == collectedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.paymentTransactionId, paymentTransactionId) || other.paymentTransactionId == paymentTransactionId)&&(identical(other.qrCode, qrCode) || other.qrCode == qrCode)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.metadata, metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Sale&&(identical(other.id, id) || other.id == id)&&(identical(other.merchantId, merchantId) || other.merchantId == merchantId)&&(identical(other.customerId, customerId) || other.customerId == customerId)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.finalAmount, finalAmount) || other.finalAmount == finalAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.collectedAt, collectedAt) || other.collectedAt == collectedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.paymentTransactionId, paymentTransactionId) || other.paymentTransactionId == paymentTransactionId)&&(identical(other.qrCode, qrCode) || other.qrCode == qrCode)&&(identical(other.secureQrEnabled, secureQrEnabled) || other.secureQrEnabled == secureQrEnabled)&&(identical(other.totpSecretId, totpSecretId) || other.totpSecretId == totpSecretId)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.metadata, metadata));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,merchantId,customerId,customerName,const DeepCollectionEquality().hash(items),totalAmount,discountAmount,finalAmount,createdAt,collectedAt,status,paymentMethod,paymentTransactionId,qrCode,notes,const DeepCollectionEquality().hash(metadata));
+int get hashCode => Object.hash(runtimeType,id,merchantId,customerId,customerName,const DeepCollectionEquality().hash(items),totalAmount,discountAmount,finalAmount,createdAt,collectedAt,status,paymentMethod,paymentTransactionId,qrCode,secureQrEnabled,totpSecretId,notes,const DeepCollectionEquality().hash(metadata));
 
 @override
 String toString() {
-  return 'Sale(id: $id, merchantId: $merchantId, customerId: $customerId, customerName: $customerName, items: $items, totalAmount: $totalAmount, discountAmount: $discountAmount, finalAmount: $finalAmount, createdAt: $createdAt, collectedAt: $collectedAt, status: $status, paymentMethod: $paymentMethod, paymentTransactionId: $paymentTransactionId, qrCode: $qrCode, notes: $notes, metadata: $metadata)';
+  return 'Sale(id: $id, merchantId: $merchantId, customerId: $customerId, customerName: $customerName, items: $items, totalAmount: $totalAmount, discountAmount: $discountAmount, finalAmount: $finalAmount, createdAt: $createdAt, collectedAt: $collectedAt, status: $status, paymentMethod: $paymentMethod, paymentTransactionId: $paymentTransactionId, qrCode: $qrCode, secureQrEnabled: $secureQrEnabled, totpSecretId: $totpSecretId, notes: $notes, metadata: $metadata)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $SaleCopyWith<$Res>  {
   factory $SaleCopyWith(Sale value, $Res Function(Sale) _then) = _$SaleCopyWithImpl;
 @useResult
 $Res call({
- String id, String merchantId, String customerId, String customerName, List<SaleItem> items, double totalAmount, double discountAmount, double finalAmount, DateTime createdAt, DateTime? collectedAt, SaleStatus status, String paymentMethod, String? paymentTransactionId, String? qrCode, String? notes, Map<String, dynamic>? metadata
+ String id, String merchantId, String customerId, String customerName, List<SaleItem> items, double totalAmount, double discountAmount, double finalAmount, DateTime createdAt, DateTime? collectedAt, SaleStatus status, String paymentMethod, String? paymentTransactionId, String? qrCode, bool secureQrEnabled, String? totpSecretId, String? notes, Map<String, dynamic>? metadata
 });
 
 
@@ -65,7 +66,7 @@ class _$SaleCopyWithImpl<$Res>
 
 /// Create a copy of Sale
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? merchantId = null,Object? customerId = null,Object? customerName = null,Object? items = null,Object? totalAmount = null,Object? discountAmount = null,Object? finalAmount = null,Object? createdAt = null,Object? collectedAt = freezed,Object? status = null,Object? paymentMethod = null,Object? paymentTransactionId = freezed,Object? qrCode = freezed,Object? notes = freezed,Object? metadata = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? merchantId = null,Object? customerId = null,Object? customerName = null,Object? items = null,Object? totalAmount = null,Object? discountAmount = null,Object? finalAmount = null,Object? createdAt = null,Object? collectedAt = freezed,Object? status = null,Object? paymentMethod = null,Object? paymentTransactionId = freezed,Object? qrCode = freezed,Object? secureQrEnabled = null,Object? totpSecretId = freezed,Object? notes = freezed,Object? metadata = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,merchantId: null == merchantId ? _self.merchantId : merchantId // ignore: cast_nullable_to_non_nullable
@@ -81,6 +82,8 @@ as DateTime?,status: null == status ? _self.status : status // ignore: cast_null
 as SaleStatus,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as String,paymentTransactionId: freezed == paymentTransactionId ? _self.paymentTransactionId : paymentTransactionId // ignore: cast_nullable_to_non_nullable
 as String?,qrCode: freezed == qrCode ? _self.qrCode : qrCode // ignore: cast_nullable_to_non_nullable
+as String?,secureQrEnabled: null == secureQrEnabled ? _self.secureQrEnabled : secureQrEnabled // ignore: cast_nullable_to_non_nullable
+as bool,totpSecretId: freezed == totpSecretId ? _self.totpSecretId : totpSecretId // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,metadata: freezed == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>?,
@@ -168,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String merchantId,  String customerId,  String customerName,  List<SaleItem> items,  double totalAmount,  double discountAmount,  double finalAmount,  DateTime createdAt,  DateTime? collectedAt,  SaleStatus status,  String paymentMethod,  String? paymentTransactionId,  String? qrCode,  String? notes,  Map<String, dynamic>? metadata)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String merchantId,  String customerId,  String customerName,  List<SaleItem> items,  double totalAmount,  double discountAmount,  double finalAmount,  DateTime createdAt,  DateTime? collectedAt,  SaleStatus status,  String paymentMethod,  String? paymentTransactionId,  String? qrCode,  bool secureQrEnabled,  String? totpSecretId,  String? notes,  Map<String, dynamic>? metadata)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Sale() when $default != null:
-return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_that.items,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.createdAt,_that.collectedAt,_that.status,_that.paymentMethod,_that.paymentTransactionId,_that.qrCode,_that.notes,_that.metadata);case _:
+return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_that.items,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.createdAt,_that.collectedAt,_that.status,_that.paymentMethod,_that.paymentTransactionId,_that.qrCode,_that.secureQrEnabled,_that.totpSecretId,_that.notes,_that.metadata);case _:
   return orElse();
 
 }
@@ -189,10 +192,10 @@ return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String merchantId,  String customerId,  String customerName,  List<SaleItem> items,  double totalAmount,  double discountAmount,  double finalAmount,  DateTime createdAt,  DateTime? collectedAt,  SaleStatus status,  String paymentMethod,  String? paymentTransactionId,  String? qrCode,  String? notes,  Map<String, dynamic>? metadata)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String merchantId,  String customerId,  String customerName,  List<SaleItem> items,  double totalAmount,  double discountAmount,  double finalAmount,  DateTime createdAt,  DateTime? collectedAt,  SaleStatus status,  String paymentMethod,  String? paymentTransactionId,  String? qrCode,  bool secureQrEnabled,  String? totpSecretId,  String? notes,  Map<String, dynamic>? metadata)  $default,) {final _that = this;
 switch (_that) {
 case _Sale():
-return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_that.items,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.createdAt,_that.collectedAt,_that.status,_that.paymentMethod,_that.paymentTransactionId,_that.qrCode,_that.notes,_that.metadata);case _:
+return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_that.items,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.createdAt,_that.collectedAt,_that.status,_that.paymentMethod,_that.paymentTransactionId,_that.qrCode,_that.secureQrEnabled,_that.totpSecretId,_that.notes,_that.metadata);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +212,10 @@ return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String merchantId,  String customerId,  String customerName,  List<SaleItem> items,  double totalAmount,  double discountAmount,  double finalAmount,  DateTime createdAt,  DateTime? collectedAt,  SaleStatus status,  String paymentMethod,  String? paymentTransactionId,  String? qrCode,  String? notes,  Map<String, dynamic>? metadata)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String merchantId,  String customerId,  String customerName,  List<SaleItem> items,  double totalAmount,  double discountAmount,  double finalAmount,  DateTime createdAt,  DateTime? collectedAt,  SaleStatus status,  String paymentMethod,  String? paymentTransactionId,  String? qrCode,  bool secureQrEnabled,  String? totpSecretId,  String? notes,  Map<String, dynamic>? metadata)?  $default,) {final _that = this;
 switch (_that) {
 case _Sale() when $default != null:
-return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_that.items,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.createdAt,_that.collectedAt,_that.status,_that.paymentMethod,_that.paymentTransactionId,_that.qrCode,_that.notes,_that.metadata);case _:
+return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_that.items,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.createdAt,_that.collectedAt,_that.status,_that.paymentMethod,_that.paymentTransactionId,_that.qrCode,_that.secureQrEnabled,_that.totpSecretId,_that.notes,_that.metadata);case _:
   return null;
 
 }
@@ -224,7 +227,7 @@ return $default(_that.id,_that.merchantId,_that.customerId,_that.customerName,_t
 @JsonSerializable()
 
 class _Sale implements Sale {
-  const _Sale({required this.id, required this.merchantId, required this.customerId, required this.customerName, required final  List<SaleItem> items, required this.totalAmount, required this.discountAmount, required this.finalAmount, required this.createdAt, required this.collectedAt, required this.status, required this.paymentMethod, this.paymentTransactionId, this.qrCode, this.notes, final  Map<String, dynamic>? metadata}): _items = items,_metadata = metadata;
+  const _Sale({required this.id, required this.merchantId, required this.customerId, required this.customerName, required final  List<SaleItem> items, required this.totalAmount, required this.discountAmount, required this.finalAmount, required this.createdAt, required this.collectedAt, required this.status, required this.paymentMethod, this.paymentTransactionId, this.qrCode, this.secureQrEnabled = false, this.totpSecretId, this.notes, final  Map<String, dynamic>? metadata}): _items = items,_metadata = metadata;
   factory _Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
 
 @override final  String id;
@@ -247,6 +250,9 @@ class _Sale implements Sale {
 @override final  String paymentMethod;
 @override final  String? paymentTransactionId;
 @override final  String? qrCode;
+// Deprecated - use secureQrEnabled instead
+@override@JsonKey() final  bool secureQrEnabled;
+@override final  String? totpSecretId;
 @override final  String? notes;
  final  Map<String, dynamic>? _metadata;
 @override Map<String, dynamic>? get metadata {
@@ -271,16 +277,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Sale&&(identical(other.id, id) || other.id == id)&&(identical(other.merchantId, merchantId) || other.merchantId == merchantId)&&(identical(other.customerId, customerId) || other.customerId == customerId)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.finalAmount, finalAmount) || other.finalAmount == finalAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.collectedAt, collectedAt) || other.collectedAt == collectedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.paymentTransactionId, paymentTransactionId) || other.paymentTransactionId == paymentTransactionId)&&(identical(other.qrCode, qrCode) || other.qrCode == qrCode)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other._metadata, _metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Sale&&(identical(other.id, id) || other.id == id)&&(identical(other.merchantId, merchantId) || other.merchantId == merchantId)&&(identical(other.customerId, customerId) || other.customerId == customerId)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.finalAmount, finalAmount) || other.finalAmount == finalAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.collectedAt, collectedAt) || other.collectedAt == collectedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.paymentTransactionId, paymentTransactionId) || other.paymentTransactionId == paymentTransactionId)&&(identical(other.qrCode, qrCode) || other.qrCode == qrCode)&&(identical(other.secureQrEnabled, secureQrEnabled) || other.secureQrEnabled == secureQrEnabled)&&(identical(other.totpSecretId, totpSecretId) || other.totpSecretId == totpSecretId)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other._metadata, _metadata));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,merchantId,customerId,customerName,const DeepCollectionEquality().hash(_items),totalAmount,discountAmount,finalAmount,createdAt,collectedAt,status,paymentMethod,paymentTransactionId,qrCode,notes,const DeepCollectionEquality().hash(_metadata));
+int get hashCode => Object.hash(runtimeType,id,merchantId,customerId,customerName,const DeepCollectionEquality().hash(_items),totalAmount,discountAmount,finalAmount,createdAt,collectedAt,status,paymentMethod,paymentTransactionId,qrCode,secureQrEnabled,totpSecretId,notes,const DeepCollectionEquality().hash(_metadata));
 
 @override
 String toString() {
-  return 'Sale(id: $id, merchantId: $merchantId, customerId: $customerId, customerName: $customerName, items: $items, totalAmount: $totalAmount, discountAmount: $discountAmount, finalAmount: $finalAmount, createdAt: $createdAt, collectedAt: $collectedAt, status: $status, paymentMethod: $paymentMethod, paymentTransactionId: $paymentTransactionId, qrCode: $qrCode, notes: $notes, metadata: $metadata)';
+  return 'Sale(id: $id, merchantId: $merchantId, customerId: $customerId, customerName: $customerName, items: $items, totalAmount: $totalAmount, discountAmount: $discountAmount, finalAmount: $finalAmount, createdAt: $createdAt, collectedAt: $collectedAt, status: $status, paymentMethod: $paymentMethod, paymentTransactionId: $paymentTransactionId, qrCode: $qrCode, secureQrEnabled: $secureQrEnabled, totpSecretId: $totpSecretId, notes: $notes, metadata: $metadata)';
 }
 
 
@@ -291,7 +297,7 @@ abstract mixin class _$SaleCopyWith<$Res> implements $SaleCopyWith<$Res> {
   factory _$SaleCopyWith(_Sale value, $Res Function(_Sale) _then) = __$SaleCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String merchantId, String customerId, String customerName, List<SaleItem> items, double totalAmount, double discountAmount, double finalAmount, DateTime createdAt, DateTime? collectedAt, SaleStatus status, String paymentMethod, String? paymentTransactionId, String? qrCode, String? notes, Map<String, dynamic>? metadata
+ String id, String merchantId, String customerId, String customerName, List<SaleItem> items, double totalAmount, double discountAmount, double finalAmount, DateTime createdAt, DateTime? collectedAt, SaleStatus status, String paymentMethod, String? paymentTransactionId, String? qrCode, bool secureQrEnabled, String? totpSecretId, String? notes, Map<String, dynamic>? metadata
 });
 
 
@@ -308,7 +314,7 @@ class __$SaleCopyWithImpl<$Res>
 
 /// Create a copy of Sale
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? merchantId = null,Object? customerId = null,Object? customerName = null,Object? items = null,Object? totalAmount = null,Object? discountAmount = null,Object? finalAmount = null,Object? createdAt = null,Object? collectedAt = freezed,Object? status = null,Object? paymentMethod = null,Object? paymentTransactionId = freezed,Object? qrCode = freezed,Object? notes = freezed,Object? metadata = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? merchantId = null,Object? customerId = null,Object? customerName = null,Object? items = null,Object? totalAmount = null,Object? discountAmount = null,Object? finalAmount = null,Object? createdAt = null,Object? collectedAt = freezed,Object? status = null,Object? paymentMethod = null,Object? paymentTransactionId = freezed,Object? qrCode = freezed,Object? secureQrEnabled = null,Object? totpSecretId = freezed,Object? notes = freezed,Object? metadata = freezed,}) {
   return _then(_Sale(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,merchantId: null == merchantId ? _self.merchantId : merchantId // ignore: cast_nullable_to_non_nullable
@@ -324,6 +330,8 @@ as DateTime?,status: null == status ? _self.status : status // ignore: cast_null
 as SaleStatus,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as String,paymentTransactionId: freezed == paymentTransactionId ? _self.paymentTransactionId : paymentTransactionId // ignore: cast_nullable_to_non_nullable
 as String?,qrCode: freezed == qrCode ? _self.qrCode : qrCode // ignore: cast_nullable_to_non_nullable
+as String?,secureQrEnabled: null == secureQrEnabled ? _self.secureQrEnabled : secureQrEnabled // ignore: cast_nullable_to_non_nullable
+as bool,totpSecretId: freezed == totpSecretId ? _self.totpSecretId : totpSecretId // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,metadata: freezed == metadata ? _self._metadata : metadata // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>?,

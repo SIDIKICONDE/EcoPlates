@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/responsive/design_tokens.dart';
 import '../providers/sort_provider.dart';
 import '../widgets/sort_modal.dart';
 
@@ -13,14 +14,17 @@ class SortSection extends ConsumerWidget {
     final currentSort = ref.watch(sortOptionProvider);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.scaleMD_LG_XL_XXL,
+        vertical: context.scaleXXS_XS_SM_MD,
+      ),
       child: Row(
         children: [
           Text(
             'Trier par : ',
             style: TextStyle(
               color: Colors.grey[600],
-              fontSize: 14,
+              fontSize: EcoPlatesDesignTokens.typography.text(context),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -33,14 +37,14 @@ class SortSection extends ConsumerWidget {
                   currentSort.label,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
-                    fontSize: 14,
+                    fontSize: EcoPlatesDesignTokens.typography.text(context),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
                 Icon(
                   Icons.keyboard_arrow_down,
-                  size: 16,
+                  size: EcoPlatesDesignTokens.size.icon(context) / 1.2,
                   color: Theme.of(context).primaryColor,
                 ),
               ],
@@ -52,20 +56,26 @@ class SortSection extends ConsumerWidget {
   }
 
   void _showSortModal(BuildContext context) {
-    unawaited(showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.4,
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+          constraints: BoxConstraints(
+            maxHeight:
+                MediaQuery.of(context).size.height *
+                EcoPlatesDesignTokens.layout.modalMaxHeightFactor,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+            ),
+          ),
+          child: const SortModal(),
         ),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-        child: const SortModal(),
       ),
-    ));
+    );
   }
 }

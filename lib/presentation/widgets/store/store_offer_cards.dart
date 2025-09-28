@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../offer_card.dart';
@@ -22,10 +23,12 @@ class StoreOfferGridCard extends ConsumerWidget {
 
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
+      ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
         child: ColorFiltered(
           colorFilter: !offer.isAvailable
               ? const ColorFilter.matrix(<double>[
@@ -47,8 +50,8 @@ class StoreOfferGridCard extends ConsumerWidget {
               Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(12),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(EcoPlatesDesignTokens.radius.md),
                     ),
                     child: AspectRatio(
                       aspectRatio: 1.5,
@@ -61,26 +64,30 @@ class StoreOfferGridCard extends ConsumerWidget {
                   ),
                   // Badges
                   Positioned(
-                    top: 8,
-                    left: 8,
-                    right: 8,
+                    top: context.scaleXXS_XS_SM_MD,
+                    left: context.scaleXXS_XS_SM_MD,
+                    right: context.scaleXXS_XS_SM_MD,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (!offer.isAvailable)
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.scaleXXS_XS_SM_MD,
+                              vertical: context.scaleXXS_XS_SM_MD / 2,
                             ),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.errorContainer,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(
+                                EcoPlatesDesignTokens.radius.sm,
+                              ),
                             ),
                             child: Text(
                               'Inactif',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: EcoPlatesDesignTokens.typography.hint(
+                                  context,
+                                ),
                                 color: theme.colorScheme.onErrorContainer,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -88,18 +95,22 @@ class StoreOfferGridCard extends ConsumerWidget {
                           ),
                         if (offer.discountPercentage > 0)
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.scaleXXS_XS_SM_MD,
+                              vertical: context.scaleXXS_XS_SM_MD / 2,
                             ),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.error,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(
+                                EcoPlatesDesignTokens.radius.sm,
+                              ),
                             ),
                             child: Text(
                               '-${offer.discountPercentage.toStringAsFixed(0)}%',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: EcoPlatesDesignTokens.typography.hint(
+                                  context,
+                                ),
                                 color: theme.colorScheme.onError,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -113,7 +124,7 @@ class StoreOfferGridCard extends ConsumerWidget {
               // Contenu
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -125,7 +136,7 @@ class StoreOfferGridCard extends ConsumerWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
                       // Description courte
                       Text(
                         offer.description,
@@ -135,16 +146,16 @@ class StoreOfferGridCard extends ConsumerWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
                       // Horaires de collecte
                       Row(
                         children: [
                           Icon(
                             Icons.access_time,
-                            size: 14,
+                            size: EcoPlatesDesignTokens.size.indicator(context),
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
                           Expanded(
                             child: Text(
                               '${_formatTime(offer.pickupStartTime)} - ${_formatTime(offer.pickupEndTime)}',
@@ -181,9 +192,9 @@ class StoreOfferGridCard extends ConsumerWidget {
                             ],
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.scaleXXS_XS_SM_MD,
+                              vertical: context.scaleXXS_XS_SM_MD / 2,
                             ),
                             decoration: BoxDecoration(
                               color:
@@ -192,14 +203,18 @@ class StoreOfferGridCard extends ConsumerWidget {
                                   : offer.alertLevel == OfferAlertLevel.low
                                   ? theme.colorScheme.tertiaryContainer
                                   : theme.colorScheme.primaryContainer,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(
+                                EcoPlatesDesignTokens.radius.sm,
+                              ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
                                   Icons.inventory_2,
-                                  size: 14,
+                                  size: EcoPlatesDesignTokens.size.indicator(
+                                    context,
+                                  ),
                                   color:
                                       offer.alertLevel ==
                                           OfferAlertLevel.outOfStock
@@ -208,11 +223,12 @@ class StoreOfferGridCard extends ConsumerWidget {
                                       ? theme.colorScheme.tertiary
                                       : theme.colorScheme.primary,
                                 ),
-                                const SizedBox(width: 4),
+                                SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
                                 Text(
                                   '${offer.quantity}',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: EcoPlatesDesignTokens.typography
+                                        .hint(context),
                                     fontWeight: FontWeight.bold,
                                     color:
                                         offer.alertLevel ==

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../responsive/design_tokens.dart';
 import 'routes/route_constants.dart';
 
+/// Types d'erreurs supportés par la page d'erreur
+enum _ErrorType {
+  merchant,
+  offer,
+  product,
+  notFound,
+}
+
 /// Page d'erreur personnalisée pour l'application EcoPlates
-/// 
+///
 /// Gère les erreurs 404 et autres erreurs de navigation
 /// selon les directives EcoPlates
 class EcoPlatesErrorPage extends StatelessWidget {
@@ -18,102 +27,182 @@ class EcoPlatesErrorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => context.go(RouteConstants.mainHome),
+          tooltip: 'Fermer',
+        ),
+      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Icône d'erreur avec animation
-              TweenAnimationBuilder<double>(
-                duration: const Duration(milliseconds: 800),
-                tween: Tween(begin: 0, end: 1),
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: Icon(
-                      Icons.error_outline_rounded,
-                      size: 80,
-                      color: theme.colorScheme.error,
-                    ),
-                  );
-                },
-              ),
-              
-              const SizedBox(height: 32),
-              
-              // Titre de l'erreur
-              Text(
-                _getErrorTitle(),
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
+        child: SingleChildScrollView(
+          padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight:
+                  MediaQuery.of(context).size.height - kToolbarHeight - 48,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Icône d'erreur avec animation améliorée
+                TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 1000),
+                  tween: Tween(begin: 0, end: 1),
+                  curve: Curves.elasticOut,
+                  builder: (context, value, child) {
+                    return Transform.scale(
+                      scale: value,
+                      child: Container(
+                        padding: EdgeInsets.all(
+                          EcoPlatesDesignTokens.spacing.md,
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: theme.colorScheme.errorContainer.withValues(
+                            alpha: 0.1,
+                          ),
+                        ),
+                        child: Icon(
+                          _getErrorIcon(),
+                          size: EcoPlatesDesignTokens.size.icon(context),
+                          color: theme.colorScheme.error,
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                textAlign: TextAlign.center,
-              ),
-              
-              const SizedBox(height: 16),
-              
-              // Description de l'erreur
-              Text(
-                _getErrorDescription(),
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              
-              const SizedBox(height: 24),
-              
-              // URL de l'erreur (en mode debug)
-              if (state.uri.toString().isNotEmpty)
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    state.uri.toString(),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontFamily: 'monospace',
-                      color: theme.colorScheme.onSurfaceVariant,
+
+                SizedBox(height: EcoPlatesDesignTokens.spacing.xl),
+
+                // Titre de l'erreur
+                Text(
+                  _getErrorTitle(),
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                    fontSize: EcoPlatesDesignTokens.typography.titleSize(
+                      context,
                     ),
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              
-              const SizedBox(height: 32),
-              
-              // Boutons d'action
-              _buildActionButtons(context, theme),
-            ],
+
+                SizedBox(height: EcoPlatesDesignTokens.spacing.md),
+
+                // Description de l'erreur
+                Text(
+                  _getErrorDescription(),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                      context,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: EcoPlatesDesignTokens.spacing.lg),
+
+                // URL de l'erreur (en mode debug)
+                if (state.uri.toString().isNotEmpty)
+                  Container(
+                    padding: EcoPlatesDesignTokens.spacing
+                        .contentPadding(context)
+                        .copyWith(
+                          top: EcoPlatesDesignTokens.spacing.sm,
+                          bottom: EcoPlatesDesignTokens.spacing.sm,
+                        ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(
+                        EcoPlatesDesignTokens.radius.md,
+                      ),
+                    ),
+                    child: Text(
+                      state.uri.toString(),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontFamily: 'monospace',
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontSize: EcoPlatesDesignTokens.typography.hint(
+                          context,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                SizedBox(height: EcoPlatesDesignTokens.spacing.xxl),
+
+                // Boutons d'action
+                _buildActionButtons(context, theme),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  /// Type d'erreur basé sur l'URI
+  _ErrorType _getErrorType() {
+    final uriString = state.uri.toString().toLowerCase();
+
+    if (uriString.contains('/merchant/') || uriString.contains('/merchants/')) {
+      return _ErrorType.merchant;
+    } else if (uriString.contains('/offer/') ||
+        uriString.contains('/offers/')) {
+      return _ErrorType.offer;
+    } else if (uriString.contains('/product/') ||
+        uriString.contains('/products/')) {
+      return _ErrorType.product;
+    } else {
+      return _ErrorType.notFound;
+    }
+  }
+
   /// Détermine le titre selon le type d'erreur
   String _getErrorTitle() {
-    if (state.uri.toString().contains('merchant')) {
-      return 'Marchand introuvable';
-    } else if (state.uri.toString().contains('offer')) {
-      return 'Offre introuvable';
-    } else {
-      return 'Page non trouvée';
+    switch (_getErrorType()) {
+      case _ErrorType.merchant:
+        return 'Marchand introuvable';
+      case _ErrorType.offer:
+        return 'Offre introuvable';
+      case _ErrorType.product:
+        return 'Produit introuvable';
+      case _ErrorType.notFound:
+        return 'Page non trouvée';
     }
   }
 
   /// Détermine la description selon le type d'erreur
   String _getErrorDescription() {
-    if (state.uri.toString().contains('merchant')) {
-      return "Le marchand que vous recherchez n'existe pas ou n'est plus disponible.";
-    } else if (state.uri.toString().contains('offer')) {
-      return "Cette offre n'est plus disponible ou a été supprimée.";
-    } else {
-      return "La page que vous recherchez n'existe pas ou a été déplacée.";
+    switch (_getErrorType()) {
+      case _ErrorType.merchant:
+        return "Le marchand que vous recherchez n'existe pas ou n'est plus disponible.";
+      case _ErrorType.offer:
+        return "Cette offre n'est plus disponible ou a été supprimée.";
+      case _ErrorType.product:
+        return "Ce produit n'est plus disponible ou a été retiré.";
+      case _ErrorType.notFound:
+        return "La page que vous recherchez n'existe pas ou a été déplacée.";
+    }
+  }
+
+  /// Détermine l'icône selon le type d'erreur
+  IconData _getErrorIcon() {
+    switch (_getErrorType()) {
+      case _ErrorType.merchant:
+        return Icons.storefront_outlined;
+      case _ErrorType.offer:
+        return Icons.local_offer_outlined;
+      case _ErrorType.product:
+        return Icons.inventory_2_outlined;
+      case _ErrorType.notFound:
+        return Icons.error_outline_rounded;
     }
   }
 
@@ -126,16 +215,21 @@ class EcoPlatesErrorPage extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: () => context.go(RouteConstants.mainHome),
-            icon: const Icon(Icons.home_rounded),
+            icon: Icon(
+              Icons.home_rounded,
+              size: EcoPlatesDesignTokens.size.icon(context),
+            ),
             label: const Text("Retour à l'accueil"),
             style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(
+                vertical: EcoPlatesDesignTokens.spacing.md,
+              ),
             ),
           ),
         ),
-        
-        const SizedBox(height: 12),
-        
+
+        SizedBox(height: EcoPlatesDesignTokens.spacing.sm),
+
         // Bouton secondaire - Retour en arrière
         SizedBox(
           width: double.infinity,
@@ -147,10 +241,15 @@ class EcoPlatesErrorPage extends StatelessWidget {
                 context.go(RouteConstants.mainHome);
               }
             },
-            icon: const Icon(Icons.arrow_back_rounded),
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              size: EcoPlatesDesignTokens.size.icon(context),
+            ),
             label: const Text('Retour'),
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(
+                vertical: EcoPlatesDesignTokens.spacing.md,
+              ),
             ),
           ),
         ),

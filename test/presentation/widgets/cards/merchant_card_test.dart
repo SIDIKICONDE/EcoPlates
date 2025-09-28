@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:ecoplates/domain/entities/brand.dart';
 import 'package:ecoplates/domain/entities/merchant.dart';
 import 'package:ecoplates/presentation/providers/brand_provider.dart';
 import 'package:ecoplates/presentation/widgets/merchant_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('MerchantCard', () {
@@ -59,7 +58,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
           ),
         ),
@@ -78,7 +77,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
           ),
         ),
@@ -95,7 +94,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
           ),
         ),
@@ -184,7 +183,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
           ),
         ),
@@ -200,7 +199,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
           ),
         ),
@@ -217,7 +216,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
           ),
         ),
@@ -260,7 +259,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
           ),
         ),
@@ -290,8 +289,8 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-            child: MediaQuery(
-              data: const MediaQueryData(disableAnimations: true),
+            child: const MediaQuery(
+              data: MediaQueryData(disableAnimations: true),
               child: MaterialApp(
                 home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
               ),
@@ -312,7 +311,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: MerchantCard(merchant: sampleMerchant)),
           ),
         ),

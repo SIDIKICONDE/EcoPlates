@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/utils/accessibility_helper.dart';
 
 /// Widget pour afficher la note avec des étoiles accessibles WCAG
@@ -17,36 +18,39 @@ class RatingDisplay extends StatelessWidget {
         children: [
           ...List.generate(5, (index) {
             if (index < starCount) {
-              return const Icon(
+              return Icon(
                 Icons.star,
-                size: 14,
+                size: EcoPlatesDesignTokens.size.indicator(context),
                 color: AccessibleColors.ratingAmber,
                 semanticLabel: '',
               );
             } else if (index == starCount && halfStar) {
-              return const Icon(
+              return Icon(
                 Icons.star_half,
-                size: 14,
+                size: EcoPlatesDesignTokens.size.indicator(context),
                 color: AccessibleColors.ratingAmber,
                 semanticLabel: '',
               );
             } else {
               return Icon(
                 Icons.star_border,
-                size: 14,
-                color: AccessibleColors.ratingAmber.withValues(alpha: 0.5),
+                size: EcoPlatesDesignTokens.size.indicator(context),
+                color: AccessibleColors.ratingAmber.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                ),
                 semanticLabel: '',
               );
             }
           }),
-          const SizedBox(width: 4),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
           Text(
             rating.toStringAsFixed(1),
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: EcoPlatesDesignTokens.colors.textPrimary,
               fontSize: AccessibleFontSizes.small,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.3,
+              fontWeight: EcoPlatesDesignTokens.typography.bold,
+              letterSpacing: EcoPlatesDesignTokens.typography
+                  .titleLetterSpacing(context),
             ),
           ),
         ],

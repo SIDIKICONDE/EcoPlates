@@ -29,8 +29,10 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   # Sorted alphabetically
+  base32: ^2.2.0
   cached_network_image: ^3.4.1
   connectivity_plus: ^7.0.0
+  crypto: ^3.0.6
   csv: ^6.0.0
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
@@ -61,9 +63,11 @@ dependencies:
   lottie: ^3.1.2
   meta: ^1.12.0
   mobile_scanner: ^7.1.2
+  otp: ^3.2.0
   path_provider: ^2.1.4
   permission_handler: ^12.0.1
   pretty_dio_logger: ^1.4.0
+  qr_flutter: ^4.1.0
   retrofit: ^4.4.1
   riverpod_annotation: ^3.0.0
   sentry_flutter: ^9.6.0
@@ -72,6 +76,7 @@ dependencies:
   shimmer: ^3.0.0
   sqlite3_flutter_libs: ^0.5.24
   stack_trace: ^1.11.1
+  url_launcher: ^6.3.0
   video_player: ^2.9.1
   
   # Dev Tools (moved to dev_dependencies)

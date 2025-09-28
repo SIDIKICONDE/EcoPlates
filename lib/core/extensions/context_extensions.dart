@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+
 import '../error/failures.dart';
+import '../responsive/design_tokens.dart';
 
 /// Extensions pour BuildContext pour faciliter l'affichage d'erreurs et de notifications
 extension ContextExtensions on BuildContext {
@@ -14,23 +18,29 @@ extension ContextExtensions on BuildContext {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error_outline, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            Icon(
+              Icons.error_outline,
+              color: EcoPlatesDesignTokens.colors.textPrimary,
+              size: EcoPlatesDesignTokens.notificationIconSize,
+            ),
+            SizedBox(width: EcoPlatesDesignTokens.notificationIconSpacing),
             Expanded(
               child: Text(
                 failure.userMessage,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: EcoPlatesDesignTokens.colors.textPrimary,
+                ),
               ),
             ),
           ],
         ),
-        backgroundColor: _getErrorColor(failure),
+        backgroundColor: EcoPlatesDesignTokens.notificationError(this),
         behavior: SnackBarBehavior.floating,
         duration: _getErrorDuration(failure),
         action: failure is NetworkFailure
             ? SnackBarAction(
                 label: 'Réessayer',
-                textColor: Colors.white,
+                textColor: EcoPlatesDesignTokens.colors.textPrimary,
                 onPressed: () {
                   // L'action sera gérée par le widget parent
                 },
@@ -47,18 +57,23 @@ extension ContextExtensions on BuildContext {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
+            Icon(
               Icons.check_circle_outline,
-              color: Colors.white,
-              size: 20,
+              color: EcoPlatesDesignTokens.colors.textPrimary,
+              size: EcoPlatesDesignTokens.notificationIconSize,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: EcoPlatesDesignTokens.notificationIconSpacing),
             Expanded(
-              child: Text(message, style: const TextStyle(color: Colors.white)),
+              child: Text(
+                message,
+                style: TextStyle(
+                  color: EcoPlatesDesignTokens.colors.textPrimary,
+                ),
+              ),
             ),
           ],
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: EcoPlatesDesignTokens.notificationSuccess(this),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
       ),
@@ -72,14 +87,23 @@ extension ContextExtensions on BuildContext {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.info_outline, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            Icon(
+              Icons.info_outline,
+              color: EcoPlatesDesignTokens.colors.textPrimary,
+              size: EcoPlatesDesignTokens.notificationIconSize,
+            ),
+            SizedBox(width: EcoPlatesDesignTokens.notificationIconSpacing),
             Expanded(
-              child: Text(message, style: const TextStyle(color: Colors.white)),
+              child: Text(
+                message,
+                style: TextStyle(
+                  color: EcoPlatesDesignTokens.colors.textPrimary,
+                ),
+              ),
             ),
           ],
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: EcoPlatesDesignTokens.notificationInfo(this),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
       ),
@@ -93,14 +117,23 @@ extension ContextExtensions on BuildContext {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.warning_outlined, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
+            Icon(
+              Icons.warning_outlined,
+              color: EcoPlatesDesignTokens.colors.textPrimary,
+              size: EcoPlatesDesignTokens.notificationIconSize,
+            ),
+            SizedBox(width: EcoPlatesDesignTokens.notificationIconSpacing),
             Expanded(
-              child: Text(message, style: const TextStyle(color: Colors.white)),
+              child: Text(
+                message,
+                style: TextStyle(
+                  color: EcoPlatesDesignTokens.colors.textPrimary,
+                ),
+              ),
             ),
           ],
         ),
-        backgroundColor: Colors.orange,
+        backgroundColor: EcoPlatesDesignTokens.notificationWarning(this),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 3),
       ),
@@ -122,8 +155,11 @@ extension ContextExtensions on BuildContext {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.error_outline, color: _getErrorColor(failure)),
-            const SizedBox(width: 8),
+            Icon(
+              Icons.error_outline,
+              color: EcoPlatesDesignTokens.notificationError(this),
+            ),
+            SizedBox(width: EcoPlatesDesignTokens.errorDialogSpacing),
             Text(title ?? 'Erreur'),
           ],
         ),
@@ -212,18 +248,20 @@ extension ContextExtensions on BuildContext {
   }) async {
     return showModalBottomSheet<T>(
       context: this,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: ui.Radius.circular(EcoPlatesDesignTokens.dialogBorderRadius),
+        ),
       ),
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(EcoPlatesDesignTokens.dialogPadding),
               child: Text(title, style: Theme.of(context).textTheme.titleLarge),
             ),
-            const Divider(height: 1),
+            Divider(height: EcoPlatesDesignTokens.dividerHeight),
             ...options.map(
               (option) => ListTile(
                 leading: option.icon != null ? Icon(option.icon) : null,
@@ -234,7 +272,7 @@ extension ContextExtensions on BuildContext {
                 onTap: () => Navigator.of(context).pop(option.value),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: EcoPlatesDesignTokens.bottomSheetEndSpacing),
           ],
         ),
       ),
@@ -250,7 +288,7 @@ extension ContextExtensions on BuildContext {
   ColorScheme get colors => Theme.of(this).colorScheme;
 
   /// Récupère la taille de l'écran
-  Size get screenSize => MediaQuery.of(this).size;
+  ui.Size get screenSize => MediaQuery.of(this).size;
 
   /// Récupère la largeur de l'écran
   double get screenWidth => MediaQuery.of(this).size.width;
@@ -262,7 +300,8 @@ extension ContextExtensions on BuildContext {
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
 
   /// Vérifie si c'est un écran large (tablette)
-  bool get isTablet => MediaQuery.of(this).size.width >= 768;
+  bool get isTablet =>
+      MediaQuery.of(this).size.width >= EcoPlatesDesignTokens.tabletBreakpoint;
 
   /// Ferme le clavier
   void hideKeyboard() {
@@ -270,21 +309,6 @@ extension ContextExtensions on BuildContext {
   }
 
   // === Méthodes privées ===
-
-  Color _getErrorColor(Failure failure) {
-    if (failure is NetworkFailure) {
-      return Colors.orange;
-    } else if (failure is ValidationFailure) {
-      return Colors.amber;
-    } else if (failure is AuthenticationFailure ||
-        failure is AuthorizationFailure) {
-      return Colors.red;
-    } else if (failure is NotFoundFailure) {
-      return Colors.blue;
-    } else {
-      return Colors.red;
-    }
-  }
 
   Duration _getErrorDuration(Failure failure) {
     if (failure is ValidationFailure) {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/design_tokens.dart';
 import '../providers/all_offers_provider.dart';
 import '../providers/browse_search_provider.dart';
 import '../providers/browse_view_provider.dart';
@@ -19,9 +20,11 @@ class BrowsePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewMode = ref.watch(browseViewModeProvider);
     final allOffersAsync = ref.watch(allOffersProvider);
-    
+
     return Scaffold(
-      backgroundColor: viewMode == BrowseViewMode.map ? Colors.transparent : Colors.grey[50],
+      backgroundColor: viewMode == BrowseViewMode.map
+          ? Colors.transparent
+          : null,
       body: SafeArea(
         child: Column(
           children: [
@@ -30,19 +33,20 @@ class BrowsePage extends ConsumerWidget {
               onFilterTap: () => _showFiltersModal(context, ref),
               onLocationTap: () => _toggleLocation(context, ref),
             ),
-            
+
             // Segment de navigation Liste/Carte
             const BrowseViewSegment(),
-            
-            const SizedBox(height: 16),
-            
+
+            SizedBox(height: EcoPlatesDesignTokens.spacing.dialogGap(context)),
+
             // Contenu principal
             Expanded(
               child: allOffersAsync.when(
                 data: (offers) {
                   // Afficher la vue selon le mode sélectionné
                   return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
+                    duration:
+                        EcoPlatesDesignTokens.layout.viewTransitionDuration,
                     child: viewMode == BrowseViewMode.list
                         ? BrowseListView(
                             key: const ValueKey('list'),
@@ -63,19 +67,31 @@ class BrowsePage extends ConsumerWidget {
                     children: [
                       Icon(
                         Icons.error_outline,
-                        size: 64,
-                        color: Colors.red[400],
+                        size: EcoPlatesDesignTokens.layout.errorStateIconSize,
+                        color:
+                            Theme.of(
+                              context,
+                            ).colorScheme.error.withValues(
+                              alpha:
+                                  EcoPlatesDesignTokens.opacity.textSecondary,
+                            ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: EcoPlatesDesignTokens.spacing.dialogGap(
+                          context,
+                        ),
+                      ),
                       Text(
                         'Erreur de chargement',
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.red[700],
+                          fontSize: 16,
+                          fontWeight: EcoPlatesDesignTokens.typography.medium,
+                          color: Theme.of(context).colorScheme.error,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: EcoPlatesDesignTokens.spacing.microGap(context),
+                      ),
                       TextButton.icon(
                         onPressed: () {
                           ref.invalidate(allOffersProvider);
@@ -93,107 +109,135 @@ class BrowsePage extends ConsumerWidget {
       ),
     );
   }
-  
+
   void _showFiltersModal(BuildContext context, WidgetRef ref) {
-    unawaited(showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.8,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            // Header
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey[200]!),
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+          height:
+              MediaQuery.of(context).size.height *
+              EcoPlatesDesignTokens.layout.filtersModalHeightRatio,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+            ),
+          ),
+          child: Column(
+            children: [
+              // Header
+              Container(
+                padding: EdgeInsets.all(
+                  EcoPlatesDesignTokens.spacing.dialogGap(context),
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Filtres',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant,
                     ),
                   ),
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          ref.read(browseFiltersProvider.notifier).clearFilters();
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Réinitialiser'),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Filtres',
+                      style: TextStyle(
+                        fontSize: EcoPlatesDesignTokens.typography.titleSize(
+                          context,
+                        ),
+                        fontWeight: EcoPlatesDesignTokens.typography.bold,
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            
-            // Contenu des filtres
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'Filtres à implémenter\n\n'
-                  '• Distance\n'
-                  '• Prix\n'
-                  '• Catégories\n'
-                  '• Régimes alimentaires\n'
-                  '• Disponibilité',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ),
-            
-            // Bouton appliquer
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.grey[200]!),
-                ),
-              ),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  child: const Text(
-                    'Appliquer les filtres',
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            ref
+                                .read(browseFiltersProvider.notifier)
+                                .clearFilters();
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Réinitialiser'),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // Contenu des filtres
+              Expanded(
+                child: Center(
+                  child: Text(
+                    'Filtres à implémenter\n\n'
+                    '• Distance\n'
+                    '• Prix\n'
+                    '• Catégories\n'
+                    '• Régimes alimentaires\n'
+                    '• Disponibilité',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontSize: EcoPlatesDesignTokens.typography.text(context),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+
+              // Bouton appliquer
+              Container(
+                padding: EdgeInsets.all(
+                  EcoPlatesDesignTokens.spacing.dialogGap(context),
+                ),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                    ),
+                  ),
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        vertical: EcoPlatesDesignTokens.spacing.dialogGap(
+                          context,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          EcoPlatesDesignTokens.radius.sm,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      'Appliquer les filtres',
+                      style: TextStyle(
+                        fontSize: EcoPlatesDesignTokens.typography.button(
+                          context,
+                        ),
+                        fontWeight: EcoPlatesDesignTokens.typography.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
-  
+
   void _toggleLocation(BuildContext context, WidgetRef ref) {
     final wasActive = ref.read(isLocationActiveProvider);
     ref.read(isLocationActiveProvider.notifier).toggle();

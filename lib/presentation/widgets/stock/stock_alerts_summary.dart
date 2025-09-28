@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Widget affichant un résumé des alertes de stock
@@ -12,21 +13,28 @@ class StockAlertsSummary extends ConsumerWidget {
     final theme = Theme.of(context);
     final lowStockItems = ref.watch(lowStockItemsProvider);
     final outOfStockItems = ref.watch(outOfStockItemsProvider);
-    
+
     // Ne rien afficher s'il n'y a pas d'alertes
     if (lowStockItems.isEmpty && outOfStockItems.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.scaleMD_LG_XL_XXL,
+        vertical: context.scaleSM_MD_LG_XL,
+      ),
+      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(
+          alpha: DesignConstants.opacitySubtle,
+        ),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
-          width: 0.5,
+          color: theme.colorScheme.outline.withValues(
+            alpha: DesignConstants.opacitySubtle,
+          ),
+          width: DesignConstants.zeroPointFive,
         ),
       ),
       child: Column(
@@ -36,28 +44,31 @@ class StockAlertsSummary extends ConsumerWidget {
             children: [
               Icon(
                 Icons.notifications_active_outlined,
-                size: 18,
+                size: context.scaleIconStandard,
                 color: theme.colorScheme.primary,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: context.scaleSM_MD_LG_XL),
               Text(
                 'Alertes de stock',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                    context,
+                  ),
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          
+          SizedBox(height: context.scaleXS_SM_MD_LG),
+
           Wrap(
-            spacing: 12,
-            runSpacing: 8,
+            spacing: context.scaleXS_SM_MD_LG,
+            runSpacing: context.scaleSM_MD_LG_XL,
             children: [
               if (outOfStockItems.isNotEmpty)
                 _buildAlertChip(
+                  context,
                   theme: theme,
                   count: outOfStockItems.length,
                   label: outOfStockItems.length == 1
@@ -66,9 +77,10 @@ class StockAlertsSummary extends ConsumerWidget {
                   color: theme.colorScheme.error,
                   icon: Icons.error_outline,
                 ),
-                
+
               if (lowStockItems.isNotEmpty)
                 _buildAlertChip(
+                  context,
                   theme: theme,
                   count: lowStockItems.length,
                   label: lowStockItems.length == 1
@@ -83,8 +95,9 @@ class StockAlertsSummary extends ConsumerWidget {
       ),
     );
   }
-  
-  Widget _buildAlertChip({
+
+  Widget _buildAlertChip(
+    BuildContext context, {
     required ThemeData theme,
     required int count,
     required String label,
@@ -92,13 +105,16 @@ class StockAlertsSummary extends ConsumerWidget {
     required IconData icon,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.scaleXS_SM_MD_LG,
+        vertical: context.scaleXXS_XS_SM_MD,
+      ),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
+        color: color.withValues(alpha: DesignConstants.opacityVeryTransparent),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xxl),
         border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 0.5,
+          color: color.withValues(alpha: DesignConstants.opacitySubtle),
+          width: DesignConstants.zeroPointFive,
         ),
       ),
       child: Row(
@@ -106,24 +122,26 @@ class StockAlertsSummary extends ConsumerWidget {
         children: [
           Icon(
             icon,
-            size: 16,
+            size: context.scaleIconStandard,
             color: color,
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
           Text(
             '$count',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: EcoPlatesDesignTokens.typography.modalContent(context),
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
           Text(
             label,
             style: TextStyle(
-              fontSize: 12,
-              color: color.withValues(alpha: 0.8),
+              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              color: color.withValues(
+                alpha: DesignConstants.opacityAlmostOpaque,
+              ),
             ),
           ),
         ],

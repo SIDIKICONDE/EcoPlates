@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../core/extensions/food_offer_extensions.dart';
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../closed_badge.dart';
 import 'merchant_logo_with_badge.dart';
@@ -36,7 +37,7 @@ class _ListOfferCardState extends State<ListOfferCard>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: EcoPlatesDesignTokens.animation.fast,
       vsync: this,
     );
     _scaleAnimation =
@@ -51,8 +52,8 @@ class _ListOfferCardState extends State<ListOfferCard>
         );
     _elevationAnimation =
         Tween<double>(
-          begin: 0,
-          end: 1,
+          begin: EcoPlatesDesignTokens.opacity.veryTransparent,
+          end: EcoPlatesDesignTokens.opacity.veryOpaque,
         ).animate(
           CurvedAnimation(
             parent: _controller,
@@ -82,7 +83,6 @@ class _ListOfferCardState extends State<ListOfferCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Semantics(
       button: true,
@@ -97,29 +97,51 @@ class _ListOfferCardState extends State<ListOfferCard>
           builder: (context, child) => Transform.scale(
             scale: _scaleAnimation.value,
             child: Container(
-              height: 100,
-              margin: const EdgeInsets.only(bottom: 12),
+              height: EcoPlatesDesignTokens.layout.merchantCardHeight(context),
+              margin: EdgeInsets.only(
+                bottom: context.scaleMD_LG_XL_XXL,
+              ),
               decoration: BoxDecoration(
-                color: isDarkMode ? Colors.grey[900] : Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.lg,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: isDarkMode
-                          ? 0.3 + (0.1 * _elevationAnimation.value)
-                          : 0.08 + (0.06 * _elevationAnimation.value),
+                    color: EcoPlatesDesignTokens.colors.overlayBlack.withValues(
+                      alpha:
+                          EcoPlatesDesignTokens.opacity.subtle +
+                          (EcoPlatesDesignTokens.opacity.subtle *
+                              _elevationAnimation.value),
                     ),
-                    blurRadius: 10 + (8 * _elevationAnimation.value),
-                    offset: Offset(0, 4 + (4 * _elevationAnimation.value)),
+                    blurRadius:
+                        EcoPlatesDesignTokens.elevation.mediumBlur +
+                        (EcoPlatesDesignTokens.elevation.smallBlur *
+                            _elevationAnimation.value),
+                    offset: Offset(
+                      0,
+                      EcoPlatesDesignTokens.elevation.standardOffset.dy +
+                          (EcoPlatesDesignTokens.elevation.standardOffset.dy *
+                              _elevationAnimation.value),
+                    ),
                   ),
                   // Ombre secondaire pour plus de profondeur
                   if (_elevationAnimation.value > 0)
                     BoxShadow(
-                      color: theme.primaryColor.withValues(
-                        alpha: 0.1 * _elevationAnimation.value,
+                      color: theme.colorScheme.primary.withValues(
+                        alpha:
+                            EcoPlatesDesignTokens.opacity.verySubtle *
+                            _elevationAnimation.value,
                       ),
-                      blurRadius: 20 * _elevationAnimation.value,
-                      offset: Offset(0, 8 * _elevationAnimation.value),
+                      blurRadius:
+                          EcoPlatesDesignTokens.elevation.largeBlur *
+                          _elevationAnimation.value,
+                      offset: Offset(
+                        0,
+                        EcoPlatesDesignTokens.elevation.standardOffset.dy *
+                            2 *
+                            _elevationAnimation.value,
+                      ),
                     ),
                 ],
               ),
@@ -131,8 +153,8 @@ class _ListOfferCardState extends State<ListOfferCard>
                   // Badge FERMÉ (si la boutique est fermée)
                   if (widget.offer.isClosed)
                     Positioned(
-                      top: 3,
-                      right: 3,
+                      top: context.scaleXXS_XS_SM_MD / 2,
+                      right: context.scaleXXS_XS_SM_MD / 2,
                       child: ClosedBadge(
                         size: BadgeSize.small,
                         reopenTime: widget.offer.reopenTime,
@@ -141,7 +163,7 @@ class _ListOfferCardState extends State<ListOfferCard>
 
                   // Contenu principal
                   Padding(
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
                     child: Row(
                       children: [
                         // Logo Restaurant
@@ -150,7 +172,7 @@ class _ListOfferCardState extends State<ListOfferCard>
                           availableQuantity: widget.offer.availableQuantity,
                         ),
 
-                        const SizedBox(width: 12),
+                        SizedBox(width: context.scaleMD_LG_XL_XXL),
 
                         // Info Section
                         OfferInfoSection(

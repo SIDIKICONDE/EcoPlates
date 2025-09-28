@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../../../core/responsive/design_tokens.dart';
 
 /// Indicateur animé pour les offres urgentes
 class TimeIndicator extends StatelessWidget {
@@ -10,19 +11,29 @@ class TimeIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 16,
-      right: 16,
+      bottom: context.scaleMD_LG_XL_XXL,
+      right: context.scaleMD_LG_XL_XXL,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.scaleMD_LG_XL_XXL,
+          vertical: context.scaleXXS_XS_SM_MD,
+        ),
         decoration: BoxDecoration(
-          color: availableOffers <= 2 ? Colors.red : Colors.orange,
-          borderRadius: BorderRadius.circular(20),
+          color: availableOffers <= 2
+              ? EcoPlatesDesignTokens.colors.snackbarError
+              : EcoPlatesDesignTokens.colors.snackbarWarning,
+          borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xxl),
           boxShadow: [
             BoxShadow(
-              color: (availableOffers <= 2 ? Colors.red : Colors.orange)
-                  .withValues(alpha: 0.5),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color:
+                  (availableOffers <= 2
+                          ? EcoPlatesDesignTokens.colors.snackbarError
+                          : EcoPlatesDesignTokens.colors.snackbarWarning)
+                      .withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                      ),
+              blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
+              offset: EcoPlatesDesignTokens.elevation.standardOffset,
             ),
           ],
         ),
@@ -30,24 +41,31 @@ class TimeIndicator extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: 1),
-              duration: const Duration(seconds: 1),
+              tween: Tween(
+                begin: EcoPlatesDesignTokens.urgentOffers.pulseBegin,
+                end: EcoPlatesDesignTokens.urgentOffers.pulseEnd,
+              ),
+              duration: EcoPlatesDesignTokens.animation.slow,
               builder: (context, value, child) {
                 return Transform.rotate(
                   angle: value * 2 * math.pi,
-                  child: const Icon(Icons.timer, size: 14, color: Colors.white),
+                  child: Icon(
+                    Icons.timer,
+                    size: EcoPlatesDesignTokens.size.indicator(context),
+                    color: EcoPlatesDesignTokens.colors.textPrimary,
+                  ),
                 );
               },
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: context.scaleXXS_XS_SM_MD),
             Text(
               availableOffers == 1
                   ? 'Dernière chance!'
                   : 'Plus que $availableOffers!',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
+              style: TextStyle(
+                color: EcoPlatesDesignTokens.colors.textPrimary,
+                fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                fontWeight: EcoPlatesDesignTokens.typography.bold,
               ),
             ),
           ],

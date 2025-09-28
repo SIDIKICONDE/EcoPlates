@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 import 'stock_list_item.dart';
@@ -134,7 +135,11 @@ class StockListView extends ConsumerWidget {
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(isCompact ? 24 : 32),
+        padding: EdgeInsets.all(
+          isCompact
+              ? context.scaleMD_LG_XL_XXL
+              : context.scaleMD_LG_XL_XXL * 1.25,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -145,10 +150,14 @@ class StockListView extends ConsumerWidget {
                   : Duration.zero,
               child: CircularProgressIndicator(
                 color: theme.colorScheme.primary,
-                strokeWidth: isCompact ? 3 : 4,
+                strokeWidth: 3,
               ),
             ),
-            SizedBox(height: isCompact ? 16 : 24),
+            SizedBox(
+              height: isCompact
+                  ? context.scaleSM_MD_LG_XL
+                  : context.scaleMD_LG_XL_XXL,
+            ),
             AnimatedOpacity(
               opacity: showAnimations ? 0.8 : 1.0,
               duration: showAnimations
@@ -157,7 +166,9 @@ class StockListView extends ConsumerWidget {
               child: Text(
                 'Chargement des articles...',
                 style: TextStyle(
-                  fontSize: isCompact ? 14 : 16,
+                  fontSize: isCompact
+                      ? EcoPlatesDesignTokens.typography.text(context)
+                      : EcoPlatesDesignTokens.typography.titleSize(context),
                   color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
@@ -165,16 +176,22 @@ class StockListView extends ConsumerWidget {
               ),
             ),
             if (showAnimations) ...[
-              SizedBox(height: isCompact ? 8 : 12),
+              SizedBox(
+                height: isCompact
+                    ? context.scaleXXS_XS_SM_MD
+                    : context.scaleXS_SM_MD_LG,
+              ),
               AnimatedOpacity(
                 opacity: 0.6,
                 duration: const Duration(milliseconds: 1000),
                 child: Text(
                   'Préparation de votre inventaire',
                   style: TextStyle(
-                    fontSize: isCompact ? 12 : 14,
+                    fontSize: isCompact
+                        ? EcoPlatesDesignTokens.typography.hint(context)
+                        : EcoPlatesDesignTokens.typography.text(context),
                     color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.7,
+                      alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
                     ),
                     fontStyle: FontStyle.italic,
                   ),
@@ -199,7 +216,11 @@ class StockListView extends ConsumerWidget {
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(isCompact ? 24 : 32),
+        padding: EdgeInsets.all(
+          isCompact
+              ? context.scaleMD_LG_XL_XXL
+              : context.scaleMD_LG_XL_XXL * 1.25,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -209,21 +230,31 @@ class StockListView extends ConsumerWidget {
                   ? const Duration(milliseconds: 300)
                   : Duration.zero,
               child: Container(
-                padding: EdgeInsets.all(isCompact ? 16 : 20),
+                padding: EdgeInsets.all(
+                  isCompact
+                      ? context.scaleSM_MD_LG_XL
+                      : context.scaleMD_LG_XL_XXL,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.errorContainer.withValues(
-                    alpha: 0.1,
+                    alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
                   ),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.error_outline_rounded,
-                  size: isCompact ? 48 : 64,
+                  size: isCompact
+                      ? EcoPlatesDesignTokens.size.icon(context) * 2
+                      : EcoPlatesDesignTokens.size.icon(context) * 2.66,
                   color: theme.colorScheme.error,
                 ),
               ),
             ),
-            SizedBox(height: isCompact ? 16 : 24),
+            SizedBox(
+              height: isCompact
+                  ? context.scaleSM_MD_LG_XL
+                  : context.scaleMD_LG_XL_XXL,
+            ),
             AnimatedOpacity(
               opacity: showAnimations ? 0.9 : 1.0,
               duration: showAnimations
@@ -232,14 +263,21 @@ class StockListView extends ConsumerWidget {
               child: Text(
                 'Une erreur est survenue',
                 style: TextStyle(
-                  fontSize: isCompact ? 16 : 20,
+                  fontSize: isCompact
+                      ? EcoPlatesDesignTokens.typography.titleSize(context)
+                      : EcoPlatesDesignTokens.typography.titleSize(context) *
+                            1.2,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: isCompact ? 8 : 12),
+            SizedBox(
+              height: isCompact
+                  ? context.scaleXXS_XS_SM_MD
+                  : context.scaleXS_SM_MD_LG,
+            ),
             AnimatedOpacity(
               opacity: showAnimations ? 0.7 : 1.0,
               duration: showAnimations
@@ -248,14 +286,20 @@ class StockListView extends ConsumerWidget {
               child: Text(
                 StockErrorMessages.getErrorMessage(error),
                 style: TextStyle(
-                  fontSize: isCompact ? 12 : 14,
+                  fontSize: isCompact
+                      ? EcoPlatesDesignTokens.typography.hint(context)
+                      : EcoPlatesDesignTokens.typography.text(context),
                   color: theme.colorScheme.onSurfaceVariant,
                   height: 1.4,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: isCompact ? 24 : 32),
+            SizedBox(
+              height: isCompact
+                  ? context.scaleMD_LG_XL_XXL
+                  : context.scaleMD_LG_XL_XXL * 1.25,
+            ),
             AnimatedScale(
               scale: showAnimations ? 1.0 : 0.95,
               duration: showAnimations
@@ -269,8 +313,12 @@ class StockListView extends ConsumerWidget {
                 label: const Text('Réessayer'),
                 style: FilledButton.styleFrom(
                   padding: EdgeInsets.symmetric(
-                    horizontal: isCompact ? 16 : 24,
-                    vertical: isCompact ? 12 : 16,
+                    horizontal: isCompact
+                        ? context.scaleSM_MD_LG_XL
+                        : context.scaleMD_LG_XL_XXL,
+                    vertical: isCompact
+                        ? context.scaleXS_SM_MD_LG
+                        : context.scaleSM_MD_LG_XL,
                   ),
                 ),
               ),
@@ -296,7 +344,11 @@ class StockListView extends ConsumerWidget {
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(isCompact ? 24 : 32),
+        padding: EdgeInsets.all(
+          isCompact
+              ? context.scaleMD_LG_XL_XXL
+              : context.scaleMD_LG_XL_XXL * 1.25,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -306,10 +358,14 @@ class StockListView extends ConsumerWidget {
                   ? const Duration(milliseconds: 300)
                   : Duration.zero,
               child: Container(
-                padding: EdgeInsets.all(isCompact ? 16 : 20),
+                padding: EdgeInsets.all(
+                  isCompact
+                      ? context.scaleSM_MD_LG_XL
+                      : context.scaleMD_LG_XL_XXL,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.3,
+                    alpha: EcoPlatesDesignTokens.opacity.subtle,
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -317,12 +373,18 @@ class StockListView extends ConsumerWidget {
                   hasActiveFilters
                       ? Icons.search_off_rounded
                       : Icons.inventory_2_outlined,
-                  size: isCompact ? 48 : 64,
+                  size: isCompact
+                      ? EcoPlatesDesignTokens.size.icon(context) * 2
+                      : EcoPlatesDesignTokens.size.icon(context) * 2.66,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ),
-            SizedBox(height: isCompact ? 16 : 24),
+            SizedBox(
+              height: isCompact
+                  ? context.scaleSM_MD_LG_XL
+                  : context.scaleMD_LG_XL_XXL,
+            ),
             AnimatedOpacity(
               opacity: showAnimations ? 0.9 : 1.0,
               duration: showAnimations
@@ -333,14 +395,21 @@ class StockListView extends ConsumerWidget {
                     ? 'Aucun article trouvé'
                     : 'Aucun article en stock',
                 style: TextStyle(
-                  fontSize: isCompact ? 16 : 20,
+                  fontSize: isCompact
+                      ? EcoPlatesDesignTokens.typography.titleSize(context)
+                      : EcoPlatesDesignTokens.typography.titleSize(context) *
+                            1.2,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: isCompact ? 8 : 12),
+            SizedBox(
+              height: isCompact
+                  ? context.scaleXXS_XS_SM_MD
+                  : context.scaleXS_SM_MD_LG,
+            ),
             AnimatedOpacity(
               opacity: showAnimations ? 0.7 : 1.0,
               duration: showAnimations
@@ -351,7 +420,9 @@ class StockListView extends ConsumerWidget {
                     ? 'Essayez de modifier vos critères de recherche'
                     : 'Commencez par ajouter des articles à votre stock',
                 style: TextStyle(
-                  fontSize: isCompact ? 12 : 14,
+                  fontSize: isCompact
+                      ? EcoPlatesDesignTokens.typography.hint(context)
+                      : EcoPlatesDesignTokens.typography.text(context),
                   color: theme.colorScheme.onSurfaceVariant,
                   height: 1.4,
                 ),
@@ -361,7 +432,11 @@ class StockListView extends ConsumerWidget {
 
             // Bouton pour effacer les filtres si on en a
             if (hasActiveFilters) ...[
-              SizedBox(height: isCompact ? 24 : 32),
+              SizedBox(
+                height: isCompact
+                    ? context.scaleMD_LG_XL_XXL
+                    : context.scaleMD_LG_XL_XXL * 1.25,
+              ),
               AnimatedScale(
                 scale: showAnimations ? 1.0 : 0.95,
                 duration: showAnimations
@@ -378,8 +453,12 @@ class StockListView extends ConsumerWidget {
                   label: const Text('Effacer les filtres'),
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
-                      horizontal: isCompact ? 16 : 24,
-                      vertical: isCompact ? 12 : 16,
+                      horizontal: isCompact
+                          ? context.scaleSM_MD_LG_XL
+                          : context.scaleMD_LG_XL_XXL,
+                      vertical: isCompact
+                          ? context.scaleXS_SM_MD_LG
+                          : context.scaleSM_MD_LG_XL,
                     ),
                   ),
                 ),
@@ -396,7 +475,7 @@ class StockListView extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(context.scaleSM_MD_LG_XL),
       child: Center(
         child: AnimatedOpacity(
           opacity: showAnimations ? 0.8 : 1.0,
@@ -407,19 +486,19 @@ class StockListView extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 16,
-                height: 16,
+                width: EcoPlatesDesignTokens.size.icon(context),
+                height: EcoPlatesDesignTokens.size.icon(context),
                 child: CircularProgressIndicator(
-                  strokeWidth: 2,
+                  strokeWidth: 3,
                   color: theme.colorScheme.primary,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: context.scaleXXS_XS_SM_MD),
               Text(
                 'Chargement...',
                 style: TextStyle(
                   color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: 14,
+                  fontSize: EcoPlatesDesignTokens.typography.text(context),
                 ),
               ),
             ],

@@ -37,9 +37,14 @@ class Breakpoints {
   }
 
   /// Détermine le [DeviceType] à partir du contexte (MediaQuery)
+  ///
+  /// Utilise la plus petite dimension (shortestSide) pour une classification
+  /// plus fiable en mode paysage sur tablette. Ainsi, une tablette 1024x768
+  /// en paysage reste considérée comme tablette, et non desktop.
   static DeviceType deviceTypeOf(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    return deviceTypeForWidth(width);
+    final size = MediaQuery.sizeOf(context);
+    final shortestSide = size.shortestSide;
+    return deviceTypeForWidth(shortestSide);
   }
 
   /// Raccourcis booléens pratiques

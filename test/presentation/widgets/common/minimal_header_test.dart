@@ -1,7 +1,6 @@
+import 'package:ecoplates/presentation/widgets/minimal_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:ecoplates/presentation/widgets/minimal_header.dart';
 
 void main() {
   group('MinimalHeader', () {

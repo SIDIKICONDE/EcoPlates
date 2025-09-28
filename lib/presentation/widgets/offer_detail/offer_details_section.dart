@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/utils/offer_formatters.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -14,26 +15,35 @@ class OfferDetailsSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey[200]!),
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.disabled,
+          ),
+          width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+        ),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Infos pratiques',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
+              fontWeight: EcoPlatesDesignTokens.typography.bold,
+            ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
           // Horaire de récupération
           _buildCompactInfo(
+            context: context,
             icon: Icons.access_time_filled,
             label: 'À récupérer',
             value: OfferFormatters.formatPickupTime(offer),
-            iconColor: theme.primaryColor,
+            iconColor: theme.colorScheme.primary,
           ),
         ],
       ),
@@ -41,6 +51,7 @@ class OfferDetailsSection extends StatelessWidget {
   }
 
   Widget _buildCompactInfo({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required String value,
@@ -48,21 +59,30 @@ class OfferDetailsSection extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Icon(icon, color: iconColor, size: 20),
-        const SizedBox(width: 8),
+        Icon(
+          icon,
+          color: iconColor,
+          size: EcoPlatesDesignTokens.size.indicator(context),
+        ),
+        SizedBox(width: context.scaleXS_SM_MD_LG),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 label,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                  ),
+                ),
               ),
               Text(
                 value,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.text(context),
+                  fontWeight: EcoPlatesDesignTokens.typography.semiBold,
                 ),
               ),
             ],

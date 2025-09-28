@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/responsive.dart';
 import '../../../domain/entities/stock_item.dart';
 import 'utils.dart';
 
@@ -24,46 +25,60 @@ void showCategoryModal(
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.75,
+          height:
+              MediaQuery.of(context).size.height *
+              EcoPlatesDesignTokens.layout.categoryModalHeightRatio,
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(28),
-              topRight: Radius.circular(28),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
+              topRight: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
             ),
           ),
           child: Column(
             children: [
               // Handle bar
               Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 40,
-                height: 4,
+                margin: EdgeInsets.only(
+                  top: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                ),
+                width: EcoPlatesDesignTokens.layout.modalHandleWidth,
+                height: EcoPlatesDesignTokens.layout.modalHandleHeight,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.3,
+                    alpha: EcoPlatesDesignTokens.opacity.subtle,
                   ),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens.radius.xs,
+                  ),
                 ),
               ),
 
               // Title
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(
+                  EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.category,
                       color: theme.colorScheme.primary,
-                      size: 28,
+                      size: EcoPlatesDesignTokens.layout.modalTitleIconSize,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(
+                      width: EcoPlatesDesignTokens.spacing.interfaceGap(
+                        context,
+                      ),
+                    ),
                     Text(
                       'Choisir une catégorie',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: EcoPlatesDesignTokens.typography.modalTitle(
+                          context,
+                        ),
+                        fontWeight: EcoPlatesDesignTokens.typography.bold,
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
@@ -71,22 +86,30 @@ void showCategoryModal(
                 ),
               ),
 
-              const Divider(height: 1),
+              Divider(
+                height: EcoPlatesDesignTokens.layout.standardDividerHeight,
+              ),
 
               // Categories grid
               Flexible(
                 child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
+                  padding: EdgeInsets.all(
+                    EcoPlatesDesignTokens.spacing.dialogGap(context),
+                  ),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount:
+                        EcoPlatesDesignTokens.layout.categoryGridCrossAxisCount,
+                    crossAxisSpacing: EcoPlatesDesignTokens.spacing
+                        .interfaceGap(context),
+                    mainAxisSpacing: EcoPlatesDesignTokens.spacing.interfaceGap(
+                      context,
+                    ),
                   ),
                   itemCount: stockItemCategories.length,
                   itemBuilder: (context, index) {
                     final category = stockItemCategories[index];
                     final isSelected = selectedCategory == category;
-                    final color = getCategoryColor(category);
+                    final color = getCategoryColor(context, category);
                     final icon = getCategoryIcon(category);
 
                     return Material(
@@ -97,64 +120,119 @@ void showCategoryModal(
                           if (isEditMode) onChangesMade();
                           Navigator.of(context).pop();
                         },
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(
+                          EcoPlatesDesignTokens.radius.lg,
+                        ),
                         child: Container(
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? color.withValues(alpha: 0.2)
+                                ? color.withValues(
+                                    alpha:
+                                        EcoPlatesDesignTokens.opacity.pressed,
+                                  )
                                 : theme.colorScheme.surfaceContainerHighest
-                                      .withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(16),
+                                      .withValues(
+                                        alpha: EcoPlatesDesignTokens
+                                            .opacity
+                                            .semiTransparent,
+                                      ),
+                            borderRadius: BorderRadius.circular(
+                              EcoPlatesDesignTokens.radius.lg,
+                            ),
                             border: Border.all(
                               color: isSelected
                                   ? color
                                   : theme.colorScheme.outline.withValues(
-                                      alpha: 0.1,
+                                      alpha: EcoPlatesDesignTokens
+                                          .opacity
+                                          .veryTransparent,
                                     ),
-                              width: isSelected ? 2 : 1,
+                              width: isSelected
+                                  ? EcoPlatesDesignTokens
+                                        .layout
+                                        .selectedBorderWidth
+                                  : EcoPlatesDesignTokens
+                                        .layout
+                                        .unselectedBorderWidth,
                             ),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.all(12),
+                                duration: EcoPlatesDesignTokens.animation.fast,
+                                padding: EdgeInsets.all(
+                                  EcoPlatesDesignTokens.spacing.interfaceGap(
+                                    context,
+                                  ),
+                                ),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? color.withValues(alpha: 0.3)
-                                      : color.withValues(alpha: 0.1),
+                                      ? color.withValues(
+                                          alpha: EcoPlatesDesignTokens
+                                              .opacity
+                                              .overlay,
+                                        )
+                                      : color.withValues(
+                                          alpha: EcoPlatesDesignTokens
+                                              .opacity
+                                              .hover,
+                                        ),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   icon,
                                   color: isSelected
                                       ? color
-                                      : color.withValues(alpha: 0.7),
-                                  size: 28,
+                                      : color.withValues(
+                                          alpha: EcoPlatesDesignTokens
+                                              .opacity
+                                              .textSecondary,
+                                        ),
+                                  size: EcoPlatesDesignTokens
+                                      .layout
+                                      .categoryGridIconSize,
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              SizedBox(
+                                height: EcoPlatesDesignTokens.spacing.microGap(
+                                  context,
+                                ),
+                              ),
                               Text(
                                 category,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: EcoPlatesDesignTokens.typography
+                                      .hint(context),
                                   fontWeight: isSelected
-                                      ? FontWeight.w600
-                                      : FontWeight.w400,
+                                      ? EcoPlatesDesignTokens
+                                            .typography
+                                            .semiBold
+                                      : EcoPlatesDesignTokens
+                                            .typography
+                                            .regular,
                                   color: isSelected
                                       ? color
                                       : theme.colorScheme.onSurfaceVariant,
                                 ),
-                                maxLines: 1,
+                                maxLines: EcoPlatesDesignTokens
+                                    .layout
+                                    .shortTextMaxLines,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               if (isSelected) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(
+                                  height: EcoPlatesDesignTokens.spacing
+                                      .microGap(context),
+                                ),
                                 Container(
-                                  width: 6,
-                                  height: 6,
+                                  width: EcoPlatesDesignTokens
+                                      .layout
+                                      .categorySelectionDotSize,
+                                  height: EcoPlatesDesignTokens
+                                      .layout
+                                      .categorySelectionDotSize,
                                   decoration: BoxDecoration(
                                     color: color,
                                     shape: BoxShape.circle,
@@ -193,46 +271,60 @@ void showUnitModal(
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.6,
+          height:
+              MediaQuery.of(context).size.height *
+              EcoPlatesDesignTokens.layout.unitModalHeightRatio,
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(28),
-              topRight: Radius.circular(28),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
+              topRight: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
             ),
           ),
           child: Column(
             children: [
               // Handle bar
               Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 40,
-                height: 4,
+                margin: EdgeInsets.only(
+                  top: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                ),
+                width: EcoPlatesDesignTokens.layout.modalHandleWidth,
+                height: EcoPlatesDesignTokens.layout.modalHandleHeight,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.3,
+                    alpha: EcoPlatesDesignTokens.opacity.subtle,
                   ),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens.radius.xs,
+                  ),
                 ),
               ),
 
               // Title
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(
+                  EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.straighten,
                       color: theme.colorScheme.primary,
-                      size: 28,
+                      size: EcoPlatesDesignTokens.layout.modalTitleIconSize,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(
+                      width: EcoPlatesDesignTokens.spacing.interfaceGap(
+                        context,
+                      ),
+                    ),
                     Text(
                       'Choisir une unité',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: EcoPlatesDesignTokens.typography.modalTitle(
+                          context,
+                        ),
+                        fontWeight: EcoPlatesDesignTokens.typography.bold,
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
@@ -240,12 +332,16 @@ void showUnitModal(
                 ),
               ),
 
-              const Divider(height: 1),
+              Divider(
+                height: EcoPlatesDesignTokens.layout.standardDividerHeight,
+              ),
 
               // Units list
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 16),
+                  padding: EdgeInsets.only(
+                    bottom: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                  ),
                   itemCount: stockItemUnits.length,
                   itemBuilder: (context, index) {
                     final unit = stockItemUnits[index];
@@ -258,26 +354,39 @@ void showUnitModal(
                         Navigator.of(context).pop();
                       },
                       leading: Container(
-                        width: 56,
-                        height: 56,
+                        width: EcoPlatesDesignTokens.layout.unitContainerWidth,
+                        height:
+                            EcoPlatesDesignTokens.layout.unitContainerHeight,
                         decoration: BoxDecoration(
                           color: isSelected
                               ? theme.colorScheme.primaryContainer
                               : theme.colorScheme.surfaceContainerHighest
-                                    .withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(16),
+                                    .withValues(
+                                      alpha: EcoPlatesDesignTokens
+                                          .opacity
+                                          .semiTransparent,
+                                    ),
+                          borderRadius: BorderRadius.circular(
+                            EcoPlatesDesignTokens.radius.lg,
+                          ),
                           border: Border.all(
                             color: isSelected
                                 ? theme.colorScheme.primary.withValues(
-                                    alpha: 0.3,
+                                    alpha: EcoPlatesDesignTokens.opacity.subtle,
                                   )
                                 : Colors.transparent,
-                            width: 1.5,
+                            width:
+                                EcoPlatesDesignTokens
+                                    .layout
+                                    .unselectedBorderWidth *
+                                EcoPlatesDesignTokens
+                                    .opacity
+                                    .selectedBorderMultiplier,
                           ),
                         ),
                         child: Icon(
                           getUnitIcon(unit),
-                          size: 28,
+                          size: EcoPlatesDesignTokens.layout.unitIconSize,
                           color: isSelected
                               ? theme.colorScheme.primary
                               : theme.colorScheme.onSurfaceVariant,
@@ -287,8 +396,8 @@ void showUnitModal(
                         unit,
                         style: TextStyle(
                           fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
+                              ? EcoPlatesDesignTokens.typography.semiBold
+                              : EcoPlatesDesignTokens.typography.regular,
                           color: isSelected
                               ? theme.colorScheme.primary
                               : theme.colorScheme.onSurface,
@@ -300,9 +409,12 @@ void showUnitModal(
                               color: theme.colorScheme.primary,
                             )
                           : null,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: EcoPlatesDesignTokens.spacing
+                            .sectionSpacing(context),
+                        vertical: EcoPlatesDesignTokens.spacing.interfaceGap(
+                          context,
+                        ),
                       ),
                     );
                   },
@@ -334,9 +446,9 @@ void showStatusModal(
         return Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(28),
-              topRight: Radius.circular(28),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
+              topRight: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
             ),
           ),
           child: Column(
@@ -344,34 +456,46 @@ void showStatusModal(
             children: [
               // Handle bar
               Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 40,
-                height: 4,
+                margin: EdgeInsets.only(
+                  top: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                ),
+                width: EcoPlatesDesignTokens.layout.modalHandleWidth,
+                height: EcoPlatesDesignTokens.layout.modalHandleHeight,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.3,
+                    alpha: EcoPlatesDesignTokens.opacity.subtle,
                   ),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens.radius.xs,
+                  ),
                 ),
               ),
 
               // Title
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(
+                  EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.toggle_on,
                       color: theme.colorScheme.primary,
-                      size: 28,
+                      size: EcoPlatesDesignTokens.layout.modalTitleIconSize,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(
+                      width: EcoPlatesDesignTokens.spacing.interfaceGap(
+                        context,
+                      ),
+                    ),
                     Text(
                       "Statut de l'article",
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: EcoPlatesDesignTokens.typography.modalTitle(
+                          context,
+                        ),
+                        fontWeight: EcoPlatesDesignTokens.typography.bold,
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
@@ -379,17 +503,21 @@ void showStatusModal(
                 ),
               ),
 
-              const Divider(height: 1),
+              Divider(
+                height: EcoPlatesDesignTokens.layout.standardDividerHeight,
+              ),
 
               // Status options
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(
+                  vertical: EcoPlatesDesignTokens.spacing.microGap(context),
+                ),
                 child: Column(
                   children: StockItemStatus.values.map((status) {
                     final isSelected = selectedStatus == status;
                     final color = status == StockItemStatus.active
-                        ? Colors.green
-                        : Colors.orange;
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.tertiary;
                     final icon = status == StockItemStatus.active
                         ? Icons.check_circle
                         : Icons.pause_circle;
@@ -401,30 +529,51 @@ void showStatusModal(
                         Navigator.of(context).pop();
                       },
                       leading: Container(
-                        width: 56,
-                        height: 56,
+                        width: EcoPlatesDesignTokens.layout.unitContainerWidth,
+                        height:
+                            EcoPlatesDesignTokens.layout.unitContainerHeight,
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? color.withValues(alpha: 0.2)
+                              ? color.withValues(
+                                  alpha: EcoPlatesDesignTokens.opacity.pressed,
+                                )
                               : theme.colorScheme.surfaceContainerHighest
-                                    .withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(16),
+                                    .withValues(
+                                      alpha: EcoPlatesDesignTokens
+                                          .opacity
+                                          .semiTransparent,
+                                    ),
+                          borderRadius: BorderRadius.circular(
+                            EcoPlatesDesignTokens.radius.lg,
+                          ),
                           border: Border.all(
                             color: isSelected
-                                ? color.withValues(alpha: 0.5)
+                                ? color.withValues(
+                                    alpha: EcoPlatesDesignTokens
+                                        .opacity
+                                        .semiTransparent,
+                                  )
                                 : Colors.transparent,
-                            width: 2,
+                            width: EcoPlatesDesignTokens
+                                .layout
+                                .selectedBorderWidth,
                           ),
                         ),
-                        child: Icon(icon, size: 32, color: color),
+                        child: Icon(
+                          icon,
+                          size: EcoPlatesDesignTokens.size.icon(context),
+                          color: color,
+                        ),
                       ),
                       title: Text(
                         status.label,
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: EcoPlatesDesignTokens.typography.text(
+                            context,
+                          ),
                           fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
+                              ? EcoPlatesDesignTokens.typography.semiBold
+                              : EcoPlatesDesignTokens.typography.regular,
                           color: isSelected
                               ? color
                               : theme.colorScheme.onSurface,
@@ -435,23 +584,34 @@ void showStatusModal(
                             ? 'Article disponible à la vente'
                             : 'Article temporairement indisponible',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: EcoPlatesDesignTokens.typography.hint(
+                            context,
+                          ),
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
                       trailing: isSelected
-                          ? Icon(Icons.check_circle, color: color, size: 28)
+                          ? Icon(
+                              Icons.check_circle,
+                              color: color,
+                              size: EcoPlatesDesignTokens.size.icon(context),
+                            )
                           : null,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: EcoPlatesDesignTokens.spacing
+                            .sectionSpacing(context),
+                        vertical: EcoPlatesDesignTokens.spacing.interfaceGap(
+                          context,
+                        ),
                       ),
                     );
                   }).toList(),
                 ),
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+              ),
             ],
           ),
         );

@@ -4,8 +4,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../core/responsive/design_tokens.dart';
+import '../../../core/services/image_cache_service.dart';
 import '../../../core/services/video_background_service.dart';
 import '../../../core/services/video_pool_manager.dart';
+import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/video_preview.dart';
 
 /// API simple pour afficher/masquer le lecteur flottant via OverlayEntry
@@ -114,7 +117,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
   // Taille du player (16:9)
   late double _baseWidth; // taille normale
   late double _baseHeight;
-  final double _miniWidth = 200;
+  double get _miniWidth => EcoPlatesDesignTokens.size.minTouchTarget * 2;
   double get _miniHeight => _miniWidth * 9 / 16;
   bool _isMini = false;
 
@@ -218,11 +221,13 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
 
   void _showBackgroundNotification() {
     if (_controller != null) {
-      unawaited(VideoBackgroundService().showVideoNotification(
-        title: widget.video.title,
-        merchant: widget.video.merchantName,
-        isPlaying: _controller!.value.isPlaying,
-      ));
+      unawaited(
+        VideoBackgroundService().showVideoNotification(
+          title: widget.video.title,
+          merchant: widget.video.merchantName,
+          isPlaying: _controller!.value.isPlaying,
+        ),
+      );
     }
   }
 
@@ -252,7 +257,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
   void _onDrag(DragUpdateDetails d) {
     if (_position == null) return;
     final size = MediaQuery.of(context).size;
-    const margin = 8.0;
+    final margin = context.scaleXXS_XS_SM_MD;
     var next = _position! + d.delta;
     // Contrainte dans l'écran
     final maxX = size.width - _currentWidth - margin;
@@ -264,14 +269,14 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
   void _onDragEnd(DragEndDetails details) {
     if (_position == null) return;
     final size = MediaQuery.of(context).size;
-    const margin = 16.0;
+    final margin = context.scaleMD_LG_XL_XXL;
 
     // Hauteur approximative d'une bottom bar pour "dock" au-dessus
-    const bottomDock = 72.0; // ~56 (nav) + marge
+    final bottomDock = context.scaleMD_LG_XL_XXL * 2; // ~56 (nav) + marge
 
     final candidates = <Offset>[
       // Coins
-      const Offset(margin, margin),
+      Offset(margin, margin),
       Offset(size.width - _currentWidth - margin, margin),
       Offset(margin, size.height - _currentHeight - margin - bottomDock),
       Offset(
@@ -319,7 +324,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
       _isMini = !_isMini;
       // S'assurer que la position reste dans l'écran
       final size = MediaQuery.of(context).size;
-      const margin = 8.0;
+      final margin = context.scaleXXS_XS_SM_MD;
       final maxX = size.width - _currentWidth - margin;
       final maxY = size.height - _currentHeight - margin;
       _position = Offset(
@@ -402,17 +407,26 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                       },
                       child: Material(
                         elevation: 12,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(
+                          EcoPlatesDesignTokens.radius.md,
+                        ),
                         clipBehavior: Clip.antiAlias,
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             color: Colors.black,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: const [
+                            borderRadius: BorderRadius.circular(
+                              EcoPlatesDesignTokens.radius.md,
+                            ),
+                            boxShadow: [
                               BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 16,
-                                offset: Offset(0, 8),
+                                color: Colors.black.withValues(
+                                  alpha: EcoPlatesDesignTokens.opacity.subtle,
+                                ),
+                                blurRadius:
+                                    EcoPlatesDesignTokens.elevation.largeBlur,
+                                offset: EcoPlatesDesignTokens
+                                    .elevation
+                                    .elevatedOffset,
                               ),
                             ],
                           ),
@@ -440,9 +454,9 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                   right: 0,
                                   top: 0,
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 4,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: context.scaleXXS_XS_SM_MD,
+                                      vertical: context.scaleXXS_XS_SM_MD / 2,
                                     ),
                                     decoration: const BoxDecoration(
                                       gradient: LinearGradient(
@@ -461,10 +475,12 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                             widget.video.title,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 12,
+                                              fontSize: EcoPlatesDesignTokens
+                                                  .typography
+                                                  .hint(context),
                                             ),
                                           ),
                                         ),
@@ -480,7 +496,8 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                                       .close_fullscreen_rounded,
                                             color: Colors.white,
                                           ),
-                                          iconSize: 18,
+                                          iconSize: EcoPlatesDesignTokens.size
+                                              .icon(context),
                                           padding: EdgeInsets.zero,
                                         ),
                                         IconButton(
@@ -494,10 +511,13 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                                 : Icons.volume_up_rounded,
                                             color: Colors.white,
                                           ),
-                                          iconSize: 18,
+                                          iconSize: EcoPlatesDesignTokens.size
+                                              .icon(context),
                                           padding: EdgeInsets.zero,
                                         ),
-                                        const SizedBox(width: 4),
+                                        SizedBox(
+                                          width: context.scaleXXS_XS_SM_MD,
+                                        ),
                                         IconButton(
                                           tooltip: 'Fermer',
                                           onPressed: widget.onClose,
@@ -505,7 +525,8 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                             Icons.close_rounded,
                                             color: Colors.white,
                                           ),
-                                          iconSize: 18,
+                                          iconSize: EcoPlatesDesignTokens.size
+                                              .icon(context),
                                           padding: EdgeInsets.zero,
                                         ),
                                       ],
@@ -519,8 +540,14 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                 Center(
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.black45,
-                                      borderRadius: BorderRadius.circular(28),
+                                      color: Colors.black.withValues(
+                                        alpha: EcoPlatesDesignTokens
+                                            .opacity
+                                            .pressed,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        EcoPlatesDesignTokens.radius.xl,
+                                      ),
                                     ),
                                     child: IconButton(
                                       onPressed: _togglePlayPause,
@@ -530,7 +557,11 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                             : Icons.play_arrow_rounded,
                                       ),
                                       color: Colors.white,
-                                      iconSize: 36,
+                                      iconSize:
+                                          EcoPlatesDesignTokens.size.icon(
+                                            context,
+                                          ) *
+                                          2,
                                     ),
                                   ),
                                 ),
@@ -539,9 +570,9 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                               // Bas: timeline (compacte)
                               if (_showControls) ...[
                                 Positioned(
-                                  left: 6,
-                                  right: 6,
-                                  bottom: 4,
+                                  left: context.scaleXXS_XS_SM_MD,
+                                  right: context.scaleXXS_XS_SM_MD,
+                                  bottom: context.scaleXXS_XS_SM_MD / 2,
                                   child: _buildTimeline(),
                                 ),
                               ],
@@ -564,15 +595,15 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.network(
-          widget.video.thumbnailUrl,
-          fit: BoxFit.cover,
-          errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
+        EcoCachedImage(
+          imageUrl: widget.video.thumbnailUrl,
+          size: ImageSize.small,
+          errorWidget: const ColoredBox(color: Colors.black),
         ),
-        const Center(
+        Center(
           child: CircularProgressIndicator(
             color: Colors.white70,
-            strokeWidth: 2,
+            strokeWidth: 3,
           ),
         ),
       ],
@@ -590,7 +621,10 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
       children: [
         Text(
           _fmt(position),
-          style: const TextStyle(color: Colors.white70, fontSize: 10),
+          style: TextStyle(
+            color: Colors.white70,
+            fontSize: EcoPlatesDesignTokens.typography.hint(context) - 2,
+          ),
         ),
         Expanded(
           child: Slider(
@@ -606,7 +640,10 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
         ),
         Text(
           _fmt(duration),
-          style: const TextStyle(color: Colors.white70, fontSize: 10),
+          style: TextStyle(
+            color: Colors.white70,
+            fontSize: EcoPlatesDesignTokens.typography.hint(context) - 2,
+          ),
         ),
       ],
     );

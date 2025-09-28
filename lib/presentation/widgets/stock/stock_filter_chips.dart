@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -71,7 +72,7 @@ class StockFilterChips extends ConsumerWidget {
     );
 
     return Wrap(
-      spacing: 8,
+      spacing: context.scaleSM_MD_LG_XL,
       children: StockFilterOption.values.map((option) {
         final isSelected = _isOptionSelected(
           option,
@@ -86,34 +87,45 @@ class StockFilterChips extends ConsumerWidget {
             children: [
               Icon(
                 option.icon,
-                size: 16,
+                size: context.scaleIconStandard,
                 color: isSelected
                     ? theme.colorScheme.onSecondaryContainer
                     : theme.colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(width: 4),
-              Text(option.label, style: const TextStyle(height: 1.2)),
+              SizedBox(width: context.scaleXXS_XS_SM_MD),
+              Text(
+                option.label,
+                style: TextStyle(
+                  height: 1.2,
+                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                    context,
+                  ),
+                ),
+              ),
               if (showCounts && count > 0) ...[
-                const SizedBox(width: 4),
+                SizedBox(width: context.scaleXXS_XS_SM_MD),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.scaleXXS_XS_SM_MD,
+                    vertical: context.scaleXXS_XS_SM_MD,
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? theme.colorScheme.onSecondaryContainer.withValues(
-                            alpha: 0.2,
+                            alpha: EcoPlatesDesignTokens.opacity.pressed,
                           )
                         : theme.colorScheme.onSurfaceVariant.withValues(
-                            alpha: 0.1,
+                            alpha:
+                                EcoPlatesDesignTokens.opacity.veryTransparent,
                           ),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(
+                      EcoPlatesDesignTokens.radius.sm,
+                    ),
                   ),
                   child: Text(
                     count.toString(),
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
                       fontWeight: FontWeight.w500,
                       color: isSelected
                           ? theme.colorScheme.onSecondaryContainer

@@ -1,11 +1,10 @@
+import 'package:ecoplates/domain/entities/food_offer.dart';
+import 'package:ecoplates/presentation/providers/browse_search_provider.dart';
+import 'package:ecoplates/presentation/widgets/browse/browse_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'package:ecoplates/domain/entities/food_offer.dart';
-import 'package:ecoplates/presentation/providers/browse_search_provider.dart';
-import 'package:ecoplates/presentation/widgets/browse/browse_map_view.dart';
 
 class TestLocationActiveNotifier extends LocationActiveNotifier {
   TestLocationActiveNotifier(bool initialState) {

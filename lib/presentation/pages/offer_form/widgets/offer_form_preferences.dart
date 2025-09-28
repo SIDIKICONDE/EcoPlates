@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/responsive/responsive.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../providers/offer_form_provider.dart';
 
 /// Section des préférences alimentaires du formulaire d'offre
@@ -11,19 +13,27 @@ class OfferFormPreferencesFields extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final formState = ref.watch(offerFormProvider);
+    final l10n = AppLocalizations.of(context);
+
+    // Design tokens responsives
+    final chipSpacing = EcoPlatesDesignTokens.spacing.interfaceGap(context);
+    final sectionSpacing = EcoPlatesDesignTokens.spacing.sectionSpacing(
+      context,
+    );
+    final mediumSpacing = EcoPlatesDesignTokens.spacing.dialogGap(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Options alimentaires
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: chipSpacing,
+          runSpacing: chipSpacing,
           children: [
             _buildFoodPreferenceChip(
               context,
               ref,
-              label: 'Végétarien',
+              label: l10n.offerFormPreferencesVegetarian,
               icon: Icons.eco,
               isSelected: formState.isVegetarian,
               onTap: () => ref
@@ -33,7 +43,7 @@ class OfferFormPreferencesFields extends ConsumerWidget {
             _buildFoodPreferenceChip(
               context,
               ref,
-              label: 'Végan',
+              label: l10n.offerFormPreferencesVegan,
               icon: Icons.grass,
               isSelected: formState.isVegan,
               onTap: () => ref
@@ -43,7 +53,7 @@ class OfferFormPreferencesFields extends ConsumerWidget {
             _buildFoodPreferenceChip(
               context,
               ref,
-              label: 'Halal',
+              label: l10n.offerFormPreferencesHalal,
               icon: Icons.mosque,
               isSelected: formState.isHalal,
               onTap: () => ref
@@ -53,25 +63,31 @@ class OfferFormPreferencesFields extends ConsumerWidget {
           ],
         ),
 
-        const SizedBox(height: 24),
+        SizedBox(height: sectionSpacing),
 
         // Allergènes
         Text(
-          'Allergènes',
+          l10n.offerFormPreferencesAllergens,
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: EcoPlatesDesignTokens.typography.bold,
+            fontSize: EcoPlatesDesignTokens.typography.text(context),
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
 
         // Liste des allergènes courants
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: chipSpacing,
+          runSpacing: chipSpacing,
           children: _commonAllergens.map((allergen) {
             final isSelected = formState.allergens.contains(allergen);
             return FilterChip(
-              label: Text(allergen),
+              label: Text(
+                allergen,
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.text(context),
+                ),
+              ),
               selected: isSelected,
               onSelected: (selected) {
                 final currentAllergens = List<String>.from(formState.allergens);
@@ -87,14 +103,16 @@ class OfferFormPreferencesFields extends ConsumerWidget {
                     .updateAllergens(currentAllergens);
               },
               backgroundColor: theme.colorScheme.surfaceContainerHighest
-                  .withValues(alpha: 0.5),
+                  .withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
+                  ),
               selectedColor: theme.colorScheme.secondaryContainer,
               checkmarkColor: theme.colorScheme.onSecondaryContainer,
             );
           }).toList(),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: mediumSpacing),
 
         // Champ pour ajouter un allergène personnalisé
         Row(
@@ -102,22 +120,27 @@ class OfferFormPreferencesFields extends ConsumerWidget {
             Expanded(
               child: TextFormField(
                 textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  labelText: 'Allergène personnalisé',
-                  hintText: 'Ex: Sulfites, colorants...',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                decoration: InputDecoration(
+                  labelText: l10n.offerFormPreferencesCustomAllergen,
+                  hintText: l10n.offerFormPreferencesCustomAllergenHint,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      EcoPlatesDesignTokens.radius.fieldRadius(context),
+                    ),
                   ),
+                  contentPadding: EcoPlatesDesignTokens.spacing.contentPadding(
+                    context,
+                  ),
+                ),
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.text(context),
                 ),
                 onFieldSubmitted: (value) {
                   if (value.trim().isNotEmpty &&
                       !formState.allergens.contains(value.trim())) {
                     final currentAllergens = List<String>.from(
                       formState.allergens,
-                    )
-                    ..add(value.trim());
+                    )..add(value.trim());
                     ref
                         .read<OfferFormNotifier>(offerFormProvider.notifier)
                         .updateAllergens(currentAllergens);
@@ -125,13 +148,25 @@ class OfferFormPreferencesFields extends ConsumerWidget {
                 },
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
             IconButton(
-              icon: const Icon(Icons.add),
+              icon: Icon(
+                Icons.add,
+                size: EcoPlatesDesignTokens.size.icon(context),
+              ),
               onPressed: () {
                 // TODO: Implémenter l'ajout d'allergène personnalisé
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Fonctionnalité à implémenter')),
+                  SnackBar(
+                    content: Text(
+                      l10n.offerFormPreferencesFeatureToImplement,
+                      style: TextStyle(
+                        fontSize: EcoPlatesDesignTokens.typography.text(
+                          context,
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               },
               style: IconButton.styleFrom(
@@ -144,14 +179,21 @@ class OfferFormPreferencesFields extends ConsumerWidget {
 
         // Affichage des allergènes sélectionnés
         if (formState.allergens.isNotEmpty) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: mediumSpacing),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
             decoration: BoxDecoration(
-              color: theme.colorScheme.errorContainer.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(8),
+              color: theme.colorScheme.errorContainer.withValues(
+                alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+              ),
+              borderRadius: BorderRadius.circular(
+                EcoPlatesDesignTokens.radius.fieldRadius(context),
+              ),
               border: Border.all(
-                color: theme.colorScheme.error.withValues(alpha: 0.3),
+                color: theme.colorScheme.error.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.subtle,
+                ),
+                width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
               ),
             ),
             child: Column(
@@ -162,42 +204,51 @@ class OfferFormPreferencesFields extends ConsumerWidget {
                     Icon(
                       Icons.warning,
                       color: theme.colorScheme.error,
-                      size: 20,
+                      size: EcoPlatesDesignTokens.size.icon(context),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: EcoPlatesDesignTokens.spacing.microGap(context),
+                    ),
                     Text(
-                      'Allergènes déclarés',
+                      l10n.offerFormPreferencesDeclaredAllergens,
                       style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: EcoPlatesDesignTokens.typography.bold,
                         color: theme.colorScheme.error,
+                        fontSize: EcoPlatesDesignTokens.typography.text(
+                          context,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.microGap(context),
+                ),
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 4,
+                  spacing: chipSpacing,
+                  runSpacing: EcoPlatesDesignTokens.spacing.microGap(context),
                   children: formState.allergens.map((allergen) {
                     return Chip(
                       label: Text(
                         allergen,
                         style: TextStyle(
                           color: theme.colorScheme.onErrorContainer,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: EcoPlatesDesignTokens.typography.medium,
+                          fontSize: EcoPlatesDesignTokens.typography.text(
+                            context,
+                          ),
                         ),
                       ),
                       backgroundColor: theme.colorScheme.errorContainer,
                       deleteIcon: Icon(
                         Icons.close,
-                        size: 16,
+                        size: EcoPlatesDesignTokens.size.indicator(context),
                         color: theme.colorScheme.onErrorContainer,
                       ),
                       onDeleted: () {
                         final currentAllergens = List<String>.from(
                           formState.allergens,
-                        )
-                        ..remove(allergen);
+                        )..remove(allergen);
                         ref
                             .read<OfferFormNotifier>(offerFormProvider.notifier)
                             .updateAllergens(currentAllergens);
@@ -211,14 +262,16 @@ class OfferFormPreferencesFields extends ConsumerWidget {
         ],
 
         // Informations sur les allergies
-        const SizedBox(height: 12),
+        SizedBox(height: mediumSpacing),
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHighest.withValues(
-              alpha: 0.3,
+              alpha: EcoPlatesDesignTokens.opacity.subtle,
             ),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(
+              EcoPlatesDesignTokens.radius.fieldRadius(context),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,25 +281,28 @@ class OfferFormPreferencesFields extends ConsumerWidget {
                   Icon(
                     Icons.health_and_safety,
                     color: theme.colorScheme.primary,
-                    size: 16,
+                    size: EcoPlatesDesignTokens.size.icon(context),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: EcoPlatesDesignTokens.spacing.microGap(context),
+                  ),
                   Text(
-                    'Informations importantes',
+                    l10n.offerFormPreferencesImportantInfo,
                     style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: EcoPlatesDesignTokens.typography.bold,
                       color: theme.colorScheme.primary,
+                      fontSize: EcoPlatesDesignTokens.typography.text(context),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
               Text(
-                'Déclaration optionnelle mais recommandée pour la sécurité des clients allergiques.',
+                l10n.offerFormPreferencesAllergenInfoText,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
                   color: theme.colorScheme.onSurfaceVariant,
-                  height: 1.4,
+                  height: EcoPlatesDesignTokens.layout.textLineHeight,
                 ),
               ),
             ],
@@ -266,22 +322,38 @@ class OfferFormPreferencesFields extends ConsumerWidget {
   }) {
     final theme = Theme.of(context);
 
+    // Design tokens responsives
+    final chipPadding = EcoPlatesDesignTokens.spacing
+        .contentPadding(context)
+        .copyWith(
+          left: EcoPlatesDesignTokens.spacing.dialogGap(context),
+          right: EcoPlatesDesignTokens.spacing.dialogGap(context),
+        );
+    final chipSpacing = EcoPlatesDesignTokens.spacing.interfaceGap(context);
+    final chipRadius = EcoPlatesDesignTokens.radius.fieldRadius(context);
+    final iconSize = EcoPlatesDesignTokens.size.icon(context);
+    final checkIconSize = EcoPlatesDesignTokens.size.indicator(context);
+    final textSize = EcoPlatesDesignTokens.typography.text(context);
+
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(chipRadius),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: chipPadding,
         decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primaryContainer
               : theme.colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.5,
+                  alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
                 ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(chipRadius),
           border: Border.all(
             color: isSelected
                 ? theme.colorScheme.primary
-                : theme.colorScheme.outline.withValues(alpha: 0.3),
+                : theme.colorScheme.outline.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.subtle,
+                  ),
+            width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
           ),
         ),
         child: Row(
@@ -289,26 +361,27 @@ class OfferFormPreferencesFields extends ConsumerWidget {
           children: [
             Icon(
               icon,
-              size: 18,
+              size: iconSize,
               color: isSelected
                   ? theme.colorScheme.onPrimaryContainer
                   : theme.colorScheme.onSurfaceVariant,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: chipSpacing),
             Text(
               label,
               style: TextStyle(
-                fontWeight: FontWeight.w500,
+                fontWeight: EcoPlatesDesignTokens.typography.medium,
                 color: isSelected
                     ? theme.colorScheme.onPrimaryContainer
                     : theme.colorScheme.onSurfaceVariant,
+                fontSize: textSize,
               ),
             ),
             if (isSelected) ...[
-              const SizedBox(width: 6),
+              SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
               Icon(
                 Icons.check,
-                size: 16,
+                size: checkIconSize,
                 color: theme.colorScheme.onPrimaryContainer,
               ),
             ],

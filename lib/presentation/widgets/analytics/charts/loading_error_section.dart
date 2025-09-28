@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/responsive/design_tokens.dart';
 import '../../../providers/analytics_provider.dart';
 
 class LoadingSection extends StatelessWidget {
@@ -13,24 +14,47 @@ class LoadingSection extends StatelessWidget {
     return SliverFillRemaining(
       child: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 300),
-          padding: const EdgeInsets.all(24),
+          constraints: BoxConstraints(
+            maxWidth:
+                EcoPlatesDesignTokens.analyticsCharts.loadingErrorMaxWidth,
+          ),
+          padding: EdgeInsets.all(
+            EcoPlatesDesignTokens.analyticsCharts.loadingErrorPadding,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 60,
-                height: 60,
+                width: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorIconContainerSize,
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorIconContainerSize,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
+                  color: theme.colorScheme.primary.withValues(
+                    alpha: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .loadingErrorBackgroundAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .loadingErrorBorderRadius,
+                  ),
                 ),
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
+                child: CircularProgressIndicator(
+                  strokeWidth: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .loadingProgressStrokeWidth,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorLargeSpacing,
+              ),
               Text(
                 'Chargement des graphiques...',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -39,7 +63,11 @@ class LoadingSection extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorSmallSpacing,
+              ),
               Text(
                 'Veuillez patienter',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -65,26 +93,49 @@ class ErrorSection extends ConsumerWidget {
     return SliverFillRemaining(
       child: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 300),
-          padding: const EdgeInsets.all(24),
+          constraints: BoxConstraints(
+            maxWidth:
+                EcoPlatesDesignTokens.analyticsCharts.loadingErrorMaxWidth,
+          ),
+          padding: EdgeInsets.all(
+            EcoPlatesDesignTokens.analyticsCharts.loadingErrorPadding,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 60,
-                height: 60,
+                width: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorIconContainerSize,
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorIconContainerSize,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.error.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
+                  color: theme.colorScheme.error.withValues(
+                    alpha: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .loadingErrorBackgroundAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .loadingErrorBorderRadius,
+                  ),
                 ),
                 child: Icon(
                   Icons.error_outline,
-                  size: 30,
+                  size: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .loadingErrorIconSize,
                   color: theme.colorScheme.error,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorLargeSpacing,
+              ),
               Text(
                 'Erreur de chargement',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -93,7 +144,11 @@ class ErrorSection extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorSmallSpacing,
+              ),
               Text(
                 'Impossible de charger les graphiques',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -101,7 +156,11 @@ class ErrorSection extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .loadingErrorLargeSpacing,
+              ),
               FilledButton.icon(
                 onPressed: () => ref.refreshAnalytics(),
                 icon: const Icon(Icons.refresh),

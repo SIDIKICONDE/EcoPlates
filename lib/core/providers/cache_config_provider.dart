@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,13 +29,15 @@ class CacheConfig {
   /// Nettoie le cache expiré
   static Future<void> _cleanExpiredCache() async {
     try {
-      final defaultCacheManager = CacheManager(Config('ecoplates_image_cache'));
-      final thumbnailCacheManager = CacheManager(Config('ecoplates_image_cache_thumbnails'));
-      
-      await Future.wait<void>([
-        defaultCacheManager.emptyCache(),
-        thumbnailCacheManager.emptyCache(),
-      ]);
+      // Ne vider le cache qu'en mode debug pour éviter des cold-starts lents en production
+      if (kDebugMode) {
+        final defaultCacheManager = CacheManager(Config('ecoplates_image_cache'));
+        final thumbnailCacheManager = CacheManager(Config('ecoplates_image_cache_thumbnails'));
+        await Future.wait<void>([
+          defaultCacheManager.emptyCache(),
+          thumbnailCacheManager.emptyCache(),
+        ]);
+      }
     } on Exception catch (e) {
       debugPrint('Erreur nettoyage cache: $e');
     }

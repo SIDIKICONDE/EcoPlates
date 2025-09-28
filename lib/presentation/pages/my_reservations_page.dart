@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/design_tokens.dart';
 import '../providers/offer_reservation_provider.dart';
 import '../providers/user_reservations_provider.dart';
 
@@ -19,9 +20,13 @@ class MyReservationsPage extends ConsumerWidget {
       body: reservations.isEmpty
           ? _EmptyState(colorScheme: colorScheme)
           : ListView.separated(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(
+                EcoPlatesDesignTokens.spacing.dialogGap(context),
+              ),
               itemCount: reservations.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => SizedBox(
+                height: EcoPlatesDesignTokens.spacing.microGap(context),
+              ),
               itemBuilder: (context, index) {
                 final r = reservations[index];
                 return Card(
@@ -44,8 +49,9 @@ class MyReservationsPage extends ConsumerWidget {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content:
-                                    Text('Réservation annulée: "${r.title}"'),
+                                content: Text(
+                                  'Réservation annulée: "${r.title}"',
+                                ),
                               ),
                             );
                           }
@@ -91,7 +97,7 @@ class _EmptyState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.event_busy, size: 64, color: colorScheme.outline),
-          const SizedBox(height: 12),
+          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
           Text(
             'Aucune réservation',
             style: TextStyle(
@@ -99,7 +105,7 @@ class _EmptyState extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
           Text(
             'Vos réservations apparaîtront ici',
             style: TextStyle(color: colorScheme.onSurfaceVariant),

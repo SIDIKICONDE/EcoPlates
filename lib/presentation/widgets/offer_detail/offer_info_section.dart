@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 
 /// Section d'informations essentielles pour l'acheteur
@@ -14,19 +16,28 @@ class OfferInfoSection extends StatelessWidget {
         // Titre de l'offre
         Text(
           offer.title,
-          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: EcoPlatesDesignTokens.typography.titleSize(context) * 1.2,
+            fontWeight: EcoPlatesDesignTokens.typography.bold,
+          ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: context.scaleLG_XL_XXL_XXXL),
 
         // Description
-        const Text(
+        Text(
           'Que contient cette offre ?',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
+            fontWeight: EcoPlatesDesignTokens.typography.bold,
+          ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: context.scaleXXS_XS_SM_MD),
         Text(
           offer.description,
-          style: const TextStyle(fontSize: 16, height: 1.5),
+          style: TextStyle(
+            fontSize: EcoPlatesDesignTokens.typography.text(context),
+            height: EcoPlatesDesignTokens.layout.textLineHeight,
+          ),
         ),
       ],
     );

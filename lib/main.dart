@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui' as ui;
 
 import 'core/constants/env_config.dart';
 import 'core/providers/cache_config_provider.dart';
@@ -13,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialiser Hive pour Flutter et enregistrer les adapters (une seule fois)
-  
+
   // Charger la configuration de l'environnement
   await EnvConfig.load();
 
@@ -24,10 +25,12 @@ void main() async {
   // Afficher la config en mode debug
   EnvConfig.printConfig();
 
-  // Configurer l'orientation préférée
+  // Permettre toutes les orientations pour le système responsive
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
   ]);
 
   // Lancer l'application avec Riverpod
@@ -41,12 +44,35 @@ class EcoPlatesApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
 
+    // Déterminer la taille de design responsive selon le type d'appareil
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+
+    // Utiliser une taille de design adaptative
+    late ui.Size designSize;
+    if (screenWidth >= 1440) {
+      // Grand écran desktop
+      designSize = ui.Size(1440, 900);
+    } else if (screenWidth >= 768) {
+      // Tablette
+      designSize = ui.Size(768, 1024);
+    } else if (screenWidth >= 900) {
+      // Écran moyen
+      designSize = ui.Size(900, 1200);
+    } else {
+      // Mobile (par défaut)
+      designSize = ui.Size(375, 812); // iPhone X comme référence
+    }
+
+    // Note: ScreenUtilInit est maintenu pour la compatibilité avec les widgets existants
+    // mais le nouveau système responsive (context.responsiveValue) est prioritaire
     return ScreenUtilInit(
-      designSize: const Size(375, 812), // iPhone X dimensions comme référence
+      designSize: designSize,
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         // Utilise AdaptiveApp qui détecte automatiquement la plateforme
+        // AdaptiveApp utilise maintenant EcoTheme avec le système responsive intégré
         return AdaptiveApp(router: router);
       },
     );

@@ -394,7 +394,7 @@ List<DataPoint> _generateCustomerSatisfactionData(
         : DateTime(now.year, i + 1);
 
     // Note moyenne entre 3.8 et 4.8 avec variations réalistes
-    final baseRating = 4.2;
+    const baseRating = 4.2;
     final variation = (i % 3 - 1) * 0.3; // Variation périodique
     final rating = (baseRating + variation + (i * 0.1) % 0.6).clamp(3.5, 4.8);
 
@@ -418,8 +418,6 @@ List<DataPoint> _generateCustomerSatisfactionData(
 
 /// Génère la répartition des notes clients (1-5 étoiles)
 List<RatingData> _generateRatingDistribution() {
-  const total = 2847; // Nombre total d'avis simulé
-
   return const [
     RatingData(
       stars: 5,
@@ -430,7 +428,7 @@ List<RatingData> _generateRatingDistribution() {
     RatingData(
       stars: 4,
       count: 654,
-      percentage: 23.0,
+      percentage: 23,
       color: 0xFF8BC34A, // Vert clair
     ),
     RatingData(
@@ -461,28 +459,28 @@ List<FunnelStep> _generateConversionFunnel() {
       step: 1,
       label: 'Visiteurs App/Web',
       count: 15420,
-      percentage: 100.0,
+      percentage: 100,
       color: 0xFF9E9E9E, // Gris
     ),
     FunnelStep(
       step: 2,
       label: 'Consultation menu',
       count: 12336,
-      percentage: 80.0,
+      percentage: 80,
       color: 0xFF2196F3, // Bleu
     ),
     FunnelStep(
       step: 3,
       label: 'Ajout au panier',
       count: 4928,
-      percentage: 40.0,
+      percentage: 40,
       color: 0xFFFF9800, // Orange
     ),
     FunnelStep(
       step: 4,
       label: 'Validation commande',
       count: 2957,
-      percentage: 60.0,
+      percentage: 60,
       color: 0xFFFF6F00, // Orange foncé
     ),
     FunnelStep(
@@ -496,7 +494,7 @@ List<FunnelStep> _generateConversionFunnel() {
       step: 6,
       label: 'Livraison terminée',
       count: 2385,
-      percentage: 90.0,
+      percentage: 90,
       color: 0xFF2E7D32, // Vert foncé
     ),
   ];

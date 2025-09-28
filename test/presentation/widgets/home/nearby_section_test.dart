@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:ecoplates/domain/entities/brand.dart';
 import 'package:ecoplates/domain/entities/food_offer.dart';
 import 'package:ecoplates/presentation/providers/brand_provider.dart';
 import 'package:ecoplates/presentation/providers/nearby_offers_provider.dart';
 import 'package:ecoplates/presentation/widgets/home/sections/nearby_section.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('NearbySection', () {
@@ -45,7 +44,7 @@ void main() {
         images: ['image1.jpg'],
         type: OfferType.panier,
         category: FoodCategory.diner,
-        originalPrice: 15.0,
+        originalPrice: 15,
         discountedPrice: 7.50,
         quantity: 5,
         pickupStartTime: DateTime.now().subtract(const Duration(hours: 1)),
@@ -62,8 +61,6 @@ void main() {
         ),
         merchantAddress: '123 Rue de Test, Paris',
         isVegetarian: true,
-        isVegan: false,
-        isHalal: false,
         distanceKm: 0.5, // Très proche
       ),
       FoodOffer(
@@ -75,7 +72,7 @@ void main() {
         images: ['image2.jpg'],
         type: OfferType.boulangerie,
         category: FoodCategory.petitDejeuner,
-        originalPrice: 5.0,
+        originalPrice: 5,
         discountedPrice: 2.50,
         quantity: 3,
         pickupStartTime: DateTime.now().subtract(const Duration(hours: 1)),
@@ -93,7 +90,6 @@ void main() {
         merchantAddress: '456 Rue de Test, Paris',
         isVegetarian: true,
         isVegan: true,
-        isHalal: false,
         distanceKm: 1.2, // Un peu plus loin
       ),
     ];
@@ -108,7 +104,7 @@ void main() {
             nearbyOffersProvider.overrideWith((ref) => sampleNearbyOffers),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: NearbySection())),
+          child: const MaterialApp(home: Scaffold(body: NearbySection())),
         ),
       );
 
@@ -130,7 +126,7 @@ void main() {
             nearbyOffersProvider.overrideWith((ref) => sampleNearbyOffers),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: NearbySection())),
+          child: const MaterialApp(home: Scaffold(body: NearbySection())),
         ),
       );
 
@@ -144,7 +140,7 @@ void main() {
     });
 
     testWidgets(
-      'affiche un message quand il n\'y a pas d\'offres à proximité',
+      "affiche un message quand il n'y a pas d'offres à proximité",
       (WidgetTester tester) async {
         // Arrange
         await tester.pumpWidget(
@@ -153,7 +149,7 @@ void main() {
               nearbyOffersProvider.overrideWith((ref) => const []),
               brandsProvider.overrideWith((ref) => testBrands),
             ],
-            child: MaterialApp(home: Scaffold(body: NearbySection())),
+            child: const MaterialApp(home: Scaffold(body: NearbySection())),
           ),
         );
 
@@ -177,7 +173,7 @@ void main() {
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: NearbySection())),
+          child: const MaterialApp(home: Scaffold(body: NearbySection())),
         ),
       );
 
@@ -195,7 +191,7 @@ void main() {
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: NearbySection())),
+          child: const MaterialApp(home: Scaffold(body: NearbySection())),
         ),
       );
 
@@ -216,7 +212,7 @@ void main() {
             nearbyOffersProvider.overrideWith((ref) => sampleNearbyOffers),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: NearbySection())),
+          child: const MaterialApp(home: Scaffold(body: NearbySection())),
         ),
       );
 
@@ -238,7 +234,7 @@ void main() {
             nearbyOffersProvider.overrideWith((ref) => sampleNearbyOffers),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: NearbySection())),
+          child: const MaterialApp(home: Scaffold(body: NearbySection())),
         ),
       );
 
@@ -267,7 +263,7 @@ void main() {
             nearbyOffersProvider.overrideWith((ref) => sampleNearbyOffers),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: NearbySection())),
+          child: const MaterialApp(home: Scaffold(body: NearbySection())),
         ),
       );
 
@@ -292,7 +288,7 @@ void main() {
             nearbyOffersProvider.overrideWith((ref) => sampleNearbyOffers),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: NearbySection())),
+          child: const MaterialApp(home: Scaffold(body: NearbySection())),
         ),
       );
 

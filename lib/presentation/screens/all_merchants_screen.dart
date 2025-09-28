@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/responsive/design_tokens.dart';
 import '../providers/merchants_provider.dart';
 import '../widgets/merchant_card.dart';
 
@@ -10,7 +12,7 @@ class AllMerchantsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final merchantsAsync = ref.watch(merchantsProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tous nos partenaires'),
@@ -26,31 +28,39 @@ class AllMerchantsScreen extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.store_outlined,
-                    size: 64,
-                    color: Colors.grey[400],
+                    size: EcoPlatesDesignTokens.layout.emptyStateIconSize,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                  ),
                   Text(
                     'Aucun marchand disponible',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 18,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
             );
           }
-          
+
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: EdgeInsets.symmetric(
+              horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
+              vertical: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+            ),
             itemCount: merchants.length,
             itemBuilder: (context, index) {
               final merchant = merchants[index];
               return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.only(
+                  bottom: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                ),
                 child: SizedBox(
-                  height: 280, // Hauteur fixe pour les cartes
+                  height: EcoPlatesDesignTokens.layout.merchantCardHeight(
+                    context,
+                  ),
                   child: MerchantCard(
                     merchant: merchant,
                     onTap: () {
@@ -77,18 +87,21 @@ class AllMerchantsScreen extends ConsumerWidget {
             children: [
               Icon(
                 Icons.error_outline,
-                size: 64,
-                color: Colors.red[400],
+                size: EcoPlatesDesignTokens.layout.errorStateIconSize,
+                color: Theme.of(context).colorScheme.error,
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              ),
               Text(
                 'Erreur de chargement',
-                style: TextStyle(
-                  color: Colors.red[700],
-                  fontSize: 18,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              ),
               ElevatedButton.icon(
                 onPressed: () {
                   ref.invalidate(merchantsProvider);

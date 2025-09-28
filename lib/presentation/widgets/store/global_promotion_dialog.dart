@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/services/promotion_service.dart';
 import '../../providers/store_offers_provider.dart';
 
@@ -39,7 +40,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
       title: Row(
         children: [
           Icon(Icons.local_offer, color: theme.colorScheme.primary),
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
           const Text('Promotion globale'),
         ],
       ),
@@ -56,7 +57,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: context.scaleMD_LG_XL_XXL),
 
               // Pourcentage de réduction
               TextFormField(
@@ -79,7 +80,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.scaleSM_MD_LG_XL),
 
               // Prix minimum (optionnel)
               TextFormField(
@@ -101,7 +102,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.scaleSM_MD_LG_XL),
 
               // Dates de début et fin
               Row(
@@ -116,7 +117,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: context.scaleXXS_XS_SM_MD),
                   Expanded(
                     child: _buildDateField(
                       context: context,
@@ -130,16 +131,18 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                 ],
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.scaleMD_LG_XL_XXL),
 
               // Résumé
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer.withValues(
-                    alpha: 0.3,
+                    alpha: EcoPlatesDesignTokens.opacity.subtle,
                   ),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens.radius.sm,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +153,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: context.scaleXXS_XS_SM_MD),
                     _buildSummaryItem(
                       'Réduction',
                       '${_discountController.text.isEmpty ? "0" : _discountController.text}%',
@@ -179,10 +182,12 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
         FilledButton(
           onPressed: _isLoading ? null : _applyPromotion,
           child: _isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+              ? SizedBox(
+                  width: EcoPlatesDesignTokens.size.icon(context),
+                  height: EcoPlatesDesignTokens.size.icon(context),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                  ),
                 )
               : const Text('Appliquer'),
         ),
@@ -224,7 +229,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
 
   Widget _buildSummaryItem(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: EdgeInsets.only(bottom: context.scaleXXS_XS_SM_MD / 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

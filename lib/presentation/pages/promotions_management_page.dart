@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/design_tokens.dart';
 import '../../core/services/promotion_service.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/store_offers_provider.dart';
@@ -23,7 +24,7 @@ class PromotionsManagementPage extends ConsumerWidget {
         title: Row(
           children: [
             Icon(Icons.local_offer, color: theme.colorScheme.primary),
-            const SizedBox(width: 8),
+            SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
             const Text('Gestion des promotions'),
           ],
         ),
@@ -67,26 +68,36 @@ class PromotionsManagementPage extends ConsumerWidget {
               .toList();
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(
+              EcoPlatesDesignTokens.spacing.dialogGap(context),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Statistiques rapides
                 _buildPromotionStatsCard(context, promotionStats),
-                const SizedBox(height: 24),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+                ),
 
                 // Promotions actives
                 if (offersWithPromotions.isNotEmpty) ...[
                   Text(
                     'Promotions actives (${offersWithPromotions.length})',
                     style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: EcoPlatesDesignTokens.typography.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                  ),
                   ...offersWithPromotions.map(
                     (offer) => Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
+                      padding: EdgeInsets.only(
+                        bottom: EcoPlatesDesignTokens.spacing.interfaceGap(
+                          context,
+                        ),
+                      ),
                       child: OfferPromotionManager(
                         offer: offer,
                         onPromotionUpdated: () =>
@@ -94,29 +105,42 @@ class PromotionsManagementPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
+                      context,
+                    ),
+                  ),
                 ],
 
                 // Offres sans promotion
                 Text(
                   'Ajouter une promotion (${offersWithoutPromotions.length})',
                   style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: EcoPlatesDesignTokens.typography.bold,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(
+                  height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                ),
                 if (offersWithoutPromotions.isEmpty)
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(32),
+                      padding: EdgeInsets.all(
+                        EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+                      ),
                       child: Column(
                         children: [
                           Icon(
                             Icons.local_offer_outlined,
-                            size: 64,
+                            size:
+                                EcoPlatesDesignTokens.layout.errorStateIconSize,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(
+                            height: EcoPlatesDesignTokens.spacing.interfaceGap(
+                              context,
+                            ),
+                          ),
                           Text(
                             'Toutes vos offres ont une promotion !',
                             style: theme.textTheme.bodyLarge?.copyWith(
@@ -133,7 +157,11 @@ class PromotionsManagementPage extends ConsumerWidget {
                       .take(3)
                       .map(
                         (offer) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
+                          padding: EdgeInsets.only(
+                            bottom: EcoPlatesDesignTokens.spacing.interfaceGap(
+                              context,
+                            ),
+                          ),
                           child: OfferPromotionManager(
                             offer: offer,
                             onPromotionUpdated: () =>
@@ -150,13 +178,19 @@ class PromotionsManagementPage extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error, size: 64, color: theme.colorScheme.error),
-              const SizedBox(height: 16),
+              Icon(
+                Icons.error,
+                size: EcoPlatesDesignTokens.layout.errorStateIconSize,
+                color: theme.colorScheme.error,
+              ),
+              SizedBox(
+                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              ),
               Text(
                 'Erreur lors du chargement des offres',
                 style: theme.textTheme.bodyLarge,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
               Text(
                 error.toString(),
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -164,7 +198,9 @@ class PromotionsManagementPage extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              ),
               FilledButton(
                 onPressed: () => ref.invalidate(storeOffersProvider),
                 child: const Text('Réessayer'),
@@ -186,7 +222,7 @@ class PromotionsManagementPage extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -196,12 +232,12 @@ class PromotionsManagementPage extends ConsumerWidget {
             theme.colorScheme.primaryContainer.withValues(alpha: 0.8),
           ],
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.primary.withValues(alpha: 0.08),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            blurRadius: EcoPlatesDesignTokens.elevation.largeBlur,
+            offset: EcoPlatesDesignTokens.elevation.elevatedOffset,
           ),
         ],
       ),
@@ -214,17 +250,17 @@ class PromotionsManagementPage extends ConsumerWidget {
                 Icons.analytics,
                 color: theme.colorScheme.onPrimaryContainer,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
               Text(
                 'Statistiques des promotions',
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: theme.colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: EcoPlatesDesignTokens.typography.bold,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
           Row(
             children: [
               Expanded(
@@ -257,7 +293,9 @@ class PromotionsManagementPage extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(
+            height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+          ),
           Row(
             children: [
               Expanded(
@@ -306,18 +344,20 @@ class PromotionsManagementPage extends ConsumerWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(
+            EcoPlatesDesignTokens.spacing.microGap(context),
+          ),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, size: 16, color: color),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
         Text(
           value,
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: EcoPlatesDesignTokens.typography.bold,
             color: theme.colorScheme.onPrimaryContainer,
           ),
           textAlign: TextAlign.center,
@@ -334,10 +374,11 @@ class PromotionsManagementPage extends ConsumerWidget {
   }
 
   void _showGlobalPromotionDialog(BuildContext context) {
-    unawaited(showDialog<void>(
-      context: context,
-      builder: (context) => const GlobalPromotionDialog(),
-    ),
+    unawaited(
+      showDialog<void>(
+        context: context,
+        builder: (context) => const GlobalPromotionDialog(),
+      ),
     );
   }
 
@@ -357,54 +398,58 @@ class PromotionsManagementPage extends ConsumerWidget {
   }
 
   void _showClearAllPromotionsDialog(BuildContext context, WidgetRef ref) {
-    unawaited(showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Supprimer toutes les promotions'),
-        content: const Text(
-          'Êtes-vous sûr de vouloir supprimer toutes les promotions actives ? '
-          'Cette action est irréversible.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Annuler'),
+    unawaited(
+      showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Supprimer toutes les promotions'),
+          content: const Text(
+            'Êtes-vous sûr de vouloir supprimer toutes les promotions actives ? '
+            'Cette action est irréversible.',
           ),
-          FilledButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-
-              try {
-                await ref
-                    .read(storeOffersProvider.notifier)
-                    .removeAllPromotions();
-
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Toutes les promotions ont été supprimées'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                }
-              } on Exception catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Erreur lors de la suppression: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Annuler'),
             ),
-            child: const Text('Supprimer'),
-          ),
-        ],
+            FilledButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+
+                try {
+                  await ref
+                      .read(storeOffersProvider.notifier)
+                      .removeAllPromotions();
+
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Toutes les promotions ont été supprimées',
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                } on Exception catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Erreur lors de la suppression: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: const Text('Supprimer'),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

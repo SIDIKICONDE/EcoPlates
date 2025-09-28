@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/providers/image_preload_provider.dart';
+import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/nearby_offers_provider.dart';
 import '../../../providers/offer_reservation_provider.dart';
@@ -11,11 +13,44 @@ import '../../offer_detail/index.dart';
 import 'categories_section.dart';
 
 /// Section des offres près de chez vous avec géolocalisation
-class NearbySection extends ConsumerWidget {
+class NearbySection extends ConsumerStatefulWidget {
   const NearbySection({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NearbySection> createState() => _NearbySectionState();
+}
+
+class _NearbySectionState extends ConsumerState<NearbySection>
+    with AutoPreloadImages {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.hasClients && mounted) {
+      final itemWidth =
+          (MediaQuery.of(context).size.width * 0.85) +
+          context.scaleXS_SM_MD_LG; // largeur + padding
+      final scrollOffset = _scrollController.offset;
+      final visibleIndexValue = (scrollOffset / itemWidth).round();
+      visibleIndex = visibleIndexValue;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final allOffers = ref.watch(nearbyOffersProvider);
     // Watch providers to trigger rebuilds when they change
     ref
@@ -27,20 +62,33 @@ class NearbySection extends ConsumerWidget {
       children: [
         // En-tête de section avec localisation
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          padding: EdgeInsets.fromLTRB(
+            context.scaleMD_LG_XL_XXL,
+            context.scaleXXS_XS_SM_MD,
+            context.scaleMD_LG_XL_XXL,
+            0,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
                   'Près de chez vous',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: EcoPlatesDesignTokens.typography.titleSize(
+                      context,
+                    ),
+                    fontWeight: EcoPlatesDesignTokens.typography.bold,
+                  ),
                 ),
               ),
               // Bouton de filtre distance
               IconButton(
-                onPressed: () => _showDistanceFilter(context, ref),
-                icon: Icon(Icons.tune, color: Theme.of(context).primaryColor),
+                onPressed: () => _showDistanceFilter(context),
+                icon: Icon(
+                  Icons.tune,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ],
           ),
@@ -48,11 +96,11 @@ class NearbySection extends ConsumerWidget {
 
         // Liste des offres à proximité
         SizedBox(
-          height: 280,
+          height: EcoPlatesDesignTokens.layout.merchantCardHeight(context),
           child: _buildOffersList(context, ref, allOffers),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: context.scaleMD_LG_XL_XXL),
       ],
     );
   }
@@ -63,7 +111,12 @@ class NearbySection extends ConsumerWidget {
     List<FoodOffer> allOffers,
   ) {
     // Filtrer les offres selon la catégorie sélectionnée
-    final offers = ref.watch(filterOffersByCategoryProvider(allOffers));
+    final selectedCategory = ref.watch(selectedCategoryProvider);
+    final offers = selectedCategory == null
+        ? allOffers
+        : allOffers
+              .where((offer) => offer.category == selectedCategory)
+              .toList();
 
     if (offers.isEmpty) {
       return Center(
@@ -72,39 +125,62 @@ class NearbySection extends ConsumerWidget {
           children: [
             Icon(
               Icons.location_off_outlined,
-              size: 48,
-              color: Colors.grey[400],
+              size: EcoPlatesDesignTokens.size.modalIcon(context),
+              color: Theme.of(context).colorScheme.onSurface.withValues(
+                alpha: EcoPlatesDesignTokens.opacity.subtle,
+              ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: context.scaleXS_SM_MD_LG),
             Text(
               'Aucune offre à proximité',
-              style: TextStyle(color: Colors.grey[600], fontSize: 16),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                ),
+                fontSize: EcoPlatesDesignTokens.typography.text(context),
+              ),
             ),
             Text(
               'Élargissez votre zone de recherche',
-              style: TextStyle(color: Colors.grey[500], fontSize: 14),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                ),
+                fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              ),
             ),
           ],
         ),
       );
     }
 
+    // Démarrer le préchargement des images proches de l'index visible
+    final imageUrls = offers
+        .where((FoodOffer o) => o.images.isNotEmpty)
+        .map((FoodOffer o) => o.images.first)
+        .toList();
+    startAutoPreload(imageUrls: imageUrls, ref: ref);
+
     // Afficher les offres avec indicateur de distance
     return ListView.builder(
+      controller: _scrollController,
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: EdgeInsets.symmetric(horizontal: context.scaleMD_LG_XL_XXL),
       physics: const BouncingScrollPhysics(),
       itemCount: offers.length,
       itemBuilder: (context, index) {
         final offer = offers[index];
         final distance =
             offer.distanceKm ??
-            (0.3 + (index * 0.4)); // Distance réelle si disponible
+            (DesignConstants.baseDistance +
+                (index *
+                    DesignConstants
+                        .distanceIncrement)); // Distance réelle si disponible
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
+          padding: EdgeInsets.symmetric(horizontal: context.scaleXS_SM_MD_LG),
           child: SizedBox(
-            width: 340,
+            width: MediaQuery.of(context).size.width * 0.85,
             child: Stack(
               children: [
                 OfferCard(
@@ -117,21 +193,29 @@ class NearbySection extends ConsumerWidget {
                 ),
                 // Badge distance en haut à droite
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: context.scaleXS_SM_MD_LG,
+                  right: context.scaleXS_SM_MD_LG,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.scaleXS_SM_MD_LG,
+                      vertical: context.scaleXXS_XS_SM_MD,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      borderRadius: BorderRadius.circular(12),
+                      color: Theme.of(context).colorScheme.surface.withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        EcoPlatesDesignTokens.radius.xxl,
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
+                          color: Theme.of(context).colorScheme.shadow
+                              .withValues(
+                                alpha: EcoPlatesDesignTokens.opacity.subtle,
+                              ),
+                          blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
+                          offset:
+                              EcoPlatesDesignTokens.elevation.standardOffset,
                         ),
                       ],
                     ),
@@ -140,16 +224,27 @@ class NearbySection extends ConsumerWidget {
                       children: [
                         Icon(
                           Icons.directions_walk,
-                          size: 14,
-                          color: Colors.grey[700],
+                          size: EcoPlatesDesignTokens.size.indicator(context),
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withValues(
+                                alpha:
+                                    EcoPlatesDesignTokens.opacity.almostOpaque,
+                              ),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: context.scaleXXS_XS_SM_MD),
                         Text(
                           '${(distance * 15).round()} min',
                           style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[700],
+                            fontSize: EcoPlatesDesignTokens.typography.hint(
+                              context,
+                            ),
+                            fontWeight: EcoPlatesDesignTokens.typography.bold,
+                            color: Theme.of(context).colorScheme.onSurface
+                                .withValues(
+                                  alpha: EcoPlatesDesignTokens
+                                      .opacity
+                                      .almostOpaque,
+                                ),
                           ),
                         ),
                       ],
@@ -164,12 +259,14 @@ class NearbySection extends ConsumerWidget {
     );
   }
 
-  void _showDistanceFilter(BuildContext context, WidgetRef ref) {
+  void _showDistanceFilter(BuildContext context) {
     unawaited(
       showModalBottomSheet<void>(
         context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
+          ),
         ),
         builder: (context) => _DistanceFilterModal(
           currentRadius: ref.read(searchRadiusProvider),
@@ -191,20 +288,27 @@ class NearbySection extends ConsumerWidget {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (context) => Container(
-          height: MediaQuery.of(context).size.height * 0.9,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          height:
+              MediaQuery.of(context).size.height *
+              EcoPlatesDesignTokens.layout.modalHeightFactor(context),
+          decoration: BoxDecoration(
+            color: EcoPlatesDesignTokens.colors.modalBackground,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
+            ),
           ),
           child: Column(
             children: [
               // Header avec indicateur de distance
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.xxl),
                 decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(20),
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest
+                      .withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+                      ),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(EcoPlatesDesignTokens.radius.xxl),
                   ),
                 ),
                 child: Row(
@@ -215,25 +319,40 @@ class NearbySection extends ConsumerWidget {
                       children: [
                         Text(
                           offer.merchantName,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          style: TextStyle(
+                            fontSize: EcoPlatesDesignTokens.typography
+                                .modalContent(context),
+                            fontWeight: EcoPlatesDesignTokens.typography.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: context.scaleXXS_XS_SM_MD),
                         Row(
                           children: [
                             Icon(
                               Icons.location_on,
-                              size: 14,
-                              color: Colors.grey[600],
+                              size: EcoPlatesDesignTokens.size.indicator(
+                                context,
+                              ),
+                              color: Theme.of(context).colorScheme.onSurface
+                                  .withValues(
+                                    alpha: EcoPlatesDesignTokens
+                                        .opacity
+                                        .almostOpaque,
+                                  ),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: context.scaleXXS_XS_SM_MD),
                             Text(
                               'À 0.5 km • 8 min à pied',
                               style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
+                                fontSize: EcoPlatesDesignTokens.typography.hint(
+                                  context,
+                                ),
+                                color: Theme.of(context).colorScheme.onSurface
+                                    .withValues(
+                                      alpha: EcoPlatesDesignTokens
+                                          .opacity
+                                          .almostOpaque,
+                                    ),
                               ),
                             ),
                           ],
@@ -251,20 +370,23 @@ class NearbySection extends ConsumerWidget {
               // Contenu de l'offre
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.xxl),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       OfferInfoSection(offer: offer),
-                      const SizedBox(height: 24),
+                      SizedBox(height: context.scaleLG_XL_XXL_XXXL),
                       OfferDetailsSection(offer: offer),
-                      const SizedBox(height: 24),
+                      SizedBox(height: context.scaleLG_XL_XXL_XXXL),
                       OfferAddressSection(offer: offer),
-                      const SizedBox(height: 24),
+                      SizedBox(height: context.scaleLG_XL_XXL_XXXL),
                       OfferBadgesSection(offer: offer),
-                      const SizedBox(height: 24),
+                      SizedBox(height: context.scaleLG_XL_XXL_XXXL),
                       OfferMetadataSection(offer: offer),
-                      const SizedBox(height: 100),
+                      SizedBox(
+                        height:
+                            EcoPlatesDesignTokens.layout.mainContainerMinWidth,
+                      ),
                     ],
                   ),
                 ),
@@ -273,8 +395,13 @@ class NearbySection extends ConsumerWidget {
               // Barre de réservation
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(top: BorderSide(color: Colors.grey[200]!)),
+                  color: EcoPlatesDesignTokens.colors.modalBackground,
+                  border: Border(
+                    top: BorderSide(
+                      color: EcoPlatesDesignTokens.colors.subtleBorder,
+                      width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+                    ),
+                  ),
                 ),
                 child: Consumer(
                   builder: (context, ref, _) {
@@ -349,7 +476,7 @@ class _DistanceFilterModalState extends State<_DistanceFilterModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.xxxl),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,21 +484,26 @@ class _DistanceFilterModalState extends State<_DistanceFilterModal> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Distance maximale',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
+                  fontWeight: EcoPlatesDesignTokens.typography.bold,
+                ),
               ),
               Text(
                 '${_selectedRadius.toStringAsFixed(1)} km',
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                    context,
+                  ),
+                  fontWeight: EcoPlatesDesignTokens.typography.bold,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
           Slider(
             value: _selectedRadius,
             min: 0.5,
@@ -384,32 +516,53 @@ class _DistanceFilterModalState extends State<_DistanceFilterModal> {
               });
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('0.5 km', style: TextStyle(color: Colors.grey[600])),
-              Text('5.0 km', style: TextStyle(color: Colors.grey[600])),
+              Text(
+                '0.5 km',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                  ),
+                ),
+              ),
+              Text(
+                '5.0 km',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                  ),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () => widget.onRadiusChanged(_selectedRadius),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(
+                  vertical: context.scaleMD_LG_XL_XXL,
+                ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens.radius.md,
+                  ),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Appliquer',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.text(context),
+                  fontWeight: EcoPlatesDesignTokens.typography.bold,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: context.scaleXS_SM_MD_LG),
         ],
       ),
     );

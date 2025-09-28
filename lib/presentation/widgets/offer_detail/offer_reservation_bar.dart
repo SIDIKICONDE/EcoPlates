@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 
 /// Barre de réservation flottante en bas de l'écran
@@ -18,13 +20,15 @@ class OfferReservationBar extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
+            color: EcoPlatesDesignTokens.colors.overlayBlack.withValues(
+              alpha: EcoPlatesDesignTokens.opacity.subtle,
+            ),
+            blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
             offset: const Offset(0, -5),
           ),
         ],
@@ -38,27 +42,35 @@ class OfferReservationBar extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: offer.isAvailable && !isReserving ? onReserve : null,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                    vertical: context.scaleMD_LG_XL_XXL,
+                  ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(
+                      EcoPlatesDesignTokens.radius.lg,
+                    ),
                   ),
                 ),
                 child: isReserving
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
+                    ? SizedBox(
+                        height: EcoPlatesDesignTokens.size.indicator(context),
+                        width: EcoPlatesDesignTokens.size.indicator(context),
                         child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
+                          strokeWidth: EcoPlatesDesignTokens
+                              .layout
+                              .loadingIndicatorStrokeWidth,
+                          color: EcoPlatesDesignTokens.colors.textPrimary,
                         ),
                       )
                     : Text(
                         offer.isFree
                             ? 'Réserver gratuitement'
                             : 'Réserver pour ${offer.discountedPrice.toStringAsFixed(2)}€',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        style: TextStyle(
+                          fontSize: EcoPlatesDesignTokens.typography.text(
+                            context,
+                          ),
+                          fontWeight: EcoPlatesDesignTokens.typography.bold,
                         ),
                       ),
               ),

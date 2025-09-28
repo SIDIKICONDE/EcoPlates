@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/analytics_stats.dart';
 import '../../providers/analytics_provider.dart';
+import 'kpi_cards/kpi_cards.dart';
 
 /// Header de la page d'analytics avec les KPIs principaux
 ///
@@ -30,39 +31,86 @@ class AnalyticsHeader extends ConsumerWidget {
 
   Widget _buildHeader(BuildContext context, AnalyticsStats analytics) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isWide = screenWidth > 768;
+    final isWide = screenWidth > DesignConstants.tabletBreakpoint;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Titre avec période
           Row(
             children: [
-              Text(
-                'Performances',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              // Icône et titre amélioré
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(
+                      context.scaleXXS_XS_SM_MD,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withValues(
+                            alpha: EcoPlatesDesignTokens.opacity.subtle,
+                          ),
+                      borderRadius: BorderRadius.circular(
+                        context.scaleFieldRadius,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.insights,
+                      size: context.scaleIconStandard,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  SizedBox(width: context.scaleSM_MD_LG_XL),
+                  Text(
+                    'Business Insights',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .kpiCardValueLetterSpacing,
+                    ),
+                  ),
+                ],
               ),
               const Spacer(),
               Chip(
                 label: Text(
                   analytics.period.label,
-                  style: const TextStyle(fontSize: 12),
+                  style: TextStyle(
+                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                    fontWeight: EcoPlatesDesignTokens.typography.semiBold,
+                  ),
                 ),
-                backgroundColor: Theme.of(
-                  context,
-                ).colorScheme.secondaryContainer,
+                backgroundColor:
+                    Theme.of(
+                      context,
+                    ).colorScheme.secondaryContainer.withValues(
+                      alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                    ),
+                side: BorderSide(
+                  color:
+                      Theme.of(
+                        context,
+                      ).colorScheme.secondary.withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.subtle,
+                      ),
+                ),
               ),
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
           // Grille des KPIs
-          if (isWide) _buildWideLayout(context, analytics) else _buildCompactLayout(context, analytics),
+          if (isWide)
+            _buildWideLayout(context, analytics)
+          else
+            _buildCompactLayout(context, analytics),
         ],
       ),
     );
@@ -70,284 +118,140 @@ class AnalyticsHeader extends ConsumerWidget {
 
   Widget _buildWideLayout(BuildContext context, AnalyticsStats analytics) {
     return Row(
-      children: [
-        Expanded(
-          child: _buildKpiCard(
-            context,
-            "Chiffre d'affaires",
-            _formatCurrency(analytics.totalRevenue),
-            Icons.euro,
-            analytics.previousPeriodComparison?.revenueGrowth,
-            analytics.previousPeriodComparison?.isPositiveRevenue,
+      children: KpiConfigs.all.map((config) {
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              right: config != KpiConfigs.all.last
+                  ? context.scaleSM_MD_LG_XL
+                  : 0,
+            ),
+            child: KpiCard(
+              config: config,
+              analytics: analytics,
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildKpiCard(
-            context,
-            'Commandes',
-            analytics.totalOrders.toString(),
-            Icons.shopping_bag,
-            analytics.previousPeriodComparison?.ordersGrowth,
-            analytics.previousPeriodComparison?.isPositiveOrders,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildKpiCard(
-            context,
-            'Panier moyen',
-            _formatCurrency(analytics.averageOrderValue),
-            Icons.shopping_cart,
-            analytics.previousPeriodComparison?.averageOrderGrowth,
-            analytics.previousPeriodComparison?.isPositiveAverageOrder,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildKpiCard(
-            context,
-            'Taux conversion',
-            '${analytics.conversionRate.toStringAsFixed(1)}%',
-            Icons.trending_up,
-            analytics.previousPeriodComparison?.conversionRateGrowth,
-            analytics.previousPeriodComparison?.isPositiveConversion,
-          ),
-        ),
-      ],
+        );
+      }).toList(),
     );
   }
 
   Widget _buildCompactLayout(BuildContext context, AnalyticsStats analytics) {
+    final firstRow = KpiConfigs.all.take(2);
+    final secondRow = KpiConfigs.all.skip(2);
+
     return Column(
       children: [
         Row(
-          children: [
-            Expanded(
-              child: _buildKpiCard(
-                context,
-                'CA',
-                _formatCurrency(analytics.totalRevenue),
-                Icons.euro,
-                analytics.previousPeriodComparison?.revenueGrowth,
-                analytics.previousPeriodComparison?.isPositiveRevenue,
+          children: firstRow.map((config) {
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: config != firstRow.last ? context.scaleSM_MD_LG_XL : 0,
+                ),
+                child: KpiCard(
+                  config: config,
+                  analytics: analytics,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildKpiCard(
-                context,
-                'Commandes',
-                analytics.totalOrders.toString(),
-                Icons.shopping_bag,
-                analytics.previousPeriodComparison?.ordersGrowth,
-                analytics.previousPeriodComparison?.isPositiveOrders,
-              ),
-            ),
-          ],
+            );
+          }).toList(),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: context.scaleSM_MD_LG_XL),
         Row(
-          children: [
-            Expanded(
-              child: _buildKpiCard(
-                context,
-                'Panier moy.',
-                _formatCurrency(analytics.averageOrderValue),
-                Icons.shopping_cart,
-                analytics.previousPeriodComparison?.averageOrderGrowth,
-                analytics.previousPeriodComparison?.isPositiveAverageOrder,
+          children: secondRow.map((config) {
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: config != secondRow.last
+                      ? context.scaleSM_MD_LG_XL
+                      : 0,
+                ),
+                child: KpiCard(
+                  config: config,
+                  analytics: analytics,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildKpiCard(
-                context,
-                'Conv.',
-                '${analytics.conversionRate.toStringAsFixed(1)}%',
-                Icons.trending_up,
-                analytics.previousPeriodComparison?.conversionRateGrowth,
-                analytics.previousPeriodComparison?.isPositiveConversion,
-              ),
-            ),
-          ],
+            );
+          }).toList(),
         ),
       ],
     );
   }
 
-  Widget _buildKpiCard(
-    BuildContext context,
-    String title,
-    String value,
-    IconData icon,
-    double? growthPercentage,
-    bool? isPositiveGrowth,
-  ) {
-    final theme = Theme.of(context);
-
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      fontSize: 12,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                value,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-
-            if (growthPercentage != null && isPositiveGrowth != null) ...[
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Icon(
-                    isPositiveGrowth ? Icons.trending_up : Icons.trending_down,
-                    size: 16,
-                    color: isPositiveGrowth ? Colors.green : Colors.red,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${growthPercentage.abs().toStringAsFixed(1)}%',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: isPositiveGrowth ? Colors.green : Colors.red,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildLoadingHeader(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWide = screenWidth > DesignConstants.tabletBreakpoint;
+
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Skeleton du titre
           Container(
-            height: 28,
-            width: 150,
+            height: EcoPlatesDesignTokens.size.buttonHeight(context),
+            width: DesignConstants.hundred + DesignConstants.fifty,
             decoration: BoxDecoration(
               color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Skeleton des cartes KPI
-          Row(
-            children: List.generate(
-              2,
-              (index) => Expanded(
-                child: Card(
-                  child: Container(
-                    height: 100,
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 16,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          height: 24,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              borderRadius: BorderRadius.circular(
+                EcoPlatesDesignTokens.radius.xs,
               ),
             ),
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
-          Row(
-            children: List.generate(
-              2,
-              (index) => Expanded(
-                child: Card(
-                  child: Container(
-                    height: 100,
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 16,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          height: 24,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ],
+          // Skeleton des cartes KPI avec shimmer
+          if (isWide)
+            Row(
+              children: KpiConfigs.all.map((config) {
+                return Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      right: config != KpiConfigs.all.last
+                          ? context.scaleSM_MD_LG_XL
+                          : 0,
                     ),
+                    child: const KpiCardShimmer(),
                   ),
+                );
+              }).toList(),
+            )
+          else
+            Column(
+              children: [
+                Row(
+                  children: KpiConfigs.all.take(2).map((config) {
+                    return Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: config != KpiConfigs.all.take(2).last
+                              ? context.scaleSM_MD_LG_XL
+                              : 0,
+                        ),
+                        child: const KpiCardShimmer(),
+                      ),
+                    );
+                  }).toList(),
                 ),
-              ),
+                SizedBox(height: context.scaleSM_MD_LG_XL),
+                Row(
+                  children: KpiConfigs.all.skip(2).map((config) {
+                    return Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: config != KpiConfigs.all.skip(2).last
+                              ? context.scaleSM_MD_LG_XL
+                              : 0,
+                        ),
+                        child: const KpiCardShimmer(),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
-          ),
         ],
       ),
     );
@@ -355,23 +259,23 @@ class AnalyticsHeader extends ConsumerWidget {
 
   Widget _buildErrorHeader(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
           child: Column(
             children: [
               Icon(
                 Icons.error_outline,
-                size: 48,
+                size: EcoPlatesDesignTokens.size.minTouchTarget,
                 color: Theme.of(context).colorScheme.error,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.scaleMD_LG_XL_XXL),
               Text(
                 'Erreur de chargement',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: context.scaleXXS_XS_SM_MD),
               Text(
                 'Impossible de charger les données analytiques',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -379,7 +283,7 @@ class AnalyticsHeader extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.scaleMD_LG_XL_XXL),
               FilledButton.icon(
                 onPressed: () => ref.refreshAnalytics(),
                 icon: const Icon(Icons.refresh),
@@ -390,14 +294,5 @@ class AnalyticsHeader extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  String _formatCurrency(double amount) {
-    final formatter = NumberFormat.currency(
-      locale: 'fr_FR',
-      symbol: '€',
-      decimalDigits: amount % 1 == 0 ? 0 : 2,
-    );
-    return formatter.format(amount);
   }
 }

@@ -1,6 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/responsive/design_tokens.dart';
+import '../../core/services/image_cache_service.dart';
+import '../../core/widgets/eco_cached_image.dart';
 import '../../domain/entities/brand.dart';
 
 /// Carte horizontale avec image de fond de nourriture
@@ -17,16 +19,20 @@ class BrandCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 100, // Hauteur fixe pour la carte
+        height: EcoPlatesDesignTokens.size.buttonHeight(context) * 2.5,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
           boxShadow: [
             BoxShadow(
               color: isDarkMode
-                  ? Colors.black.withValues(alpha: 0.4)
-                  : Colors.black.withValues(alpha: 0.12),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
+                  ? Colors.black.withValues(
+                      alpha: EcoPlatesDesignTokens.opacity.subtle,
+                    )
+                  : Colors.black.withValues(
+                      alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                    ),
+              blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
+              offset: EcoPlatesDesignTokens.elevation.standardOffset,
             ),
           ],
         ),
@@ -35,25 +41,29 @@ class BrandCard extends StatelessWidget {
             // Image de fond de nourriture
             Positioned.fill(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: CachedNetworkImage(
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.md,
+                ),
+                child: EcoCachedImage(
                   imageUrl: _getFoodImageUrl(brand.category),
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
+                  size: ImageSize.small,
+                  placeholder: Container(
                     color: isDarkMode
                         ? Colors.grey.shade800
                         : Colors.grey.shade100,
                   ),
-                  errorWidget: (context, url, error) => Container(
+                  errorWidget: Container(
                     decoration: BoxDecoration(
                       color: isDarkMode
                           ? Colors.grey.shade800
                           : Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(
+                        EcoPlatesDesignTokens.radius.md,
+                      ),
                     ),
                     child: Icon(
                       Icons.fastfood,
-                      size: 40,
+                      size: EcoPlatesDesignTokens.size.icon(context) * 2,
                       color: Colors.grey.shade500,
                     ),
                   ),
@@ -64,7 +74,9 @@ class BrandCard extends StatelessWidget {
             // Overlay gradient pour la lisibilité
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.md,
+                ),
                 gradient: LinearGradient(
                   colors: [
                     Colors.black.withValues(alpha: 0.7),
@@ -76,168 +88,253 @@ class BrandCard extends StatelessWidget {
 
             // Contenu principal
             Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
+              padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+              child: Stack(
                 children: [
-                  // Logo Section
-                  Container(
-                    width: 60,
-                    height: 60,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.95),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
+                  // Zone texte pleine largeur, avec marge basse pour le logo
+                  Positioned.fill(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        bottom:
+                            EcoPlatesDesignTokens.size.icon(context) * 3 +
+                            context.scaleXXS_XS_SM_MD,
                       ),
-                    ),
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: CachedNetworkImage(
-                            imageUrl: brand.logoUrl,
-                            fit: BoxFit.contain,
-                            placeholder: (context, url) => SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  theme.primaryColor.withValues(alpha: 0.5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // Brand Name - Taille augmentée
+                          Text(
+                            brand.name,
+                            style: TextStyle(
+                              fontSize:
+                                  EcoPlatesDesignTokens.typography.titleSize(
+                                    context,
+                                  ) +
+                                  4, // Augmentation de la taille du titre
+                              fontWeight: FontWeight.bold, // Plus gras
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  blurRadius:
+                                      EcoPlatesDesignTokens.elevation.smallBlur,
                                 ),
-                              ),
+                              ],
                             ),
-                            errorWidget: (context, url, error) => Icon(
-                              Icons.storefront_outlined,
-                              size: 24,
-                              color: theme.primaryColor,
-                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
+                          SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
 
-                        // Badge Premium/New
-                        if (brand.isPremium || brand.isNew)
-                          Positioned(
-                            top: -2,
-                            right: -2,
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: brand.isPremium
-                                    ? Colors.amber.shade100
-                                    : Colors.green.shade100,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white),
-                              ),
-                              child: Icon(
-                                brand.isPremium
-                                    ? Icons.star
-                                    : Icons.new_releases,
-                                size: 8,
-                                color: brand.isPremium
-                                    ? Colors.amber.shade700
-                                    : Colors.green.shade700,
-                              ),
+                          // Pousse le sous-titre et les offres vers le bas
+                          const Spacer(),
+
+                          // Sous-titre et offres décalés vers la droite
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left:
+                                  EcoPlatesDesignTokens.size.icon(context) * 3 +
+                                  context.scaleXXS_XS_SM_MD,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Category - Taille augmentée
+                                Text(
+                                  brand.category,
+                                  style: TextStyle(
+                                    fontSize: EcoPlatesDesignTokens.typography
+                                        .text(
+                                          context,
+                                        ), // Changé de hint à text pour plus grand
+                                    fontWeight:
+                                        FontWeight.w500, // Ajout du poids
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: EcoPlatesDesignTokens
+                                            .elevation
+                                            .smallBlur,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                SizedBox(
+                                  height: context.scaleXXS_XS_SM_MD * 1.5,
+                                ),
+
+                                // Stats Row
+                                Row(
+                                  children: [
+                                    // Offers
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: context.scaleXXS_XS_SM_MD,
+                                        vertical: context.scaleXXS_XS_SM_MD / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: EcoPlatesDesignTokens
+                                              .opacity
+                                              .pressed,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                          EcoPlatesDesignTokens.radius.sm,
+                                        ),
+                                        border: Border.all(
+                                          color: Colors.white.withValues(
+                                            alpha: EcoPlatesDesignTokens
+                                                .opacity
+                                                .subtle,
+                                          ),
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        '${brand.activeOffers} offres',
+                                        style: TextStyle(
+                                          fontSize: EcoPlatesDesignTokens
+                                              .typography
+                                              .hint(
+                                                context,
+                                              ),
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      width: context.scaleXXS_XS_SM_MD,
+                                    ),
+
+                                    // Discount
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: context.scaleXXS_XS_SM_MD,
+                                        vertical: context.scaleXXS_XS_SM_MD / 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.shade600,
+                                        borderRadius: BorderRadius.circular(
+                                          EcoPlatesDesignTokens.radius.sm,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        '-${brand.averageDiscount.toInt()}%',
+                                        style: TextStyle(
+                                          fontSize: EcoPlatesDesignTokens
+                                              .typography
+                                              .hint(
+                                                context,
+                                              ),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+
+                                    const Spacer(),
+
+                                    // Arrow
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size:
+                                          EcoPlatesDesignTokens.size.icon(
+                                            context,
+                                          ) /
+                                          2,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
-                  const SizedBox(width: 12),
-
-                  // Info Section
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Brand Name
-                        Text(
-                          brand.name,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            shadows: [Shadow(blurRadius: 4)],
+                  // Logo en bas à gauche
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      width: EcoPlatesDesignTokens.size.icon(context) * 3,
+                      height: EcoPlatesDesignTokens.size.icon(context) * 3,
+                      padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.95),
+                        borderRadius: BorderRadius.circular(
+                          EcoPlatesDesignTokens.radius.sm,
+                        ),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: EcoCachedImage(
+                              imageUrl: brand.logoUrl,
+                              width:
+                                  EcoPlatesDesignTokens.size.icon(context) * 2,
+                              height:
+                                  EcoPlatesDesignTokens.size.icon(context) * 2,
+                              fit: BoxFit.contain,
+                              size: ImageSize.thumbnail,
+                              placeholder: SizedBox(
+                                width: EcoPlatesDesignTokens.size.icon(context),
+                                height: EcoPlatesDesignTokens.size.icon(
+                                  context,
+                                ),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    theme.primaryColor.withValues(alpha: 0.5),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: Icon(
+                                Icons.storefront_outlined,
+                                size: EcoPlatesDesignTokens.size.icon(context),
+                                color: theme.primaryColor,
+                              ),
+                            ),
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2),
 
-                        // Category
-                        Text(
-                          brand.category,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white.withValues(alpha: 0.9),
-                            shadows: const [Shadow(blurRadius: 2)],
-                          ),
-                        ),
-
-                        const SizedBox(height: 6),
-
-                        // Stats Row
-                        Row(
-                          children: [
-                            // Offers
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.3),
-                                  width: 0.5,
+                          // Badge Premium/New
+                          if (brand.isPremium || brand.isNew)
+                            Positioned(
+                              top: -context.scaleXXS_XS_SM_MD / 2,
+                              right: -context.scaleXXS_XS_SM_MD / 2,
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                  context.scaleXXS_XS_SM_MD / 4,
                                 ),
-                              ),
-                              child: Text(
-                                '${brand.activeOffers} offres',
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
+                                decoration: BoxDecoration(
+                                  color: brand.isPremium
+                                      ? Colors.amber.shade100
+                                      : Colors.green.shade100,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white),
+                                ),
+                                child: Icon(
+                                  brand.isPremium
+                                      ? Icons.star
+                                      : Icons.new_releases,
+                                  size:
+                                      EcoPlatesDesignTokens.size.icon(context) /
+                                      3,
+                                  color: brand.isPremium
+                                      ? Colors.amber.shade700
+                                      : Colors.green.shade700,
                                 ),
                               ),
                             ),
-
-                            const SizedBox(width: 8),
-
-                            // Discount
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 1,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.green.shade600,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                '-${brand.averageDiscount.toInt()}%',
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-
-                            const Spacer(),
-
-                            // Arrow
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 12,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

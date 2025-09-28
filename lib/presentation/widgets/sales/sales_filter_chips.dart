@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive.dart';
 import '../../../domain/entities/sale.dart';
 import '../../providers/sales_provider.dart';
 
@@ -28,8 +29,11 @@ class SalesFilterChips extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(filters.period.label),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.arrow_drop_down, size: 18),
+                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                  Icon(
+                    Icons.arrow_drop_down,
+                    size: context.scaleIconStandard,
+                  ),
                 ],
               ),
               backgroundColor: theme.colorScheme.primaryContainer,
@@ -46,13 +50,20 @@ class SalesFilterChips extends ConsumerWidget {
                     if (filters.period == period)
                       Icon(
                         Icons.check,
-                        size: 18,
+                        size: context.scaleIconStandard,
                         color: theme.colorScheme.primary,
                       )
                     else
-                      const SizedBox(width: 18),
-                    const SizedBox(width: 8),
-                    Text(period.label),
+                      SizedBox(width: context.scaleIconStandard),
+                    SizedBox(width: context.scaleSM_MD_LG_XL),
+                    Text(
+                      period.label,
+                      style: TextStyle(
+                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                          context,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -62,7 +73,7 @@ class SalesFilterChips extends ConsumerWidget {
             },
           ),
 
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleSM_MD_LG_XL),
 
           // Filtre par statut
           PopupMenuButton<Object>(
@@ -72,8 +83,11 @@ class SalesFilterChips extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(filters.status?.label ?? 'Tous les statuts'),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.arrow_drop_down, size: 18),
+                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                  Icon(
+                    Icons.arrow_drop_down,
+                    size: context.scaleIconStandard,
+                  ),
                 ],
               ),
               backgroundColor: filters.status != null
@@ -96,9 +110,16 @@ class SalesFilterChips extends ConsumerWidget {
             ),
             itemBuilder: (context) {
               final items = <PopupMenuEntry<Object>>[
-                const PopupMenuItem<Object>(
+                PopupMenuItem<Object>(
                   value: _StatusMenuCmd.all,
-                  child: Text('Tous les statuts'),
+                  child: Text(
+                    'Tous les statuts',
+                    style: TextStyle(
+                      fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                        context,
+                      ),
+                    ),
+                  ),
                 ),
                 const PopupMenuDivider(),
                 ...SaleStatus.values.map((status) {
@@ -107,8 +128,8 @@ class SalesFilterChips extends ConsumerWidget {
                     child: Row(
                       children: [
                         Container(
-                          width: 12,
-                          height: 12,
+                          width: context.scaleXXS_XS_SM_MD,
+                          height: context.scaleXXS_XS_SM_MD,
                           decoration: BoxDecoration(
                             color: Color(
                               int.parse(
@@ -118,8 +139,14 @@ class SalesFilterChips extends ConsumerWidget {
                             shape: BoxShape.circle,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(status.label),
+                        SizedBox(width: context.scaleSM_MD_LG_XL),
+                        Text(
+                          status.label,
+                          style: TextStyle(
+                            fontSize: EcoPlatesDesignTokens.typography
+                                .modalContent(context),
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -137,26 +164,40 @@ class SalesFilterChips extends ConsumerWidget {
             },
           ),
 
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleSM_MD_LG_XL),
 
           // Recherche
           SizedBox(
-            width: 200,
-            height: 32,
+            width: context.applyPattern([
+              180.0, // mobile
+              220.0, // tablet
+              250.0, // desktop
+              280.0, // desktop large
+            ]),
+            height: context.scaleButtonHeight,
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Rechercher...',
-                hintStyle: const TextStyle(fontSize: 14),
-                prefixIcon: const Icon(Icons.search, size: 18),
+                hintStyle: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  size: context.scaleIconStandard,
+                ),
                 filled: true,
                 fillColor: theme.colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens.radius.xxl,
+                  ),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.zero,
               ),
-              style: const TextStyle(fontSize: 14),
+              style: TextStyle(
+                fontSize: EcoPlatesDesignTokens.typography.text(context),
+              ),
               onChanged: (value) {
                 ref.read(salesFilterProvider.notifier).updateSearchQuery(value);
               },

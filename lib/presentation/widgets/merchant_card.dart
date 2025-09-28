@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../core/responsive/design_tokens.dart';
 import '../../core/utils/accessibility_helper.dart';
 import '../../core/utils/animation_manager.dart';
 import '../../domain/entities/merchant.dart';
@@ -83,7 +84,6 @@ class _MerchantCardState extends State<MerchantCard>
       name: widget.merchant.name,
       rating: widget.merchant.rating,
       category: widget.merchant.category,
-      isOpen: true, // TODO: get from merchant data
       hasDiscount: widget.merchant.discountPercentage > 0,
       discountPercentage: widget.merchant.discountPercentage,
     );
@@ -133,20 +133,31 @@ class _MerchantCardState extends State<MerchantCard>
   Widget _buildCard(BuildContext context, bool isDarkMode) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xl),
         boxShadow: [
           BoxShadow(
             color: isDarkMode
-                ? Colors.black.withValues(alpha: 0.3)
-                : Colors.black.withValues(alpha: 0.12),
-            blurRadius: _isPressed ? 8 : 15,
-            offset: Offset(0, _isPressed ? 4 : 8),
-            spreadRadius: _isPressed ? -2 : 0,
+                ? Colors.black.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.subtle,
+                  )
+                : Colors.black.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                  ),
+            blurRadius: _isPressed
+                ? EcoPlatesDesignTokens.elevation.mediumBlur
+                : EcoPlatesDesignTokens.elevation.largeBlur,
+            offset: Offset(
+              0,
+              _isPressed
+                  ? EcoPlatesDesignTokens.elevation.standardOffset.dy
+                  : EcoPlatesDesignTokens.elevation.elevatedOffset.dy,
+            ),
+            spreadRadius: _isPressed ? -1.0 : 0,
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xl),
         child: Stack(
           children: [
             // Background avec image et gradient
@@ -173,7 +184,7 @@ class _MerchantCardState extends State<MerchantCard>
 
   Widget _buildMainContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -205,23 +216,27 @@ class _MerchantCardState extends State<MerchantCard>
         // Tags
         if (widget.merchant.tags?.isNotEmpty ?? false) ...[
           Wrap(
-            spacing: 6,
+            spacing: context.scaleXXS_XS_SM_MD * 1.5,
             children: widget.merchant.tags!
                 .take(3)
                 .map((tag) => RestaurantTag(tag: tag))
                 .toList(),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
         ],
 
         // Nom du commerçant
         Text(
           widget.merchant.name,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: AccessibleFontSizes.medium,
+            fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
             fontWeight: FontWeight.bold,
-            shadows: [Shadow(blurRadius: 4)],
+            shadows: [
+              Shadow(
+                blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
+              ),
+            ],
             letterSpacing: 0.2,
           ),
           maxLines: 1,
@@ -229,26 +244,32 @@ class _MerchantCardState extends State<MerchantCard>
           semanticsLabel: widget.merchant.name,
         ),
 
-        const SizedBox(height: 2),
+        SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
 
         // Type de cuisine
         Text(
           widget.merchant.cuisineType,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.9),
-            fontSize: 12,
-            shadows: const [Shadow(blurRadius: 2)],
+            color: Colors.white.withValues(
+              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+            ),
+            fontSize: EcoPlatesDesignTokens.typography.hint(context),
+            shadows: [
+              Shadow(
+                blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
+              ),
+            ],
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
 
-        const SizedBox(height: 4),
+        SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
 
         // Ligne d'infos (rating, distance, prix)
         _buildInfoRow(),
 
-        const SizedBox(height: 4),
+        SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
 
         // Horaire de collecte
         _buildPickupTime(),
@@ -257,23 +278,35 @@ class _MerchantCardState extends State<MerchantCard>
   }
 
   Widget _buildInfoRow() {
-    return Row(
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: context.scaleXXS_XS_SM_MD,
+      runSpacing: context.scaleXXS_XS_SM_MD / 2,
       children: [
-        // Note
-        RatingDisplay(rating: widget.merchant.rating),
-        const SizedBox(width: 8),
-
-        // Distance
-        _buildDistanceBadge(),
-
-        const Spacer(),
-
-        // Prix
-        PriceInfo(
-          hasActiveOffer: widget.merchant.hasActiveOffer,
-          originalPrice: widget.merchant.originalPrice,
-          discountedPrice: widget.merchant.discountedPrice,
-          minPrice: widget.merchant.minPrice,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RatingDisplay(rating: widget.merchant.rating),
+            SizedBox(width: context.scaleXXS_XS_SM_MD * 1.5),
+            _buildDistanceBadge(),
+          ],
+        ),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 160),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: PriceInfo(
+                hasActiveOffer: widget.merchant.hasActiveOffer,
+                originalPrice: widget.merchant.originalPrice,
+                discountedPrice: widget.merchant.discountedPrice,
+                minPrice: widget.merchant.minPrice,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -281,19 +314,31 @@ class _MerchantCardState extends State<MerchantCard>
 
   Widget _buildDistanceBadge() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.scaleXXS_XS_SM_MD,
+        vertical: context.scaleXXS_XS_SM_MD / 2,
+      ),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(10),
+        color: Colors.black.withValues(
+          alpha: EcoPlatesDesignTokens.opacity.subtle,
+        ),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.location_on, size: 12, color: Colors.white),
-          const SizedBox(width: 3),
+          Icon(
+            Icons.location_on,
+            size: EcoPlatesDesignTokens.size.icon(context) / 2,
+            color: Colors.white,
+          ),
+          SizedBox(width: context.scaleXXS_XS_SM_MD / 4),
           Text(
             widget.merchant.distanceText,
-            style: const TextStyle(color: Colors.white, fontSize: 11),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: EcoPlatesDesignTokens.typography.hint(context) - 2,
+            ),
           ),
         ],
       ),
@@ -302,23 +347,39 @@ class _MerchantCardState extends State<MerchantCard>
 
   Widget _buildPickupTime() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.scaleXXS_XS_SM_MD,
+        vertical: context.scaleXXS_XS_SM_MD / 4,
+      ),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+        color: Colors.white.withValues(
+          alpha: EcoPlatesDesignTokens.opacity.pressed,
+        ),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
+        border: Border.all(
+          color: Colors.white.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.subtle,
+          ),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.access_time, size: 14, color: Colors.white),
-          const SizedBox(width: 6),
-          Text(
-            'Collecte : ${widget.merchant.pickupTime}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
+          Icon(
+            Icons.access_time,
+            size: EcoPlatesDesignTokens.size.icon(context) * 0.8,
+            color: Colors.white,
+          ),
+          SizedBox(width: context.scaleXXS_XS_SM_MD * 1.5),
+          Flexible(
+            child: Text(
+              'Collecte : ${widget.merchant.pickupTime}',
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: EcoPlatesDesignTokens.typography.hint(context) - 2,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
@@ -328,9 +389,9 @@ class _MerchantCardState extends State<MerchantCard>
 
   Widget _buildTopBadges() {
     return Positioned(
-      top: 12,
-      left: 12,
-      right: 60,
+      top: context.scaleXS_SM_MD_LG,
+      left: context.scaleXS_SM_MD_LG,
+      right: EcoPlatesDesignTokens.size.minTouchTarget,
       child: Row(
         children: [
           // Badge de réduction
@@ -339,7 +400,7 @@ class _MerchantCardState extends State<MerchantCard>
               discountPercentage: widget.merchant.discountPercentage,
               animationsEnabled: _animationsEnabled,
             ),
-            if (_isPopular) const SizedBox(width: 8),
+            if (_isPopular) SizedBox(width: context.scaleXXS_XS_SM_MD),
           ],
 
           // Badge de popularité

@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../providers/sales_provider.dart';
 
@@ -11,7 +13,7 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const SalesAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  ui.Size get preferredSize => ui.Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,26 +24,50 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
         // Menu d'actions
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert),
-          iconSize: 20,
+          iconSize: context.scaleIconStandard,
           tooltip: 'Actions',
           onSelected: (value) => _handleMenuAction(context, ref, value),
           itemBuilder: (context) {
             return [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'export',
                 child: ListTile(
-                  leading: Icon(Icons.download, size: 18),
-                  title: Text('Exporter', style: TextStyle(fontSize: 14)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                  leading: Icon(
+                    Icons.download,
+                    size: context.scaleIconStandard,
+                  ),
+                  title: Text(
+                    'Exporter',
+                    style: TextStyle(
+                      fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                        context,
+                      ),
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: context.scaleSM_MD_LG_XL,
+                  ),
                   dense: true,
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'refresh',
                 child: ListTile(
-                  leading: Icon(Icons.refresh, size: 18),
-                  title: Text('Actualiser', style: TextStyle(fontSize: 14)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                  leading: Icon(
+                    Icons.refresh,
+                    size: context.scaleIconStandard,
+                  ),
+                  title: Text(
+                    'Actualiser',
+                    style: TextStyle(
+                      fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                        context,
+                      ),
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: context.scaleSM_MD_LG_XL,
+                  ),
                   dense: true,
                 ),
               ),
@@ -49,7 +75,7 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
           },
         ),
 
-        const SizedBox(width: 4),
+        SizedBox(width: context.scaleXXS_XS_SM_MD),
       ],
     );
   }
@@ -80,15 +106,19 @@ class _MerchantLogo extends StatelessWidget {
         'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center';
 
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: EdgeInsets.all(context.scaleSM_MD_LG_XL),
       child: CircleAvatar(
-        radius: 16,
+        radius: context.scaleXS_SM_MD_LG,
         backgroundColor: Theme.of(context).colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
         onBackgroundImageError: (_, _) {
           // Fallback vers une icône si l'image ne charge pas
         },
-        child: const Icon(Icons.store, size: 20, color: Colors.grey),
+        child: Icon(
+          Icons.store,
+          size: context.scaleIconStandard,
+          color: Colors.grey,
+        ),
       ),
     );
   }

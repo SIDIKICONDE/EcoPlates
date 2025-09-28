@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/design_tokens.dart';
 
 /// Widget pour afficher un tag avec icône
 class RestaurantTag extends StatelessWidget {
@@ -10,23 +11,34 @@ class RestaurantTag extends StatelessWidget {
     final (icon, color) = _getTagStyle(tag);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.scaleXXS_XS_SM_MD,
+        vertical: context.scaleXXS_XS_SM_MD / 2,
+      ),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.5)),
+        color: color.withValues(alpha: EcoPlatesDesignTokens.opacity.subtle),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
+        border: Border.all(
+          color: color.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+          ),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 10, color: Colors.white),
-          const SizedBox(width: 2),
+          Icon(
+            icon,
+            size: EcoPlatesDesignTokens.size.indicator(context),
+            color: EcoPlatesDesignTokens.colors.textPrimary,
+          ),
+          SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
           Text(
             tag,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 9,
-              fontWeight: FontWeight.bold,
+            style: TextStyle(
+              color: EcoPlatesDesignTokens.colors.textPrimary,
+              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              fontWeight: EcoPlatesDesignTokens.typography.bold,
             ),
           ),
         ],

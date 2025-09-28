@@ -1,5 +1,7 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 class CategoriesChart extends StatelessWidget {
@@ -15,53 +17,89 @@ class CategoriesChart extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: EcoPlatesDesignTokens.analyticsCharts.chartPadding(context),
+      ),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(
+            EcoPlatesDesignTokens.analyticsCharts.chartContentPadding(context),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                padding:
+                    EcoPlatesDesignTokens.analyticsCharts.chartHeaderPadding,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.tertiary.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(8),
+                  color: theme.colorScheme.tertiary.withValues(
+                    alpha: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .categoriesHeaderBackgroundAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .chartHeaderBorderRadius,
+                  ),
                   border: Border.all(
-                    color: theme.colorScheme.tertiary.withValues(alpha: 0.15),
+                    color: theme.colorScheme.tertiary.withValues(
+                      alpha: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .categoriesHeaderBorderAlpha,
+                    ),
                   ),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .categoriesIconContainerPadding,
                       decoration: BoxDecoration(
                         color: theme.colorScheme.tertiary.withValues(
-                          alpha: 0.1,
+                          alpha: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .categoriesIconContainerAlpha,
                         ),
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(
+                          EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .chartHeaderIconContainerSize,
+                        ),
                       ),
                       child: Icon(
                         Icons.pie_chart,
-                        size: 16,
+                        size: EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .chartHeaderIconSize,
                         color: theme.colorScheme.tertiary,
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(
+                      width: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .chartHeaderIconSpacing,
+                    ),
                     Expanded(
                       child: Text(
                         'Par catégories',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: theme.colorScheme.onSurface,
-                          fontSize: 14,
+                          fontSize: EcoPlatesDesignTokens.analyticsCharts
+                              .chartTitleFontSize(context),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .chartHeaderContentSpacing,
+              ),
               _buildChartContent(context),
             ],
           ),
@@ -74,50 +112,97 @@ class CategoriesChart extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      height: 140,
-      padding: const EdgeInsets.all(16),
+      height: EcoPlatesDesignTokens.analyticsCharts.chartContentHeight(context),
+      padding: EdgeInsets.all(
+        EcoPlatesDesignTokens.analyticsCharts.chartContentPadding(context),
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.08),
-            theme.colorScheme.surface.withValues(alpha: 0.05),
+            theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: EcoPlatesDesignTokens
+                  .analyticsCharts
+                  .categoriesChartSurfaceHighAlpha,
+            ),
+            theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: EcoPlatesDesignTokens
+                  .analyticsCharts
+                  .categoriesChartSurfaceMediumAlpha,
+            ),
+            theme.colorScheme.surface.withValues(
+              alpha: EcoPlatesDesignTokens
+                  .analyticsCharts
+                  .categoriesChartSurfaceLowAlpha,
+            ),
           ],
-          stops: const [0.0, 0.6, 1.0],
+          stops: EcoPlatesDesignTokens
+              .analyticsCharts
+              .categoriesChartGradientStops,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(
+          EcoPlatesDesignTokens.analyticsCharts.chartContentBorderRadius,
+        ),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          color: theme.colorScheme.outline.withValues(
+            alpha: EcoPlatesDesignTokens
+                .analyticsCharts
+                .categoriesChartBorderAlpha,
+          ),
         ),
       ),
       child: Row(
         children: [
           // Diagramme circulaire stylisé
           Expanded(
-            flex: 2,
+            flex: EcoPlatesDesignTokens.analyticsCharts.mobileFlexRatio(
+              context,
+            )[0],
             child: Container(
-              height: 100,
+              height: EcoPlatesDesignTokens.analyticsCharts.pieChartSize(
+                context,
+              ),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    theme.colorScheme.tertiary.withValues(alpha: 0.2),
-                    theme.colorScheme.tertiary.withValues(alpha: 0.1),
+                    theme.colorScheme.tertiary.withValues(
+                      alpha: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .categoriesPieChartGradientHighAlpha,
+                    ),
+                    theme.colorScheme.tertiary.withValues(
+                      alpha: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .categoriesPieChartGradientLowAlpha,
+                    ),
                   ],
                 ),
                 border: Border.all(
-                  color: theme.colorScheme.tertiary.withValues(alpha: 0.3),
-                  width: 2,
+                  color: theme.colorScheme.tertiary.withValues(
+                    alpha: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .categoriesPieChartBorderAlpha,
+                  ),
+                  width:
+                      EcoPlatesDesignTokens.analyticsCharts.pieChartBorderWidth,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.tertiary.withValues(alpha: 0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
+                    color: theme.colorScheme.tertiary.withValues(
+                      alpha: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .categoriesPieChartShadowAlpha,
+                    ),
+                    blurRadius: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .pieChartShadowBlurRadius,
+                    offset: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .pieChartShadowOffset,
                   ),
                 ],
               ),
@@ -126,75 +211,128 @@ class CategoriesChart extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(
+            width: EcoPlatesDesignTokens.analyticsCharts.chartElementSpacing(
+              context,
+            ),
+          ),
           // Liste des catégories scrollable
           Expanded(
-            flex: 3,
+            flex: EcoPlatesDesignTokens.analyticsCharts.mobileFlexRatio(
+              context,
+            )[1],
             child: Container(
-              constraints: const BoxConstraints(maxHeight: 120),
+              constraints: BoxConstraints(
+                maxHeight: EcoPlatesDesignTokens.analyticsCharts
+                    .legendMaxHeight(context),
+              ),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: analytics.categoryBreakdown.map((category) {
                     return Container(
-                      margin: const EdgeInsets.only(bottom: 6),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      margin: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .legendItemMargin,
+                      padding: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .legendItemPadding,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.white.withValues(
+                          alpha: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .categoriesLegendItemBackgroundAlpha,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .legendItemBorderRadius,
+                        ),
                         border: Border.all(
-                          color: Color(category.color).withValues(alpha: 0.2),
+                          color: Color(category.color).withValues(
+                            alpha: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .categoriesLegendItemBorderAlpha,
+                          ),
                         ),
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: 10,
-                            height: 10,
+                            width: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .legendColorIndicatorSize,
+                            height: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .legendColorIndicatorSize,
                             decoration: BoxDecoration(
                               color: Color(category.color),
-                              borderRadius: BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(
+                                EcoPlatesDesignTokens
+                                    .analyticsCharts
+                                    .legendColorIndicatorBorderRadius,
+                              ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(
-                                    category.color,
-                                  ).withValues(alpha: 0.4),
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 1),
+                                  color:
+                                      Color(
+                                        category.color,
+                                      ).withValues(
+                                        alpha: EcoPlatesDesignTokens
+                                            .analyticsCharts
+                                            .categoriesLegendIndicatorShadowAlpha,
+                                      ),
+                                  blurRadius: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .categoriesLegendIndicatorShadowBlurRadius,
+                                  offset: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .categoriesLegendIndicatorShadowOffset,
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(width: 6),
+                          SizedBox(
+                            width: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .legendColorIndicatorSpacing,
+                          ),
                           Expanded(
                             child: Text(
                               category.name,
                               style: theme.textTheme.bodySmall?.copyWith(
-                                fontSize: 10,
+                                fontSize: EcoPlatesDesignTokens.analyticsCharts
+                                    .chartLegendFontSize(context),
                                 fontWeight: FontWeight.w500,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 2,
-                            ),
+                            padding: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .legendBadgePadding,
                             decoration: BoxDecoration(
-                              color: Color(
-                                category.color,
-                              ).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8),
+                              color:
+                                  Color(
+                                    category.color,
+                                  ).withValues(
+                                    alpha: EcoPlatesDesignTokens
+                                        .analyticsCharts
+                                        .categoriesLegendBadgeBackgroundAlpha,
+                                  ),
+                              borderRadius: BorderRadius.circular(
+                                EcoPlatesDesignTokens
+                                    .analyticsCharts
+                                    .legendBadgeBorderRadius,
+                              ),
                             ),
                             child: Text(
                               '${category.percentage.toStringAsFixed(1)}%',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.w700,
-                                fontSize: 9,
+                                fontSize: EcoPlatesDesignTokens.analyticsCharts
+                                    .chartBadgeFontSize(context),
                                 color: Color(category.color),
                               ),
                             ),
@@ -219,11 +357,13 @@ class _CategoryPiePainter extends CustomPainter {
   final List<CategoryData> categories;
 
   @override
-  void paint(Canvas canvas, Size size) {
+  void paint(Canvas canvas, ui.Size size) {
     if (categories.isEmpty) return;
 
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2 - 4; // Petite marge
+    final radius =
+        size.width / 2 -
+        EcoPlatesDesignTokens.analyticsCharts.pieChartInnerMargin;
 
     var startAngle = -90 * (3.141592653589793 / 180); // Commencer en haut
 
@@ -245,9 +385,14 @@ class _CategoryPiePainter extends CustomPainter {
 
       // Bordure du secteur
       final borderPaint = Paint()
-        ..color = Colors.white.withValues(alpha: 0.8)
+        ..color = Colors.white.withValues(
+          alpha: EcoPlatesDesignTokens
+              .analyticsCharts
+              .categoriesPieSectorBorderAlpha,
+        )
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2;
+        ..strokeWidth =
+            EcoPlatesDesignTokens.analyticsCharts.pieChartSectorStrokeWidth;
 
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
@@ -265,15 +410,28 @@ class _CategoryPiePainter extends CustomPainter {
       ..color = Colors.white
       ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(center, radius * 0.4, centerPaint);
+    canvas.drawCircle(
+      center,
+      radius * EcoPlatesDesignTokens.analyticsCharts.donutCenterRatio,
+      centerPaint,
+    );
 
     // Bordure du cercle central
     final centerBorderPaint = Paint()
-      ..color = Colors.grey.withValues(alpha: 0.3)
+      ..color = Colors.grey.withValues(
+        alpha: EcoPlatesDesignTokens
+            .analyticsCharts
+            .categoriesDonutCenterBorderAlpha,
+      )
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
+      ..strokeWidth =
+          EcoPlatesDesignTokens.analyticsCharts.donutCenterStrokeWidth;
 
-    canvas.drawCircle(center, radius * 0.4, centerBorderPaint);
+    canvas.drawCircle(
+      center,
+      radius * EcoPlatesDesignTokens.analyticsCharts.donutCenterRatio,
+      centerBorderPaint,
+    );
   }
 
   @override

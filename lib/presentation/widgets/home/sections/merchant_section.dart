@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/responsive/design_tokens.dart';
 import '../../../providers/merchants_provider.dart';
 import '../../../screens/all_merchants_screen.dart';
 import '../../merchant_card.dart';
@@ -14,52 +15,63 @@ class MerchantSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final merchantsAsync = ref.watch(merchantsProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // En-tête de section
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+          padding: EdgeInsets.fromLTRB(
+            context.scaleMD_LG_XL_XXL,
+            context.scaleXS_SM_MD_LG,
+            context.scaleMD_LG_XL_XXL,
+            context.scaleMD_LG_XL_XXL,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Nos partenaires',
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: EcoPlatesDesignTokens.typography.titleSize(
+                        context,
+                      ),
+                      fontWeight: EcoPlatesDesignTokens.typography.bold,
                     ),
                   ),
                   Text(
                     'Découvrez nos commerçants engagés',
                     style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
+                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                      ),
                     ),
                   ),
                 ],
               ),
               TextButton(
                 onPressed: () {
-                  unawaited(Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (context) => const AllMerchantsScreen(),
+                  unawaited(
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (context) => const AllMerchantsScreen(),
+                      ),
                     ),
-                  ));
+                  );
                 },
                 child: const Text('Voir tout'),
               ),
             ],
           ),
         ),
-        
+
         // Liste horizontale de cartes de marchands
         SizedBox(
-          height: 280, // Hauteur optimisée pour les cartes merchant
+          height: EcoPlatesDesignTokens.layout.merchantCardHeight(context),
           child: merchantsAsync.when(
             data: (merchants) {
               if (merchants.isEmpty) {
@@ -69,33 +81,46 @@ class MerchantSection extends ConsumerWidget {
                     children: [
                       Icon(
                         Icons.store_outlined,
-                        size: 48,
-                        color: Colors.grey[400],
+                        size: EcoPlatesDesignTokens.size.modalIcon(context),
+                        color: Theme.of(context).colorScheme.onSurface
+                            .withValues(
+                              alpha: EcoPlatesDesignTokens.opacity.subtle,
+                            ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: context.scaleXS_SM_MD_LG),
                       Text(
                         'Aucun marchand disponible',
                         style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withValues(
+                                alpha:
+                                    EcoPlatesDesignTokens.opacity.almostOpaque,
+                              ),
+                          fontSize: EcoPlatesDesignTokens.typography.text(
+                            context,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 );
               }
-              
+
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.scaleMD_LG_XL_XXL,
+                ),
                 physics: const BouncingScrollPhysics(),
                 itemCount: merchants.length,
                 itemBuilder: (context, index) {
                   final merchant = merchants[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.scaleXS_SM_MD_LG,
+                    ),
                     child: SizedBox(
-                      width: 320, // Largeur des cartes
+                      width: MediaQuery.of(context).size.width * 0.85,
                       child: MerchantCard(
                         merchant: merchant,
                         onTap: () {
@@ -105,7 +130,7 @@ class MerchantSection extends ConsumerWidget {
                           //     builder: (context) => MerchantDetailScreen(merchant: merchant),
                           //   ),
                           // );
-                          
+
                           // Pour l'instant, afficher un message temporaire
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -129,15 +154,20 @@ class MerchantSection extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.error_outline,
-                    size: 48,
-                    color: Colors.red[400],
+                    size: EcoPlatesDesignTokens.size.modalIcon(context),
+                    color: EcoPlatesDesignTokens.errorColorValidation(context),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: context.scaleXS_SM_MD_LG),
                   Text(
                     'Erreur de chargement',
-                    style: TextStyle(color: Colors.red[700]),
+                    style: TextStyle(
+                      color: EcoPlatesDesignTokens.errorColorValidation(
+                        context,
+                      ),
+                      fontSize: EcoPlatesDesignTokens.typography.text(context),
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: context.scaleXS_SM_MD_LG),
                   TextButton.icon(
                     onPressed: () {
                       ref.invalidate(merchantsProvider);
@@ -150,8 +180,8 @@ class MerchantSection extends ConsumerWidget {
             ),
           ),
         ),
-        
-        const SizedBox(height: 16),
+
+        SizedBox(height: context.scaleMD_LG_XL_XXL),
       ],
     );
   }

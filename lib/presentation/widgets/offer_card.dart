@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/responsive/design_tokens.dart';
 import '../../domain/entities/food_offer.dart';
-import 'offer_card/widgets/offer_card_content.dart';
-import 'offer_card/widgets/offer_card_image.dart';
+import 'offer_card/component/offer_card_content.dart';
+import 'offer_card/component/offer_card_image.dart';
 
 /// Widget de carte pour afficher une offre anti-gaspillage
 /// Utilisable dans toutes les listes et grilles de l'application
@@ -78,25 +79,47 @@ class _OfferCardState extends State<OfferCard>
             child: Container(
               decoration: BoxDecoration(
                 color: isDark ? Colors.grey[900] : Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.lg,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(
                       alpha: isDark
-                          ? 0.3 + (0.1 * _elevationAnimation.value)
-                          : 0.08 + (0.06 * _elevationAnimation.value),
+                          ? EcoPlatesDesignTokens.opacity.subtle +
+                                (EcoPlatesDesignTokens.opacity.pressed *
+                                    _elevationAnimation.value)
+                          : EcoPlatesDesignTokens.opacity.veryTransparent +
+                                (EcoPlatesDesignTokens.opacity.verySubtle *
+                                    _elevationAnimation.value),
                     ),
-                    blurRadius: 10 + (8 * _elevationAnimation.value),
-                    offset: Offset(0, 4 + (4 * _elevationAnimation.value)),
+                    blurRadius:
+                        EcoPlatesDesignTokens.elevation.mediumBlur +
+                        (EcoPlatesDesignTokens.elevation.smallBlur *
+                            _elevationAnimation.value),
+                    offset: Offset(
+                      0,
+                      EcoPlatesDesignTokens.elevation.standardOffset.dy +
+                          (EcoPlatesDesignTokens.elevation.standardOffset.dy *
+                              _elevationAnimation.value),
+                    ),
                   ),
                   // Ombre secondaire pour plus de profondeur
                   if (_elevationAnimation.value > 0)
                     BoxShadow(
                       color: theme.primaryColor.withValues(
-                        alpha: 0.1 * _elevationAnimation.value,
+                        alpha:
+                            EcoPlatesDesignTokens.opacity.veryTransparent *
+                            _elevationAnimation.value,
                       ),
-                      blurRadius: 20 * _elevationAnimation.value,
-                      offset: Offset(0, 8 * _elevationAnimation.value),
+                      blurRadius:
+                          EcoPlatesDesignTokens.elevation.largeBlur *
+                          _elevationAnimation.value,
+                      offset: Offset(
+                        0,
+                        EcoPlatesDesignTokens.elevation.elevatedOffset.dy *
+                            _elevationAnimation.value,
+                      ),
                     ),
                 ],
               ),

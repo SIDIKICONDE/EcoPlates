@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/design_tokens.dart';
 
 /// Widget pour afficher les informations de prix
 class PriceInfo extends StatelessWidget {
@@ -24,24 +25,27 @@ class PriceInfo extends StatelessWidget {
             discountedPrice != null) ...[
           Text(
             '${originalPrice!.toStringAsFixed(2)}€',
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 11,
+            style: TextStyle(
+              color: EcoPlatesDesignTokens.colors.textSecondary,
+              fontSize: EcoPlatesDesignTokens.typography.hint(context),
               decoration: TextDecoration.lineThrough,
             ),
           ),
           Text(
             '${discountedPrice!.toStringAsFixed(2)}€',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+            style: TextStyle(
+              color: EcoPlatesDesignTokens.colors.textPrimary,
+              fontSize: EcoPlatesDesignTokens.typography.text(context),
+              fontWeight: EcoPlatesDesignTokens.typography.bold,
             ),
           ),
         ] else if (minPrice != null)
           Text(
             'Dès ${minPrice!.toStringAsFixed(2)}€',
-            style: const TextStyle(color: Colors.white, fontSize: 13),
+            style: TextStyle(
+              color: EcoPlatesDesignTokens.colors.textPrimary,
+              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+            ),
           ),
       ],
     );

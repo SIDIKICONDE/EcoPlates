@@ -40,6 +40,68 @@ class FoodOffer {
     this.viewCount = 0,
     this.soldCount = 0,
   });
+
+  /// Création depuis JSON pour cache SharedPreferences
+  factory FoodOffer.fromJson(Map<String, dynamic> json) {
+    final locationData = json['location'] as Map<String, dynamic>;
+
+    return FoodOffer(
+      id: json['id'] as String,
+      merchantId: json['merchantId'] as String,
+      merchantName: json['merchantName'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      images: List<String>.from(json['images'] as List),
+      type: OfferType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => OfferType.autre,
+      ),
+      category: FoodCategory.values.firstWhere(
+        (e) => e.name == json['category'],
+        orElse: () => FoodCategory.autre,
+      ),
+      originalPrice: (json['originalPrice'] as num).toDouble(),
+      discountedPrice: (json['discountedPrice'] as num).toDouble(),
+      quantity: json['quantity'] as int,
+      pickupStartTime: DateTime.parse(json['pickupStartTime'] as String),
+      pickupEndTime: DateTime.parse(json['pickupEndTime'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      status: OfferStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => OfferStatus.cancelled,
+      ),
+      location: Location(
+        latitude: (locationData['latitude'] as num).toDouble(),
+        longitude: (locationData['longitude'] as num).toDouble(),
+        address: locationData['address'] as String,
+        city: locationData['city'] as String,
+        postalCode: locationData['postalCode'] as String,
+        additionalInfo: locationData['additionalInfo'] as String?,
+      ),
+      merchantAddress: json['merchantAddress'] as String,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      allergens: List<String>.from(json['allergens'] as List),
+      isVegetarian: json['isVegetarian'] as bool,
+      isVegan: json['isVegan'] as bool,
+      isHalal: json['isHalal'] as bool,
+      co2Saved: json['co2Saved'] as int,
+      merchantLogo: json['merchantLogo'] as String?,
+      availableQuantity: json['availableQuantity'] as int,
+      totalQuantity: json['totalQuantity'] as int,
+      tags: List<String>.from(json['tags'] as List),
+      nutritionalInfo: json['nutritionalInfo'] as Map<String, dynamic>?,
+      ecoImpact: json['ecoImpact'] as Map<String, dynamic>?,
+      rating: (json['rating'] as num).toDouble(),
+      ratingsCount: json['ratingsCount'] as int,
+      distanceKm: json['distanceKm'] != null
+          ? (json['distanceKm'] as num).toDouble()
+          : null,
+      preparationTime: json['preparationTime'] as int,
+      isFavorite: json['isFavorite'] as bool,
+      viewCount: json['viewCount'] as int,
+      soldCount: json['soldCount'] as int,
+    );
+  }
   final String id;
   final String merchantId;
   final String merchantName;
@@ -187,6 +249,55 @@ class FoodOffer {
   String get discountBadge {
     if (isFree) return 'GRATUIT';
     return '-${discountPercentage.toStringAsFixed(0)}%';
+  }
+
+  /// Conversion vers JSON pour cache SharedPreferences
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'merchantId': merchantId,
+      'merchantName': merchantName,
+      'title': title,
+      'description': description,
+      'images': images,
+      'type': type.name,
+      'category': category.name,
+      'originalPrice': originalPrice,
+      'discountedPrice': discountedPrice,
+      'quantity': quantity,
+      'pickupStartTime': pickupStartTime.toIso8601String(),
+      'pickupEndTime': pickupEndTime.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'status': status.name,
+      'location': {
+        'latitude': location.latitude,
+        'longitude': location.longitude,
+        'address': location.address,
+        'city': location.city,
+        'postalCode': location.postalCode,
+        'additionalInfo': location.additionalInfo,
+      },
+      'merchantAddress': merchantAddress,
+      'updatedAt': updatedAt.toIso8601String(),
+      'allergens': allergens,
+      'isVegetarian': isVegetarian,
+      'isVegan': isVegan,
+      'isHalal': isHalal,
+      'co2Saved': co2Saved,
+      'merchantLogo': merchantLogo,
+      'availableQuantity': availableQuantity,
+      'totalQuantity': totalQuantity,
+      'tags': tags,
+      'nutritionalInfo': nutritionalInfo,
+      'ecoImpact': ecoImpact,
+      'rating': rating,
+      'ratingsCount': ratingsCount,
+      'distanceKm': distanceKm,
+      'preparationTime': preparationTime,
+      'isFavorite': isFavorite,
+      'viewCount': viewCount,
+      'soldCount': soldCount,
+    };
   }
 }
 

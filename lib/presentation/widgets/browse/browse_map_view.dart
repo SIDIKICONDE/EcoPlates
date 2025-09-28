@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../core/responsive/design_tokens.dart';
+import '../../../core/responsive/context_responsive_extensions.dart';
 import '../../../core/services/geo_location_service.dart';
 import '../../../core/services/map_service.dart';
 import '../../../domain/entities/food_offer.dart';
@@ -101,9 +103,13 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
           builder: (context, snapshot) {
             final markers = snapshot.data ?? {};
             return GoogleMap(
-              initialCameraPosition: const CameraPosition(
+              initialCameraPosition: CameraPosition(
                 target: _initialPosition,
-                zoom: 12,
+                zoom: context.isMobileDevice
+                    ? 11.0
+                    : context.isTabletDevice
+                    ? 12.0
+                    : 13.0,
               ),
               onMapCreated: _onMapCreated,
               markers: markers,
@@ -118,13 +124,13 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
 
         // Bouton de recentrage
         Positioned(
-          bottom: 16,
-          right: 16,
+          bottom: context.scaleMD_LG_XL_XXL,
+          right: context.scaleMD_LG_XL_XXL,
           child: Consumer(
             builder: (context, ref, child) {
               final isLocationActive = ref.watch(isLocationActiveProvider);
               return FloatingActionButton(
-                mini: true,
+                mini: context.isMobileDevice,
                 onPressed: _centerOnUserLocation,
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
@@ -132,7 +138,9 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
                   isLocationActive ? Icons.near_me : Icons.near_me_outlined,
                   color: isLocationActive
                       ? Theme.of(context).primaryColor
-                      : Colors.grey[700],
+                      : Theme.of(context).colorScheme.onSurface.withValues(
+                          alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                        ),
                 ),
               );
             },

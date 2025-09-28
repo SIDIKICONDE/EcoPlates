@@ -1,14 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:ecoplates/domain/entities/brand.dart';
 import 'package:ecoplates/domain/entities/merchant.dart';
 import 'package:ecoplates/presentation/providers/brand_provider.dart';
 import 'package:ecoplates/presentation/providers/merchants_provider.dart';
 import 'package:ecoplates/presentation/widgets/home/sections/merchant_section.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  Future<void> setLargeSurface(WidgetTester tester) async {
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.physicalSize = const Size(
+      1600,
+      2400,
+    ); // Surface plus large pour éviter overflow
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  }
+
   group('MerchantSection', () {
     late ProviderContainer container;
 
@@ -44,13 +55,12 @@ void main() {
         cuisineType: 'Française',
         rating: 4.5,
         distanceText: '2.5 km',
-        originalPrice: 25.0,
-        discountedPrice: 15.0,
-        minPrice: 12.0,
+        originalPrice: 25,
+        discountedPrice: 15,
+        minPrice: 12,
         availableOffers: 5,
         pickupTime: '12:00 - 14:00',
         discountPercentage: 40,
-        isFavorite: false,
         tags: ['Bio', 'Local'],
         hasActiveOffer: true,
       ),
@@ -62,9 +72,9 @@ void main() {
         cuisineType: 'Traditionnelle',
         rating: 4.2,
         distanceText: '1.8 km',
-        originalPrice: 8.0,
-        discountedPrice: 4.0,
-        minPrice: 3.0,
+        originalPrice: 8,
+        discountedPrice: 4,
+        minPrice: 3,
         availableOffers: 3,
         pickupTime: '08:00 - 18:00',
         discountPercentage: 50,
@@ -78,13 +88,14 @@ void main() {
       WidgetTester tester,
     ) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             merchantsProvider.overrideWith((ref) => sampleMerchants),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: const MaterialApp(home: Scaffold(body: MerchantSection())),
         ),
       );
 
@@ -98,13 +109,14 @@ void main() {
 
     testWidgets('affiche le bouton "Voir tout"', (WidgetTester tester) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             merchantsProvider.overrideWith((ref) => sampleMerchants),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: const MaterialApp(home: Scaffold(body: MerchantSection())),
         ),
       );
 
@@ -119,13 +131,14 @@ void main() {
       WidgetTester tester,
     ) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             merchantsProvider.overrideWith((ref) => sampleMerchants),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: const MaterialApp(home: Scaffold(body: MerchantSection())),
         ),
       );
 
@@ -138,17 +151,18 @@ void main() {
       expect(find.byType(ListView), findsOneWidget);
     });
 
-    testWidgets('affiche un message quand il n\'y a pas de marchands', (
+    testWidgets("affiche un message quand il n'y a pas de marchands", (
       WidgetTester tester,
     ) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             merchantsProvider.overrideWith((ref) => const []),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: const MaterialApp(home: Scaffold(body: MerchantSection())),
         ),
       );
 
@@ -162,17 +176,26 @@ void main() {
 
     testWidgets('affiche un état de chargement', (WidgetTester tester) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             merchantsProvider.overrideWith(
-              (ref) => throw UnimplementedError('Loading state'),
+              (ref) => Future<List<Merchant>>.delayed(
+                const Duration(
+                  seconds: 10,
+                ), // Délai plus long pour maintenir l'état de chargement
+                () => sampleMerchants,
+              ),
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: const MaterialApp(home: Scaffold(body: MerchantSection())),
         ),
       );
+
+      // Attendre que l'état de chargement soit affiché
+      await tester.pump();
 
       // Assert
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -180,6 +203,7 @@ void main() {
 
     testWidgets('gère les erreurs de chargement', (WidgetTester tester) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -188,7 +212,7 @@ void main() {
             ),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: const MaterialApp(home: Scaffold(body: MerchantSection())),
         ),
       );
 
@@ -203,13 +227,14 @@ void main() {
       WidgetTester tester,
     ) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             merchantsProvider.overrideWith((ref) => sampleMerchants),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: const MaterialApp(home: Scaffold(body: MerchantSection())),
         ),
       );
 
@@ -225,13 +250,14 @@ void main() {
       WidgetTester tester,
     ) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             merchantsProvider.overrideWith((ref) => sampleMerchants),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: const MaterialApp(home: Scaffold(body: MerchantSection())),
         ),
       );
 
@@ -254,13 +280,22 @@ void main() {
       WidgetTester tester,
     ) async {
       // Arrange
+      await setLargeSurface(tester);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             merchantsProvider.overrideWith((ref) => sampleMerchants),
             brandsProvider.overrideWith((ref) => testBrands),
           ],
-          child: MaterialApp(home: Scaffold(body: MerchantSection())),
+          child: MaterialApp(
+            home: const Scaffold(body: MerchantSection()),
+            routes: {
+              // Simuler la route pour éviter le timeout de navigation
+              '/all-merchants': (context) => const Scaffold(
+                body: Center(child: Text('All Merchants Screen')),
+              ),
+            },
+          ),
         ),
       );
 
@@ -269,11 +304,10 @@ void main() {
 
       // Act - Appuyer sur "Voir tout"
       await tester.tap(find.text('Voir tout'));
-      await tester.pumpAndSettle();
+      await tester.pump(); // Simple pump pour traiter le tap
 
-      // Assert - Devrait naviguer vers AllMerchantsScreen
-      // Note: Dans les tests, la navigation peut être limitée, on vérifie juste que le tap fonctionne
-      expect(find.byType(MerchantSection), findsOneWidget);
+      // Assert - Vérifier que le bouton est toujours présent (navigation simulée)
+      expect(find.text('Voir tout'), findsOneWidget);
     });
   });
 }

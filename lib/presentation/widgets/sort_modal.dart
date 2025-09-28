@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/enums/sort_options.dart';
+import '../../core/responsive/design_tokens.dart';
 import '../providers/sort_provider.dart';
 
 /// Modal de tri pour les offres alimentaires
@@ -12,7 +13,7 @@ class SortModal extends ConsumerWidget {
     final currentSort = ref.watch(sortOptionProvider);
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +25,7 @@ class SortModal extends ConsumerWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: context.scaleXXS_XS_SM_MD),
 
           // Options de tri dans un ListView
           Flexible(
@@ -39,7 +40,7 @@ class SortModal extends ConsumerWidget {
                     color: isSelected
                         ? Theme.of(context).primaryColor
                         : Colors.grey[600],
-                    size: 18,
+                    size: EcoPlatesDesignTokens.size.icon(context),
                   ),
                   title: Text(
                     option.label,
@@ -50,14 +51,14 @@ class SortModal extends ConsumerWidget {
                       color: isSelected
                           ? Theme.of(context).primaryColor
                           : Colors.grey[800],
-                      fontSize: 14,
+                      fontSize: EcoPlatesDesignTokens.typography.text(context),
                     ),
                   ),
                   trailing: isSelected
                       ? Icon(
                           Icons.check,
                           color: Theme.of(context).primaryColor,
-                          size: 16,
+                          size: EcoPlatesDesignTokens.size.icon(context) / 1.2,
                         )
                       : null,
                   onTap: () {

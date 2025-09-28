@@ -5,7 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../domain/entities/food_offer.dart';
 
 import '../../presentation/pages/browse_page.dart';
+import '../../presentation/pages/consumer_profile_page.dart';
 import '../../presentation/pages/merchant_analytics_page.dart';
+import '../../presentation/pages/merchant_profile_page.dart';
+import '../../presentation/pages/merchant_qr_scanner_page.dart';
 import '../../presentation/pages/merchant_sales_page.dart';
 import '../../presentation/pages/merchant_stock_page.dart';
 import '../../presentation/pages/merchant_store_page.dart';
@@ -126,6 +129,20 @@ class AppRouter {
             },
           ),
           GoRoute(
+            path: '/merchant/qr-scanner',
+            name: 'merchant-qr-scanner',
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MerchantQRScannerPage());
+            },
+          ),
+          GoRoute(
+            path: RouteConstants.merchantProfile,
+            name: RouteConstants.merchantProfileName,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: MerchantProfilePage());
+            },
+          ),
+          GoRoute(
             path: RouteConstants.merchantOfferForm,
             name: RouteConstants.merchantOfferFormName,
             pageBuilder: (context, state) {
@@ -202,7 +219,7 @@ class AppRouter {
             path: RouteConstants.consumerProfile,
             name: RouteConstants.consumerProfileName,
             pageBuilder: (context, state) {
-              return const MaterialPage(child: MainHomeScreen());
+              return const MaterialPage(child: ConsumerProfilePage());
             },
           ),
         ],

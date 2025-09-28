@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/video_preview.dart';
 import 'constants.dart';
 import 'video_card.dart';
@@ -6,12 +7,15 @@ import 'video_card.dart';
 /// Widget pour liste horizontale vidéos style Apple TV+
 class VideoSlider extends StatefulWidget {
   const VideoSlider({
-    required this.videos, super.key,
+    required this.videos,
+    super.key,
     this.title,
     this.height = VideoSliderConstants.defaultHeight,
     this.onVideoTap,
     this.onSeeAllTap,
-    this.padding = const EdgeInsets.symmetric(horizontal: VideoSliderConstants.defaultHorizontalPadding),
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: VideoSliderConstants.defaultHorizontalPadding,
+    ),
   });
 
   final List<VideoPreview> videos;
@@ -27,7 +31,8 @@ class VideoSlider extends StatefulWidget {
 
 class _VideoSliderState extends State<VideoSlider>
     with SingleTickerProviderStateMixin {
-  late final ScrollController _scrollController = ScrollController()..addListener(_onScroll);
+  late final ScrollController _scrollController = ScrollController()
+    ..addListener(_onScroll);
   AnimationController? _animationController;
   double _scrollOffset = 0;
   double _viewportWidth = 0;
@@ -37,8 +42,10 @@ class _VideoSliderState extends State<VideoSlider>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: VideoSliderConstants.sliderAnimationDuration), 
-      vsync: this
+      duration: const Duration(
+        milliseconds: VideoSliderConstants.sliderAnimationDuration,
+      ),
+      vsync: this,
     );
   }
 
@@ -57,40 +64,86 @@ class _VideoSliderState extends State<VideoSlider>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      if (widget.title != null) ...[_buildHeader(theme), const SizedBox(height: VideoSliderConstants.headerSpacing)],
-      LayoutBuilder(builder: (context, constraints) {
-        _viewportWidth = constraints.maxWidth;
-        WidgetsBinding.instance.addPostFrameCallback((_) => _recomputeActiveIndex());
-        return SizedBox(
-        height: widget.height,
-        child: ListView.builder(
-          controller: _scrollController,
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          padding: widget.padding,
-          itemCount: widget.videos.length,
-          itemBuilder: (_, index) => _buildVideoItem(constraints.maxWidth, index),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.title != null) ...[
+          _buildHeader(theme),
+          SizedBox(height: context.scaleXS_SM_MD_LG),
+        ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            _viewportWidth = constraints.maxWidth;
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => _recomputeActiveIndex(),
+            );
+            return SizedBox(
+              height: widget.height,
+              child: ListView.builder(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
+                padding: widget.padding,
+                itemCount: widget.videos.length,
+                itemBuilder: (_, index) =>
+                    _buildVideoItem(constraints.maxWidth, index),
+              ),
+            );
+          },
         ),
-      );
-      }),
-    ]);
+      ],
+    );
   }
 
   Widget _buildHeader(ThemeData theme) => Padding(
     padding: widget.padding,
-    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(widget.title!, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, letterSpacing: VideoSliderConstants.letterSpacing)),
-      if (widget.onSeeAllTap != null) TextButton(
-        onPressed: widget.onSeeAllTap,
-        style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: VideoSliderConstants.buttonHorizontalPadding, vertical: VideoSliderConstants.buttonVerticalPadding), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(VideoSliderConstants.buttonBorderRadius))),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Text('Tout voir', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.primary, fontWeight: FontWeight.w600)),
-          const SizedBox(width: VideoSliderConstants.buttonTextIconSpacing),
-          Icon(Icons.chevron_right_rounded, size: VideoSliderConstants.buttonIconSize, color: theme.colorScheme.primary),
-        ]),
-      ),
-    ]),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          widget.title!,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+            letterSpacing: VideoSliderConstants.letterSpacing,
+          ),
+        ),
+        if (widget.onSeeAllTap != null)
+          TextButton(
+            onPressed: widget.onSeeAllTap,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.scaleSM_MD_LG_XL,
+                vertical: context.scaleXXS_XS_SM_MD,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.lg,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Tout voir',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: EcoPlatesDesignTokens.size.icon(context),
+                  color: theme.colorScheme.primary,
+                ),
+              ],
+            ),
+          ),
+      ],
+    ),
   );
 
   Widget _buildVideoItem(double screenWidth, int index) {
@@ -101,7 +154,10 @@ class _VideoSliderState extends State<VideoSlider>
 
     return Container(
       width: VideoSliderConstants.itemWidth,
-      margin: EdgeInsets.only(left: isFirst ? 0 : VideoSliderConstants.itemMargin, right: isLast ? 0 : VideoSliderConstants.itemMargin),
+      margin: EdgeInsets.only(
+        left: isFirst ? 0 : VideoSliderConstants.itemMargin,
+        right: isLast ? 0 : VideoSliderConstants.itemMargin,
+      ),
       child: Transform.translate(
         offset: Offset(itemOffset * VideoSliderConstants.parallaxFactor, 0),
         filterQuality: FilterQuality.high,
@@ -114,6 +170,7 @@ class _VideoSliderState extends State<VideoSlider>
       ),
     );
   }
+
   void _recomputeActiveIndex() {
     if (!mounted) return;
     final centerX = _scrollOffset + (_viewportWidth / 2) - widget.padding.left;
@@ -129,7 +186,8 @@ class _VideoSliderState extends State<VideoSlider>
 /// Widget grille vidéos
 class VideoGrid extends StatelessWidget {
   const VideoGrid({
-    required this.videos, super.key,
+    required this.videos,
+    super.key,
     this.onVideoTap,
     this.scrollController,
     this.shrinkWrap = false,
@@ -141,21 +199,33 @@ class VideoGrid extends StatelessWidget {
   final bool shrinkWrap;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(builder: (context, constraints) {
-    final crossAxisCount = constraints.maxWidth > VideoGridConstants.responsiveBreakpoint ? VideoGridConstants.desktopCrossAxisCount : VideoGridConstants.mobileCrossAxisCount;
-    return GridView.builder(
-      controller: scrollController,
-      shrinkWrap: shrinkWrap,
-      physics: shrinkWrap ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(VideoGridConstants.padding),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        childAspectRatio: VideoCardConstants.defaultWidth / VideoCardConstants.defaultHeight,
-        crossAxisSpacing: VideoGridConstants.crossAxisSpacing,
-        mainAxisSpacing: VideoGridConstants.mainAxisSpacing,
-      ),
-      itemCount: videos.length,
-      itemBuilder: (_, index) => VideoCard(video: videos[index], onTap: () => onVideoTap?.call(videos[index])),
-    );
-  });
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final crossAxisCount =
+          constraints.maxWidth > VideoGridConstants.responsiveBreakpoint
+          ? VideoGridConstants.desktopCrossAxisCount
+          : VideoGridConstants.mobileCrossAxisCount;
+      return GridView.builder(
+        controller: scrollController,
+        shrinkWrap: shrinkWrap,
+        physics: shrinkWrap
+            ? const NeverScrollableScrollPhysics()
+            : const BouncingScrollPhysics(),
+        padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          childAspectRatio:
+              VideoCardConstants.defaultWidth /
+              VideoCardConstants.defaultHeight,
+          crossAxisSpacing: context.scaleXXS_XS_SM_MD,
+          mainAxisSpacing: context.scaleXXS_XS_SM_MD,
+        ),
+        itemCount: videos.length,
+        itemBuilder: (_, index) => VideoCard(
+          video: videos[index],
+          onTap: () => onVideoTap?.call(videos[index]),
+        ),
+      );
+    },
+  );
 }

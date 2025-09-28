@@ -52,7 +52,9 @@ class ResponsiveGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final columnCount = config.getColumnCount(context);
-        final itemWidth = (constraints.maxWidth - (columnCount - 1) * config.spacing) / columnCount;
+        final itemWidth =
+            (constraints.maxWidth - (columnCount - 1) * config.spacing) /
+            columnCount;
 
         return Wrap(
           spacing: config.spacing,
@@ -112,8 +114,8 @@ extension ResponsiveGridExtension on List<Widget> {
     ResponsiveGridConfig config = const ResponsiveGridConfig(),
   }) {
     return ResponsiveGrid(
-      children: this,
       config: config,
+      children: this,
     );
   }
 
@@ -126,12 +128,12 @@ extension ResponsiveGridExtension on List<Widget> {
     double aspectRatio = 1.0,
   }) {
     return FixedResponsiveGrid(
-      children: this,
       crossAxisCount: crossAxisCount,
       spacing: spacing,
       mainAxisSpacing: mainAxisSpacing,
       crossAxisSpacing: crossAxisSpacing,
       aspectRatio: aspectRatio,
+      children: this,
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/router/routes/route_constants.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/store_offers_provider.dart';
@@ -39,13 +40,13 @@ class MerchantStorePage extends ConsumerWidget {
         inactiveOffersCount,
         promotionsCount,
       ),
-      body: Column(
+      body: const Column(
         children: [
           // En-tête avec recherche et filtres
-          _buildHeader(),
+          _StoreHeader(),
 
           // Grille des offres
-          const Expanded(child: StoreOffersGrid()),
+          Expanded(child: StoreOffersGrid()),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -66,11 +67,11 @@ class MerchantStorePage extends ConsumerWidget {
     int promotionsCount,
   ) {
     return AdaptiveAppBar(
-      leading: _buildMerchantLogo(theme),
+      leading: const _MerchantLogo(),
       title: Row(
         children: [
-          const Icon(Icons.storefront, size: 24),
-          const SizedBox(width: 8),
+          Icon(Icons.storefront, size: EcoPlatesDesignTokens.errorIconSize),
+          SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +84,7 @@ class MerchantStorePage extends ConsumerWidget {
                   Text(
                     '$offersCount actives${inactiveOffersCount > 0 ? ' • $inactiveOffersCount inactives' : ''}${promotionsCount > 0 ? ' • $promotionsCount promo' : ''}',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -169,49 +170,6 @@ class MerchantStorePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.black12, width: 0.5)),
-      ),
-      child: const Column(
-        children: [
-          // Barre de recherche
-          StoreSearchBar(),
-
-          SizedBox(height: 4),
-
-          // Chips de filtrage
-          Align(alignment: Alignment.centerLeft, child: StoreFilterChips()),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMerchantLogo(ThemeData theme) {
-    // TODO: Récupérer le logo depuis le profil marchand connecté
-    const merchantLogoUrl =
-        'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center';
-
-    return Container(
-      margin: const EdgeInsets.all(8),
-      child: CircleAvatar(
-        radius: 16,
-        backgroundColor: theme.colorScheme.surface,
-        backgroundImage: const NetworkImage(merchantLogoUrl),
-        onBackgroundImageError: (_, _) {
-          // Fallback si l'image ne charge pas
-        },
-        child: Icon(
-          Icons.store,
-          size: 20,
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-    );
-  }
-
   void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
     switch (action) {
       case 'refresh':
@@ -252,11 +210,18 @@ class MerchantStorePage extends ConsumerWidget {
             child: ListView(
               shrinkWrap: true,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16),
+                Padding(
+                  padding: EdgeInsets.all(
+                    EcoPlatesDesignTokens.spacing.dialogGap(context),
+                  ),
                   child: Text(
                     'Trier les offres par',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: EcoPlatesDesignTokens.typography.modalTitle(
+                        context,
+                      ),
+                      fontWeight: EcoPlatesDesignTokens.typography.title,
+                    ),
                   ),
                 ),
                 ...StoreSortOption.values.map((option) {
@@ -401,5 +366,74 @@ class MerchantStorePage extends ConsumerWidget {
   void _navigateToOfferForm(BuildContext context) {
     // Navigation vers le formulaire d'offres (mode création)
     context.go(RouteConstants.merchantOfferForm);
+  }
+}
+
+/// Widget pour l'en-tête de recherche et filtres avec espacement responsive
+class _StoreHeader extends StatelessWidget {
+  const _StoreHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        EcoPlatesDesignTokens.spacing.microGap(context),
+        EcoPlatesDesignTokens.spacing.microGap(context),
+        EcoPlatesDesignTokens.spacing.microGap(context),
+        EcoPlatesDesignTokens.spacing.microGap(context),
+      ),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.black12,
+            width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+          ),
+        ),
+      ),
+      child: Column(
+        children: [
+          // Barre de recherche
+          const StoreSearchBar(),
+
+          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+
+          // Chips de filtrage
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: StoreFilterChips(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Widget pour le logo du marchand avec espacement responsive
+class _MerchantLogo extends StatelessWidget {
+  const _MerchantLogo();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    // TODO: Récupérer le logo depuis le profil marchand connecté
+    const merchantLogoUrl =
+        'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center';
+
+    return Container(
+      margin: EdgeInsets.all(EcoPlatesDesignTokens.spacing.microGap(context)),
+      child: CircleAvatar(
+        radius: EcoPlatesDesignTokens.radius.lg,
+        backgroundColor: theme.colorScheme.surface,
+        backgroundImage: const NetworkImage(merchantLogoUrl),
+        onBackgroundImageError: (_, _) {
+          // Fallback si l'image ne charge pas
+        },
+        child: Icon(
+          Icons.store,
+          size: EcoPlatesDesignTokens.layout.loadingIndicatorSize,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
   }
 }

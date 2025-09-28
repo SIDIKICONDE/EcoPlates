@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:ecoplates/domain/entities/brand.dart';
 import 'package:ecoplates/presentation/providers/brand_provider.dart';
 import 'package:ecoplates/presentation/widgets/brand_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BrandCard', () {
@@ -33,7 +32,7 @@ void main() {
       container.dispose();
     });
 
-    final sampleBrand = const Brand(
+    const sampleBrand = Brand(
       id: '1',
       name: 'Carrefour',
       logoUrl: 'https://example.com/carrefour-logo.png',
@@ -44,7 +43,6 @@ void main() {
       description: 'Grande enseigne de distribution',
       primaryColor: '#0066CC',
       isPremium: true,
-      isNew: false,
       tagline: 'Tous les choix',
     );
 
@@ -53,7 +51,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: BrandCard(brand: sampleBrand)),
           ),
         ),
@@ -70,7 +68,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: BrandCard(brand: sampleBrand)),
           ),
         ),
@@ -80,14 +78,14 @@ void main() {
       expect(find.text('Supermarché'), findsOneWidget);
     });
 
-    testWidgets('affiche le nombre d\'offres actives', (
+    testWidgets("affiche le nombre d'offres actives", (
       WidgetTester tester,
     ) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: BrandCard(brand: sampleBrand)),
           ),
         ),
@@ -104,7 +102,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: BrandCard(brand: sampleBrand)),
           ),
         ),
@@ -121,7 +119,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: BrandCard(brand: sampleBrand)),
           ),
         ),
@@ -150,7 +148,7 @@ void main() {
       expect(find.byIcon(Icons.new_releases), findsOneWidget);
     });
 
-    testWidgets('n\'affiche pas de badge pour les marques normales', (
+    testWidgets("n'affiche pas de badge pour les marques normales", (
       WidgetTester tester,
     ) async {
       // Arrange
@@ -175,7 +173,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: BrandCard(brand: sampleBrand)),
           ),
         ),
@@ -212,11 +210,11 @@ void main() {
       expect(tapCalled, true);
     });
 
-    testWidgets('gère l\'erreur de chargement du logo', (
+    testWidgets("gère l'erreur de chargement du logo", (
       WidgetTester tester,
     ) async {
       // Arrange
-      final brandWithInvalidLogo = const Brand(
+      const brandWithInvalidLogo = Brand(
         id: '1',
         name: 'Test Brand',
         logoUrl: 'https://invalid-url.com/logo.png',
@@ -231,7 +229,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: BrandCard(brand: brandWithInvalidLogo)),
           ),
         ),
@@ -242,14 +240,14 @@ void main() {
       expect(find.text('Test Brand'), findsOneWidget);
     });
 
-    testWidgets('affiche l\'image de fond appropriée selon la catégorie', (
+    testWidgets("affiche l'image de fond appropriée selon la catégorie", (
       WidgetTester tester,
     ) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(body: BrandCard(brand: sampleBrand)),
           ),
         ),

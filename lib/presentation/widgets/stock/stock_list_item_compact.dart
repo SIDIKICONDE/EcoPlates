@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../pages/stock_item_form/page.dart';
 import '../../providers/stock_items_provider.dart';
@@ -27,25 +28,32 @@ class StockListItemCompact extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    final pad = dense ? 8.0 : 12.0;
-    final radius = dense ? 10.0 : 12.0;
-    final titleSize = dense ? 15.0 : 16.0;
-    final priceSize = dense ? 13.0 : 14.0;
-    final unitSize = dense ? 11.0 : 12.0;
-    final metaSize = dense ? 11.0 : 12.0;
-    final hSpacing = dense ? 6.0 : 8.0;
-
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: dense ? 12 : 16, vertical: 4),
+      margin: EdgeInsets.symmetric(
+        horizontal: dense
+            ? context.scaleXS_SM_MD_LG
+            : context.scaleMD_LG_XL_XXL,
+        vertical: context.scaleXXS_XS_SM_MD,
+      ),
       child: Material(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: BorderRadius.circular(
+          dense
+              ? EcoPlatesDesignTokens.radius.sm
+              : EcoPlatesDesignTokens.radius.md,
+        ),
         elevation: 1,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(
+            dense
+                ? EcoPlatesDesignTokens.radius.sm
+                : EcoPlatesDesignTokens.radius.md,
+          ),
           child: Padding(
-            padding: EdgeInsets.all(pad),
+            padding: EdgeInsets.all(
+              dense ? context.scaleXS_SM_MD_LG : context.scaleSM_MD_LG_XL,
+            ),
             child: Row(
               children: [
                 // Informations principales
@@ -60,7 +68,13 @@ class StockListItemCompact extends ConsumerWidget {
                             child: Text(
                               item.name,
                               style: TextStyle(
-                                fontSize: titleSize,
+                                fontSize: dense
+                                    ? EcoPlatesDesignTokens.typography.hint(
+                                        context,
+                                      )
+                                    : EcoPlatesDesignTokens.typography.text(
+                                        context,
+                                      ),
                                 fontWeight: FontWeight.w500,
                                 color: theme.colorScheme.onSurface,
                               ),
@@ -68,7 +82,7 @@ class StockListItemCompact extends ConsumerWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          SizedBox(width: hSpacing),
+                          SizedBox(width: context.scaleXXS_XS_SM_MD),
                           // Indicateur de stock avec alerte
                           StockIndicator(
                             item: item,
@@ -76,14 +90,24 @@ class StockListItemCompact extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: dense ? 3 : 4),
+                      SizedBox(
+                        height: dense
+                            ? context.scaleXXS_XS_SM_MD / 2
+                            : context.scaleXXS_XS_SM_MD,
+                      ),
                       // Prix et catégorie
                       Row(
                         children: [
                           Text(
                             item.formattedPrice,
                             style: TextStyle(
-                              fontSize: priceSize,
+                              fontSize: dense
+                                  ? EcoPlatesDesignTokens.typography.hint(
+                                      context,
+                                    )
+                                  : EcoPlatesDesignTokens.typography.text(
+                                      context,
+                                    ),
                               fontWeight: FontWeight.w600,
                               color: theme.colorScheme.primary,
                             ),
@@ -91,27 +115,43 @@ class StockListItemCompact extends ConsumerWidget {
                           Text(
                             ' / ${item.unit}',
                             style: TextStyle(
-                              fontSize: unitSize,
+                              fontSize: EcoPlatesDesignTokens.typography.hint(
+                                context,
+                              ),
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          SizedBox(width: dense ? 8 : 12),
+                          SizedBox(
+                            width: dense
+                                ? context.scaleXXS_XS_SM_MD
+                                : context.scaleXS_SM_MD_LG,
+                          ),
                           Container(
-                            width: 4,
-                            height: 4,
+                            width:
+                                EcoPlatesDesignTokens.size.indicator(context) /
+                                2,
+                            height:
+                                EcoPlatesDesignTokens.size.indicator(context) /
+                                2,
                             decoration: BoxDecoration(
                               color: theme.colorScheme.onSurfaceVariant
                                   .withValues(alpha: 0.5),
                               shape: BoxShape.circle,
                             ),
                           ),
-                          SizedBox(width: dense ? 8 : 12),
+                          SizedBox(
+                            width: dense
+                                ? context.scaleXXS_XS_SM_MD
+                                : context.scaleXS_SM_MD_LG,
+                          ),
                           Text(
                             item.category,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: metaSize,
+                              fontSize: EcoPlatesDesignTokens.typography.hint(
+                                context,
+                              ),
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
@@ -126,9 +166,9 @@ class StockListItemCompact extends ConsumerWidget {
                   children: [
                     // Indicateur de statut
                     Container(
-                      width: 8,
-                      height: 8,
-                      margin: const EdgeInsets.only(right: 8),
+                      width: EcoPlatesDesignTokens.layout.statusDotSize,
+                      height: EcoPlatesDesignTokens.layout.statusDotSize,
+                      margin: EdgeInsets.only(right: context.scaleXXS_XS_SM_MD),
                       decoration: BoxDecoration(
                         color: item.status == StockItemStatus.active
                             ? Colors.green
@@ -141,16 +181,19 @@ class StockListItemCompact extends ConsumerWidget {
                       icon: Icon(
                         Icons.more_vert,
                         color: theme.colorScheme.onSurfaceVariant,
-                        size: 20,
+                        size: EcoPlatesDesignTokens.size.icon(context),
                       ),
                       onSelected: (value) =>
                           _handleMenuAction(context, ref, value),
                       itemBuilder: (context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'edit',
                           child: ListTile(
-                            leading: Icon(Icons.edit, size: 20),
-                            title: Text('Modifier'),
+                            leading: Icon(
+                              Icons.edit,
+                              size: EcoPlatesDesignTokens.size.icon(context),
+                            ),
+                            title: const Text('Modifier'),
                             contentPadding: EdgeInsets.zero,
                             visualDensity: VisualDensity.compact,
                           ),
@@ -162,7 +205,7 @@ class StockListItemCompact extends ConsumerWidget {
                               item.status == StockItemStatus.active
                                   ? Icons.pause
                                   : Icons.play_arrow,
-                              size: 20,
+                              size: EcoPlatesDesignTokens.size.icon(context),
                             ),
                             title: Text(
                               item.status == StockItemStatus.active

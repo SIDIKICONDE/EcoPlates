@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/categories.dart';
+import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/offer_form_provider.dart';
 
@@ -14,6 +15,14 @@ class OfferFormBasicFields extends ConsumerWidget {
     final theme = Theme.of(context);
     final formState = ref.watch(offerFormProvider);
 
+    // Espacement adaptatif entre les champs
+    final fieldSpacing = EcoPlatesDesignTokens.spacing.sectionSpacing(context);
+    final fieldRadius = EcoPlatesDesignTokens.radius.fieldRadius(context);
+    final contentPadding = EcoPlatesDesignTokens.spacing.contentPadding(
+      context,
+    );
+    final textSize = EcoPlatesDesignTokens.typography.text(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,21 +31,27 @@ class OfferFormBasicFields extends ConsumerWidget {
           initialValue: formState.title,
           textCapitalization: TextCapitalization.words,
           textInputAction: TextInputAction.next,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: "Titre de l'offre *",
             hintText: 'Ex: Panier surprise déjeuner',
-            prefixIcon: Icon(Icons.title),
-            border: OutlineInputBorder(),
+            prefixIcon: const Icon(Icons.title),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(fieldRadius),
+            ),
+            contentPadding: contentPadding,
           ),
+          style: TextStyle(fontSize: textSize),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Le titre est requis';
             }
-            if (value.trim().length < 5) {
-              return 'Au moins 5 caractères';
+            if (value.trim().length <
+                EcoPlatesDesignTokens.validation.titleMinLength) {
+              return 'Au moins ${EcoPlatesDesignTokens.validation.titleMinLength} caractères';
             }
-            if (value.trim().length > 100) {
-              return 'Maximum 100 caractères';
+            if (value.trim().length >
+                EcoPlatesDesignTokens.validation.titleMaxLength) {
+              return 'Maximum ${EcoPlatesDesignTokens.validation.titleMaxLength} caractères';
             }
             return null;
           },
@@ -47,27 +62,32 @@ class OfferFormBasicFields extends ConsumerWidget {
           },
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: fieldSpacing),
 
         // Description
         TextFormField(
           initialValue: formState.description,
-          maxLines: 4,
+          maxLines: EcoPlatesDesignTokens.layout.descriptionLines(context),
           textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.done,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Description *',
             hintText:
                 'Décrivez votre offre (ingrédients, quantité, particularités...)',
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(fieldRadius),
+            ),
+            contentPadding: contentPadding,
             alignLabelWithHint: true,
           ),
+          style: TextStyle(fontSize: textSize),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'La description est requise';
             }
-            if (value.trim().length < 20) {
-              return 'Au moins 20 caractères';
+            if (value.trim().length <
+                EcoPlatesDesignTokens.validation.descriptionMinLength) {
+              return 'Au moins ${EcoPlatesDesignTokens.validation.descriptionMinLength} caractères';
             }
             return null;
           },
@@ -78,42 +98,54 @@ class OfferFormBasicFields extends ConsumerWidget {
           },
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: fieldSpacing),
 
         // Type d'offre
         InkWell(
           onTap: () => _showOfferTypeModal(context, ref, formState.type),
           child: InputDecorator(
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: "Type d'offre *",
-              prefixIcon: Icon(Icons.restaurant_menu),
-              border: OutlineInputBorder(),
-              suffixIcon: Icon(Icons.arrow_drop_down),
+              prefixIcon: const Icon(Icons.restaurant_menu),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(fieldRadius),
+              ),
+              contentPadding: contentPadding,
+              suffixIcon: const Icon(Icons.arrow_drop_down),
             ),
             child: Text(
               formState.customType ?? _getOfferTypeLabel(formState.type),
-              style: TextStyle(color: theme.colorScheme.onSurface),
+              style: TextStyle(
+                color: theme.colorScheme.onSurface,
+                fontSize: textSize,
+              ),
             ),
           ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: fieldSpacing),
 
         // Catégorie alimentaire
         InkWell(
           onTap: () async =>
               _showFoodCategoryModal(context, ref, formState.category),
           child: InputDecorator(
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Catégorie alimentaire *',
-              prefixIcon: Icon(Icons.category),
-              border: OutlineInputBorder(),
-              suffixIcon: Icon(Icons.arrow_drop_down),
+              prefixIcon: const Icon(Icons.category),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(fieldRadius),
+              ),
+              contentPadding: contentPadding,
+              suffixIcon: const Icon(Icons.arrow_drop_down),
             ),
             child: Text(
               formState.customCategory ??
                   Categories.labelOf(formState.category),
-              style: TextStyle(color: theme.colorScheme.onSurface),
+              style: TextStyle(
+                color: theme.colorScheme.onSurface,
+                fontSize: textSize,
+              ),
             ),
           ),
         ),
@@ -126,6 +158,15 @@ class OfferFormBasicFields extends ConsumerWidget {
     WidgetRef ref,
     OfferType currentType,
   ) async {
+    // Hauteur maximale adaptative pour la modale
+    final modalMaxHeight =
+        MediaQuery.of(context).size.height *
+        EcoPlatesDesignTokens.layout.modalHeightFactor(context);
+
+    // Styles responsives pour la modale
+    final titleSize = EcoPlatesDesignTokens.typography.text(context);
+    final subtitleSize = EcoPlatesDesignTokens.typography.hint(context);
+
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -133,7 +174,7 @@ class OfferFormBasicFields extends ConsumerWidget {
         return SafeArea(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.7,
+              maxHeight: modalMaxHeight,
             ),
             child: SingleChildScrollView(
               child: Column(
@@ -142,15 +183,25 @@ class OfferFormBasicFields extends ConsumerWidget {
                   // Types prédéfinis
                   ...OfferType.values.map((type) {
                     final isSelected = type == currentType;
+
                     return ListTile(
                       leading: Icon(
                         isSelected ? Icons.check_circle : Icons.circle_outlined,
                         color: isSelected
                             ? Theme.of(context).colorScheme.primary
                             : null,
+                        size: EcoPlatesDesignTokens.size.icon(context),
                       ),
-                      title: Text(_getOfferTypeLabel(type)),
-                      subtitle: Text(_getOfferTypeDescription(type)),
+                      title: Text(
+                        _getOfferTypeLabel(type),
+                        style: TextStyle(fontSize: titleSize),
+                      ),
+                      subtitle: Text(
+                        _getOfferTypeDescription(type),
+                        style: TextStyle(fontSize: subtitleSize),
+                      ),
+                      contentPadding: EcoPlatesDesignTokens.spacing
+                          .contentPadding(context),
                       onTap: () {
                         ref
                             .read<OfferFormNotifier>(offerFormProvider.notifier)
@@ -166,16 +217,27 @@ class OfferFormBasicFields extends ConsumerWidget {
                     leading: Icon(
                       Icons.add_circle_outline,
                       color: Theme.of(context).colorScheme.primary,
+                      size: EcoPlatesDesignTokens.size.icon(context),
                     ),
-                    title: const Text('Type personnalisé'),
-                    subtitle: const Text("Définir votre propre type d'offre"),
+                    title: Text(
+                      'Type personnalisé',
+                      style: TextStyle(fontSize: titleSize),
+                    ),
+                    subtitle: Text(
+                      "Définir votre propre type d'offre",
+                      style: TextStyle(fontSize: subtitleSize),
+                    ),
+                    contentPadding: EcoPlatesDesignTokens.spacing
+                        .contentPadding(context),
                     onTap: () async {
                       Navigator.of(context).pop();
                       await _showCustomTypeDialog(context, ref);
                     },
                   ),
                   // Espacement en bas
-                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                  ),
                 ],
               ),
             ),
@@ -191,28 +253,47 @@ class OfferFormBasicFields extends ConsumerWidget {
   ) async {
     final controller = TextEditingController();
 
+    // Espacement et styles responsives pour le dialogue
+    final dialogPadding = EcoPlatesDesignTokens.spacing.contentPadding(context);
+    final fieldRadius = EcoPlatesDesignTokens.radius.fieldRadius(context);
+    final titleSize = EcoPlatesDesignTokens.typography.modalTitle(context);
+    final contentSize = EcoPlatesDesignTokens.typography.modalContent(context);
+    final textSize = EcoPlatesDesignTokens.typography.text(context);
+
     await showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Type d'offre personnalisé"),
+          title: Text(
+            "Type d'offre personnalisé",
+            style: TextStyle(fontSize: titleSize),
+          ),
+          contentPadding: dialogPadding,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 "Entrez le nom de votre type d'offre personnalisé :",
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: contentSize),
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens.validation.dialogContentSpacing,
+              ),
               TextField(
                 controller: controller,
                 autofocus: true,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Type d'offre",
                   hintText: 'Ex: Menu spécial, Box déjeuner...',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(fieldRadius),
+                  ),
+                  contentPadding: EcoPlatesDesignTokens.spacing.contentPadding(
+                    context,
+                  ),
                 ),
+                style: TextStyle(fontSize: textSize),
                 onSubmitted: (value) {
                   if (value.trim().isNotEmpty) {
                     // Pour l'instant, on utilise le type "autre" mais on stocke le nom personnalisé
@@ -260,28 +341,47 @@ class OfferFormBasicFields extends ConsumerWidget {
   ) async {
     final controller = TextEditingController();
 
+    // Espacement et styles responsives pour le dialogue
+    final dialogPadding = EcoPlatesDesignTokens.spacing.contentPadding(context);
+    final fieldRadius = EcoPlatesDesignTokens.radius.fieldRadius(context);
+    final titleSize = EcoPlatesDesignTokens.typography.modalTitle(context);
+    final contentSize = EcoPlatesDesignTokens.typography.modalContent(context);
+    final textSize = EcoPlatesDesignTokens.typography.text(context);
+
     await showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Catégorie alimentaire personnalisée'),
+          title: Text(
+            'Catégorie alimentaire personnalisée',
+            style: TextStyle(fontSize: titleSize),
+          ),
+          contentPadding: dialogPadding,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 'Entrez le nom de votre catégorie alimentaire personnalisée :',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: contentSize),
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens.validation.dialogContentSpacing,
+              ),
               TextField(
                 controller: controller,
                 autofocus: true,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Catégorie alimentaire',
                   hintText: 'Ex: Produits bio, Sans gluten...',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(fieldRadius),
+                  ),
+                  contentPadding: EcoPlatesDesignTokens.spacing.contentPadding(
+                    context,
+                  ),
                 ),
+                style: TextStyle(fontSize: textSize),
                 onSubmitted: (value) {
                   if (value.trim().isNotEmpty) {
                     // Pour l'instant, on utilise la catégorie "autre" mais on stocke le nom personnalisé
@@ -328,6 +428,15 @@ class OfferFormBasicFields extends ConsumerWidget {
     WidgetRef ref,
     FoodCategory currentCategory,
   ) async {
+    // Hauteur maximale adaptative pour la modale
+    final modalMaxHeight =
+        MediaQuery.of(context).size.height *
+        EcoPlatesDesignTokens.layout.modalHeightFactor(context);
+
+    // Styles responsives pour la modale
+    final titleSize = EcoPlatesDesignTokens.typography.text(context);
+    final subtitleSize = EcoPlatesDesignTokens.typography.hint(context);
+
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -335,7 +444,7 @@ class OfferFormBasicFields extends ConsumerWidget {
         return SafeArea(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.7,
+              maxHeight: modalMaxHeight,
             ),
             child: SingleChildScrollView(
               child: Column(
@@ -344,14 +453,21 @@ class OfferFormBasicFields extends ConsumerWidget {
                   // Catégories prédéfinies
                   ...FoodCategory.values.map((category) {
                     final isSelected = category == currentCategory;
+
                     return ListTile(
                       leading: Icon(
                         isSelected ? Icons.check_circle : Icons.circle_outlined,
                         color: isSelected
                             ? Theme.of(context).colorScheme.primary
                             : null,
+                        size: EcoPlatesDesignTokens.size.icon(context),
                       ),
-                      title: Text(Categories.labelOf(category)),
+                      title: Text(
+                        Categories.labelOf(category),
+                        style: TextStyle(fontSize: titleSize),
+                      ),
+                      contentPadding: EcoPlatesDesignTokens.spacing
+                          .contentPadding(context),
                       onTap: () {
                         ref
                             .read<OfferFormNotifier>(offerFormProvider.notifier)
@@ -367,16 +483,27 @@ class OfferFormBasicFields extends ConsumerWidget {
                     leading: Icon(
                       Icons.add_circle_outline,
                       color: Theme.of(context).colorScheme.primary,
+                      size: EcoPlatesDesignTokens.size.icon(context),
                     ),
-                    title: const Text('Catégorie personnalisée'),
-                    subtitle: const Text('Définir votre propre catégorie'),
+                    title: Text(
+                      'Catégorie personnalisée',
+                      style: TextStyle(fontSize: titleSize),
+                    ),
+                    subtitle: Text(
+                      'Définir votre propre catégorie',
+                      style: TextStyle(fontSize: subtitleSize),
+                    ),
+                    contentPadding: EcoPlatesDesignTokens.spacing
+                        .contentPadding(context),
                     onTap: () async {
                       Navigator.of(context).pop();
                       await _showCustomCategoryDialog(context, ref);
                     },
                   ),
                   // Espacement en bas
-                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                  ),
                 ],
               ),
             ),

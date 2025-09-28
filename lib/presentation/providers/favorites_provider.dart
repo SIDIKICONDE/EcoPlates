@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod/src/providers/provider.dart';
 
 /// Notifier pour gérer l'état des favoris
 class FavoriteMerchantIdsNotifier extends Notifier<Set<String>> {
@@ -46,7 +47,7 @@ final favoriteMerchantIdsProvider =
     );
 
 /// Provider pour vérifier si un marchand spécifique est favori
-final isMerchantFavoriteProvider = Provider.family<bool, String>((
+final ProviderFamily<bool, String> isMerchantFavoriteProvider = Provider.family<bool, String>((
   ref,
   merchantId,
 ) {

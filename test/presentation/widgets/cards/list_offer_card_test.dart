@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:ecoplates/domain/entities/brand.dart';
 import 'package:ecoplates/domain/entities/food_offer.dart';
 import 'package:ecoplates/presentation/providers/brand_provider.dart';
 import 'package:ecoplates/presentation/widgets/list_offer_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ListOfferCard', () {
@@ -117,7 +116,7 @@ void main() {
         type: sampleOffer.type,
         category: sampleOffer.category,
         originalPrice: sampleOffer.originalPrice,
-        discountedPrice: 0.0, // Gratuit
+        discountedPrice: 0, // Gratuit
         quantity: sampleOffer.quantity,
         pickupStartTime: sampleOffer.pickupStartTime,
         pickupEndTime: sampleOffer.pickupEndTime,

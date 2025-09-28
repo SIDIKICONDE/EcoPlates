@@ -1,8 +1,12 @@
 import 'dart:ui';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/design_tokens.dart';
+import '../../core/services/image_cache_service.dart';
+import '../../core/widgets/eco_cached_image.dart';
 import '../../domain/entities/merchant.dart';
 import '../providers/favorites_provider.dart';
 
@@ -23,17 +27,22 @@ class FavoriteMerchantCard extends ConsumerWidget {
     final isFavorite = ref.watch(isMerchantFavoriteProvider(merchant.id));
 
     return InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
       onTap: onTap,
       child: Stack(
         children: [
           // Effet glassmorphism
           ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(
+              EcoPlatesDesignTokens.radius.lg,
+            ),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              filter: ImageFilter.blur(
+                sigmaX: EcoPlatesDesignTokens.elevation.largeBlur,
+                sigmaY: EcoPlatesDesignTokens.elevation.largeBlur,
+              ),
               child: Container(
-                height: 128,
+                height: EcoPlatesDesignTokens.size.buttonHeight(context) * 3,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
@@ -43,7 +52,9 @@ class FavoriteMerchantCard extends ConsumerWidget {
                       Colors.white.withValues(alpha: 0.4),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens.radius.lg,
+                  ),
                   border: Border.all(
                     width: 1.5,
                     color: LinearGradient(
@@ -55,212 +66,282 @@ class FavoriteMerchantCard extends ConsumerWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: colorScheme.primary.withValues(alpha: 0.15),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                      spreadRadius: 2,
+                      color: colorScheme.primary.withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                      ),
+                      blurRadius: EcoPlatesDesignTokens.elevation.largeBlur,
+                      offset: EcoPlatesDesignTokens.elevation.elevatedOffset,
+                      spreadRadius: 2.0,
                     ),
                   ],
                 ),
                 child: Stack(
                   children: [
-                    // Contenu principal
+                    // Contenu principal (responsive)
                     Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          // Image carré
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              merchant.imageUrl,
-                              width: 92,
-                              height: 92,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) => Container(
-                                width: 92,
-                                height: 92,
+                      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final bool isNarrow = constraints.maxWidth < 320;
+                          final double targetSide =
+                              EcoPlatesDesignTokens.size.icon(context) * 4.6;
+                          final double imageSide = math.max(
+                            40,
+                            math.min(
+                              targetSide,
+                              constraints.maxWidth * (isNarrow ? 0.28 : 0.30),
+                            ),
+                          );
+
+                          final Widget image = ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              EcoPlatesDesignTokens.radius.md,
+                            ),
+                            child: EcoCachedImage(
+                              imageUrl: merchant.imageUrl,
+                              width: imageSide,
+                              height: imageSide,
+                              size: ImageSize.thumbnail,
+                              placeholder: Container(
+                                width: imageSide,
+                                height: imageSide,
                                 color: Colors.grey[200],
-                                child: const Icon(
+                              ),
+                              errorWidget: Container(
+                                width: imageSide,
+                                height: imageSide,
+                                color: Colors.grey[200],
+                                child: Icon(
                                   Icons.store,
                                   color: Colors.grey,
+                                  size: EcoPlatesDesignTokens.size.icon(
+                                    context,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 12),
+                          );
 
-                          // Infos
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Ligne titre + coeur
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            merchant.name,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black87,
-                                            ),
+                          final Widget infoColumn = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Ligne titre + coeur
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          merchant.name,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: EcoPlatesDesignTokens
+                                                .typography
+                                                .titleSize(context),
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black87,
                                           ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            merchant.cuisineType,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey[700],
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                        ),
+                                        SizedBox(
+                                          height: context.scaleXXS_XS_SM_MD / 2,
+                                        ),
+                                        Text(
+                                          merchant.cuisineType,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: EcoPlatesDesignTokens
+                                                .typography
+                                                .hint(context),
+                                            color: Colors.grey[700],
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    // Bouton toggle favori
-                                    IconButton(
-                                      onPressed: () {
-                                        ref
-                                            .read(
-                                              favoriteMerchantIdsProvider
-                                                  .notifier,
-                                            )
-                                            .toggleFavorite(merchant.id);
-
-                                        // Animation de feedback
-                                        if (context.mounted) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                isFavorite
-                                                    ? 'Retiré des favoris'
-                                                    : 'Ajouté aux favoris',
-                                              ),
-                                              duration: const Duration(
-                                                seconds: 1,
-                                              ),
-                                              backgroundColor: isFavorite
-                                                  ? Colors.grey[700]
-                                                  : Colors.green[700],
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      icon: AnimatedSwitcher(
-                                        duration: const Duration(
-                                          milliseconds: 300,
                                         ),
-                                        child: Icon(
-                                          isFavorite
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          key: ValueKey(isFavorite),
-                                          size: 20,
-                                          color: isFavorite
-                                              ? Colors.red[500]
-                                              : Colors.grey[600],
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(
-                                        minWidth: 32,
-                                        minHeight: 32,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                const SizedBox(height: 4),
-
-                                // Rating + distance
-                                Row(
-                                  children: [
-                                    _StarRating(rating: merchant.rating),
-                                    const SizedBox(width: 8),
-                                    _Chip(
-                                      icon: Icons.place_outlined,
-                                      text: merchant.distanceText,
-                                      color: colorScheme.primary,
-                                    ),
-                                  ],
-                                ),
-
-                                const SizedBox(height: 4),
-
-                                // Offre / prix minimum
-                                if (merchant.hasActiveOffer)
-                                  Row(
-                                    children: [
-                                      _Chip(
-                                        icon: Icons.local_offer_outlined,
-                                        text:
-                                            '${merchant.availableOffers} offres',
-                                        color: Colors.green[600]!,
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        'Dès ${merchant.minPrice.toStringAsFixed(2)}€',
-                                        style: const TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                else
-                                  Text(
-                                    "Pas d'offre",
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey[600],
+                                      ],
                                     ),
                                   ),
+                                  // Bouton toggle favori
+                                  IconButton(
+                                    onPressed: () {
+                                      ref
+                                          .read(
+                                            favoriteMerchantIdsProvider
+                                                .notifier,
+                                          )
+                                          .toggleFavorite(merchant.id);
+
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              isFavorite
+                                                  ? 'Retiré des favoris'
+                                                  : 'Ajouté aux favoris',
+                                            ),
+                                            duration: const Duration(
+                                              seconds: 1,
+                                            ),
+                                            backgroundColor: isFavorite
+                                                ? Colors.grey[700]
+                                                : Colors.green[700],
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    icon: AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      child: Icon(
+                                        isFavorite
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        key: ValueKey(isFavorite),
+                                        size: EcoPlatesDesignTokens.size.icon(
+                                          context,
+                                        ),
+                                        color: isFavorite
+                                            ? Colors.red[500]
+                                            : Colors.grey[600],
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(
+                                      minWidth: EcoPlatesDesignTokens
+                                          .size
+                                          .minTouchTarget,
+                                      minHeight: EcoPlatesDesignTokens
+                                          .size
+                                          .minTouchTarget,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+
+                              // Rating + distance
+                              Row(
+                                children: [
+                                  _StarRating(rating: merchant.rating),
+                                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                                  _Chip(
+                                    icon: Icons.place_outlined,
+                                    text: merchant.distanceText,
+                                    color: colorScheme.primary,
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+
+                              // Offre / prix minimum
+                              if (merchant.hasActiveOffer)
+                                Row(
+                                  children: [
+                                    _Chip(
+                                      icon: Icons.local_offer_outlined,
+                                      text:
+                                          '${merchant.availableOffers} offres',
+                                      color: Colors.green[600]!,
+                                    ),
+                                    SizedBox(
+                                      width: context.scaleXXS_XS_SM_MD * 1.5,
+                                    ),
+                                    Text(
+                                      'Dès ${merchant.minPrice.toStringAsFixed(2)}€',
+                                      style: TextStyle(
+                                        fontSize: EcoPlatesDesignTokens
+                                            .typography
+                                            .text(context),
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              else
+                                Text(
+                                  "Pas d'offre",
+                                  style: TextStyle(
+                                    fontSize:
+                                        EcoPlatesDesignTokens.typography.hint(
+                                          context,
+                                        ) -
+                                        2,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                            ],
+                          );
+
+                          if (isNarrow) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                image,
+                                SizedBox(height: context.scaleXS_SM_MD_LG),
+                                infoColumn,
                               ],
-                            ),
-                          ),
-                        ],
+                            );
+                          }
+
+                          return Row(
+                            children: [
+                              image,
+                              SizedBox(width: context.scaleXS_SM_MD_LG),
+                              Expanded(child: infoColumn),
+                            ],
+                          );
+                        },
                       ),
                     ),
 
                     // Badge Favori en coin avec effet glassmorphism
                     if (isFavorite)
                       Positioned(
-                        top: 8,
-                        left: 8,
+                        top: context.scaleXXS_XS_SM_MD,
+                        left: context.scaleXXS_XS_SM_MD,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(
+                            EcoPlatesDesignTokens.radius.sm,
+                          ),
                           child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                            filter: ImageFilter.blur(
+                              sigmaX: EcoPlatesDesignTokens.elevation.smallBlur,
+                              sigmaY: EcoPlatesDesignTokens.elevation.smallBlur,
+                            ),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.scaleXXS_XS_SM_MD,
+                                vertical: context.scaleXXS_XS_SM_MD / 2,
                               ),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.pink[100]!.withValues(alpha: 0.8),
-                                    Colors.pink[50]!.withValues(alpha: 0.6),
+                                    Colors.pink[100]!.withValues(
+                                      alpha: EcoPlatesDesignTokens
+                                          .opacity
+                                          .almostOpaque,
+                                    ),
+                                    Colors.pink[50]!.withValues(
+                                      alpha:
+                                          EcoPlatesDesignTokens.opacity.subtle,
+                                    ),
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(
+                                  EcoPlatesDesignTokens.radius.sm,
+                                ),
                                 border: Border.all(
                                   color: Colors.pink[300]!.withValues(
-                                    alpha: 0.5,
+                                    alpha: EcoPlatesDesignTokens.opacity.subtle,
                                   ),
                                 ),
                               ),
@@ -269,14 +350,24 @@ class FavoriteMerchantCard extends ConsumerWidget {
                                 children: [
                                   Icon(
                                     Icons.favorite,
-                                    size: 12,
+                                    size:
+                                        EcoPlatesDesignTokens.size.icon(
+                                          context,
+                                        ) /
+                                        2,
                                     color: Colors.pink[600],
                                   ),
-                                  const SizedBox(width: 4),
+                                  SizedBox(
+                                    width: context.scaleXXS_XS_SM_MD / 2,
+                                  ),
                                   Text(
                                     'Favori',
                                     style: TextStyle(
-                                      fontSize: 11,
+                                      fontSize:
+                                          EcoPlatesDesignTokens.typography.hint(
+                                            context,
+                                          ) -
+                                          2,
                                       color: Colors.pink[700],
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -307,11 +398,18 @@ class _StarRating extends StatelessWidget {
     final r = rating.clamp(0, 5);
     return Row(
       children: [
-        Icon(Icons.star, size: 16, color: Colors.amber[600]),
-        const SizedBox(width: 2),
+        Icon(
+          Icons.star,
+          size: EcoPlatesDesignTokens.size.icon(context),
+          color: Colors.amber[600],
+        ),
+        SizedBox(width: context.scaleXXS_XS_SM_MD / 4),
         Text(
           r.toStringAsFixed(1),
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: EcoPlatesDesignTokens.typography.hint(context),
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     );
@@ -327,21 +425,32 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.scaleXXS_XS_SM_MD,
+        vertical: context.scaleXXS_XS_SM_MD / 4,
+      ),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
+        color: color.withValues(
+          alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+        ),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
+        border: Border.all(
+          color: color.withValues(alpha: EcoPlatesDesignTokens.opacity.pressed),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: color),
-          const SizedBox(width: 4),
+          Icon(
+            icon,
+            size: EcoPlatesDesignTokens.size.icon(context) / 2,
+            color: color,
+          ),
+          SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
           Text(
             text,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: EcoPlatesDesignTokens.typography.hint(context) - 2,
               color: color,
               fontWeight: FontWeight.w600,
             ),

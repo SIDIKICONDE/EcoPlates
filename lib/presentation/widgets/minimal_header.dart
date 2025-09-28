@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 
+import '../../core/responsive/design_tokens.dart';
 import 'common/location_header.dart';
 
 /// En-tête minimaliste, élégant et professionnel
@@ -9,7 +11,6 @@ import 'common/location_header.dart';
 /// - Légère bordure inférieure pour la séparation
 /// - Titre centré, leading et actions optionnels
 class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
-
   const MinimalHeader({
     super.key,
     this.title,
@@ -31,25 +32,26 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool showLocationInstead;
 
   @override
-  Size get preferredSize => Size.fromHeight(height + (kIsWeb ? 0 : 0));
+  ui.Size get preferredSize => ui.Size.fromHeight(height + (kIsWeb ? 0 : 0));
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bg = backgroundColor ?? theme.colorScheme.surface;
-    final dividerColor = theme.dividerColor.withValues(alpha: 0.08);
+    final dividerColor = theme.dividerColor.withValues(
+      alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+    );
 
     // Si aucune action n'est fournie, on réserve l'espace pour éviter les "sauts"
     final right = actions == null || actions!.isEmpty
-        ? const SizedBox(width: 44)
+        ? SizedBox(width: EcoPlatesDesignTokens.size.minTouchTarget)
         : Row(mainAxisSize: MainAxisSize.min, children: actions!);
 
     return Material(
       color: bg,
       child: SafeArea(
         bottom: false,
-        child: Container
-          (
+        child: Container(
           height: height,
           decoration: BoxDecoration(
             border: showBottomDivider
@@ -62,15 +64,14 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             children: [
               // Leading (ex: bouton retour ou logo compact)
-              leading ?? const SizedBox(width: 44),
+              leading ??
+                  SizedBox(width: EcoPlatesDesignTokens.size.minTouchTarget),
 
               // Titre centré ou localisation
               Expanded(
                 child: showLocationInstead
                     ? const Center(
-                        child: LocationHeader(
-                          
-                        ),
+                        child: LocationHeader(),
                       )
                     : Text(
                         title ?? '',

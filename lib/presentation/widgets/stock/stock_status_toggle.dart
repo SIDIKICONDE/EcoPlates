@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
@@ -90,41 +91,50 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
     final isActive = widget.item.status == StockItemStatus.active;
 
     if (widget.compactMode) {
-      return _buildCompactToggle(theme, isActive);
+      return _buildCompactToggle(context, theme, isActive);
     } else {
-      return _buildStandardToggle(theme, isActive);
+      return _buildStandardToggle(context, theme, isActive);
     }
   }
 
-  Widget _buildStandardToggle(ThemeData theme, bool isActive) {
+  Widget _buildStandardToggle(
+    BuildContext context,
+    ThemeData theme,
+    bool isActive,
+  ) {
     if (!widget.showLabel) {
-      return _buildSwitchOnly(theme, isActive);
+      return _buildSwitchOnly(context, theme, isActive);
     }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildStatusLabel(theme, isActive),
-        const SizedBox(width: 8),
-        _buildSwitchOnly(theme, isActive),
+        _buildStatusLabel(context, theme, isActive),
+        SizedBox(width: context.scaleXXS_XS_SM_MD),
+        _buildSwitchOnly(context, theme, isActive),
       ],
     );
   }
 
-  Widget _buildCompactToggle(ThemeData theme, bool isActive) {
+  Widget _buildCompactToggle(
+    BuildContext context,
+    ThemeData theme,
+    bool isActive,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildSwitchOnly(theme, isActive, compact: true),
+        _buildSwitchOnly(context, theme, isActive, compact: true),
         if (widget.showLabel) ...[
-          const SizedBox(height: 4),
-          _buildStatusLabel(theme, isActive, compact: true),
+          SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+          _buildStatusLabel(context, theme, isActive, compact: true),
         ],
       ],
     );
   }
 
   Widget _buildSwitchOnly(
+    BuildContext context,
     ThemeData theme,
     bool isActive, {
     bool compact = false,
@@ -132,10 +142,14 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
     if (_isToggling) {
       if (widget.showLoading) {
         return SizedBox(
-          width: compact ? 16 : 20,
-          height: compact ? 16 : 20,
+          width: compact
+              ? EcoPlatesDesignTokens.size.icon(context)
+              : EcoPlatesDesignTokens.size.icon(context) * 1.25,
+          height: compact
+              ? EcoPlatesDesignTokens.size.icon(context)
+              : EcoPlatesDesignTokens.size.icon(context) * 1.25,
           child: CircularProgressIndicator(
-            strokeWidth: compact ? 2 : 2.5,
+            strokeWidth: 3,
             color: theme.colorScheme.primary,
           ),
         );
@@ -173,34 +187,55 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
   }
 
   Widget _buildStatusLabel(
+    BuildContext context,
     ThemeData theme,
     bool isActive, {
     bool compact = false,
   }) {
     final labelPadding = EdgeInsets.symmetric(
-      horizontal: compact ? 6 : 8,
-      vertical: compact ? 2 : 4,
+      horizontal: compact
+          ? context.scaleXXS_XS_SM_MD
+          : context.scaleXS_SM_MD_LG,
+      vertical: compact
+          ? context.scaleXXS_XS_SM_MD / 4
+          : context.scaleXXS_XS_SM_MD / 2,
     );
 
     final labelContainer = Container(
       padding: labelPadding,
       decoration: BoxDecoration(
         color: isActive
-            ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
-            : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(compact ? 8 : 12),
+            ? theme.colorScheme.primaryContainer.withValues(
+                alpha: EcoPlatesDesignTokens.opacity.subtle,
+              )
+            : theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: EcoPlatesDesignTokens.opacity.pressed,
+              ),
+        borderRadius: BorderRadius.circular(
+          compact
+              ? EcoPlatesDesignTokens.radius.sm
+              : EcoPlatesDesignTokens.radius.md,
+        ),
         border: Border.all(
           color: isActive
-              ? theme.colorScheme.primary.withValues(alpha: 0.3)
-              : theme.colorScheme.outline.withValues(alpha: 0.2),
+              ? theme.colorScheme.primary.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.subtle,
+                )
+              : theme.colorScheme.outline.withValues(
+                  alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                ),
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: compact ? 6 : 8,
-            height: compact ? 6 : 8,
+            width: compact
+                ? EcoPlatesDesignTokens.layout.statusDotSize / 2
+                : EcoPlatesDesignTokens.layout.statusDotSize,
+            height: compact
+                ? EcoPlatesDesignTokens.layout.statusDotSize / 2
+                : EcoPlatesDesignTokens.layout.statusDotSize,
             decoration: BoxDecoration(
               color: isActive
                   ? theme.colorScheme.primary
@@ -208,11 +243,17 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
               shape: BoxShape.circle,
             ),
           ),
-          SizedBox(width: compact ? 4 : 6),
+          SizedBox(
+            width: compact
+                ? context.scaleXXS_XS_SM_MD / 2
+                : context.scaleXXS_XS_SM_MD,
+          ),
           Text(
             widget.item.status.label,
             style: TextStyle(
-              fontSize: compact ? 11 : 12,
+              fontSize: compact
+                  ? EcoPlatesDesignTokens.typography.hint(context)
+                  : EcoPlatesDesignTokens.typography.text(context),
               fontWeight: FontWeight.w500,
               color: isActive
                   ? theme.colorScheme.onPrimaryContainer

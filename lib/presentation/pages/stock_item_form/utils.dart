@@ -32,21 +32,22 @@ const List<String> stockItemUnits = [
 ];
 
 /// Retourne la couleur associée à une catégorie
-Color getCategoryColor(String category) {
+Color getCategoryColor(BuildContext context, String category) {
+  final theme = Theme.of(context);
   final colors = {
-    'Fruits': Colors.orange,
-    'Légumes': Colors.green,
-    'Plats': Colors.deepOrange,
-    'Boulangerie': Colors.brown,
-    'Boissons': Colors.blue,
-    'Épicerie': Colors.purple,
-    'Viande': Colors.red,
-    'Poisson': Colors.cyan,
-    'Produits laitiers': Colors.amber,
-    'Surgelés': Colors.lightBlue,
-    'Autre': Colors.grey,
+    'Fruits': theme.colorScheme.secondary,
+    'Légumes': theme.colorScheme.primary,
+    'Plats': theme.colorScheme.tertiary,
+    'Boulangerie': theme.colorScheme.primaryContainer,
+    'Boissons': theme.colorScheme.secondaryContainer,
+    'Épicerie': theme.colorScheme.tertiaryContainer,
+    'Viande': theme.colorScheme.error,
+    'Poisson': theme.colorScheme.inversePrimary,
+    'Produits laitiers': theme.colorScheme.surfaceContainerHighest,
+    'Surgelés': theme.colorScheme.surfaceContainer,
+    'Autre': theme.colorScheme.outline,
   };
-  return colors[category] ?? Colors.grey;
+  return colors[category] ?? theme.colorScheme.outline;
 }
 
 /// Retourne l'icône associée à une catégorie

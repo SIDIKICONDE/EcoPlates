@@ -24,42 +24,34 @@ class MainHomeScreen extends ConsumerStatefulWidget {
 class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: MinimalHeader(showLocationInstead: true),
+    return Scaffold(
+      appBar: const MinimalHeader(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 4),
+          children: const [
+            SizedBox(height: 0),
 
-            // Section des grandes enseignes (toujours en premier)
-            BrandSection(),
+            // Sections de l'écran d'accueil (ordre défini dans EcoPlatesDesignTokens.homeScreen.sectionOrder)
+            BrandSection(), // Grandes enseignes (toujours en premier)
+            SizedBox(height: 0),
+            CategoriesSection(), // Catégories
+            SizedBox(height: 0),
+            NearbySection(), // Près de chez vous
+            SizedBox(height: 0),
+            UrgentSection(), // Offres urgentes
+            SizedBox(height: 0),
+            RecommendedSection(), // Recommandé pour vous
+            SizedBox(height: 0),
+            MealsSection(), // Repas complets
+            SizedBox(height: 0),
+            MerchantSection(), // Marchands partenaires
+            SizedBox(height: 0),
+            VideosSection(), // Vidéos et astuces
+            SizedBox(height: 0),
+            FavoritesMerchantsSection(), // Commerçants favoris
 
-            // Section des catégories
-            CategoriesSection(),
-
-            // Section Près de chez vous (nouvelle)
-            NearbySection(),
-
-            // Section des offres urgentes
-            UrgentSection(),
-
-            // Section recommandé pour vous
-            RecommendedSection(),
-
-            // Section des repas complets
-            MealsSection(),
-
-            // Section des marchands partenaires
-            MerchantSection(),
-
-            // Section des vidéos et astuces
-            VideosSection(),
-
-            // Section des commerçants favoris (slider)
-            FavoritesMerchantsSection(),
-
-            SizedBox(height: 16),
+            SizedBox(height: 0),
           ],
         ),
       ),

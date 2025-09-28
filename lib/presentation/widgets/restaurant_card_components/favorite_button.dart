@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/design_tokens.dart';
 
 /// Bouton favori animé avec effet de transition
 class FavoriteButton extends StatelessWidget {
@@ -11,25 +12,33 @@ class FavoriteButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(6),
+        padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.9),
+          color: Colors.white.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+          ),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: EcoPlatesDesignTokens.colors.overlayBlack.withValues(
+                alpha: EcoPlatesDesignTokens.opacity.subtle,
+              ),
+              blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
+              offset: EcoPlatesDesignTokens.elevation.standardOffset,
             ),
           ],
         ),
         child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
+          duration: EcoPlatesDesignTokens.animation.normal,
           child: Icon(
             isFavorite ? Icons.favorite : Icons.favorite_border,
             key: ValueKey(isFavorite),
-            color: isFavorite ? Colors.red : Colors.grey.shade600,
-            size: 18,
+            color: isFavorite
+                ? EcoPlatesDesignTokens.colors.snackbarError
+                : Theme.of(context).colorScheme.onSurface.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                  ),
+            size: EcoPlatesDesignTokens.size.indicator(context),
           ),
         ),
       ),

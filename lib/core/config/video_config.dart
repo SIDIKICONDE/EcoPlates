@@ -86,22 +86,22 @@ class VideoConfig {
   static const double preloadStartThreshold = 0.8; // Start preloading at 80% completion
 
   /// Lazy loading configuration
-  static const double lazyLoadThreshold = 200.0; // pixels before viewport
+  static const double lazyLoadThreshold = 200; // pixels before viewport
   static const int initialLoadCount = 3; // Number of videos to load initially
 }
 
 enum VideoQuality { low, medium, high }
 
 class VideoQualityConfig {
-  final String resolution;
-  final int bitrate;
-  final String suffix;
 
   const VideoQualityConfig({
     required this.resolution,
     required this.bitrate,
     required this.suffix,
   });
+  final String resolution;
+  final int bitrate;
+  final String suffix;
 }
 
 /// Adaptive bitrate streaming configuration
@@ -115,7 +115,7 @@ class AdaptiveBitrateConfig {
   static const Duration checkInterval = Duration(seconds: 5);
 
   /// Quality switch threshold (avoid frequent switching)
-  static const double switchThresholdMbps = 1.0;
+  static const double switchThresholdMbps = 1;
 
   /// Buffer configuration
   static const Duration minBufferDuration = Duration(seconds: 10);

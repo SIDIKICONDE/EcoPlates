@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/categories.dart';
+import '../../../core/responsive/design_tokens.dart';
 import '../../providers/store_offers_provider.dart';
 
 /// Chips de filtrage pour les offres de la boutique
@@ -31,14 +32,14 @@ class StoreFilterChips extends ConsumerWidget {
               filters.displayMode == OfferDisplayMode.all
                   ? Icons.check_circle
                   : Icons.circle_outlined,
-              size: 18,
+              size: EcoPlatesDesignTokens.size.icon(context),
             ),
             backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.5),
+                .withValues(alpha: EcoPlatesDesignTokens.opacity.pressed),
             selectedColor: theme.colorScheme.primaryContainer,
             checkmarkColor: theme.colorScheme.onPrimaryContainer,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
 
           // Filtre Actives
           FilterChip(
@@ -46,20 +47,24 @@ class StoreFilterChips extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text('Actives'),
-                const SizedBox(width: 4),
+                SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.scaleXXS_XS_SM_MD,
+                    vertical: context.scaleXXS_XS_SM_MD / 4,
                   ),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10),
+                    color: theme.colorScheme.outline.withValues(
+                      alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                    ),
+                    borderRadius: BorderRadius.circular(
+                      EcoPlatesDesignTokens.radius.sm,
+                    ),
                   ),
                   child: Text(
                     ref.watch(activeOffersCountProvider).toString(),
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -77,14 +82,14 @@ class StoreFilterChips extends ConsumerWidget {
               filters.displayMode == OfferDisplayMode.activeOnly
                   ? Icons.check_circle
                   : Icons.circle_outlined,
-              size: 18,
+              size: EcoPlatesDesignTokens.size.icon(context),
             ),
             backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.5),
+                .withValues(alpha: EcoPlatesDesignTokens.opacity.pressed),
             selectedColor: theme.colorScheme.primaryContainer,
             checkmarkColor: theme.colorScheme.onPrimaryContainer,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
 
           // Filtre Inactives
           FilterChip(
@@ -92,20 +97,24 @@ class StoreFilterChips extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text('Inactives'),
-                const SizedBox(width: 4),
+                SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.scaleXXS_XS_SM_MD,
+                    vertical: context.scaleXXS_XS_SM_MD / 4,
                   ),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10),
+                    color: theme.colorScheme.outline.withValues(
+                      alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                    ),
+                    borderRadius: BorderRadius.circular(
+                      EcoPlatesDesignTokens.radius.sm,
+                    ),
                   ),
                   child: Text(
                     ref.watch(inactiveOffersCountProvider).toString(),
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -123,14 +132,14 @@ class StoreFilterChips extends ConsumerWidget {
               filters.displayMode == OfferDisplayMode.inactiveOnly
                   ? Icons.check_circle
                   : Icons.circle_outlined,
-              size: 18,
+              size: EcoPlatesDesignTokens.size.icon(context),
             ),
             backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.5),
+                .withValues(alpha: EcoPlatesDesignTokens.opacity.pressed),
             selectedColor: theme.colorScheme.primaryContainer,
             checkmarkColor: theme.colorScheme.onPrimaryContainer,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
 
           // Filtre promotions
           FilterChip(
@@ -139,20 +148,24 @@ class StoreFilterChips extends ConsumerWidget {
               children: [
                 const Text('Promotions'),
                 if (filters.showPromotionsOnly) ...[
-                  const SizedBox(width: 4),
+                  SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.scaleXXS_XS_SM_MD,
+                      vertical: context.scaleXXS_XS_SM_MD / 4,
                     ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.error,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(
+                        EcoPlatesDesignTokens.radius.sm,
+                      ),
                     ),
                     child: Text(
                       ref.watch(activePromotionsCountProvider).toString(),
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: EcoPlatesDesignTokens.typography.hint(
+                          context,
+                        ),
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onError,
                       ),
@@ -165,13 +178,16 @@ class StoreFilterChips extends ConsumerWidget {
             onSelected: (_) {
               ref.read(storeFiltersProvider.notifier).togglePromotionsOnly();
             },
-            avatar: const Icon(Icons.local_offer, size: 18),
+            avatar: Icon(
+              Icons.local_offer,
+              size: EcoPlatesDesignTokens.size.icon(context),
+            ),
             backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.5),
+                .withValues(alpha: EcoPlatesDesignTokens.opacity.pressed),
             selectedColor: theme.colorScheme.errorContainer,
             checkmarkColor: theme.colorScheme.onErrorContainer,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
 
           // Divider
           Container(
@@ -179,18 +195,18 @@ class StoreFilterChips extends ConsumerWidget {
             width: 1,
             color: theme.colorScheme.outlineVariant,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
 
           // Chips de catégories
           ...categories.map((category) {
             final isSelected = filters.selectedCategories.contains(category);
             return Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: EdgeInsets.only(right: context.scaleXXS_XS_SM_MD),
               child: FilterChip(
                 label: Text(Categories.labelOf(category)),
                 avatar: Icon(
                   Categories.iconOf(category),
-                  size: 16,
+                  size: EcoPlatesDesignTokens.size.indicator(context),
                   color: isSelected
                       ? theme.colorScheme.onSecondaryContainer
                       : Categories.colorOf(category),
@@ -202,7 +218,7 @@ class StoreFilterChips extends ConsumerWidget {
                       .toggleCategory(category);
                 },
                 backgroundColor: theme.colorScheme.surfaceContainerHighest
-                    .withValues(alpha: 0.5),
+                    .withValues(alpha: EcoPlatesDesignTokens.opacity.pressed),
                 selectedColor: theme.colorScheme.secondaryContainer,
                 checkmarkColor: theme.colorScheme.onSecondaryContainer,
               ),
@@ -219,7 +235,7 @@ class StoreFilterChips extends ConsumerWidget {
                 ref.read(storeFiltersProvider.notifier).resetFilters();
               },
               tooltip: 'Réinitialiser les filtres',
-              iconSize: 20,
+              iconSize: EcoPlatesDesignTokens.size.icon(context),
               color: theme.colorScheme.error,
             ),
           ],

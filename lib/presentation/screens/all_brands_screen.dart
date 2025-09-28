@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/responsive/design_tokens.dart';
 import '../providers/brand_provider.dart';
 import '../widgets/brand_card.dart';
 
@@ -10,7 +12,7 @@ class AllBrandsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final brandsAsync = ref.watch(brandsProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Toutes les enseignes'),
@@ -18,19 +20,25 @@ class AllBrandsScreen extends ConsumerWidget {
       ),
       body: brandsAsync.when(
         data: (brands) => ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(
+            EcoPlatesDesignTokens.spacing.dialogGap(context),
+          ),
           itemCount: brands.length,
           itemBuilder: (context, index) {
             final brand = brands[index];
             return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: EdgeInsets.only(
+                bottom: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              ),
               child: BrandCard(
                 brand: brand,
                 onTap: () {
                   // Navigation vers la page détail de la marque
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${brand.name} - ${brand.formattedOffersCount}'),
+                      content: Text(
+                        '${brand.name} - ${brand.formattedOffersCount}',
+                      ),
                       duration: const Duration(seconds: 1),
                     ),
                   );
@@ -48,21 +56,27 @@ class AllBrandsScreen extends ConsumerWidget {
             children: [
               Icon(
                 Icons.error_outline,
-                size: 64,
-                color: Colors.red[400],
+                size: EcoPlatesDesignTokens.layout.errorStateIconSize,
+                color: Theme.of(context).colorScheme.error,
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              ),
               Text(
                 'Erreur lors du chargement',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
               Text(
                 error.toString(),
-                style: TextStyle(color: Colors.grey[600]),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              SizedBox(
+                height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+              ),
               ElevatedButton.icon(
                 onPressed: () {
                   // Forcer le rechargement

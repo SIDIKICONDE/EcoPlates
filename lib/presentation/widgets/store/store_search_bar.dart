@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../providers/store_offers_provider.dart';
 
 /// Barre de recherche pour filtrer les offres de la boutique
@@ -42,12 +43,16 @@ class _StoreSearchBarState extends ConsumerState<StoreSearchBar> {
     }
 
     return Container(
-      height: 36,
+      height: EcoPlatesDesignTokens.size.minTouchTarget * 0.9,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(6),
+        color: theme.colorScheme.surfaceContainerLow.withValues(
+          alpha: EcoPlatesDesignTokens.opacity.subtle,
+        ),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xs),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          color: theme.colorScheme.outline.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+          ),
         ),
       ),
       child: TextField(
@@ -56,20 +61,22 @@ class _StoreSearchBarState extends ConsumerState<StoreSearchBar> {
         decoration: InputDecoration(
           hintText: 'Rechercher...',
           hintStyle: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-            fontSize: 12,
+            color: theme.colorScheme.onSurfaceVariant.withValues(
+              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+            ),
+            fontSize: EcoPlatesDesignTokens.typography.hint(context),
           ),
           prefixIcon: Icon(
             Icons.search,
             color: theme.colorScheme.onSurfaceVariant,
-            size: 16,
+            size: EcoPlatesDesignTokens.size.icon(context),
           ),
           suffixIcon: searchQuery.isNotEmpty
               ? IconButton(
                   icon: Icon(
                     Icons.clear,
                     color: theme.colorScheme.onSurfaceVariant,
-                    size: 16,
+                    size: EcoPlatesDesignTokens.size.icon(context),
                   ),
                   onPressed: () {
                     _controller.clear();
@@ -81,9 +88,9 @@ class _StoreSearchBarState extends ConsumerState<StoreSearchBar> {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 6,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: context.scaleXXS_XS_SM_MD,
+            vertical: context.scaleXXS_XS_SM_MD / 2,
           ),
         ),
         onChanged: (value) {
@@ -93,7 +100,10 @@ class _StoreSearchBarState extends ConsumerState<StoreSearchBar> {
           _focusNode.unfocus();
         },
         textInputAction: TextInputAction.search,
-        style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 12),
+        style: TextStyle(
+          color: theme.colorScheme.onSurface,
+          fontSize: EcoPlatesDesignTokens.typography.hint(context),
+        ),
       ),
     );
   }

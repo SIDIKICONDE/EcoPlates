@@ -12,6 +12,8 @@ class RouteConstants {
   static const String merchantStock = '/merchant/stock';
   static const String merchantSales = '/merchant/sales';
   static const String merchantStore = '/merchant/store';
+  static const String merchantQRScanner = '/merchant/qr-scanner';
+  static const String merchantProfile = '/merchant/profile';
   static const String merchantOfferForm = '/merchant/offer-form';
   static const String merchantPromotions = '/merchant/promotions';
   static const String merchantAnalytics = '/merchant/analytics';
@@ -34,6 +36,8 @@ class RouteConstants {
   static const String merchantStockName = 'merchant-stock';
   static const String merchantSalesName = 'merchant-sales';
   static const String merchantStoreName = 'merchant-store';
+  static const String merchantQRScannerName = 'merchant-qr-scanner';
+  static const String merchantProfileName = 'merchant-profile';
   static const String merchantOfferFormName = 'merchant-offer-form';
   static const String merchantPromotionsName = 'merchant-promotions';
   static const String merchantAnalyticsName = 'merchant-analytics';

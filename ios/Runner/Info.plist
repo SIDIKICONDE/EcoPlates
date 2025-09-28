@@ -46,6 +46,10 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 
+	<!-- Permissions caméra -->
+	<key>NSCameraUsageDescription</key>
+	<string>EcoPlates a besoin d'accéder à votre caméra pour scanner les QR codes.</string>
+
 	<!-- Google Maps Configuration -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Cette application utilise votre localisation pour afficher les offres près de chez vous.</string>

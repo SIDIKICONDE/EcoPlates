@@ -296,9 +296,9 @@ class LoggerService {
       'Business Event: $action',
       data: {
         'action': action,
-        if (parameters != null) 'parameters': parameters,
-        if (userId != null) 'userId': userId,
-        if (result != null) 'result': result,
+        'parameters': ?parameters,
+        'userId': ?userId,
+        'result': ?result,
         'timestamp': DateTime.now().toIso8601String(),
       },
       tag: 'BusinessEvent',

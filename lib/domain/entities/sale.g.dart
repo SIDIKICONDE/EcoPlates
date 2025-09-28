@@ -25,6 +25,8 @@ _Sale _$SaleFromJson(Map<String, dynamic> json) => _Sale(
   paymentMethod: json['paymentMethod'] as String,
   paymentTransactionId: json['paymentTransactionId'] as String?,
   qrCode: json['qrCode'] as String?,
+  secureQrEnabled: json['secureQrEnabled'] as bool? ?? false,
+  totpSecretId: json['totpSecretId'] as String?,
   notes: json['notes'] as String?,
   metadata: json['metadata'] as Map<String, dynamic>?,
 );
@@ -44,6 +46,8 @@ Map<String, dynamic> _$SaleToJson(_Sale instance) => <String, dynamic>{
   'paymentMethod': instance.paymentMethod,
   'paymentTransactionId': instance.paymentTransactionId,
   'qrCode': instance.qrCode,
+  'secureQrEnabled': instance.secureQrEnabled,
+  'totpSecretId': instance.totpSecretId,
   'notes': instance.notes,
   'metadata': instance.metadata,
 };

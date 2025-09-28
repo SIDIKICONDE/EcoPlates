@@ -1,12 +1,21 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/food_offer.dart';
 
 class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
+  bool _initialized = false;
+
   @override
   List<FoodOffer> build() {
-    loadMockData();
-    return const [];
+    // Initialisation sûre: pas d'effets de bord synchrones durant build
+    if (!_initialized) {
+      _initialized = true;
+      state = const <FoodOffer>[];
+      // Charger les mocks après le build pour éviter toute boucle de dépendance
+      Future.microtask(loadMockData);
+    }
+    return state;
   }
 
   // Méthode pour obtenir l'heure actuelle arrondie à l'heure suivante
@@ -115,7 +124,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         originalPrice: 12.50,
         discountedPrice: 10.50,
         images: const [
-          'https://images.unsplash.com/photo-1546793665-c74683f339c1',
+          'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=600&auto=format&q=60&fit=crop',
         ],
         type: OfferType.plat,
         category: FoodCategory.dejeuner,
@@ -147,7 +156,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         originalPrice: 14.90,
         discountedPrice: 14.90,
         images: const [
-          'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38',
+          'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&q=60&fit=crop',
         ],
         type: OfferType.plat,
         category: FoodCategory.diner,
@@ -180,7 +189,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         originalPrice: 9.90,
         discountedPrice: 7.90,
         images: const [
-          'https://images.unsplash.com/photo-1528735602780-2552fd46c7af',
+          'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&auto=format&q=60&fit=crop',
         ],
         type: OfferType.plat,
         category: FoodCategory.dejeuner,
@@ -212,7 +221,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         originalPrice: 6.50,
         discountedPrice: 5.20,
         images: const [
-          'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9',
+          'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&auto=format&q=60&fit=crop',
         ],
         type: OfferType.plat,
         category: FoodCategory.dessert,
@@ -243,7 +252,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         originalPrice: 11.50,
         discountedPrice: 11.50,
         images: const [
-          'https://images.unsplash.com/photo-1546069901-ba9599a7e63c',
+          'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&q=60&fit=crop',
         ],
         type: OfferType.plat,
         category: FoodCategory.dejeuner,
@@ -275,6 +284,39 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
 }
 
 /// Source de vérité unique pour les offres (catalogue partagé)
-final offersCatalogProvider = NotifierProvider<OffersCatalogNotifier, List<FoodOffer>>(
-  OffersCatalogNotifier.new,
+final offersCatalogProvider =
+    NotifierProvider<OffersCatalogNotifier, List<FoodOffer>>(
+      OffersCatalogNotifier.new,
+    );
+
+/// Provider utilitaire pour rafraîchir le catalogue avec une politique TTL
+class OffersRefresher extends Notifier<DateTime?> {
+  static const Duration _ttl = Duration(minutes: 5);
+
+  @override
+  DateTime? build() => null; // dernière mise à jour
+
+  Future<void> refreshIfStale() async {
+    final last = state;
+    final now = DateTime.now();
+    if (last == null || now.difference(last) > _ttl) {
+      await _refreshFromSource();
+      state = now;
+    }
+  }
+
+  Future<void> forceRefresh() async {
+    await _refreshFromSource();
+    state = DateTime.now();
+  }
+
+  Future<void> _refreshFromSource() async {
+    // TODO: Brancher sur le repository pour récupérer les vraies offres
+    // Pour l’instant, on régénère les données mock (dev)
+    ref.read(offersCatalogProvider.notifier).loadMockData();
+  }
+}
+
+final offersRefreshProvider = NotifierProvider<OffersRefresher, DateTime?>(
+  OffersRefresher.new,
 );

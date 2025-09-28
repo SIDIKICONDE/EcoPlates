@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/categories.dart';
+import '../../../core/responsive/design_tokens.dart';
+import '../../../core/responsive/responsive.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -90,7 +92,9 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
               child: FadeTransition(
                 opacity: _fadeAnimation,
                 child: ColoredBox(
-                  color: Colors.black.withValues(alpha: 0.5),
+                  color: Colors.black.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.pressed,
+                  ),
                   child: BackdropFilter(
                     filter: ColorFilter.mode(
                       Colors.black.withValues(alpha: 0.3),
@@ -110,16 +114,26 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
               scale: _scaleAnimation,
               child: Container(
                 width: size.width * 0.9,
-                constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.all(24),
+                constraints: BoxConstraints(
+                  maxWidth:
+                      EcoPlatesDesignTokens.layout.mainContainerMaxWidth(
+                        context,
+                      ) *
+                      0.9,
+                ),
+                padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens.radius.xxl,
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: theme.colorScheme.shadow.withValues(alpha: 0.3),
-                      blurRadius: 24,
-                      offset: const Offset(0, 12),
+                      color: theme.colorScheme.shadow.withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.subtle,
+                      ),
+                      blurRadius: EcoPlatesDesignTokens.elevation.largeBlur,
+                      offset: EcoPlatesDesignTokens.elevation.elevatedOffset,
                     ),
                   ],
                 ),
@@ -134,35 +148,42 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                           Icon(
                             Icons.category,
                             color: theme.colorScheme.primary,
-                            size: 28,
+                            size: EcoPlatesDesignTokens.size.icon(context),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: context.scaleXS_SM_MD_LG),
                           Text(
                             'Catégories',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: EcoPlatesDesignTokens.typography
+                                  .modalTitle(context),
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: context.scaleLG_XL_XXL_XXXL),
 
                       // Grille de catégories
                       Flexible(
                         child: SingleChildScrollView(
                           child: Wrap(
-                            spacing: 12,
-                            runSpacing: 12,
+                            spacing: context.scaleXS_SM_MD_LG,
+                            runSpacing: context.scaleXS_SM_MD_LG,
                             alignment: WrapAlignment.center,
                             children: _categories.map((category) {
                               final isSelected =
                                   selectedCategory == category.name;
+                              final tileSize =
+                                  (size.width * 0.9 -
+                                      context.scaleLG_XL_XXL_XXXL * 2 -
+                                      context.scaleXS_SM_MD_LG * 2) /
+                                  3;
                               return SizedBox(
-                                width: (size.width * 0.9 - 48 - 24) / 3,
-                                height: (size.width * 0.9 - 48 - 24) / 3,
+                                width: tileSize,
+                                height: tileSize,
                                 child: _buildCategoryTile(
+                                  context,
                                   category,
                                   isSelected,
                                   theme,
@@ -173,18 +194,27 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                         ),
                       ),
 
-                      const SizedBox(height: 16),
+                      SizedBox(height: context.scaleMD_LG_XL_XXL),
 
                       // Bouton fermer
                       TextButton.icon(
                         onPressed: _toggleMenu,
-                        icon: const Icon(Icons.close),
-                        label: const Text('Fermer'),
+                        icon: Icon(
+                          Icons.close,
+                          size: context.scaleIconStandard,
+                        ),
+                        label: Text(
+                          'Fermer',
+                          style: TextStyle(
+                            fontSize: EcoPlatesDesignTokens.typography
+                                .modalContent(context),
+                          ),
+                        ),
                         style: TextButton.styleFrom(
                           foregroundColor: theme.colorScheme.primary,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.scaleLG_XL_XXL_XXXL,
+                            vertical: context.scaleXS_SM_MD_LG,
                           ),
                         ),
                       ),
@@ -197,18 +227,19 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
 
         // Bouton flottant principal
         Positioned(
-          bottom: 16,
-          right: 16,
+          bottom: context.scaleMD_LG_XL_XXL,
+          right: context.scaleMD_LG_XL_XXL,
           child: FloatingActionButton(
             onPressed: _toggleMenu,
             backgroundColor: theme.colorScheme.primary,
-            elevation: 8,
+            elevation: EcoPlatesDesignTokens.elevation.modal,
             child: AnimatedRotation(
               turns: _isOpen ? 0.125 : 0,
               duration: const Duration(milliseconds: 300),
               child: Icon(
                 _isOpen ? Icons.close : Icons.category,
                 color: theme.colorScheme.onPrimary,
+                size: context.scaleIconStandard,
               ),
             ),
           ),
@@ -218,6 +249,7 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
   }
 
   Widget _buildCategoryTile(
+    BuildContext context,
     CategoryItem category,
     bool isSelected,
     ThemeData theme,
@@ -238,20 +270,28 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
               );
           _toggleMenu();
         },
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
         child: Container(
           decoration: BoxDecoration(
             color: isSelected
-                ? category.color.withValues(alpha: 0.2)
+                ? category.color.withValues(
+                    alpha: EcoPlatesDesignTokens.opacity.pressed,
+                  )
                 : theme.colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.5,
+                    alpha: EcoPlatesDesignTokens.opacity.pressed,
                   ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(
+              EcoPlatesDesignTokens.radius.md,
+            ),
             border: Border.all(
               color: isSelected
                   ? category.color
-                  : theme.colorScheme.outline.withValues(alpha: 0.1),
-              width: isSelected ? 2 : 1,
+                  : theme.colorScheme.outline.withValues(
+                      alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                    ),
+              width: isSelected
+                  ? EcoPlatesDesignTokens.layout.cardBorderWidth
+                  : EcoPlatesDesignTokens.layout.subtleBorderWidth,
             ),
           ),
           child: Column(
@@ -260,28 +300,34 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
               // Icône avec animation
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? category.color.withValues(alpha: 0.3)
-                      : category.color.withValues(alpha: 0.1),
+                      ? category.color.withValues(
+                          alpha: EcoPlatesDesignTokens.opacity.subtle,
+                        )
+                      : category.color.withValues(
+                          alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                        ),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   category.icon,
                   color: isSelected
                       ? category.color
-                      : category.color.withValues(alpha: 0.7),
-                  size: 28,
+                      : category.color.withValues(
+                          alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                        ),
+                  size: EcoPlatesDesignTokens.size.icon(context),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: context.scaleSM_MD_LG_XL),
               // Nom de la catégorie
               Text(
                 category.name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected
                       ? category.color
@@ -292,10 +338,10 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
               ),
               // Badge de sélection
               if (isSelected) ...[
-                const SizedBox(height: 4),
+                SizedBox(height: context.scaleXXS_XS_SM_MD),
                 Container(
-                  width: 6,
-                  height: 6,
+                  width: context.scaleXXS_XS_SM_MD,
+                  height: context.scaleXXS_XS_SM_MD,
                   decoration: BoxDecoration(
                     color: category.color,
                     shape: BoxShape.circle,

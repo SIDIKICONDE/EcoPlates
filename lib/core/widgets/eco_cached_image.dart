@@ -90,13 +90,21 @@ class _EcoCachedImageState extends ConsumerState<EcoCachedImage>
     final targetWidth = _getOptimalSize(widget.width, widget.size);
     final targetHeight = _getOptimalSize(widget.height, widget.size);
 
+    final optimizedUrl = _optimizeUrl(widget.imageUrl, targetWidth?.toInt());
+
     Widget imageWidget = CachedNetworkImage(
-      imageUrl: widget.imageUrl,
+      imageUrl: optimizedUrl,
       width: widget.width,
       height: widget.height,
       fit: widget.fit,
       memCacheWidth: targetWidth?.toInt(),
       memCacheHeight: targetHeight?.toInt(),
+      maxWidthDiskCache: targetWidth?.toInt(),
+      maxHeightDiskCache: targetHeight?.toInt(),
+      httpHeaders: const {
+        'Accept': 'image/avif,image/webp,image/*;q=0.9',
+        'Accept-Encoding': 'gzip, deflate',
+      },
       fadeInDuration: widget.fadeInDuration,
       fadeOutDuration: const Duration(milliseconds: 150),
       cacheManager: widget.size == ImageSize.thumbnail
@@ -159,6 +167,29 @@ class _EcoCachedImageState extends ConsumerState<EcoCachedImage>
       borderRadius: widget.borderRadius ?? BorderRadius.zero,
       child: imageWidget,
     );
+  }
+
+  String _optimizeUrl(String url, int? targetWidth) {
+    try {
+      if (!url.contains('images.unsplash.com')) return url;
+      var w = targetWidth ?? _getOptimalSize(null, widget.size)?.toInt() ?? 600;
+      if (w < 100) w = 100;
+      if (w > 1600) w = 1600;
+      final hasWidth = url.contains('w=');
+      final hasAuto = url.contains('auto=');
+      final hasFit = url.contains('fit=');
+      final hasQ = url.contains('q=');
+      final params = <String>[];
+      if (!hasWidth) params.add('w=$w');
+      if (!hasAuto) params.add('auto=format');
+      if (!hasQ) params.add('q=60');
+      if (!hasFit) params.add('fit=crop');
+      if (params.isEmpty) return url;
+      final sep = url.contains('?') ? '&' : '?';
+      return '$url$sep${params.join('&')}';
+    } catch (_) {
+      return url;
+    }
   }
 
   /// Calcule la taille optimale basée sur la taille demandée et le preset

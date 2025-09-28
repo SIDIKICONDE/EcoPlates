@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Barre de recherche avancée pour filtrer les articles de stock
@@ -88,12 +89,14 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
     final theme = Theme.of(context);
 
     return Container(
-      height: 40, // Hauteur fixe réduite
+      height: EcoPlatesDesignTokens.size.minTouchTarget,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          color: theme.colorScheme.outline.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+          ),
         ),
       ),
       child: TextField(
@@ -103,19 +106,19 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
           hintText: widget.hintText,
           hintStyle: TextStyle(
             color: theme.colorScheme.onSurfaceVariant,
-            fontSize: 14,
+            fontSize: EcoPlatesDesignTokens.typography.text(context),
           ),
           prefixIcon: Icon(
             Icons.search,
             color: theme.colorScheme.onSurfaceVariant,
-            size: 18,
+            size: EcoPlatesDesignTokens.size.icon(context),
           ),
           suffixIcon: _controller.text.isNotEmpty
               ? IconButton(
                   icon: Icon(
                     Icons.clear,
                     color: theme.colorScheme.onSurfaceVariant,
-                    size: 18,
+                    size: EcoPlatesDesignTokens.size.icon(context),
                   ),
                   onPressed: _clearSearch,
                   tooltip: 'Effacer la recherche',
@@ -124,12 +127,16 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 8,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: context.scaleXS_SM_MD_LG,
+            vertical: context.scaleXXS_XS_SM_MD,
           ),
         ),
-        style: const TextStyle(color: Colors.black, fontSize: 14, height: 1.2),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: EcoPlatesDesignTokens.typography.text(context),
+          height: 1.2,
+        ),
         textInputAction: TextInputAction.search,
       ),
     );

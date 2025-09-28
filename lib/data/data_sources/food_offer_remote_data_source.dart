@@ -89,9 +89,9 @@ class FoodOfferRemoteDataSourceImpl implements FoodOfferRemoteDataSource {
       final queryParams = {
         'page': page,
         'limit': limit,
-        if (categoryId != null) 'categoryId': categoryId,
-        if (maxDistance != null) 'maxDistance': maxDistance,
-        if (sortBy != null) 'sortBy': sortBy,
+        'categoryId': ?categoryId,
+        'maxDistance': ?maxDistance,
+        'sortBy': ?sortBy,
       };
 
       final response = await apiClient.get(

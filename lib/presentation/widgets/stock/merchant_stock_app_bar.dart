@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../controllers/merchant_stock_controller.dart';
 import '../../pages/stock_item_form/page.dart';
@@ -17,16 +19,15 @@ class MerchantStockAppBar extends ConsumerWidget
   const MerchantStockAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  ui.Size get preferredSize => ui.Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stockCount = ref.watch(stockItemsCountProvider);
     final outOfStockCount = ref.watch(outOfStockItemsProvider).length;
-    final screenWidth = MediaQuery.of(context).size.width;
 
-    // Pour éviter l'overflow sur petits écrans
-    final isSmallScreen = screenWidth < 400;
+    // Utiliser le système de breakpoints EcoPlates
+    final isSmallScreen = context.isMobileDevice;
 
     return AdaptiveAppBar(
       leading: const _MerchantLogo(),
@@ -38,9 +39,9 @@ class MerchantStockAppBar extends ConsumerWidget
         // Bouton d'ajout d'article
         IconButton(
           icon: const Icon(Icons.add),
-          iconSize: 20,
+          iconSize: context.scaleIconStandard,
           tooltip: 'Ajouter',
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(context.scaleSM_MD_LG_XL),
           constraints: const BoxConstraints(),
           onPressed: () => _navigateToStockItemForm(context),
         ),
@@ -52,7 +53,7 @@ class MerchantStockAppBar extends ConsumerWidget
         // Menu d'actions compact
         const _ActionsMenu(),
 
-        const SizedBox(width: 4),
+        SizedBox(width: context.scaleXXS_XS_SM_MD),
       ],
     );
   }
@@ -78,15 +79,19 @@ class _MerchantLogo extends StatelessWidget {
         'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center';
 
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: EdgeInsets.all(context.scaleSM_MD_LG_XL),
       child: CircleAvatar(
-        radius: 16,
+        radius: context.scaleXS_SM_MD_LG,
         backgroundColor: Theme.of(context).colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
         onBackgroundImageError: (_, _) {
           // Fallback vers une icône si l'image ne charge pas
         },
-        child: const Icon(Icons.store, size: 20, color: Colors.grey),
+        child: Icon(
+          Icons.store,
+          size: context.scaleIconStandard,
+          color: Colors.grey,
+        ),
       ),
     );
   }
@@ -102,16 +107,16 @@ class _ViewModeSwitch extends ConsumerWidget {
     final isCompactView = ref.watch(stockViewModeProvider);
 
     return Padding(
-      padding: const EdgeInsets.only(right: 4),
+      padding: EdgeInsets.only(right: context.scaleXXS_XS_SM_MD),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             isCompactView ? Icons.view_agenda : Icons.view_list,
-            size: 16,
+            size: context.scaleIconStandard,
             color: theme.colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: context.scaleXXS_XS_SM_MD),
           Transform.scale(
             scale: 0.8,
             child: Switch(
@@ -142,11 +147,14 @@ class _StockBadge extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      margin: const EdgeInsets.only(right: 4),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.scaleXXS_XS_SM_MD,
+        vertical: context.scaleXXS_XS_SM_MD,
+      ),
+      margin: EdgeInsets.only(right: context.scaleXXS_XS_SM_MD),
       decoration: BoxDecoration(
         color: theme.colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xs),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -154,17 +162,17 @@ class _StockBadge extends StatelessWidget {
           Text(
             stockCount > 999 ? '999+' : stockCount.toString(),
             style: TextStyle(
-              fontSize: 10,
+              fontSize: EcoPlatesDesignTokens.typography.hint(context),
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSecondaryContainer,
             ),
           ),
 
           if (outOfStockCount > 0) ...[
-            const SizedBox(width: 2),
+            SizedBox(width: context.scaleXXS_XS_SM_MD),
             Container(
-              width: 3,
-              height: 3,
+              width: context.scaleXXS_XS_SM_MD,
+              height: context.scaleXXS_XS_SM_MD,
               decoration: BoxDecoration(
                 color: theme.colorScheme.error,
                 shape: BoxShape.circle,
@@ -183,14 +191,13 @@ class _ActionsMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSmallScreen = screenWidth < 400;
+    final isSmallScreen = context.isMobileDevice;
     final stockCount = ref.watch(stockItemsCountProvider);
     final outOfStockCount = ref.watch(outOfStockItemsProvider).length;
 
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
-      iconSize: 20,
+      iconSize: context.scaleIconStandard,
       tooltip: 'Actions',
       onSelected: (value) => _handleMenuAction(context, ref, value),
       itemBuilder: (context) {
@@ -202,17 +209,19 @@ class _ActionsMenu extends ConsumerWidget {
               child: ListTile(
                 leading: Icon(
                   Icons.inventory,
-                  size: 18,
+                  size: context.scaleIconStandard,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 title: Text(
                   '$stockCount articles${outOfStockCount > 0 ? ' (• $outOfStockCount ruptures)' : ''}',
-                  style: const TextStyle(
-                    fontSize: 12,
+                  style: TextStyle(
+                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: context.scaleSM_MD_LG_XL,
+                ),
                 dense: true,
               ),
             ),
@@ -227,13 +236,19 @@ class _ActionsMenu extends ConsumerWidget {
                   return ListTile(
                     leading: Icon(
                       isCompactView ? Icons.view_agenda : Icons.view_list,
-                      size: 18,
+                      size: context.scaleIconStandard,
                     ),
                     title: Text(
                       isCompactView ? 'Vue détaillée' : 'Vue compacte',
-                      style: const TextStyle(fontSize: 14),
+                      style: TextStyle(
+                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                          context,
+                        ),
+                      ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: context.scaleSM_MD_LG_XL,
+                    ),
                     dense: true,
                   );
                 },
@@ -243,30 +258,66 @@ class _ActionsMenu extends ConsumerWidget {
           // Séparateur si on a ajouté des éléments
           if (isSmallScreen) const PopupMenuDivider(),
 
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'refresh',
             child: ListTile(
-              leading: Icon(Icons.refresh, size: 18),
-              title: Text('Actualiser', style: TextStyle(fontSize: 14)),
-              contentPadding: EdgeInsets.symmetric(horizontal: 8),
+              leading: Icon(
+                Icons.refresh,
+                size: context.scaleIconStandard,
+              ),
+              title: Text(
+                'Actualiser',
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                    context,
+                  ),
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: context.scaleSM_MD_LG_XL,
+              ),
               dense: true,
             ),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'sort',
             child: ListTile(
-              leading: Icon(Icons.sort, size: 18),
-              title: Text('Trier', style: TextStyle(fontSize: 14)),
-              contentPadding: EdgeInsets.symmetric(horizontal: 8),
+              leading: Icon(
+                Icons.sort,
+                size: context.scaleIconStandard,
+              ),
+              title: Text(
+                'Trier',
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                    context,
+                  ),
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: context.scaleSM_MD_LG_XL,
+              ),
               dense: true,
             ),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'export',
             child: ListTile(
-              leading: Icon(Icons.download, size: 18),
-              title: Text('Exporter', style: TextStyle(fontSize: 14)),
-              contentPadding: EdgeInsets.symmetric(horizontal: 8),
+              leading: Icon(
+                Icons.download,
+                size: context.scaleIconStandard,
+              ),
+              title: Text(
+                'Exporter',
+                style: TextStyle(
+                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                    context,
+                  ),
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: context.scaleSM_MD_LG_XL,
+              ),
               dense: true,
             ),
           ),

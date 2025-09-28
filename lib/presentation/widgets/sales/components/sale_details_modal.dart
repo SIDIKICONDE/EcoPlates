@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/categories.dart';
+import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/sale.dart';
 
 /// Modal de détails d'une vente
@@ -27,111 +28,195 @@ class SaleDetailsModal extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+        ),
       ),
       child: ListView(
         controller: scrollController,
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
         children: [
           // Handle
           Center(
             child: Container(
-              width: 40,
-              height: 4,
+              width: EcoPlatesDesignTokens.layout.modalHandleWidth,
+              height: EcoPlatesDesignTokens.layout.modalHandleHeight,
               decoration: BoxDecoration(
                 color: theme.colorScheme.onSurfaceVariant.withValues(
-                  alpha: 0.3,
+                  alpha: DesignConstants.opacitySubtle,
                 ),
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens.radius.xs,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
-          // En-tête
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Commande #${sale.id}',
-                    style: theme.textTheme.headlineSmall?.copyWith(
+          // En-tête - Responsive
+          if (context.isMobileDevice)
+            // Layout vertical pour mobiles
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Commande #${sale.id}',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: EcoPlatesDesignTokens.typography.modalTitle(
+                          context,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: context.scaleXS_SM_MD_LG),
+                    Text(
+                      'Client: ${sale.customerName}',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                          context,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: context.scaleXS_SM_MD_LG),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.scaleSM_MD_LG_XL,
+                      vertical: context.scaleXS_SM_MD_LG,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusColor.withValues(
+                        alpha: DesignConstants.opacityVeryTransparent,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        EcoPlatesDesignTokens.radius.xxl,
+                      ),
+                    ),
+                    child: Text(
+                      sale.status.label,
+                      style: TextStyle(
+                        color: statusColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: EcoPlatesDesignTokens.typography.button(
+                          context,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else
+            // Layout horizontal pour tablettes et desktops
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Commande #${sale.id}',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: context.scaleXS_SM_MD_LG),
+                      Text(
+                        'Client: ${sale.customerName}',
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.scaleMD_LG_XL_XXL,
+                    vertical: context.scaleXS_SM_MD_LG,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(
+                      alpha: DesignConstants.opacityVeryTransparent,
+                    ),
+                    borderRadius: BorderRadius.circular(
+                      EcoPlatesDesignTokens.radius.xxl,
+                    ),
+                  ),
+                  child: Text(
+                    sale.status.label,
+                    style: TextStyle(
+                      color: statusColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Client: ${sale.customerName}',
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
                 ),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  sale.status.label,
-                  style: TextStyle(
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
           // Articles détaillés
           Text(
             'Articles commandés',
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
+              fontSize: EcoPlatesDesignTokens.typography.modalSubtitle(context),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: context.scaleXS_SM_MD_LG),
           ...sale.items.map(
             (item) => Card(
-              margin: const EdgeInsets.only(bottom: 8),
+              margin: EdgeInsets.only(bottom: context.scaleXS_SM_MD_LG),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Categories.colorOf(
                     item.category,
-                  ).withValues(alpha: 0.1),
+                  ).withValues(alpha: DesignConstants.opacityVeryTransparent),
                   child: Icon(
                     Categories.iconOf(item.category),
                     color: Categories.colorOf(item.category),
-                    size: 20,
+                    size: context.scaleIconStandard,
                   ),
                 ),
-                title: Text(item.offerTitle),
+                title: Text(
+                  item.offerTitle,
+                  style: TextStyle(
+                    fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                      context,
+                    ),
+                  ),
+                ),
                 subtitle: Text(
                   '${item.quantity} x ${item.unitPrice.toStringAsFixed(2)}€',
+                  style: TextStyle(
+                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  ),
                 ),
                 trailing: Text(
                   '${item.totalPrice.toStringAsFixed(2)}€',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
+                    fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                      context,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: context.scaleSM_MD_LG_XL),
 
           // Détails financiers
           Card(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(context.scaleSM_MD_LG_XL),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -139,17 +224,25 @@ class SaleDetailsModal extends StatelessWidget {
                     'Détails du paiement',
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      fontSize: EcoPlatesDesignTokens.typography.modalSubtitle(
+                        context,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.scaleXS_SM_MD_LG),
                   _buildDetailRow(
                     'Sous-total',
                     '${sale.totalAmount.toStringAsFixed(2)}€',
+                    null,
+                    false,
+                    context,
                   ),
                   _buildDetailRow(
                     'Réduction',
                     '-${sale.discountAmount.toStringAsFixed(2)}€',
                     Colors.green,
+                    false,
+                    context,
                   ),
                   const Divider(height: 16),
                   _buildDetailRow(
@@ -157,22 +250,35 @@ class SaleDetailsModal extends StatelessWidget {
                     '${sale.finalAmount.toStringAsFixed(2)}€',
                     theme.colorScheme.primary,
                     true,
+                    context,
                   ),
-                  const SizedBox(height: 8),
-                  _buildDetailRow('Méthode', sale.paymentMethod),
+                  SizedBox(height: context.scaleXS_SM_MD_LG),
+                  _buildDetailRow(
+                    'Méthode',
+                    sale.paymentMethod,
+                    null,
+                    false,
+                    context,
+                  ),
                   if (sale.paymentTransactionId != null)
-                    _buildDetailRow('Transaction', sale.paymentTransactionId!),
+                    _buildDetailRow(
+                      'Transaction',
+                      sale.paymentTransactionId!,
+                      null,
+                      false,
+                      context,
+                    ),
                 ],
               ),
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: context.scaleSM_MD_LG_XL),
 
           // Informations temporelles
           Card(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(context.scaleSM_MD_LG_XL),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -180,23 +286,34 @@ class SaleDetailsModal extends StatelessWidget {
                     'Historique',
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      fontSize: EcoPlatesDesignTokens.typography.modalSubtitle(
+                        context,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.scaleXS_SM_MD_LG),
                   _buildDetailRow(
                     'Commandé le',
                     '${sale.createdAt.day}/${sale.createdAt.month} à ${sale.createdAt.hour}:${sale.createdAt.minute.toString().padLeft(2, '0')}',
+                    null,
+                    false,
+                    context,
                   ),
                   if (sale.collectedAt != null)
                     _buildDetailRow(
                       'Récupéré le',
                       '${sale.collectedAt!.day}/${sale.collectedAt!.month} à ${sale.collectedAt!.hour}:${sale.collectedAt!.minute.toString().padLeft(2, '0')}',
+                      null,
+                      false,
+                      context,
                     ),
                   if (sale.remainingTime != null && sale.isActive)
                     _buildDetailRow(
                       'Temps restant',
                       _formatDuration(sale.remainingTime!),
                       sale.remainingTime!.inMinutes < 30 ? Colors.orange : null,
+                      false,
+                      context,
                     ),
                 ],
               ),
@@ -204,10 +321,10 @@ class SaleDetailsModal extends StatelessWidget {
           ),
 
           if (sale.notes != null) ...[
-            const SizedBox(height: 16),
+            SizedBox(height: context.scaleSM_MD_LG_XL),
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(context.scaleSM_MD_LG_XL),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -215,10 +332,19 @@ class SaleDetailsModal extends StatelessWidget {
                       'Notes',
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
+                        fontSize: EcoPlatesDesignTokens.typography
+                            .modalSubtitle(context),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(sale.notes!),
+                    SizedBox(height: context.scaleXS_SM_MD_LG),
+                    Text(
+                      sale.notes!,
+                      style: TextStyle(
+                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
+                          context,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -234,19 +360,32 @@ class SaleDetailsModal extends StatelessWidget {
     String value, [
     Color? valueColor,
     bool bold = false,
+    BuildContext? context,
   ]) {
+    final textStyle = TextStyle(
+      fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+      color: valueColor,
+      fontSize: context != null
+          ? EcoPlatesDesignTokens.typography.modalContent(context)
+          : null,
+    );
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: context?.scaleXXS_XS_SM_MD ?? 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: context != null
+                  ? EcoPlatesDesignTokens.typography.modalContent(context)
+                  : null,
+            ),
+          ),
           Text(
             value,
-            style: TextStyle(
-              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-              color: valueColor,
-            ),
+            style: textStyle,
           ),
         ],
       ),

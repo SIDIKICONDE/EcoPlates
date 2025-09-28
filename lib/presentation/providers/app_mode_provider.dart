@@ -76,6 +76,27 @@ final isMerchantModeProvider = Provider<bool>((ref) {
   return ref.watch(appModeProvider) == AppMode.merchant;
 });
 
+/// Provider pour récupérer le merchant ID de l'utilisateur actuel
+/// Retourne null si l'utilisateur n'est pas connecté ou n'est pas un merchant/staff
+final currentMerchantIdProvider = Provider<String?>((ref) {
+  final currentUser = ref.watch(currentUserProvider);
+
+  if (currentUser == null) return null;
+
+  // Pour un merchant, l'ID du merchant est l'ID de l'utilisateur
+  if (currentUser.isMerchant) {
+    return currentUser.id;
+  }
+
+  // Pour un staff, l'ID du merchant est dans le profil
+  if (currentUser.type == UserType.staff) {
+    final staffProfile = currentUser.profile as StaffProfile;
+    return staffProfile.merchantId;
+  }
+
+  return null;
+});
+
 /// Provider pour déterminer si l'utilisateur n'est pas connecté
 final isOnboardingModeProvider = Provider<bool>((ref) {
   return ref.watch(appModeProvider) == AppMode.onboarding;

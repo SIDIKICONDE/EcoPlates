@@ -517,6 +517,270 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Envoyer l\'avis'**
   String get submitReview;
+
+  /// No description provided for @merchantProfileTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Profil Marchand'**
+  String get merchantProfileTitle;
+
+  /// No description provided for @merchantId.
+  ///
+  /// In fr, this message translates to:
+  /// **'ID Marchand'**
+  String get merchantId;
+
+  /// No description provided for @businessName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du commerce'**
+  String get businessName;
+
+  /// No description provided for @description.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @contactInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations de contact'**
+  String get contactInfo;
+
+  /// No description provided for @address.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse'**
+  String get address;
+
+  /// No description provided for @phone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone'**
+  String get phone;
+
+  /// No description provided for @openingHours.
+  ///
+  /// In fr, this message translates to:
+  /// **'Horaires d\'ouverture'**
+  String get openingHours;
+
+  /// No description provided for @category.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get category;
+
+  /// No description provided for @edit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get edit;
+
+  /// No description provided for @save.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get save;
+
+  /// No description provided for @viewOnMap.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir sur la carte'**
+  String get viewOnMap;
+
+  /// No description provided for @callBusiness.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler'**
+  String get callBusiness;
+
+  /// No description provided for @emailBusiness.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email'**
+  String get emailBusiness;
+
+  /// No description provided for @closed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermé'**
+  String get closed;
+
+  /// No description provided for @monday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lundi'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mardi'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mercredi'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jeudi'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vendredi'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Samedi'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dimanche'**
+  String get sunday;
+
+  /// No description provided for @bakery.
+  ///
+  /// In fr, this message translates to:
+  /// **'Boulangerie'**
+  String get bakery;
+
+  /// No description provided for @grocery.
+  ///
+  /// In fr, this message translates to:
+  /// **'Épicerie'**
+  String get grocery;
+
+  /// No description provided for @cafe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Café'**
+  String get cafe;
+
+  /// No description provided for @supermarket.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supermarché'**
+  String get supermarket;
+
+  /// No description provided for @profileUpdated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Profil mis à jour avec succès'**
+  String get profileUpdated;
+
+  /// No description provided for @profileUpdateError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échec de la mise à jour du profil'**
+  String get profileUpdateError;
+
+  /// No description provided for @offerFormPreferencesVegetarian.
+  ///
+  /// In fr, this message translates to:
+  /// **'Végétarien'**
+  String get offerFormPreferencesVegetarian;
+
+  /// No description provided for @offerFormPreferencesVegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Végan'**
+  String get offerFormPreferencesVegan;
+
+  /// No description provided for @offerFormPreferencesHalal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Halal'**
+  String get offerFormPreferencesHalal;
+
+  /// No description provided for @offerFormPreferencesAllergens.
+  ///
+  /// In fr, this message translates to:
+  /// **'Allergènes'**
+  String get offerFormPreferencesAllergens;
+
+  /// No description provided for @offerFormPreferencesCustomAllergen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Allergène personnalisé'**
+  String get offerFormPreferencesCustomAllergen;
+
+  /// No description provided for @offerFormPreferencesCustomAllergenHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex: Sulfites, colorants...'**
+  String get offerFormPreferencesCustomAllergenHint;
+
+  /// No description provided for @offerFormPreferencesDeclaredAllergens.
+  ///
+  /// In fr, this message translates to:
+  /// **'Allergènes déclarés'**
+  String get offerFormPreferencesDeclaredAllergens;
+
+  /// No description provided for @offerFormPreferencesImportantInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations importantes'**
+  String get offerFormPreferencesImportantInfo;
+
+  /// No description provided for @offerFormPreferencesAllergenInfoText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déclaration optionnelle mais recommandée pour la sécurité des clients allergiques.'**
+  String get offerFormPreferencesAllergenInfoText;
+
+  /// No description provided for @offerFormPreferencesFeatureToImplement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fonctionnalité à implémenter'**
+  String get offerFormPreferencesFeatureToImplement;
+
+  /// No description provided for @offerFormPageEditOffer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'offre'**
+  String get offerFormPageEditOffer;
+
+  /// No description provided for @offerFormPageNewOffer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle offre'**
+  String get offerFormPageNewOffer;
+
+  /// No description provided for @offerFormPageSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get offerFormPageSave;
+
+  /// No description provided for @offerFormPageSaving.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde...'**
+  String get offerFormPageSaving;
+
+  /// No description provided for @offerFormPageSaveProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarder ({percentage}%)'**
+  String offerFormPageSaveProgress(Object percentage);
+
+  /// No description provided for @offerFormPageDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get offerFormPageDelete;
 }
 
 class _AppLocalizationsDelegate

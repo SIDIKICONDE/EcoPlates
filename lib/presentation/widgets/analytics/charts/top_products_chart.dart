@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 class TopProductsChart extends StatelessWidget {
@@ -16,53 +17,102 @@ class TopProductsChart extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: EcoPlatesDesignTokens
+            .analyticsCharts
+            .topProductsChartHorizontalPadding,
+      ),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(
+            EcoPlatesDesignTokens.analyticsCharts.topProductsChartCardPadding,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                padding: EdgeInsets.symmetric(
+                  horizontal: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .topProductsHeaderHorizontalPadding,
+                  vertical: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .topProductsHeaderVerticalPadding,
+                ),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.tertiary.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(6),
+                  color: theme.colorScheme.tertiary.withValues(
+                    alpha: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsHeaderBackgroundAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsHeaderBorderRadius,
+                  ),
                   border: Border.all(
-                    color: theme.colorScheme.tertiary.withValues(alpha: 0.15),
+                    color: theme.colorScheme.tertiary.withValues(
+                      alpha: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .topProductsHeaderBorderAlpha,
+                    ),
                   ),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(3),
+                      padding: EdgeInsets.all(
+                        EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .topProductsHeaderIconPadding,
+                      ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.tertiary.withValues(
-                          alpha: 0.1,
+                          alpha: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsHeaderIconBackgroundAlpha,
                         ),
-                        borderRadius: BorderRadius.circular(3),
+                        borderRadius: BorderRadius.circular(
+                          EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsHeaderIconBorderRadius,
+                        ),
                       ),
                       child: Icon(
                         Icons.emoji_events,
-                        size: 14,
+                        size: EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .topProductsHeaderIconSize,
                         color: theme.colorScheme.tertiary,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(
+                      width: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .topProductsHeaderIconSpacing,
+                    ),
                     Expanded(
                       child: Text(
-                        'Top produits',
+                        EcoPlatesDesignTokens.analyticsCharts.topProductsTitle,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsHeaderTitleWeight,
                           color: theme.colorScheme.onSurface,
-                          fontSize: 13,
+                          fontSize: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsHeaderTitleFontSize,
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .topProductsHeaderVerticalSpacing,
+              ),
               _buildChartContent(context),
             ],
           ),
@@ -75,22 +125,46 @@ class TopProductsChart extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      height: 200,
-      padding: const EdgeInsets.all(12),
+      height: EcoPlatesDesignTokens.analyticsCharts.topProductsChartHeight(
+        context,
+      ),
+      padding: EdgeInsets.all(
+        EcoPlatesDesignTokens.analyticsCharts.topProductsChartContentPadding,
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.08),
-            theme.colorScheme.surface.withValues(alpha: 0.05),
+            theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: EcoPlatesDesignTokens
+                  .analyticsCharts
+                  .topProductsChartSurfaceHighAlpha,
+            ),
+            theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: EcoPlatesDesignTokens
+                  .analyticsCharts
+                  .topProductsChartSurfaceMediumAlpha,
+            ),
+            theme.colorScheme.surface.withValues(
+              alpha: EcoPlatesDesignTokens
+                  .analyticsCharts
+                  .topProductsChartSurfaceLowAlpha,
+            ),
           ],
-          stops: const [0.0, 0.6, 1.0],
+          stops: EcoPlatesDesignTokens
+              .analyticsCharts
+              .topProductsChartGradientStops,
         ),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(
+          EcoPlatesDesignTokens.analyticsCharts.topProductsChartBorderRadius,
+        ),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          color: theme.colorScheme.outline.withValues(
+            alpha: EcoPlatesDesignTokens
+                .analyticsCharts
+                .topProductsChartBorderAlpha,
+          ),
         ),
       ),
       child: SingleChildScrollView(
@@ -100,97 +174,211 @@ class TopProductsChart extends StatelessWidget {
             final rank = analytics.topProducts.indexOf(product) + 1;
 
             return Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(8),
+              margin: EdgeInsets.only(
+                bottom: EcoPlatesDesignTokens
+                    .analyticsCharts
+                    .topProductsProductVerticalMargin,
+              ),
+              padding: EdgeInsets.all(
+                EcoPlatesDesignTokens.analyticsCharts.topProductsProductPadding,
+              ),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withValues(alpha: 0.4),
-                    Colors.white.withValues(alpha: 0.2),
-                    Colors.white.withValues(alpha: 0.1),
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsRankInnerBackgroundColor
+                        .withValues(
+                          alpha: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsProductBackgroundHighAlpha,
+                        ),
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsRankInnerBackgroundColor
+                        .withValues(
+                          alpha: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsProductBackgroundMediumAlpha,
+                        ),
+                    EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsRankInnerBackgroundColor
+                        .withValues(
+                          alpha: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsProductBackgroundLowAlpha,
+                        ),
                   ],
-                  stops: const [0.0, 0.5, 1.0],
+                  stops: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .topProductsProductGradientStops,
                 ),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(
+                  EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .topProductsProductBorderRadius,
+                ),
                 border: Border.all(
-                  color: _getRankColor(theme, rank).withValues(alpha: 0.25),
-                  width: 1.5,
+                  color: _getRankColor(theme, rank).withValues(
+                    alpha: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsProductBorderAlpha,
+                  ),
+                  width: EcoPlatesDesignTokens
+                      .analyticsCharts
+                      .topProductsProductBorderWidth,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: _getRankColor(theme, rank).withValues(alpha: 0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    color: _getRankColor(theme, rank).withValues(
+                      alpha: EcoPlatesDesignTokens
+                          .analyticsCharts
+                          .topProductsProductShadowAlpha,
+                    ),
+                    blurRadius: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsProductShadowBlurRadius,
+                    offset: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsProductShadowOffset,
                   ),
                 ],
               ),
               child: Row(
                 children: [
                   Container(
-                    width: 28,
-                    height: 28,
+                    width: EcoPlatesDesignTokens.analyticsCharts
+                        .topProductsRankBadgeSize(context),
+                    height: EcoPlatesDesignTokens.analyticsCharts
+                        .topProductsRankBadgeHeight(context),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          _getRankColor(theme, rank).withValues(alpha: 0.9),
-                          _getRankColor(theme, rank).withValues(alpha: 0.7),
-                          _getRankColor(theme, rank).withValues(alpha: 0.5),
+                          _getRankColor(theme, rank).withValues(
+                            alpha: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRankGradientHighAlpha,
+                          ),
+                          _getRankColor(theme, rank).withValues(
+                            alpha: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRankGradientMediumAlpha,
+                          ),
+                          _getRankColor(theme, rank).withValues(
+                            alpha: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRankGradientLowAlpha,
+                          ),
                         ],
-                        stops: const [0.0, 0.6, 1.0],
+                        stops: EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .topProductsRankGradientStops,
                       ),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(
+                        EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .topProductsRankBadgeBorderRadius,
+                      ),
                       border: Border.all(
-                        color: _getRankColor(
-                          theme,
-                          rank,
-                        ).withValues(alpha: 0.3),
-                        width: 1.5,
+                        color: _getRankColor(theme, rank).withValues(
+                          alpha: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRankBorderAlpha,
+                        ),
+                        width: EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .topProductsRankBorderWidth,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: _getRankColor(
-                            theme,
-                            rank,
-                          ).withValues(alpha: 0.5),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                          spreadRadius: 1,
+                          color: _getRankColor(theme, rank).withValues(
+                            alpha: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRankShadowPrimaryAlpha,
+                          ),
+                          blurRadius: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRankShadowPrimaryBlurRadius,
+                          offset: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRankShadowPrimaryOffset,
+                          spreadRadius: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRankBadgeShadowSpreadRadius,
                         ),
                         BoxShadow(
-                          color: _getRankColor(
-                            theme,
-                            rank,
-                          ).withValues(alpha: 0.3),
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
+                          color: _getRankColor(theme, rank).withValues(
+                            alpha: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRankShadowSecondaryAlpha,
+                          ),
+                          blurRadius: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRankShadowSecondaryBlurRadius,
+                          offset: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRankShadowSecondaryOffset,
                         ),
                       ],
                     ),
                     child: Center(
                       child: Container(
-                        width: 20,
-                        height: 20,
+                        width: EcoPlatesDesignTokens.analyticsCharts
+                            .topProductsRankInnerSize(context),
+                        height: EcoPlatesDesignTokens.analyticsCharts
+                            .topProductsRankInnerHeight(context),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(6),
+                          color: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRankInnerBackgroundColor
+                              .withValues(
+                                alpha: EcoPlatesDesignTokens
+                                    .analyticsCharts
+                                    .topProductsRankInnerBackgroundAlpha,
+                              ),
+                          borderRadius: BorderRadius.circular(
+                            EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRankInnerBorderRadius,
+                          ),
                         ),
                         child: Center(
                           child: Text(
                             rank.toString(),
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.white,
-                              letterSpacing: 0.5,
+                            style: TextStyle(
+                              fontSize: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsRankFontSize,
+                              fontWeight: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsRankWeight,
+                              color: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsRankTextColor,
+                              letterSpacing: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsRankLetterSpacing,
                               shadows: [
                                 Shadow(
-                                  color: Colors.black26,
-                                  offset: Offset(0, 1),
-                                  blurRadius: 2,
+                                  color: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .topProductsRankTextShadowColor
+                                      .withValues(
+                                        alpha: EcoPlatesDesignTokens
+                                            .analyticsCharts
+                                            .topProductsRankTextShadowAlpha,
+                                      ),
+                                  offset: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .topProductsRankTextShadowOffset,
+                                  blurRadius: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .topProductsRankTextShadowBlurRadius,
                                 ),
                               ],
                             ),
@@ -199,7 +387,11 @@ class TopProductsChart extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsProductHorizontalSpacing,
+                  ),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,18 +399,30 @@ class TopProductsChart extends StatelessWidget {
                         Text(
                           product.name,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsProductNameWeight,
                             color: theme.colorScheme.onSurface,
-                            fontSize: 13,
+                            fontSize: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsProductNameFontSize,
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
-                        const SizedBox(height: 1),
+                        SizedBox(
+                          height: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsProductVerticalSpacing,
+                        ),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 5,
-                            vertical: 2,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsCategoryHorizontalPadding,
+                            vertical: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsCategoryVerticalPadding,
                           ),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -226,82 +430,142 @@ class TopProductsChart extends StatelessWidget {
                                 _getCategoryColor(
                                   product.category,
                                   theme,
-                                ).withValues(alpha: 0.15),
+                                ).withValues(
+                                  alpha: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .topProductsCategoryBackgroundHighAlpha,
+                                ),
                                 _getCategoryColor(
                                   product.category,
                                   theme,
-                                ).withValues(alpha: 0.08),
+                                ).withValues(
+                                  alpha: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .topProductsCategoryBackgroundLowAlpha,
+                                ),
                               ],
                             ),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(
+                              EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsCategoryBorderRadius,
+                            ),
                             border: Border.all(
-                              color: _getCategoryColor(
-                                product.category,
-                                theme,
-                              ).withValues(alpha: 0.3),
+                              color: _getCategoryColor(product.category, theme)
+                                  .withValues(
+                                    alpha: EcoPlatesDesignTokens
+                                        .analyticsCharts
+                                        .topProductsCategoryBorderAlpha,
+                                  ),
                             ),
                           ),
                           child: Text(
                             product.category,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: _getCategoryColor(product.category, theme),
-                              fontSize: 9,
-                              fontWeight: FontWeight.w600,
+                              fontSize: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsCategoryFontSize,
+                              fontWeight: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsCategoryWeight,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: EcoPlatesDesignTokens
+                        .analyticsCharts
+                        .topProductsProductHorizontalSpacing,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 3,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRevenueHorizontalPadding,
+                          vertical: EcoPlatesDesignTokens
+                              .analyticsCharts
+                              .topProductsRevenueVerticalPadding,
                         ),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              theme.colorScheme.primary.withValues(alpha: 0.1),
-                              theme.colorScheme.primary.withValues(alpha: 0.05),
+                              theme.colorScheme.primary.withValues(
+                                alpha: EcoPlatesDesignTokens
+                                    .analyticsCharts
+                                    .topProductsRevenueBackgroundHighAlpha,
+                              ),
+                              theme.colorScheme.primary.withValues(
+                                alpha: EcoPlatesDesignTokens
+                                    .analyticsCharts
+                                    .topProductsRevenueBackgroundLowAlpha,
+                              ),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(
+                            EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRevenueBorderRadius,
+                          ),
                           border: Border.all(
                             color: theme.colorScheme.primary.withValues(
-                              alpha: 0.2,
+                              alpha: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsRevenueBorderAlpha,
                             ),
                           ),
                         ),
                         child: Text(
                           _formatCurrency(product.revenue),
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
+                            fontWeight: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRevenueWeight,
                             color: theme.colorScheme.primary,
-                            fontSize: 10,
+                            fontSize: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsRevenueFontSize,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(
+                        height: EcoPlatesDesignTokens
+                            .analyticsCharts
+                            .topProductsStatsVerticalSpacing,
+                      ),
                       Row(
                         children: [
                           Icon(
                             Icons.inventory_2,
-                            size: 10,
+                            size: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsQuantityIconSize,
                             color: theme.colorScheme.onSurfaceVariant
                                 .withValues(
-                                  alpha: 0.6,
+                                  alpha: EcoPlatesDesignTokens
+                                      .analyticsCharts
+                                      .topProductsQuantityIconAlpha,
                                 ),
                           ),
-                          const SizedBox(width: 1),
+                          SizedBox(
+                            width: EcoPlatesDesignTokens
+                                .analyticsCharts
+                                .topProductsQuantityIconSpacing,
+                          ),
                           Text(
                             '${product.quantity}',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w500,
+                              fontSize: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsQuantityFontSize,
+                              fontWeight: EcoPlatesDesignTokens
+                                  .analyticsCharts
+                                  .topProductsQuantityWeight,
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
@@ -320,9 +584,13 @@ class TopProductsChart extends StatelessWidget {
 
   String _formatCurrency(double amount) {
     final formatter = NumberFormat.currency(
-      locale: 'fr_FR',
-      symbol: '€',
-      decimalDigits: amount % 1 == 0 ? 0 : 2,
+      locale: EcoPlatesDesignTokens.analyticsCharts.topProductsCurrencyLocale,
+      symbol: EcoPlatesDesignTokens.analyticsCharts.topProductsCurrencySymbol,
+      decimalDigits: amount % 1 == 0
+          ? 0
+          : EcoPlatesDesignTokens
+                .analyticsCharts
+                .topProductsCurrencyMaxDecimalDigits,
     );
     return formatter.format(amount);
   }
@@ -330,17 +598,7 @@ class TopProductsChart extends StatelessWidget {
   Color _getRankColor(ThemeData theme, int rank) {
     // Palette étendue de couleurs pour les rangs
     final rankColors = [
-      const Color(0xFFFFD700), // Or pour le #1
-      const Color(0xFFC0C0C0), // Argent pour le #2
-      const Color(0xFFCD7F32), // Bronze pour le #3
-      const Color(0xFF4CAF50), // Vert émeraude pour le #4
-      const Color(0xFF2196F3), // Bleu pour le #5
-      const Color(0xFF9C27B0), // Violet pour le #6
-      const Color(0xFFFF9800), // Orange pour le #7
-      const Color(0xFFE91E63), // Rose pour le #8
-      const Color(0xFF00BCD4), // Cyan pour le #9
-      const Color(0xFF8BC34A), // Vert clair pour le #10
-      const Color(0xFF3F51B5), // Indigo pour le #11+
+      ...EcoPlatesDesignTokens.analyticsCharts.topProductsRankColors,
       theme.colorScheme.primary,
       theme.colorScheme.secondary,
       theme.colorScheme.tertiary,
@@ -350,24 +608,9 @@ class TopProductsChart extends StatelessWidget {
   }
 
   Color _getCategoryColor(String category, ThemeData theme) {
-    // Palette de couleurs pour les catégories
-    final categoryColors = {
-      'Pizza': const Color(0xFFFF6B6B),
-      'Burger': const Color(0xFF4ECDC4),
-      'Pasta': const Color(0xFF45B7D1),
-      'Salade': const Color(0xFF96CEB4),
-      'Dessert': const Color(0xFFFECA57),
-      'Boisson': const Color(0xFF74B9FF),
-      'Entrée': const Color(0xFFA29BFE),
-      'Plat': const Color(0xFFFD79A8),
-      'Végétarien': const Color(0xFF00B894),
-      'Viande': const Color(0xFFE17055),
-      'Poisson': const Color(0xFF0984E3),
-      'Asiatique': const Color(0xFFE84393),
-      'Italien': const Color(0xFFD63031),
-      'Français': const Color(0xFF6C5CE7),
-    };
-
-    return categoryColors[category] ?? theme.colorScheme.tertiary;
+    return EcoPlatesDesignTokens
+            .analyticsCharts
+            .topProductsCategoryColors[category] ??
+        theme.colorScheme.tertiary;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../core/utils/offer_formatters.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -11,7 +12,7 @@ class OfferMetadataSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
       child: Column(
         children: [
           // Type d'offre et catégorie
@@ -19,15 +20,17 @@ class OfferMetadataSection extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildInfoSection(
+                  context,
                   icon: Icons.category,
                   title: "Type d'offre",
                   content: OfferFormatters.formatOfferType(offer.type),
                   color: Colors.blue,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: context.scaleMD_LG_XL_XXL),
               Expanded(
                 child: _buildInfoSection(
+                  context,
                   icon: Icons.restaurant_menu,
                   title: 'Catégorie',
                   content: OfferFormatters.formatFoodCategory(offer.category),
@@ -36,22 +39,24 @@ class OfferMetadataSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
           // Date de création et statut
           Row(
             children: [
               Expanded(
                 child: _buildInfoSection(
+                  context,
                   icon: Icons.calendar_today,
                   title: 'Publié',
                   content: OfferFormatters.formatCreatedDate(offer.createdAt),
                   color: Colors.purple,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: context.scaleMD_LG_XL_XXL),
               Expanded(
                 child: _buildInfoSection(
+                  context,
                   icon: Icons.info_outline,
                   title: 'Statut',
                   content: OfferFormatters.formatOfferStatus(offer.status),
@@ -65,40 +70,52 @@ class OfferMetadataSection extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoSection({
+  Widget _buildInfoSection(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String content,
     required Color color,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
+        color: color.withValues(
+          alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+        ),
+        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        border: Border.all(
+          color: color.withValues(alpha: EcoPlatesDesignTokens.opacity.subtle),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, size: 20, color: color),
-              const SizedBox(width: 8),
+              Icon(
+                icon,
+                size: EcoPlatesDesignTokens.size.indicator(context),
+                color: color,
+              ),
+              SizedBox(width: context.scaleXXS_XS_SM_MD),
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
                   color: color,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: EcoPlatesDesignTokens.typography.medium,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: context.scaleXXS_XS_SM_MD),
           Text(
             content,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              fontWeight: EcoPlatesDesignTokens.typography.semiBold,
+            ),
           ),
         ],
       ),

@@ -1,9 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:csv/csv.dart';
-import 'package:intl/intl.dart';
-
 import 'package:ecoplates/core/services/stock_export_service.dart';
 import 'package:ecoplates/domain/entities/stock_item.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   late StockExportService exportService;
@@ -103,8 +102,7 @@ void main() {
           quantity: 5,
           unit: 'kg',
           status: StockItemStatus.active,
-          description: null, // Pas de description
-          updatedAt: DateTime(2025, 1, 17, 11, 0),
+          updatedAt: DateTime(2025, 1, 17, 11),
         ),
       ];
 
@@ -144,7 +142,7 @@ void main() {
           quantity: 1,
           unit: 'pièce',
           status: StockItemStatus.active,
-          updatedAt: DateTime(2025, 1, 1, 12, 0),
+          updatedAt: DateTime(2025, 1, 1, 12),
         ),
       ];
 
@@ -164,22 +162,22 @@ void main() {
           name: 'Actif',
           sku: 'ACT-001',
           category: 'Test',
-          price: 1.0,
+          price: 1,
           quantity: 1,
           unit: 'pièce',
           status: StockItemStatus.active,
-          updatedAt: DateTime(2025, 1, 1, 12, 0),
+          updatedAt: DateTime(2025, 1, 1, 12),
         ),
         StockItem(
           id: '6',
           name: 'Inactif',
           sku: 'INA-001',
           category: 'Test',
-          price: 1.0,
+          price: 1,
           quantity: 1,
           unit: 'pièce',
           status: StockItemStatus.inactive,
-          updatedAt: DateTime(2025, 1, 1, 12, 0),
+          updatedAt: DateTime(2025, 1, 1, 12),
         ),
       ];
 
@@ -199,22 +197,22 @@ void main() {
           name: 'En Stock',
           sku: 'STK-001',
           category: 'Test',
-          price: 1.0,
+          price: 1,
           quantity: 5,
           unit: 'pièce',
           status: StockItemStatus.active,
-          updatedAt: DateTime(2025, 1, 1, 12, 0),
+          updatedAt: DateTime(2025, 1, 1, 12),
         ),
         StockItem(
           id: '8',
           name: 'Rupture',
           sku: 'OUT-001',
           category: 'Test',
-          price: 1.0,
+          price: 1,
           quantity: 0,
           unit: 'pièce',
           status: StockItemStatus.active,
-          updatedAt: DateTime(2025, 1, 1, 12, 0),
+          updatedAt: DateTime(2025, 1, 1, 12),
         ),
       ];
 
@@ -253,7 +251,7 @@ extension StockExportServiceTest on StockExportService {
         item.unit,
         item.quantity.toString(),
         item.status.label,
-        item.isOutOfStock ? 'Oui' : 'Non',
+        if (item.isOutOfStock) 'Oui' else 'Non',
         item.description ?? '',
         DateFormat('dd/MM/yyyy HH:mm').format(item.updatedAt),
       ];

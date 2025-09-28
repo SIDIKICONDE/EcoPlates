@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/responsive/design_tokens.dart';
 import '../../../../core/router/routes/route_constants.dart';
 import '../../../providers/merchants_provider.dart';
 import '../../favorite_merchant_card.dart';
@@ -19,15 +20,22 @@ class FavoritesMerchantsSection extends ConsumerWidget {
       children: [
         // En-tête de section
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+          padding: EdgeInsets.fromLTRB(
+            context.scaleMD_LG_XL_XXL,
+            context.scaleXS_SM_MD_LG,
+            context.scaleMD_LG_XL_XXL,
+            context.scaleMD_LG_XL_XXL,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Vos favoris',
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: EcoPlatesDesignTokens.typography.modalTitle(
+                    context,
+                  ),
+                  fontWeight: EcoPlatesDesignTokens.typography.bold,
                 ),
               ),
               if (favorites.isNotEmpty)
@@ -43,25 +51,33 @@ class FavoritesMerchantsSection extends ConsumerWidget {
         ),
 
         SizedBox(
-          height: favorites.isEmpty ? 80 : 152,
+          height: favorites.isEmpty ? DesignConstants.eighty.toDouble() : 152,
           child: favorites.isEmpty
               ? Center(
                   child: Text(
                     'Aucun favori pour l’instant',
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(
+                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                      ),
+                    ),
                   ),
                 )
               : ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.scaleMD_LG_XL_XXL,
+                  ),
                   physics: const BouncingScrollPhysics(),
                   itemCount: favorites.length,
                   itemBuilder: (context, index) {
                     final merchant = favorites[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.scaleXS_SM_MD_LG,
+                      ),
                       child: SizedBox(
-                        width: 320,
+                        width: context.scaleLG_XL_XXL_XXXL,
                         child: FavoriteMerchantCard(
                           merchant: merchant,
                           onTap: () {
@@ -74,7 +90,9 @@ class FavoritesMerchantsSection extends ConsumerWidget {
                 ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(
+          height: context.scaleMD_LG_XL_XXL,
+        ),
       ],
     );
   }

@@ -1,7 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/responsive/design_tokens.dart';
+import '../../../core/services/image_cache_service.dart';
 import '../../../core/utils/offer_formatters.dart';
+import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/food_offer.dart';
 
 /// Header de l'offre avec image et badges
@@ -17,7 +19,7 @@ class OfferImageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 300,
+      expandedHeight: 300.0,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
@@ -25,17 +27,17 @@ class OfferImageHeader extends StatelessWidget {
           children: [
             // Image principale
             if (offer.images.isNotEmpty)
-              CachedNetworkImage(
+              EcoCachedImage(
                 imageUrl: offer.images.first,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[300],
+                size: ImageSize.large,
+                placeholder: Container(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   child: const Center(child: CircularProgressIndicator()),
                 ),
-                errorWidget: (context, url, error) => _buildPlaceholderImage(),
+                errorWidget: _buildPlaceholderImage(context),
               )
             else
-              _buildPlaceholderImage(),
+              _buildPlaceholderImage(context),
 
             // Gradient overlay
             Container(
@@ -45,7 +47,9 @@ class OfferImageHeader extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withValues(alpha: 0.7),
+                    EcoPlatesDesignTokens.colors.overlayBlack.withValues(
+                      alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                    ),
                   ],
                 ),
               ),
@@ -53,9 +57,9 @@ class OfferImageHeader extends StatelessWidget {
 
             // Barre en bas avec tous les éléments alignés
             Positioned(
-              bottom: 16,
-              left: 16,
-              right: 16,
+              bottom: context.scaleMD_LG_XL_XXL,
+              left: context.scaleMD_LG_XL_XXL,
+              right: context.scaleMD_LG_XL_XXL,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -66,63 +70,84 @@ class OfferImageHeader extends StatelessWidget {
                       children: [
                         // Nom du merchant
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.scaleMD_LG_XL_XXL,
+                            vertical: context.scaleXS_SM_MD_LG,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(20),
+                            color: EcoPlatesDesignTokens.colors.overlayBlack
+                                .withValues(
+                                  alpha: EcoPlatesDesignTokens
+                                      .opacity
+                                      .almostOpaque,
+                                ),
+                            borderRadius: BorderRadius.circular(
+                              EcoPlatesDesignTokens.radius.xxl,
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.restaurant,
-                                size: 16,
-                                color: Colors.white,
+                                size: EcoPlatesDesignTokens.size.indicator(
+                                  context,
+                                ),
+                                color: EcoPlatesDesignTokens.colors.textPrimary,
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: context.scaleXXS_XS_SM_MD),
                               Text(
                                 offer.merchantName,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
+                                style: TextStyle(
+                                  color:
+                                      EcoPlatesDesignTokens.colors.textPrimary,
+                                  fontWeight:
+                                      EcoPlatesDesignTokens.typography.medium,
+                                  fontSize: EcoPlatesDesignTokens.typography
+                                      .hint(context),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: context.scaleXS_SM_MD_LG),
                         // Badge temps restant
                         if (offer.canPickup)
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.scaleMD_LG_XL_XXL,
+                              vertical: context.scaleXS_SM_MD_LG,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(20),
+                              color: EcoPlatesDesignTokens.colors.snackbarError,
+                              borderRadius: BorderRadius.circular(
+                                EcoPlatesDesignTokens.radius.xxl,
+                              ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.access_time,
-                                  size: 16,
-                                  color: Colors.white,
+                                  size: EcoPlatesDesignTokens.size.indicator(
+                                    context,
+                                  ),
+                                  color:
+                                      EcoPlatesDesignTokens.colors.textPrimary,
                                 ),
-                                const SizedBox(width: 4),
+                                SizedBox(width: context.scaleXXS_XS_SM_MD),
                                 Text(
                                   OfferFormatters.formatTimeRemaining(
                                     offer.timeRemaining,
                                   ),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                                  style: TextStyle(
+                                    color: EcoPlatesDesignTokens
+                                        .colors
+                                        .textPrimary,
+                                    fontWeight:
+                                        EcoPlatesDesignTokens.typography.bold,
+                                    fontSize: EcoPlatesDesignTokens.typography
+                                        .hint(context),
                                   ),
                                 ),
                               ],
@@ -140,25 +165,43 @@ class OfferImageHeader extends StatelessWidget {
                         Text(
                           '€${offer.originalPrice.toStringAsFixed(2)}',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: EcoPlatesDesignTokens.typography
+                                .titleSize(context),
                             decoration: TextDecoration.lineThrough,
-                            color: Colors.white.withValues(alpha: 0.8),
-                            fontWeight: FontWeight.w500,
+                            color: EcoPlatesDesignTokens.colors.textPrimary
+                                .withValues(
+                                  alpha: EcoPlatesDesignTokens
+                                      .opacity
+                                      .almostOpaque,
+                                ),
+                            fontWeight: EcoPlatesDesignTokens.typography.medium,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: context.scaleMD_LG_XL_XXL),
                       ],
                       Text(
                         offer.priceText,
                         style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          fontSize:
+                              EcoPlatesDesignTokens.typography.titleSize(
+                                context,
+                              ) *
+                              1.5,
+                          fontWeight: EcoPlatesDesignTokens.typography.bold,
+                          color: EcoPlatesDesignTokens.colors.textPrimary,
                           shadows: [
                             Shadow(
-                              color: Colors.black.withValues(alpha: 0.5),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
+                              color: EcoPlatesDesignTokens.colors.overlayBlack
+                                  .withValues(
+                                    alpha: EcoPlatesDesignTokens
+                                        .opacity
+                                        .almostOpaque,
+                                  ),
+                              blurRadius:
+                                  EcoPlatesDesignTokens.elevation.smallBlur,
+                              offset: EcoPlatesDesignTokens
+                                  .elevation
+                                  .standardOffset,
                             ),
                           ],
                         ),
@@ -173,12 +216,17 @@ class OfferImageHeader extends StatelessWidget {
       ),
       leading: IconButton(
         icon: Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.9),
+            color: EcoPlatesDesignTokens.colors.textPrimary.withValues(
+              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+            ),
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.arrow_back, color: Colors.black),
+          child: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         onPressed: () {
           debugPrint('🔙 Bouton retour SliverAppBar pressé');
@@ -188,11 +236,17 @@ class OfferImageHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholderImage() {
+  Widget _buildPlaceholderImage(BuildContext context) {
     return Container(
-      color: Colors.grey[300],
-      child: const Center(
-        child: Icon(Icons.restaurant, size: 64, color: Colors.grey),
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: Center(
+        child: Icon(
+          Icons.restaurant,
+          size: EcoPlatesDesignTokens.size.modalIcon(context),
+          color: Theme.of(context).colorScheme.onSurface.withValues(
+            alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+          ),
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/analytics_stats.dart';
 import '../../providers/analytics_provider.dart';
 import 'charts/charts.dart';
@@ -30,37 +31,37 @@ class AnalyticsChartsSection extends ConsumerWidget {
   Widget _buildChartsSection(BuildContext context, AnalyticsStats analytics) {
     return SliverList(
       delegate: SliverChildListDelegate([
-        const SizedBox(height: 16),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.responsive(context)),
 
         // Graphique d'évolution des revenus
         RevenueChart(analytics: analytics),
 
-        const SizedBox(height: 24),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.sectionSpacing(context)),
 
         // Graphique des commandes
         OrdersChart(analytics: analytics),
 
-        const SizedBox(height: 24),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.sectionSpacing(context)),
 
         // Graphique des commissions
         CommissionsChart(analytics: analytics),
 
-        const SizedBox(height: 24),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.sectionSpacing(context)),
 
         // Graphique de satisfaction client
         CustomerSatisfactionChart(analytics: analytics),
 
-        const SizedBox(height: 24),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.sectionSpacing(context)),
 
         // Graphique du funnel de conversion
         ConversionFunnelChart(analytics: analytics),
 
-        const SizedBox(height: 24),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.sectionSpacing(context)),
 
         // Top produits et catégories sur une ligne (responsive)
         BottomChartsSection(analytics: analytics),
 
-        const SizedBox(height: 24),
+        SizedBox(height: EcoPlatesDesignTokens.spacing.sectionSpacing(context)),
       ]),
     );
   }

@@ -52,7 +52,8 @@ class OfferCardImage extends StatelessWidget {
                 child: offer.images.isNotEmpty
                     ? EcoCachedImage(
                         imageUrl: offer.images.first,
-                        size: compact ? ImageSize.small : ImageSize.medium,
+                        size: ImageSize
+                            .small, // Taille réduite pour tous les modes sur mobile
                         priority: Priority
                             .high, // Haute priorité pour les images d'offres
                         borderRadius:

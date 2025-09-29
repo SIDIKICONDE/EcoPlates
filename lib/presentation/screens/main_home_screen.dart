@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/responsive_utils.dart';
+import '../widgets/navigation/integrated_tablet_menu.dart';
 import '../widgets/home/sections/brand_section.dart';
 import '../widgets/home/sections/categories_section.dart';
 import '../widgets/home/sections/favorites_merchants_section.dart';
@@ -24,6 +26,15 @@ class MainHomeScreen extends ConsumerStatefulWidget {
 class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
+    // Détecter si c'est une tablette
+    final isTablet = ResponsiveUtils.isTablet(context);
+    
+    // Si c'est une tablette, utiliser le menu tablette
+    if (isTablet) {
+      return const IntegratedTabletMenu();
+    }
+    
+    // Sinon, afficher l'interface mobile normale
     return Scaffold(
       appBar: const MinimalHeader(),
       body: SingleChildScrollView(

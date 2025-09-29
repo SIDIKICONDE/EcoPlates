@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/responsive/responsive.dart';
 import '../../core/router/routes/route_constants.dart';
+import '../widgets/common/eco_button.dart';
 
 /// Page de bienvenue pour choisir le type d'utilisateur
 class WelcomeScreen extends ConsumerWidget {
@@ -181,80 +182,45 @@ class WelcomeScreen extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          // Bouton Merchant avec hauteur responsive
+          // Bouton Merchant avec le nouveau système EcoButton
           FractionallySizedBox(
             widthFactor: 0.8,
-            child: ResponsiveButton(
+            child: EcoButton(
+              text: 'Merchant',
               onPressed: () {
                 context.go(RouteConstants.merchantStore);
               },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ResponsiveIcon(
-                    Icons.store,
-                    size: context.responsive(
-                      mobile: 20,
-                      tablet: 24,
-                      desktop: 28,
-                    ),
-                  ),
-                  const HorizontalGap(multiplier: 0.5),
-                  ResponsiveText(
-                    'Merchant',
-                    fontSize: FontSizes.buttonMedium,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+              icon: Icons.store,
+              variant: EcoButtonVariant.primary,
+              backgroundColor: Colors.white,
+              foregroundColor: Theme.of(context).primaryColor,
+              size: context.responsive(
+                mobile: EcoButtonSize.medium,
+                tablet: EcoButtonSize.large,
+                desktop: EcoButtonSize.large,
               ),
             ),
           ),
 
           const VerticalGap(),
 
-          // Bouton Consommateur avec style responsive
+          // Bouton Consommateur avec le nouveau système EcoButton
           FractionallySizedBox(
             widthFactor: 0.8,
-            child: SizedBox(
-              height: context.buttonHeight,
-              child: OutlinedButton(
-                onPressed: () {
-                  context.go(RouteConstants.consumerDiscover);
-                },
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.white, width: 2),
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.horizontalSpacing,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(context.borderRadius),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ResponsiveIcon(
-                      Icons.person,
-                      size: context.responsive(
-                        mobile: 20,
-                        tablet: 24,
-                        desktop: 28,
-                      ),
-                    ),
-                    const HorizontalGap(multiplier: 0.5),
-                    ResponsiveText(
-                      'Consommateur',
-                      fontSize: FontSizes.buttonMedium,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+            child: EcoButton(
+              text: 'Consommateur',
+              onPressed: () {
+                context.go(RouteConstants.consumerDiscover);
+              },
+              icon: Icons.person,
+              variant: EcoButtonVariant.outline,
+              borderColor: Colors.white,
+              foregroundColor: Colors.white,
+              borderWidth: 2.0,
+              size: context.responsive(
+                mobile: EcoButtonSize.medium,
+                tablet: EcoButtonSize.large,
+                desktop: EcoButtonSize.large,
               ),
             ),
           ),

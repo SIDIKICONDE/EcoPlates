@@ -13,18 +13,18 @@ class OfferDiscountBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 12.0,
-        vertical: 6.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8.0,
+        vertical: 4.0,
       ),
       decoration: BoxDecoration(
         color: isFree ? Colors.green : Colors.red,
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(8.0),
         boxShadow: const [
           BoxShadow(
             color: Colors.black26,
-            blurRadius: 4.0,
-            offset: Offset(0, 2.0),
+            blurRadius: 2.0,
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -33,10 +33,10 @@ class OfferDiscountBadge extends StatelessWidget {
         children: [
           Icon(
             isFree ? Icons.card_giftcard : Icons.discount,
-            size: 14.0,
+            size: 13.0,
             color: Colors.white,
           ),
-          SizedBox(width: 4.0),
+          const SizedBox(width: 4.0),
           Text(
             discountBadge,
             style: TextStyle(

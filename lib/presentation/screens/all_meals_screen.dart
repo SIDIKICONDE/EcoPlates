@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/responsive_utils.dart';
 import '../../domain/entities/food_offer.dart';
 import '../providers/meals_provider.dart';
 import '../widgets/common/empty_state.dart';
@@ -17,9 +18,16 @@ class AllMealsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tous les repas complets'),
+        title: Text(
+          'Tous les repas complets',
+          style: TextStyle(
+            fontSize: ResponsiveUtils.getResponsiveFontSize(context, 20.0),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
+        toolbarHeight: context.appBarHeight,
       ),
       body: meals.isEmpty
           ? const EmptyState(
@@ -27,28 +35,32 @@ class AllMealsScreen extends ConsumerWidget {
               title: 'Aucun repas disponible',
               subtitle: 'Revenez plus tard pour découvrir de nouveaux repas',
             )
-          : ListView.builder(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 16.0,
-              ),
-              itemCount: meals.length,
-              itemBuilder: (context, index) {
-                final meal = meals[index];
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: 16.0,
-                  ),
-                  child: OfferCard(
-                    offer: meal,
-                    distance: 0.8 + (index * 0.3), // Distance simulée
-                    onTap: () async {
-                      await _showMealDetailModal(context, meal);
-                    },
-                  ),
-                );
-              },
-            ),
+          : _buildListView(context, meals),
+    );
+  }
+
+  Widget _buildListView(BuildContext context, List<FoodOffer> meals) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing,
+        vertical: context.verticalSpacing,
+      ),
+      itemCount: meals.length,
+      itemBuilder: (context, index) {
+        final meal = meals[index];
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: context.verticalSpacing,
+          ),
+          child: OfferCard(
+            offer: meal,
+            distance: 0.8 + (index * 0.3), // Distance simulée
+            onTap: () async {
+              await _showMealDetailModal(context, meal);
+            },
+          ),
+        );
+      },
     );
   }
 

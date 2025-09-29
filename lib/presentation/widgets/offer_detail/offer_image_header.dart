@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/image_cache_service.dart';
-import '../../../core/utils/offer_formatters.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -84,40 +83,6 @@ class OfferImageHeader extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8.0),
-                        // Badge temps restant
-                        if (offer.canPickup)
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                              vertical: 6.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.orange.withValues(alpha: 0.9),
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.access_time,
-                                  size: 14.0,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 4.0),
-                                Text(
-                                  OfferFormatters.formatTimeRemaining(
-                                    offer.timeRemaining,
-                                  ),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                       ],
                     ),
                   ),

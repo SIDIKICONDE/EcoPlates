@@ -3,16 +3,46 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/meals_provider.dart';
 import '../../../screens/all_meals_screen.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
 import 'categories_section.dart';
+import 'responsive_card_config.dart';
 
 /// Section affichant les offres de repas complets
 class MealsSection extends ConsumerWidget {
   const MealsSection({super.key});
+
+  double _calculateCardHeight(BuildContext context) {
+    // Hauteur de l'image (depuis OfferCardImage)
+    final imageHeight = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 120.0,  // Mode compact
+      tablet: 120.0,
+      tabletLarge: 140.0,
+      desktop: 160.0,
+      desktopLarge: 180.0,
+    );
+    
+    // Hauteur estimée du contenu en mode compact
+    // (titre + description + pickup info + séparateur + prix + espacements)
+    final contentHeight = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 110.0,  // Contenu compact avec séparateur
+      tablet: 110.0,
+      tabletLarge: 120.0,
+      desktop: 130.0,
+      desktopLarge: 140.0,
+    );
+    
+    // Paddings (top image: 2, top content: 4, bottom content: 2)
+    const totalPadding = 8.0;
+    
+    return imageHeight + contentHeight + totalPadding;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,7 +105,7 @@ class MealsSection extends ConsumerWidget {
 
         // Liste horizontale d'offres de repas
         SizedBox(
-          height: 280.0,
+          height: _calculateCardHeight(context),
           child: _buildMealsList(context, ref, allMeals),
         ),
 
@@ -115,21 +145,21 @@ class MealsSection extends ConsumerWidget {
       );
     }
 
+    // Utiliser la configuration responsive
+    final cardWidth = ResponsiveCardConfig.getSliderCardWidth(context);
+    final cardSpacing = ResponsiveCardConfig.getCardSpacing(context);
+    
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      padding: ResponsiveCardConfig.getSliderPadding(context),
       physics: const BouncingScrollPhysics(),
       itemCount: meals.length,
       itemBuilder: (context, index) {
         final meal = meals[index];
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: cardSpacing / 2),
           child: SizedBox(
-            width:
-                MediaQuery.of(context).size.width *
-                (MediaQuery.of(context).orientation == Orientation.landscape
-                    ? 0.9
-                    : 0.85),
+            width: cardWidth,
             child: OfferCard(
               offer: meal,
               compact: true,
@@ -279,7 +309,6 @@ class MealsSection extends ConsumerWidget {
             borderRadius: BorderRadius.circular(12.0),
             border: Border.all(
               color: Colors.green.shade200,
-              width: 1.0,
             ),
           ),
           child: Column(

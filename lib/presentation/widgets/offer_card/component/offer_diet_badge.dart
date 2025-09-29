@@ -9,21 +9,21 @@ class OfferDietBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 4.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 6.0,
+        vertical: 2.0,
       ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         border: Border.all(
           color: color.withValues(alpha: 0.2),
         ),
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(6.0),
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 12.0,
+          fontSize: 11.0,
           fontWeight: FontWeight.w500,
           color: color,
         ),

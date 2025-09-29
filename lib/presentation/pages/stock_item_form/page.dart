@@ -338,7 +338,6 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                         borderRadius: BorderRadius.circular(6.0),
                         border: Border.all(
                           color: theme.colorScheme.outline.withValues(alpha: 0.3),
-                          width: 1.0,
                         ),
                       ),
                       child: Text(
@@ -539,7 +538,6 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                   ),
                   SizedBox(width: 12.0),
                   Expanded(
-                    flex: 1,
                     child: InkWell(
                       onTap: () => showUnitModal(
                         context,
@@ -573,7 +571,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 maxLines: 3,
                 decoration: const InputDecoration(
                   labelText: 'Description',
-                  hintText: 'Détails optionnels sur l\'article...',
+                  hintText: "Détails optionnels sur l'article...",
                   prefixIcon: Icon(Icons.description_outlined),
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
@@ -606,7 +604,6 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(
                       color: theme.colorScheme.primary.withValues(alpha: 0.5),
-                      width: 1.0,
                     ),
                   ),
                   child: Row(

@@ -78,7 +78,6 @@ class _PlatformTimePickerState extends State<PlatformTimePicker> {
                       border: Border(
                         bottom: BorderSide(
                           color: CupertinoColors.separator,
-                          width: 1.0,
                         ),
                       ),
                     ),
@@ -342,7 +341,6 @@ class OfferFormScheduleFields extends ConsumerWidget {
                     )
                     ? theme.colorScheme.primary.withValues(alpha: 0.5)
                     : theme.colorScheme.error.withValues(alpha: 0.5),
-                width: 1.0,
               ),
             ),
             child: Row(

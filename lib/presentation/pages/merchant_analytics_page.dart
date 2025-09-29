@@ -34,7 +34,7 @@ class MerchantAnalyticsPage extends ConsumerWidget {
               const Color(0xFFFF9800).withValues(alpha: 0.1),
               const Color(0xFF9C27B0).withValues(alpha: 0.1),
             ],
-            stops: [0.0, 0.25, 0.5, 0.75, 1.0],
+            stops: const [0.0, 0.25, 0.5, 0.75, 1.0],
           ),
         ),
         child: RefreshIndicator(

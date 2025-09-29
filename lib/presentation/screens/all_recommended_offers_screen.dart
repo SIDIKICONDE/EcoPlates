@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/responsive_utils.dart';
 import '../providers/recommended_offers_provider.dart';
 import '../widgets/common/offers_list_view.dart';
 
@@ -16,8 +17,14 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Offres recommandées'),
-        centerTitle: false,
+        title: Text(
+          'Offres recommandées',
+          style: TextStyle(
+            fontSize: FontSizes.subtitleLarge.getSize(context),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        toolbarHeight: context.appBarHeight,
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -37,8 +44,7 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
           ref.invalidate(recommendedOffersProvider);
         },
         compactCards: true,
-        itemSpacing: 12.0,
-        showDetailModal: true,
+        itemSpacing: context.verticalSpacing,
       ),
     );
   }
@@ -49,14 +55,12 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
         context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(12.0),
+            top: Radius.circular(context.borderRadius),
           ),
         ),
         builder: (context) {
           return Container(
-            padding: EdgeInsets.all(
-              32.0,
-            ),
+            padding: context.responsivePadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,126 +72,203 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                       'Filtrer les offres',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
+                        fontSize: FontSizes.titleMedium.getSize(context),
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: Icon(
+                        Icons.close,
+                        size: ResponsiveUtils.getIconSize(context),
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: 12.0,
+                  height: context.verticalSpacing,
                 ),
 
                 // Filtres par catégorie
                 Text(
                   'Catégorie',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontSize: FontSizes.subtitleMedium.getSize(context),
+                  ),
                 ),
                 SizedBox(
-                  height: 8.0,
+                  height: context.verticalSpacing / 2,
                 ),
                 Wrap(
-                  spacing: 4.0,
-                  runSpacing: 4.0,
+                  spacing: context.horizontalSpacing / 2,
+                  runSpacing: context.verticalSpacing / 2,
                   children: [
                     FilterChip(
-                      label: const Text('Boulangerie'),
+                      label: Text(
+                        'Boulangerie',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
-                      label: const Text('Fruits & Légumes'),
+                      label: Text(
+                        'Fruits & Légumes',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
-                      label: const Text('Plats préparés'),
+                      label: Text(
+                        'Plats préparés',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
-                      label: const Text('Snacks'),
+                      label: Text(
+                        'Snacks',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       onSelected: (selected) {},
                     ),
                   ],
                 ),
 
                 SizedBox(
-                  height: 12.0,
+                  height: context.verticalSpacing,
                 ),
 
                 // Filtres par régime
                 Text(
                   'Régime alimentaire',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontSize: FontSizes.subtitleMedium.getSize(context),
+                  ),
                 ),
                 SizedBox(
-                  height: 8.0,
+                  height: context.verticalSpacing / 2,
                 ),
                 Wrap(
-                  spacing: 4.0,
-                  runSpacing: 4.0,
+                  spacing: context.horizontalSpacing / 2,
+                  runSpacing: context.verticalSpacing / 2,
                   children: [
                     FilterChip(
-                      label: const Text('Végétarien'),
+                      label: Text(
+                        'Végétarien',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       avatar: Icon(
                         Icons.eco,
-                        size: 12.0,
+                        size: ResponsiveUtils.getIconSize(
+                          context,
+                          baseSize: 16.0,
+                        ),
                       ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
-                      label: const Text('Vegan'),
+                      label: Text(
+                        'Vegan',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       avatar: Icon(
                         Icons.spa,
-                        size: 12.0,
+                        size: ResponsiveUtils.getIconSize(
+                          context,
+                          baseSize: 16.0,
+                        ),
                       ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
-                      label: const Text('Sans gluten'),
+                      label: Text(
+                        'Sans gluten',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       onSelected: (selected) {},
                     ),
                   ],
                 ),
 
                 SizedBox(
-                  height: 12.0,
+                  height: context.verticalSpacing,
                 ),
 
                 // Filtres par prix
-                Text('Prix', style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  'Prix',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontSize: FontSizes.subtitleMedium.getSize(context),
+                  ),
+                ),
                 SizedBox(
-                  height: 8.0,
+                  height: context.verticalSpacing / 2,
                 ),
                 Wrap(
-                  spacing: 4.0,
-                  runSpacing: 4.0,
+                  spacing: context.horizontalSpacing / 2,
+                  runSpacing: context.verticalSpacing / 2,
                   children: [
                     FilterChip(
-                      label: const Text('Gratuit'),
+                      label: Text(
+                        'Gratuit',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       avatar: Icon(
                         Icons.star,
-                        size: 12.0,
+                        size: ResponsiveUtils.getIconSize(
+                          context,
+                          baseSize: 16.0,
+                        ),
                       ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
-                      label: const Text('< 5€'),
+                      label: Text(
+                        '< 5€',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
-                      label: const Text('5€ - 10€'),
+                      label: Text(
+                        '5€ - 10€',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       onSelected: (selected) {},
                     ),
                     FilterChip(
-                      label: const Text('> 10€'),
+                      label: Text(
+                        '> 10€',
+                        style: TextStyle(
+                          fontSize: FontSizes.bodySmall.getSize(context),
+                        ),
+                      ),
                       onSelected: (selected) {},
                     ),
                   ],
                 ),
 
                 SizedBox(
-                  height: 32.0,
+                  height: context.verticalSpacing * 2,
                 ),
 
                 // Boutons d'action
@@ -199,11 +280,16 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                           // Réinitialiser les filtres
                           Navigator.pop(context);
                         },
-                        child: const Text('Réinitialiser'),
+                        child: Text(
+                          'Réinitialiser',
+                          style: TextStyle(
+                            fontSize: FontSizes.buttonMedium.getSize(context),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(
-                      width: 8.0,
+                      width: context.horizontalSpacing / 2,
                     ),
                     Expanded(
                       child: ElevatedButton(
@@ -217,13 +303,18 @@ class AllRecommendedOffersScreen extends ConsumerWidget {
                             ),
                           );
                         },
-                        child: const Text('Appliquer'),
+                        child: Text(
+                          'Appliquer',
+                          style: TextStyle(
+                            fontSize: FontSizes.buttonMedium.getSize(context),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: 8.0,
+                  height: context.verticalSpacing / 2,
                 ),
               ],
             ),

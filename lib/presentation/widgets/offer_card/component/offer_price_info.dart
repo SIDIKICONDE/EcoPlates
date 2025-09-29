@@ -22,17 +22,19 @@ class OfferPriceInfo extends StatelessWidget {
           Text(
             '€${originalPrice.toStringAsFixed(2)}',
             style: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               decoration: TextDecoration.lineThrough,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
-          SizedBox(width: 8.0),
+          const SizedBox(width: 4.0),
         ],
         Text(
           priceText,
           style: TextStyle(
-            fontSize: 16.0,
+            fontSize: 14.0,
             fontWeight: FontWeight.bold,
             color: isFree ? Colors.green : primaryColor,
           ),

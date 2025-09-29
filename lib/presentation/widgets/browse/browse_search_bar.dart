@@ -54,7 +54,6 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                 borderRadius: BorderRadius.circular(12.0),
                 border: Border.all(
                   color: Colors.grey.shade300,
-                  width: 1.0,
                 ),
                 boxShadow: [
                   BoxShadow(

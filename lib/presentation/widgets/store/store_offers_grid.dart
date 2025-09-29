@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/store_offers_provider.dart';
 import 'store_offer_actions_dialog.dart';
@@ -58,11 +59,19 @@ class _OffersGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final columns = ResponsiveUtils.getResponsiveColumns(
+      context,
+      mobileColumns: 1,
+      tabletColumns: 2,
+      desktopColumns: 3,
+      desktopLargeColumns: 4,
+    );
+
     return GridView.builder(
       padding: const EdgeInsets.all(8.0),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.55, // Encore plus réduit pour éviter l'overflow
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: columns,
+        childAspectRatio: ResponsiveUtils.getOfferCardAspectRatio(context),
         crossAxisSpacing: 8.0,
         mainAxisSpacing: 8.0,
       ),

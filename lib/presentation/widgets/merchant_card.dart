@@ -1,15 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../core/utils/accessibility_helper.dart';
-import '../../core/utils/animation_manager.dart';
 import '../../domain/entities/merchant.dart';
-import 'restaurant_card_components/discount_badge.dart';
-import 'restaurant_card_components/favorite_button.dart';
+import 'common/offer_card_favorite_button.dart';
 import 'restaurant_card_components/popularity_badge.dart';
 import 'restaurant_card_components/price_info.dart';
 import 'restaurant_card_components/rating_display.dart';
 import 'restaurant_card_components/restaurant_tag.dart';
-import 'restaurant_card_components/time_indicator.dart';
 
 /// Carte de merchant moderne et modulaire
 class MerchantCard extends StatefulWidget {
@@ -21,54 +17,16 @@ class MerchantCard extends StatefulWidget {
   State<MerchantCard> createState() => _MerchantCardState();
 }
 
-class _MerchantCardState extends State<MerchantCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+class _MerchantCardState extends State<MerchantCard> {
   bool _isPressed = false;
-  bool _animationsEnabled = true;
-  final AnimationManager _animationManager = AnimationManager();
 
   @override
   void initState() {
     super.initState();
-    // Créer le contrôleur d'animation
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      vsync: this,
-    );
-
-    // Enregistrer l'animation dans le gestionnaire pour éviter les collisions
-    unawaited(
-      _animationManager.registerAnimation(
-        id: 'restaurant_card_${widget.merchant.id}',
-        controller: _controller,
-        priority: true,
-      ),
-    );
-
-    _scaleAnimation = Tween<double>(
-      begin: 1,
-      end: 0.95,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Vérifier les préférences d'accessibilité
-    final mediaQuery = MediaQuery.of(context);
-    _animationsEnabled = !mediaQuery.disableAnimations;
   }
 
   @override
   void dispose() {
-    unawaited(
-      _animationManager.cancelAnimation(
-        'restaurant_card_${widget.merchant.id}',
-      ),
-    );
-    _controller.dispose();
     super.dispose();
   }
 
@@ -95,37 +53,32 @@ class _MerchantCardState extends State<MerchantCard>
         onTapDown: (_) => _onTapDown(),
         onTapUp: (_) => _onTapUp(),
         onTapCancel: _onTapCancel,
-        child: _animationsEnabled
-            ? AnimatedBuilder(
-                animation: _scaleAnimation,
-                builder: (context, child) => Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: _buildCard(context, isDarkMode),
-                ),
-              )
-            : _buildCard(context, isDarkMode),
+        child: AnimatedScale(
+          scale: _isPressed ? 0.95 : 1.0,
+          duration: const Duration(milliseconds: 150),
+          child: _buildCard(context, isDarkMode),
+        ),
       ),
     );
   }
 
   void _onTapDown() {
-    if (!_animationsEnabled) return;
-    setState(() => _isPressed = true);
-    unawaited(_controller.forward());
+    if (mounted) {
+      setState(() => _isPressed = true);
+    }
   }
 
   void _onTapUp() {
-    setState(() => _isPressed = false);
-    if (_animationsEnabled) {
-      unawaited(_controller.reverse());
+    if (mounted) {
+      setState(() => _isPressed = false);
     }
     widget.onTap?.call();
   }
 
   void _onTapCancel() {
-    if (!_animationsEnabled) return;
-    setState(() => _isPressed = false);
-    unawaited(_controller.reverse());
+    if (mounted) {
+      setState(() => _isPressed = false);
+    }
   }
 
   Widget _buildCard(BuildContext context, bool isDarkMode) {
@@ -150,10 +103,6 @@ class _MerchantCardState extends State<MerchantCard>
 
             // Badges supérieurs
             _buildTopBadges(),
-
-            // Indicateur de temps
-            if (widget.merchant.availableOffers <= 3)
-              TimeIndicator(availableOffers: widget.merchant.availableOffers),
           ],
         ),
       ),
@@ -171,11 +120,8 @@ class _MerchantCardState extends State<MerchantCard>
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              FavoriteButton(
+              OfferCardFavoriteButton(
                 isFavorite: widget.merchant.isFavorite,
-                onTap: () {
-                  // TODO: Implémenter la logique de favoris
-                },
               ),
             ],
           ),
@@ -210,10 +156,9 @@ class _MerchantCardState extends State<MerchantCard>
             color: Colors.white,
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
-            shadows: [
-              const Shadow(
+            shadows: const [
+              Shadow(
                 blurRadius: 16.0,
-                color: Colors.black,
                 offset: Offset(0, 2),
               ),
             ],
@@ -226,10 +171,9 @@ class _MerchantCardState extends State<MerchantCard>
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.8),
             fontSize: 14.0,
-            shadows: [
-              const Shadow(
+            shadows: const [
+              Shadow(
                 blurRadius: 16.0,
-                color: Colors.black,
                 offset: Offset(0, 2),
               ),
             ],
@@ -324,7 +268,6 @@ class _MerchantCardState extends State<MerchantCard>
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.3),
-          width: 1.0,
         ),
       ),
       child: Row(
@@ -360,13 +303,6 @@ class _MerchantCardState extends State<MerchantCard>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Badge de réduction
-          if (widget.merchant.discountPercentage > 0)
-            DiscountBadge(
-              discountPercentage: widget.merchant.discountPercentage,
-              animationsEnabled: _animationsEnabled,
-            ),
-
           // Badge de popularité
           if (_isPopular) const PopularityBadge(),
         ],

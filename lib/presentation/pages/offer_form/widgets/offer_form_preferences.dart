@@ -159,7 +159,6 @@ class OfferFormPreferencesFields extends ConsumerWidget {
               borderRadius: BorderRadius.circular(8.0),
               border: Border.all(
                 color: theme.colorScheme.error.withValues(alpha: 0.5),
-                width: 1.0,
               ),
             ),
             child: Column(
@@ -295,7 +294,6 @@ class OfferFormPreferencesFields extends ConsumerWidget {
             color: isSelected
                 ? theme.colorScheme.primary
                 : theme.colorScheme.outline.withValues(alpha: 0.3),
-            width: 1.0,
           ),
         ),
         child: Row(

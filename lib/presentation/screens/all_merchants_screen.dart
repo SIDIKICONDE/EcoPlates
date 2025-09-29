@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/responsive_utils.dart';
 import '../providers/merchants_provider.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/merchant_card.dart';
@@ -15,9 +16,16 @@ class AllMerchantsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tous nos partenaires'),
+        title: Text(
+          'Tous nos partenaires',
+          style: TextStyle(
+            fontSize: FontSizes.subtitleLarge.getSize(context),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
+        toolbarHeight: context.appBarHeight,
       ),
       body: merchantsAsync.when(
         data: (merchants) {
@@ -30,18 +38,18 @@ class AllMerchantsScreen extends ConsumerWidget {
 
           return ListView.builder(
             padding: EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 12.0,
+              horizontal: context.horizontalSpacing,
+              vertical: context.verticalSpacing,
             ),
             itemCount: merchants.length,
             itemBuilder: (context, index) {
               final merchant = merchants[index];
               return Padding(
                 padding: EdgeInsets.only(
-                  bottom: 12.0,
+                  bottom: context.verticalSpacing,
                 ),
                 child: SizedBox(
-                  height: 120.0,
+                  height: ResponsiveUtils.getMerchantCardHeight(context),
                   child: MerchantCard(
                     merchant: merchant,
                     onTap: () {
@@ -68,20 +76,21 @@ class AllMerchantsScreen extends ConsumerWidget {
             children: [
               Icon(
                 Icons.error_outline,
-                size: 48.0,
+                size: ResponsiveUtils.getIconSize(context),
                 color: Theme.of(context).colorScheme.error,
               ),
               SizedBox(
-                height: 12.0,
+                height: context.verticalSpacing,
               ),
               Text(
                 'Erreur de chargement',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Theme.of(context).colorScheme.error,
+                  fontSize: FontSizes.subtitleMedium.getSize(context),
                 ),
               ),
               SizedBox(
-                height: 12.0,
+                height: context.verticalSpacing,
               ),
               ElevatedButton.icon(
                 onPressed: () {

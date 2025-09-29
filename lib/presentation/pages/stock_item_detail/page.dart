@@ -98,7 +98,6 @@ class _HeaderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
           color: theme.colorScheme.outline.withValues(alpha: 0.1),
-          width: 1.0,
         ),
       ),
       child: Column(
@@ -155,7 +154,6 @@ class _StatsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
           color: theme.colorScheme.outline.withValues(alpha: 0.1),
-          width: 1.0,
         ),
       ),
       child: Column(
@@ -275,7 +273,6 @@ class _DescriptionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
           color: theme.colorScheme.outline.withValues(alpha: 0.1),
-          width: 1.0,
         ),
       ),
       child: Column(
@@ -317,7 +314,6 @@ class _ActionsSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
           color: theme.colorScheme.outline.withValues(alpha: 0.1),
-          width: 1.0,
         ),
       ),
       child: Column(

@@ -4,13 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../core/router/routes/route_constants.dart';
 import '../../../providers/brand_provider.dart';
 import '../../brand_card.dart';
+import 'responsive_card_config.dart';
 
 /// Section des grandes marques/enseignes
 class BrandSection extends ConsumerWidget {
   const BrandSection({super.key});
+
+  double _calculateBrandCardHeight(BuildContext context) {
+    // Hauteur adaptée pour les cartes de marque
+    return ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 120.0,
+      tablet: 140.0,
+      tabletLarge: 160.0,
+      desktop: 180.0,
+      desktopLarge: 200.0,
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,24 +73,27 @@ class BrandSection extends ConsumerWidget {
 
         // Slider horizontal de cartes
         SizedBox(
-          height: 120.0,
+          height: _calculateBrandCardHeight(context),
           child: brandsAsync.when(
-            data: (brands) => ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.0,
-              ),
-              physics: const BouncingScrollPhysics(),
-              itemCount: brands.length,
-              itemBuilder: (context, index) {
-                final brand = brands[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                  ),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    child: BrandCard(
+            data: (brands) {
+              // Utiliser la configuration responsive
+              final cardWidth = ResponsiveCardConfig.getSliderCardWidth(context);
+              final cardSpacing = ResponsiveCardConfig.getCardSpacing(context);
+              
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: ResponsiveCardConfig.getSliderPadding(context),
+                physics: const BouncingScrollPhysics(),
+                itemCount: brands.length,
+                itemBuilder: (context, index) {
+                  final brand = brands[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: cardSpacing / 2,
+                    ),
+                    child: SizedBox(
+                      width: cardWidth, // Utilise la largeur responsive (4 cartes sur PC)
+                      child: BrandCard(
                       brand: brand,
                       onTap: () {
                         // Navigation vers la page de la marque
@@ -89,9 +106,10 @@ class BrandSection extends ConsumerWidget {
                       },
                     ),
                   ),
-                );
-              },
-            ),
+                  );
+                },
+              );
+            },
             loading: () => const Center(
               child: CircularProgressIndicator(),
             ),

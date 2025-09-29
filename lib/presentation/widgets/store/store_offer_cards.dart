@@ -273,8 +273,6 @@ class StoreOfferListCard extends ConsumerWidget {
       onTap: onTap,
       compact: true, // Mode compact pour la liste
       showDistance: false, // Pas de distance pour les offres du marchand
-      showInactiveBadge:
-          true, // Afficher le badge "Inactif" pour les offres désactivées
     );
   }
 }

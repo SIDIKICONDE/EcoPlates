@@ -164,7 +164,6 @@ class OfferFormPriceQuantityFields extends ConsumerWidget {
               borderRadius: BorderRadius.circular(12.0),
               border: Border.all(
                 color: theme.colorScheme.primary.withValues(alpha: 0.5),
-                width: 1.0,
               ),
             ),
             child: Column(

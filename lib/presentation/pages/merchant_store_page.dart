@@ -381,7 +381,6 @@ class _StoreHeader extends StatelessWidget {
         border: Border(
           bottom: BorderSide(
             color: Colors.black12,
-            width: 1,
           ),
         ),
       ),

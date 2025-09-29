@@ -72,7 +72,6 @@ class OfferFormImages extends ConsumerWidget {
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.3),
               width: 2.0,
-              style: BorderStyle.solid,
             ),
             color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
           ),
@@ -223,7 +222,6 @@ class OfferFormImages extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(borderRadius),
                         border: Border.all(
                           color: Colors.white.withValues(alpha: 0.2),
-                          width: 1.0,
                         ),
                       ),
                     ),

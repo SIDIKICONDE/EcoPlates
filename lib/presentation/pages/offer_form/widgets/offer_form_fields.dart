@@ -483,8 +483,8 @@ class OfferFormBasicFields extends ConsumerWidget {
       OfferType.plat => 'Plat préparé spécifique',
       OfferType.boulangerie => 'Produits de boulangerie et pâtisserie',
       OfferType.fruits => 'Fruits, légumes et produits frais',
-      OfferType.epicerie => 'Produits d\'épicerie générale',
-      OfferType.autre => 'Autre type d\'offre',
+      OfferType.epicerie => "Produits d'épicerie générale",
+      OfferType.autre => "Autre type d'offre",
     };
   }
 }

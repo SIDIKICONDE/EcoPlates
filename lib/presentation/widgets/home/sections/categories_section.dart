@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod/src/providers/provider.dart';
 
 import '../../../../core/constants/categories.dart';
 import '../../../../domain/entities/food_offer.dart';
@@ -27,9 +26,9 @@ class SelectedCategoryNotifier extends Notifier<FoodCategory?> {
 
 /// Provider pour vérifier si une catégorie est sélectionnée
 /// Peut être utilisé par d'autres sections pour filtrer les offres
-final ProviderFamily<bool, FoodCategory?> isCategorySelectedProvider =
+final isCategorySelectedProvider =
     Provider.family<bool, FoodCategory?>(
-      (Ref ref, FoodCategory? category) {
+      (ref, category) {
         final selected = ref.watch(selectedCategoryProvider);
         return selected == category;
       },
@@ -50,8 +49,7 @@ final homeCategoryAvailabilityProvider = Provider<Map<FoodCategory, int>>((
 });
 
 /// Provider pour filtrer une liste d'offres selon la catégorie sélectionnée
-final ProviderFamily<List<FoodOffer>, List<FoodOffer>>
-filterOffersByCategoryProvider =
+final filterOffersByCategoryProvider =
     Provider.family<List<FoodOffer>, List<FoodOffer>>((ref, offers) {
       final selectedCategory = ref.watch(selectedCategoryProvider);
       if (selectedCategory == null) return offers; // Tous

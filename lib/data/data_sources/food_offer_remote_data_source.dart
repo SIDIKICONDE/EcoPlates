@@ -354,6 +354,11 @@ class FoodOfferRemoteDataSourceMock implements FoodOfferRemoteDataSource {
       'Burger King',
       'Subway',
       'KFC',
+      'Franprix',
+      'Monoprix',
+      'Lidl',
+      'Aldi',
+      'Super U',
     ];
     final categories = [
       FoodCategory.boulangerie,

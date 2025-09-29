@@ -191,18 +191,13 @@ class WelcomeScreen extends ConsumerWidget {
                 context.go(RouteConstants.merchantStore);
               },
               icon: Icons.store,
-              variant: EcoButtonVariant.primary,
               backgroundColor: Colors.white,
               foregroundColor: Theme.of(context).primaryColor,
-              size: context.responsive(
-                mobile: EcoButtonSize.medium,
-                tablet: EcoButtonSize.large,
-                desktop: EcoButtonSize.large,
-              ),
+              size: EcoButtonSizeHelper.getAdaptiveSize(context),
             ),
           ),
 
-          const VerticalGap(),
+          const VerticalGap(multiplier: 0.5),  // Réduction de l'espacement
 
           // Bouton Consommateur avec le nouveau système EcoButton
           FractionallySizedBox(
@@ -217,11 +212,7 @@ class WelcomeScreen extends ConsumerWidget {
               borderColor: Colors.white,
               foregroundColor: Colors.white,
               borderWidth: 2.0,
-              size: context.responsive(
-                mobile: EcoButtonSize.medium,
-                tablet: EcoButtonSize.large,
-                desktop: EcoButtonSize.large,
-              ),
+              size: EcoButtonSizeHelper.getAdaptiveSize(context),
             ),
           ),
         ],

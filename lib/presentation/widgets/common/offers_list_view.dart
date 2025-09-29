@@ -9,8 +9,7 @@ import 'offer_detail_modal.dart';
 /// Widget générique pour afficher une liste d'offres avec fonctionnalités communes
 class OffersListView extends ConsumerWidget {
   const OffersListView({
-    super.key,
-    required this.offers,
+    required this.offers, super.key,
     this.emptyStateTitle = 'Aucune offre disponible',
     this.emptyStateSubtitle,
     this.emptyStateIcon = Icons.local_offer_outlined,
@@ -93,7 +92,7 @@ class OffersListView extends ConsumerWidget {
         title: emptyStateTitle,
         subtitle: emptyStateSubtitle,
         icon: emptyStateIcon,
-        primaryActionLabel: emptyStateActions?.isNotEmpty == true ? null : null,
+        primaryActionLabel: emptyStateActions?.isNotEmpty ?? false ? null : null,
         // TODO: Gérer les actions personnalisées si nécessaire
       );
     }
@@ -178,8 +177,7 @@ class OffersListView extends ConsumerWidget {
 /// Widget spécialisé pour les offres urgentes
 class UrgentOffersListView extends OffersListView {
   const UrgentOffersListView({
-    super.key,
-    required super.offers,
+    required super.offers, super.key,
     super.enableRefresh = true,
     super.onRefresh,
     super.padding,

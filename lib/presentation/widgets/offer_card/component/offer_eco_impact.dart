@@ -13,10 +13,10 @@ class OfferEcoImpact extends StatelessWidget {
       children: [
         Icon(
           Icons.eco,
-          size: 14.0,
+          size: 13.0,
           color: Colors.green,
         ),
-        SizedBox(width: 4.0),
+        const SizedBox(width: 4.0),
         Text(
           '${(co2Saved / 1000).toStringAsFixed(1)} kg CO₂ économisés',
           style: TextStyle(

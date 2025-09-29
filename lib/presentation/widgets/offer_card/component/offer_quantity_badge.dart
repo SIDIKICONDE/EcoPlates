@@ -9,13 +9,13 @@ class OfferQuantityBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     // Version ultra-compacte du badge
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 4.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 6.0,
+        vertical: 2.0,
       ),
       decoration: BoxDecoration(
         color: Colors.blue,
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(6.0),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -25,12 +25,12 @@ class OfferQuantityBadge extends StatelessWidget {
             size: 12.0,
             color: Colors.white,
           ),
-          SizedBox(width: 2.0),
+          const SizedBox(width: 2.0),
           Text(
             '$quantity',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12.0,
+              fontSize: 11.0,
               fontWeight: FontWeight.w600,
             ),
           ),

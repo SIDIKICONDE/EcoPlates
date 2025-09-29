@@ -23,7 +23,6 @@ class OfferBackgroundImage extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
             child: EcoCachedImage(
               imageUrl: offer.images.isNotEmpty ? offer.images.first : '',
-              fit: BoxFit.cover,
               errorWidget: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
@@ -45,7 +44,6 @@ class OfferBackgroundImage extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0),
               gradient: LinearGradient(
-                begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
                   Colors.black.withValues(alpha: 0.7),

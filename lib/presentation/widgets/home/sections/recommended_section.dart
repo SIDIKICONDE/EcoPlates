@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/image_preload_provider.dart';
+import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/offer_reservation_provider.dart';
 import '../../../providers/recommended_offers_provider.dart';
@@ -11,6 +12,7 @@ import '../../../screens/all_recommended_offers_screen.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
 import 'categories_section.dart';
+import 'responsive_card_config.dart';
 
 /// Section des offres recommandées avec style Material 3
 class RecommendedSection extends ConsumerStatefulWidget {
@@ -40,11 +42,40 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
 
   void _onScroll() {
     if (_scrollController.hasClients) {
-      final itemWidth = (MediaQuery.of(context).size.width * 0.85) + 8.0;
+      final itemWidth = ResponsiveCardConfig.getSliderCardWidth(context) + 
+                       ResponsiveCardConfig.getCardSpacing(context);
       final scrollOffset = _scrollController.offset;
       final visibleIndexValue = (scrollOffset / itemWidth).round();
       visibleIndex = visibleIndexValue;
     }
+  }
+
+  double _calculateCardHeight(BuildContext context) {
+    // Hauteur de l'image (depuis OfferCardImage)
+    final imageHeight = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 120.0,  // Mode compact
+      tablet: 120.0,
+      tabletLarge: 140.0,
+      desktop: 160.0,
+      desktopLarge: 180.0,
+    );
+    
+    // Hauteur estimée du contenu en mode compact
+    // (titre + description + pickup info + séparateur + prix + espacements)
+    final contentHeight = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 110.0,  // Contenu compact avec séparateur
+      tablet: 110.0,
+      tabletLarge: 120.0,
+      desktop: 130.0,
+      desktopLarge: 140.0,
+    );
+    
+    // Paddings (top image: 2, top content: 6, bottom content: 4)
+    const totalPadding = 12.0;
+    
+    return imageHeight + contentHeight + totalPadding;
   }
 
   @override
@@ -100,7 +131,7 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
 
         // Liste horizontale d'offres avec animations
         SizedBox(
-          height: 280.0,
+          height: _calculateCardHeight(context),
           child: Builder(
             builder: (context) {
               final offers = ref.watch(
@@ -117,11 +148,15 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
                   .map((o) => o.images.first)
                   .toList();
               startAutoPreload(imageUrls: imageUrls, ref: ref);
+              
+              // Utiliser la configuration responsive pour la largeur des cartes
+              final cardWidth = ResponsiveCardConfig.getSliderCardWidth(context);
+              final cardSpacing = ResponsiveCardConfig.getCardSpacing(context);
 
               return ListView.builder(
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                padding: ResponsiveCardConfig.getSliderPadding(context),
                 physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
@@ -131,14 +166,9 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
                   return AnimatedContainer(
                     duration: Duration(milliseconds: 300 + (index * 50)),
                     curve: Curves.easeOutCubic,
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    padding: EdgeInsets.symmetric(horizontal: cardSpacing / 2),
                     child: SizedBox(
-                      width:
-                          MediaQuery.of(context).size.width *
-                          (MediaQuery.of(context).orientation ==
-                                  Orientation.landscape
-                              ? 0.9
-                              : 0.85),
+                      width: cardWidth,  // Utiliser la valeur responsive
                       child: OfferCard(
                         offer: offer,
                         compact: true,

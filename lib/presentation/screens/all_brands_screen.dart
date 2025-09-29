@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/responsive_utils.dart';
 import '../providers/brand_provider.dart';
 import '../widgets/brand_card.dart';
 
@@ -14,77 +15,118 @@ class AllBrandsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Toutes les enseignes'),
+        title: Text(
+          'Toutes les enseignes',
+          style: TextStyle(
+            fontSize: FontSizes.subtitleLarge.getSize(context),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         centerTitle: false,
+        toolbarHeight: context.appBarHeight,
       ),
       body: brandsAsync.when(
-        data: (brands) => ListView.builder(
-          padding: EdgeInsets.all(
-            16.0,
-          ),
-          itemCount: brands.length,
-          itemBuilder: (context, index) {
-            final brand = brands[index];
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: 16.0,
-              ),
-              child: BrandCard(
-                brand: brand,
-                onTap: () {
-                  // Navigation vers la page détail de la marque
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        '${brand.name} - ${brand.formattedOffersCount}',
-                      ),
-                      duration: const Duration(seconds: 1),
-                    ),
+        data: (brands) {
+          final columns = ResponsiveUtils.getResponsiveColumns(
+            context,
+            mobileColumns: 1,
+            tabletColumns: 2,
+            desktopColumns: 3,
+            desktopLargeColumns: 4,
+          );
+
+          return Container(
+            margin: context.centerContentMargin,
+            child: Padding(
+              padding: context.responsivePadding,
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  mainAxisSpacing: context.verticalSpacing,
+                  crossAxisSpacing: context.horizontalSpacing,
+                  childAspectRatio: ResponsiveUtils.getCardAspectRatio(context),
+                ),
+                itemCount: brands.length,
+                itemBuilder: (context, index) {
+                  final brand = brands[index];
+                  return BrandCard(
+                    brand: brand,
+                    onTap: () {
+                      // Navigation vers la page détail de la marque
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '${brand.name} - ${brand.formattedOffersCount}',
+                          ),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
         loading: () => const Center(
           child: CircularProgressIndicator(),
         ),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 16.0,
-                color: Theme.of(context).colorScheme.error,
+        error: (error, stack) => Container(
+          margin: context.centerContentMargin,
+          child: Padding(
+            padding: context.responsivePadding,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: ResponsiveUtils.getIconSize(context),
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  SizedBox(
+                    height: context.verticalSpacing,
+                  ),
+                  Text(
+                    'Erreur lors du chargement',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontSize: FontSizes.titleMedium.getSize(context),
+                    ),
+                  ),
+                  SizedBox(height: context.verticalSpacing),
+                  Text(
+                    error.toString(),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontSize: FontSizes.bodyMedium.getSize(context),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: context.verticalSpacing,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Forcer le rechargement
+                      ref.invalidate(brandsProvider);
+                    },
+                    icon: Icon(
+                      Icons.refresh,
+                      size: ResponsiveUtils.getIconSize(
+                        context,
+                        baseSize: 20.0,
+                      ),
+                    ),
+                    label: Text(
+                      'Réessayer',
+                      style: TextStyle(
+                        fontSize: FontSizes.buttonMedium.getSize(context),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Text(
-                'Erreur lors du chargement',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                error.toString(),
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Forcer le rechargement
-                  ref.invalidate(brandsProvider);
-                },
-                icon: const Icon(Icons.refresh),
-                label: const Text('Réessayer'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

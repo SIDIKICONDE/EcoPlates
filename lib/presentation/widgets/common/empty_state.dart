@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Widget d'état vide réutilisable pour harmoniser les écrans
 class EmptyState extends StatelessWidget {
   const EmptyState({
-    super.key,
-    required this.title,
+    required this.title, super.key,
     this.subtitle,
     this.icon,
     this.iconSize = 80.0,
@@ -63,7 +62,6 @@ class EmptyState extends StatelessWidget {
         padding: padding ?? const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (icon != null)
               useCircularIconBackground

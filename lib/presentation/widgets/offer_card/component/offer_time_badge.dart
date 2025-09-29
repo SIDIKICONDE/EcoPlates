@@ -8,18 +8,18 @@ class OfferTimeBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 12.0,
-        vertical: 6.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8.0,
+        vertical: 4.0,
       ),
       decoration: BoxDecoration(
         color: Colors.orange,
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 4.0,
-            offset: Offset(0, 2.0),
+            blurRadius: 2.0,
+            offset: const Offset(0, 1),
           ),
         ],
       ),
@@ -31,7 +31,7 @@ class OfferTimeBadge extends StatelessWidget {
             size: 14.0,
             color: Colors.white,
           ),
-          SizedBox(width: 4.0),
+          const SizedBox(width: 4.0),
           Text(
             _formatTimeRemaining(timeRemaining),
             style: TextStyle(

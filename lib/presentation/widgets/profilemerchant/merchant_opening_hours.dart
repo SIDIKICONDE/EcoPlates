@@ -98,7 +98,6 @@ class MerchantOpeningHours extends ConsumerWidget {
         border: isToday
             ? Border.all(
                 color: colors.primary.withValues(alpha: 0.2),
-                width: 1.0,
               )
             : null,
         borderRadius: BorderRadius.circular(8.0),

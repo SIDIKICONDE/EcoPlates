@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../../core/extensions/food_offer_extensions.dart';
 import '../../../domain/entities/food_offer.dart';
+import 'merchant_logo_with_badge.dart';
 import 'offer_background_image.dart';
 import 'offer_info_section.dart';
-import 'merchant_logo_with_badge.dart';
 
 /// Carte horizontale style BrandCard pour les offres
 class ListOfferCard extends StatefulWidget {

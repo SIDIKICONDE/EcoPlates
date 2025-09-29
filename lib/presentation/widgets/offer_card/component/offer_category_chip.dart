@@ -14,16 +14,16 @@ class OfferCategoryChip extends StatelessWidget {
     final color = Categories.colorOf(category);
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 10.0,
-        vertical: 5.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8.0,
+        vertical: 4.0,
       ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         border: Border.all(
           color: color.withValues(alpha: 0.2),
         ),
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text(
         label,

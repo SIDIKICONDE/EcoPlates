@@ -7,8 +7,7 @@ import '../offer_detail/index.dart';
 /// Modal générique pour afficher les détails d'une offre
 class OfferDetailModal extends ConsumerWidget {
   const OfferDetailModal({
-    super.key,
-    required this.offer,
+    required this.offer, super.key,
     this.title,
     this.subtitle,
     this.headerGradient,

@@ -139,11 +139,7 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
     return Container(
       decoration: const ShapeDecoration(
         shape: QrScannerOverlayShape(
-          borderColor: Colors.white,
           borderRadius: 16,
-          borderLength: 40,
-          borderWidth: 3,
-          cutOutSize: 250,
         ),
       ),
     );
@@ -230,7 +226,7 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
     );
   }
 
-  void _onDetect(BarcodeCapture capture) async {
+  Future<void> _onDetect(BarcodeCapture capture) async {
     final barcodes = capture.barcodes;
     if (barcodes.isEmpty || _isProcessing) return;
 

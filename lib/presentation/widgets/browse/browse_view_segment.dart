@@ -21,7 +21,6 @@ class BrowseViewSegment extends ConsumerWidget {
             color: Colors.white.withValues(alpha: 0.9),
             border: Border.all(
               color: Colors.grey[300]!.withValues(alpha: 0.5),
-              width: 1.0,
             ),
             borderRadius: BorderRadius.circular(12.0),
             boxShadow: [

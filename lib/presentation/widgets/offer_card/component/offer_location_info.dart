@@ -21,30 +21,36 @@ class OfferLocationInfo extends StatelessWidget {
         if (showDistance && distance != null) ...[
           Icon(
             Icons.location_on,
-            size: 14.0,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+            size: 13.0,
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
           ),
-          SizedBox(width: 4.0),
+          const SizedBox(width: 4.0),
           Text(
             '${distance!.toStringAsFixed(1)} km',
             style: TextStyle(
               fontSize: 12.0,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
-          SizedBox(width: 12.0),
+          const SizedBox(width: 8.0),
         ],
         Icon(
           Icons.schedule,
-          size: 14.0,
+          size: 13.0,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
         ),
-        SizedBox(width: 4.0),
+        const SizedBox(width: 4.0),
         Text(
           _formatPickupTime(),
           style: TextStyle(
             fontSize: 12.0,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
       ],

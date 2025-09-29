@@ -11,6 +11,7 @@ analyzer:
     prefer_const_constructors: ignore
     deprecated_member_use: error
     deprecated_member_use_from_same_package: error
+    prefer_if_elements_to_conditional_expressions: ignore
    
   exclude:
     - "**/*.g.dart"

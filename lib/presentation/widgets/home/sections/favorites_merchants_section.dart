@@ -81,7 +81,7 @@ class FavoritesMerchantsSection extends ConsumerWidget {
                         child: FavoriteMerchantCard(
                           merchant: merchant,
                           onTap: () {
-                            // TODO: Navigation vers le détail du commerçant
+                            // TODO(navigation): Add merchant detail navigation
                           },
                         ),
                       ),

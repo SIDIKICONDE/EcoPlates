@@ -16,14 +16,12 @@ class OfferCard extends StatefulWidget {
     this.showDistance = true,
     this.distance,
     this.compact = false,
-    this.showInactiveBadge = false,
   });
   final FoodOffer offer;
   final VoidCallback? onTap;
   final bool showDistance;
   final double? distance; // en km
   final bool compact;
-  final bool showInactiveBadge;
 
   @override
   State<OfferCard> createState() => _OfferCardState();
@@ -78,21 +76,9 @@ class _OfferCardState extends State<OfferCard>
             child: Container(
               decoration: BoxDecoration(
                 color: isDark ? Colors.grey[900] : Colors.white,
-                borderRadius: BorderRadius.circular(16.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 8.0,
-                    offset: Offset(0.0, 4.0),
-                  ),
-                  // Ombre secondaire pour plus de profondeur
-                  if (_elevationAnimation.value > 0)
-                    BoxShadow(
-                      color: Colors.blue.withValues(alpha: 0.1),
-                      blurRadius: _elevationAnimation.value * 4.0,
-                      offset: Offset(0.0, _elevationAnimation.value * 2.0),
-                    ),
-                ],
+                borderRadius: BorderRadius.circular(
+                  8.0,
+                ), // Radius réduit pour un look moins arrondi
               ),
               child: ColorFiltered(
                 colorFilter: !widget.offer.isAvailable
@@ -110,20 +96,26 @@ class _OfferCardState extends State<OfferCard>
                       ]),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize:
+                      MainAxisSize.max, // Remplit toute la hauteur disponible
                   children: [
-                    // Image avec badges
-                    OfferCardImage(
-                      offer: widget.offer,
-                      compact: widget.compact,
-                      showInactiveBadge: widget.showInactiveBadge,
+                    // Section image - prend l'espace restant
+                    Expanded(
+                      child: OfferCardImage(
+                        offer: widget.offer,
+                        compact: widget.compact,
+                      ),
                     ),
 
-                    // Contenu de la carte
-                    OfferCardContent(
-                      offer: widget.offer,
-                      showDistance: widget.showDistance,
-                      distance: widget.distance,
-                      compact: widget.compact,
+                    // Section contenu - hauteur augmentée pour réduire l'espace en bas
+                    SizedBox(
+                      height: widget.compact ? 100.0 : 140.0,
+                      child: OfferCardContent(
+                        offer: widget.offer,
+                        showDistance: widget.showDistance,
+                        distance: widget.distance,
+                        compact: widget.compact,
+                      ),
                     ),
                   ],
                 ),

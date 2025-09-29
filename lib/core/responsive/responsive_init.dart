@@ -51,8 +51,6 @@ class ResponsiveConfig {
     ScreenUtil.init(
       context,
       designSize: deviceDesignSize,
-      minTextAdapt: false, // Désactiver le minTextAdapt pour éviter les textes trop petits
-      splitScreenMode: false, // Désactiver le splitScreenMode pour un meilleur scaling
     );
   }
 

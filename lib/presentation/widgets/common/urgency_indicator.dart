@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Widget d'indicateur d'urgence pour les offres avec peu de temps restant
 class UrgencyIndicator extends StatelessWidget {
   const UrgencyIndicator({
-    super.key,
-    required this.remainingTime,
+    required this.remainingTime, super.key,
     this.animate = false,
     this.animationController,
     this.pulseAnimation,

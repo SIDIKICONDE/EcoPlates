@@ -31,8 +31,6 @@ class ResponsiveScreenUtilInit extends StatelessWidget {
           // Initialiser ScreenUtil avec la taille adaptative
           return ScreenUtilInit(
             designSize: designSize,
-            minTextAdapt: false, // Désactivé pour éviter les textes trop petits
-            splitScreenMode: false, // Désactivé pour un meilleur scaling
             useInheritedMediaQuery: useInheritedMediaQuery,
             builder: (context, widget) => child,
           );
@@ -48,8 +46,6 @@ void initScreenUtil(BuildContext context, {Size? designSize}) {
   ScreenUtil.init(
     context,
     designSize: designSize ?? const Size(375, 812),
-    minTextAdapt: false,
-    splitScreenMode: false,
   );
 }
 

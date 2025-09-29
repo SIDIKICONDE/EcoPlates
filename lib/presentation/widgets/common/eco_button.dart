@@ -102,11 +102,12 @@ class EcoButton extends StatelessWidget {
     final effectiveForegroundColor = foregroundColor ?? colors.foregroundColor;
     final effectiveBorderColor = borderColor ?? colors.borderColor;
 
-    // Style du texte responsive
+    // Style du texte responsive avec meilleure lisibilité
     final textStyle = TextStyle(
       fontSize: fontSize ?? dimensions.fontSize,
-      fontWeight: fontWeight ?? FontWeight.w600,
+      fontWeight: fontWeight ?? FontWeight.w700,  // Plus gras pour meilleure lisibilité
       letterSpacing: 0.5,
+      height: 1.2,  // Ajout d'une hauteur de ligne
     );
 
     // Border radius responsive
@@ -119,7 +120,7 @@ class EcoButton extends StatelessWidget {
     );
 
     // Contenu du bouton
-    Widget buttonContent = _buildButtonContent(
+    final buttonContent = _buildButtonContent(
       effectiveForegroundColor,
       textStyle,
       dimensions.iconSize,
@@ -142,7 +143,7 @@ class EcoButton extends StatelessWidget {
                 ? Colors.grey[800] 
                 : Colors.grey[300],
             elevation: elevation ?? 2.0,
-            shadowColor: Colors.black.withOpacity(0.2),
+            shadowColor: Colors.black.withValues(alpha: 0.2),
             padding: effectivePadding,
             minimumSize: Size(
               effectiveWidth ?? 0,
@@ -154,17 +155,16 @@ class EcoButton extends StatelessWidget {
           ).copyWith(
             overlayColor: WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.pressed)) {
-                return effectiveForegroundColor.withOpacity(0.1);
+                return effectiveForegroundColor.withValues(alpha: 0.1);
               }
               if (states.contains(WidgetState.hovered)) {
-                return effectiveForegroundColor.withOpacity(0.05);
+                return effectiveForegroundColor.withValues(alpha: 0.05);
               }
               return null;
             }),
           ),
           child: buttonContent,
         );
-        break;
 
       case EcoButtonVariant.outline:
       case EcoButtonVariant.ghost:
@@ -190,17 +190,16 @@ class EcoButton extends StatelessWidget {
           ).copyWith(
             overlayColor: WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.pressed)) {
-                return effectiveForegroundColor.withOpacity(0.1);
+                return effectiveForegroundColor.withValues(alpha: 0.1);
               }
               if (states.contains(WidgetState.hovered)) {
-                return effectiveForegroundColor.withOpacity(0.05);
+                return effectiveForegroundColor.withValues(alpha: 0.05);
               }
               return null;
             }),
           ),
           child: buttonContent,
         );
-        break;
 
       case EcoButtonVariant.text:
         button = TextButton(
@@ -218,17 +217,16 @@ class EcoButton extends StatelessWidget {
           ).copyWith(
             overlayColor: WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.pressed)) {
-                return effectiveForegroundColor.withOpacity(0.1);
+                return effectiveForegroundColor.withValues(alpha: 0.1);
               }
               if (states.contains(WidgetState.hovered)) {
-                return effectiveForegroundColor.withOpacity(0.05);
+                return effectiveForegroundColor.withValues(alpha: 0.05);
               }
               return null;
             }),
           ),
           child: buttonContent,
         );
-        break;
 
       case EcoButtonVariant.pill:
         button = ElevatedButton(
@@ -240,7 +238,7 @@ class EcoButton extends StatelessWidget {
                 ? Colors.grey[800] 
                 : Colors.grey[300],
             elevation: elevation ?? 2.0,
-            shadowColor: Colors.black.withOpacity(0.2),
+            shadowColor: Colors.black.withValues(alpha: 0.2),
             padding: EdgeInsets.symmetric(
               horizontal: dimensions.horizontalPadding * 1.5,
               vertical: dimensions.verticalPadding * 0.8,
@@ -255,7 +253,6 @@ class EcoButton extends StatelessWidget {
           ),
           child: buttonContent,
         );
-        break;
     }
 
     // Si width custom ou fullWidth, wrapper dans un SizedBox
@@ -313,25 +310,32 @@ class EcoButton extends StatelessWidget {
 
   /// Retourne les dimensions selon la taille
   _ButtonDimensions _getButtonDimensions() {
+    // Déterminer le type d'appareil pour des tailles cohérentes
+    final screenWidth = ScreenUtil().screenWidth;
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
+    
     switch (size) {
       case EcoButtonSize.small:
         return _ButtonDimensions(
           height: 36.h,
-          fontSize: 12.sp,
+          // Tailles fixes selon l'appareil, pas .sp qui s'adapte mal
+          fontSize: isMobile ? 13.0 : isTablet ? 14.0 : 15.0,
           horizontalPadding: 12.w,
           verticalPadding: 8.h,
-          iconSize: 16.sp,
+          iconSize: isMobile ? 16.0 : isTablet ? 18.0 : 20.0,
           spacing: 6.w,
-          borderRadius: 8.r,
+          borderRadius: 10.r,
         );
 
       case EcoButtonSize.medium:
         return _ButtonDimensions(
           height: 44.h,
-          fontSize: 14.sp,
+          // Tailles progressives : mobile < tablette < desktop
+          fontSize: isMobile ? 15.0 : isTablet ? 16.0 : 17.0,
           horizontalPadding: 16.w,
           verticalPadding: 10.h,
-          iconSize: 20.sp,
+          iconSize: isMobile ? 18.0 : isTablet ? 20.0 : 22.0,
           spacing: 8.w,
           borderRadius: 12.r,
         );
@@ -339,10 +343,11 @@ class EcoButton extends StatelessWidget {
       case EcoButtonSize.large:
         return _ButtonDimensions(
           height: 52.h,
-          fontSize: 16.sp,
+          // Tailles progressives et lisibles
+          fontSize: isMobile ? 16.0 : isTablet ? 18.0 : 20.0,
           horizontalPadding: 20.w,
           verticalPadding: 12.h,
-          iconSize: 24.sp,
+          iconSize: isMobile ? 20.0 : isTablet ? 24.0 : 28.0,
           spacing: 10.w,
           borderRadius: 14.r,
         );
@@ -443,13 +448,6 @@ enum IconPosition {
 
 /// Classe interne pour les dimensions
 class _ButtonDimensions {
-  final double height;
-  final double fontSize;
-  final double horizontalPadding;
-  final double verticalPadding;
-  final double iconSize;
-  final double spacing;
-  final double borderRadius;
 
   const _ButtonDimensions({
     required this.height,
@@ -460,19 +458,57 @@ class _ButtonDimensions {
     required this.spacing,
     required this.borderRadius,
   });
+  final double height;
+  final double fontSize;
+  final double horizontalPadding;
+  final double verticalPadding;
+  final double iconSize;
+  final double spacing;
+  final double borderRadius;
 }
 
 /// Classe interne pour les couleurs
 class _ButtonColors {
-  final Color backgroundColor;
-  final Color foregroundColor;
-  final Color? borderColor;
 
   const _ButtonColors({
     required this.backgroundColor,
     required this.foregroundColor,
     this.borderColor,
   });
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final Color? borderColor;
+}
+
+/// Méthode helper pour obtenir la taille appropriée selon l'écran
+class EcoButtonSizeHelper {
+  /// Retourne une taille de bouton appropriée selon la largeur de l'écran
+  static EcoButtonSize getAdaptiveSize(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth < 400) {
+      return EcoButtonSize.medium;  // Petits mobiles
+    } else if (screenWidth < 600) {
+      return EcoButtonSize.medium;  // Mobiles normaux
+    } else if (screenWidth < 1024) {
+      return EcoButtonSize.large;   // Tablettes
+    } else {
+      return EcoButtonSize.large;   // Desktop
+    }
+  }
+  
+  /// Retourne une taille de police adaptée directement
+  static double getAdaptiveFontSize(BuildContext context, {double base = 16.0}) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth < 400) {
+      return base - 1;  // Petits écrans
+    } else if (screenWidth < 600) {
+      return base;      // Mobile standard
+    } else if (screenWidth < 1024) {
+      return base + 2;  // Tablette
+    } else {
+      return base + 3;  // Desktop
+    }
+  }
 }
 
 /// Extension pour faciliter l'usage
@@ -489,7 +525,6 @@ extension EcoButtonHelpers on EcoButton {
     return EcoButton(
       text: text,
       onPressed: onPressed,
-      variant: EcoButtonVariant.primary,
       icon: icon,
       isFullWidth: isFullWidth,
       isLoading: isLoading,

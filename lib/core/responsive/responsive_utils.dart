@@ -262,6 +262,18 @@ class ResponsiveUtils {
     return EdgeInsets.symmetric(horizontal: horizontalMargin);
   }
 
+  /// Calcule la hauteur responsive pour les cartes marchand
+  static double getMerchantCardHeight(BuildContext context) {
+    return responsiveValue(
+      context,
+      mobile: 120.0,
+      tablet: 130.0,
+      tabletLarge: 135.0,
+      desktop: 140.0,
+      desktopLarge: 150.0,
+    );
+  }
+
   /// Calcule l'aspect ratio responsive pour les cards
   static double getCardAspectRatio(BuildContext context) {
     return responsiveValue(
@@ -271,6 +283,24 @@ class ResponsiveUtils {
       tabletLarge: 4 / 3,
       desktop: 3 / 2,
       desktopLarge: 5 / 3,
+    );
+  }
+
+  /// Calcule l'aspect ratio pour les cartes d'offres dans une grille
+  /// Ratio < 1 = carte plus haute que large
+  /// Ratio = 1 = carte carrée  
+  /// Ratio > 1 = carte plus large que haute
+  static double getOfferCardAspectRatio(BuildContext context) {
+    // IMPORTANT: childAspectRatio = largeur / hauteur
+    // Un ratio équilibré permet au contenu de s'afficher correctement
+    // sans débordement, tout en évitant trop d'espace blanc
+    return responsiveValue(
+      context,
+      mobile: 0.65,      // Ratio ajusté pour éliminer le débordement de 8px
+      tablet: 0.85,      // Légèrement plus compact sur tablette
+      tabletLarge: 0.95, // Équilibré
+      desktop: 1.10,     // Plus large sur desktop
+      desktopLarge: 1.15, // Plus large sur grand écran
     );
   }
 
@@ -298,6 +328,18 @@ class ResponsiveUtils {
       baseSize.height * multiplier,
     );
   }
+
+  /// Calcule la taille de police pour les titres d'erreur responsive
+  static double getErrorTitleFontSize(BuildContext context) {
+    return responsiveValue(
+      context,
+      mobile: 16,
+      tablet: 18,
+      tabletLarge: 22,
+      desktop: 24,
+      desktopLarge: 26,
+    );
+  }
 }
 
 /// Types d'appareils basés sur les breakpoints Material Design
@@ -311,38 +353,44 @@ enum DeviceType {
 class FontSizes {
   const FontSizes._();
 
-  // Tailles pour les titres principaux
+  // Tailles pour les titres principaux (avec bold)
   static const FontSize titleLarge = FontSize(
     mobile: 32,
     tablet: 38,
     desktop: 44,
+    fontWeight: FontWeight.w700,
   );
   static const FontSize titleMedium = FontSize(
     mobile: 28,
     tablet: 32,
     desktop: 36,
+    fontWeight: FontWeight.w700,
   );
   static const FontSize titleSmall = FontSize(
     mobile: 24,
     tablet: 28,
     desktop: 32,
+    fontWeight: FontWeight.w600,
   );
 
-  // Tailles pour les sous-titres
+  // Tailles pour les sous-titres (avec semi-bold)
   static const FontSize subtitleLarge = FontSize(
     mobile: 20,
     tablet: 24,
     desktop: 28,
+    fontWeight: FontWeight.w600,
   );
   static const FontSize subtitleMedium = FontSize(
     mobile: 18,
     tablet: 20,
     desktop: 24,
+    fontWeight: FontWeight.w600,
   );
   static const FontSize subtitleSmall = FontSize(
     mobile: 16,
     tablet: 18,
     desktop: 20,
+    fontWeight: FontWeight.w500,
   );
 
   // Tailles pour le contenu
@@ -362,21 +410,24 @@ class FontSizes {
     desktop: 18,
   );
 
-  // Tailles pour les éléments d'interface
+  // Tailles pour les éléments d'interface (avec bold)
   static const FontSize buttonLarge = FontSize(
     mobile: 18,
     tablet: 20,
     desktop: 22,
+    fontWeight: FontWeight.w600,
   );
   static const FontSize buttonMedium = FontSize(
     mobile: 16,
     tablet: 18,
     desktop: 20,
+    fontWeight: FontWeight.w600,
   );
   static const FontSize buttonSmall = FontSize(
     mobile: 14,
     tablet: 16,
     desktop: 18,
+    fontWeight: FontWeight.w600,
   );
 
   // Tailles pour les labels et captions
@@ -391,12 +442,14 @@ class FontSize {
     required this.tablet,
     required this.desktop,
     this.tabletLarge, // Nouveau : pour les tablettes larges
+    this.fontWeight, // Nouveau : pour la graisse de police
   });
 
   final double mobile;
   final double tablet;
   final double? tabletLarge;
   final double desktop;
+  final FontWeight? fontWeight; // Nouveau : graisse de police optionnelle
 
   /// Retourne la taille appropriée selon le contexte
   double getSize(BuildContext context) {
@@ -409,6 +462,9 @@ class FontSize {
       desktopLarge: desktop,
     );
   }
+
+  /// Retourne le FontWeight approprié (null si pas défini)
+  FontWeight? getFontWeight() => fontWeight;
 }
 
 /// Extension sur BuildContext pour un accès facile aux utilitaires
@@ -469,7 +525,16 @@ extension ResponsiveContext on BuildContext {
   /// Hauteur des boutons responsive
   double get buttonHeight => ResponsiveUtils.getButtonHeight(this);
 
+  /// Hauteur des cartes marchand responsive
+  double get merchantCardHeight => ResponsiveUtils.getMerchantCardHeight(this);
+
+  /// Taille de police pour les titres d'erreur responsive
+  double get errorTitleFontSize => ResponsiveUtils.getErrorTitleFontSize(this);
+
   /// Marge pour centrer le contenu
   EdgeInsets get centerContentMargin =>
       ResponsiveUtils.getCenterContentMargin(this);
+
+  /// Extension pour accéder au FontWeight des FontSizes
+  FontWeight? getFontWeightFor(FontSize fontSize) => fontSize.getFontWeight();
 }

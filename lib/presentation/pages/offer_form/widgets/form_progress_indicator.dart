@@ -23,7 +23,6 @@ class FormProgressIndicator extends StatelessWidget {
         color: colorScheme.primaryContainer.withValues(alpha: 0.1),
         border: Border.all(
           color: colorScheme.primary.withValues(alpha: 0.2),
-          width: 1.0,
         ),
         borderRadius: BorderRadius.circular(12.0),
       ),

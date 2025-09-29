@@ -144,7 +144,7 @@ class OfferFormHelpers {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          'Supprimer l\'offre',
+          "Supprimer l'offre",
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
@@ -188,7 +188,7 @@ class OfferFormHelpers {
       ),
     );
 
-    if (confirmed == true && context.mounted) {
+    if (confirmed ?? false && context.mounted) {
       try {
         await ref.read(offerFormProvider.notifier).deleteOffer(offer.id);
 

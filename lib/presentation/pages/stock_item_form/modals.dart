@@ -259,7 +259,6 @@ void showUnitModal(
                             color: isSelected
                                 ? theme.colorScheme.primary
                                 : Colors.transparent,
-                            width: 1.0,
                           ),
                         ),
                         child: Icon(

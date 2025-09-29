@@ -9,13 +9,14 @@ class OfferRatingBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     // Version compacte du badge de rating
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 4.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 4.0,
+        vertical: 2.0,
       ),
       decoration: BoxDecoration(
-        color: Colors.amber,
-        borderRadius: BorderRadius.circular(12.0),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(6.0),
+        border: Border.all(color: Colors.green, width: 1.0),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -23,14 +24,14 @@ class OfferRatingBadge extends StatelessWidget {
           Icon(
             Icons.star,
             size: 12.0,
-            color: Colors.white,
+            color: Colors.green,
           ),
-          SizedBox(width: 2.0),
+          const SizedBox(width: 2.0),
           Text(
             rating.toStringAsFixed(1),
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 12.0,
+              color: Colors.green,
+              fontSize: 11.0,
               fontWeight: FontWeight.w600,
             ),
           ),

@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/image_preload_provider.dart';
+import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/nearby_offers_provider.dart';
 import '../../../providers/offer_reservation_provider.dart';
 import '../../offer_card.dart';
 import '../../offer_detail/index.dart';
 import 'categories_section.dart';
+import 'responsive_card_config.dart';
 
 /// Section des offres près de chez vous avec géolocalisation
 class NearbySection extends ConsumerStatefulWidget {
@@ -40,11 +42,40 @@ class _NearbySectionState extends ConsumerState<NearbySection>
   void _onScroll() {
     if (_scrollController.hasClients && mounted) {
       final itemWidth =
-          (MediaQuery.of(context).size.width * 0.85) + 3.0; // largeur + padding
+          ResponsiveCardConfig.getSliderCardWidth(context) +
+          ResponsiveCardConfig.getCardSpacing(context);
       final scrollOffset = _scrollController.offset;
       final visibleIndexValue = (scrollOffset / itemWidth).round();
       visibleIndex = visibleIndexValue;
     }
+  }
+
+  double _calculateCardHeight(BuildContext context) {
+    // Hauteur de l'image (depuis OfferCardImage)
+    final imageHeight = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 120.0,  // Mode compact
+      tablet: 120.0,
+      tabletLarge: 140.0,
+      desktop: 160.0,
+      desktopLarge: 180.0,
+    );
+    
+    // Hauteur estimée du contenu en mode compact
+    // (titre + description + pickup info + séparateur + prix + espacements)
+    final contentHeight = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 110.0,  // Contenu compact avec séparateur
+      tablet: 110.0,
+      tabletLarge: 120.0,
+      desktop: 130.0,
+      desktopLarge: 140.0,
+    );
+    
+    // Paddings (top image: 2, top content: 4, bottom content: 2)
+    const totalPadding = 8.0;
+    
+    return imageHeight + contentHeight + totalPadding;
   }
 
   @override
@@ -92,7 +123,7 @@ class _NearbySectionState extends ConsumerState<NearbySection>
 
         // Liste des offres à proximité
         SizedBox(
-          height: 16.0,
+          height: _calculateCardHeight(context),
           child: _buildOffersList(context, ref, allOffers),
         ),
 
@@ -151,11 +182,15 @@ class _NearbySectionState extends ConsumerState<NearbySection>
         .toList();
     startAutoPreload(imageUrls: imageUrls, ref: ref);
 
+    // Utiliser la configuration responsive
+    final cardWidth = ResponsiveCardConfig.getSliderCardWidth(context);
+    final cardSpacing = ResponsiveCardConfig.getCardSpacing(context);
+
     // Afficher les offres avec indicateur de distance
     return ListView.builder(
       controller: _scrollController,
       scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
+      padding: ResponsiveCardConfig.getSliderPadding(context),
       physics: const BouncingScrollPhysics(),
       itemCount: offers.length,
       itemBuilder: (context, index) {
@@ -165,50 +200,17 @@ class _NearbySectionState extends ConsumerState<NearbySection>
             (0.5 + (index * 0.1)); // Distance réelle si disponible
 
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.0),
+          padding: EdgeInsets.symmetric(horizontal: cardSpacing / 2),
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            child: Stack(
-              children: [
-                OfferCard(
-                  offer: offer,
-                  compact: true,
-                  distance: distance,
-                  onTap: () {
-                    _showOfferDetailModal(context, offer);
-                  },
-                ),
-                // Badge distance en haut à droite
-                Positioned(
-                  top: 8.0,
-                  right: 8.0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 4.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      borderRadius: BorderRadius.circular(16.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 4.0,
-                          offset: Offset(0.0, 2.0),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      '${(distance * 15).round()} min',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            width: cardWidth,
+            child: OfferCard(
+              offer: offer,
+              compact: true,
+              distance: distance,
+              // showDistance: true est la valeur par défaut
+              onTap: () {
+                _showOfferDetailModal(context, offer);
+              },
             ),
           ),
         );

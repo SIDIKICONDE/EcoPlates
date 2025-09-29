@@ -82,7 +82,7 @@ class CustomerSatisfactionChart extends StatelessWidget {
           SizedBox(height: 16.0),
 
           // Simple bar chart representation
-          Container(
+          SizedBox(
             height: 120.0,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -123,7 +123,7 @@ class CustomerSatisfactionChart extends StatelessWidget {
       return 0.0;
     }
 
-    double weightedSum = 0.0;
+    var weightedSum = 0.0;
     for (final rating in analytics.ratingDistribution) {
       weightedSum += rating.stars * rating.count;
     }

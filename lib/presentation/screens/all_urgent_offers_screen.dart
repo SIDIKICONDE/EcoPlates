@@ -98,14 +98,22 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                 child: ResponsiveGrid(
                   spacing: context.horizontalSpacing,
                   runSpacing: context.verticalSpacing,
-                  childAspectRatio: ResponsiveUtils.getOfferCardAspectRatio(context),
+                  childAspectRatio:
+                      1.8, // Ratio plus équilibré pour cette page (largeur/hauteur = 1.3)
                   children: offers.map((offer) {
                     final index = offers.indexOf(offer);
 
                     return OfferCard(
                       offer: offer,
                       distance: 0.5 + (index * 0.3),
-                      compact: true,  // Aligne avec les sections d'accueil (cartes compactes)
+                      compact:
+                          true, // Aligne avec les sections d'accueil (cartes compactes)
+                      imageBorderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0),
+                        bottomLeft: Radius.zero,
+                        bottomRight: Radius.zero,
+                      ), // Pas d'arrondi en bas
                       onTap: () => UrgentOfferDetailModal.show(
                         context,
                         offer,

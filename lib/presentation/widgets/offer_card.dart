@@ -16,12 +16,14 @@ class OfferCard extends StatefulWidget {
     this.showDistance = true,
     this.distance,
     this.compact = false,
+    this.imageBorderRadius,
   });
   final FoodOffer offer;
   final VoidCallback? onTap;
   final bool showDistance;
   final double? distance; // en km
   final bool compact;
+  final BorderRadius? imageBorderRadius;
 
   @override
   State<OfferCard> createState() => _OfferCardState();
@@ -104,6 +106,7 @@ class _OfferCardState extends State<OfferCard>
                       child: OfferCardImage(
                         offer: widget.offer,
                         compact: widget.compact,
+                        borderRadius: widget.imageBorderRadius,
                       ),
                     ),
 

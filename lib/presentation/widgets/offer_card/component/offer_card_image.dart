@@ -12,6 +12,7 @@ class OfferCardImage extends StatelessWidget {
     required this.offer,
     super.key,
     this.compact = false,
+    this.borderRadius,
   });
 
   /// L'offre alimentaire dont on affiche l'image
@@ -19,6 +20,9 @@ class OfferCardImage extends StatelessWidget {
 
   /// Mode compact pour réduire la hauteur de l'image
   final bool compact;
+
+  /// Rayon des coins arrondis personnalisé (optionnel)
+  final BorderRadius? borderRadius;
 
   /// Construit le widget avec une mise en page optimisée
   /// Utilise un système de padding cohérent avec les autres composants de carte
@@ -34,9 +38,11 @@ class OfferCardImage extends StatelessWidget {
         children: [
           // Section image principale avec coins arrondis
           ClipRRect(
-            borderRadius: BorderRadius.circular(
-              8.0,
-            ), // Cohérent avec la carte principale
+            borderRadius:
+                borderRadius ??
+                BorderRadius.circular(
+                  8.0,
+                ), // Utilise le borderRadius personnalisé ou la valeur par défaut
             child: AbsorbPointer(
               // absorbing: true est la valeur par défaut
               child: SizedBox(
@@ -48,9 +54,11 @@ class OfferCardImage extends StatelessWidget {
                         size: compact ? ImageSize.small : ImageSize.medium,
                         priority: Priority
                             .high, // Haute priorité pour les images d'offres
-                        borderRadius: BorderRadius.circular(
-                          6.0,
-                        ), // Valeur réduite pour cohérence
+                        borderRadius:
+                            borderRadius ??
+                            BorderRadius.circular(
+                              6.0,
+                            ), // Utilise le borderRadius personnalisé ou la valeur par défaut
                       )
                     : _OfferPlaceholderImage(height: imageHeight),
               ),
@@ -95,9 +103,11 @@ class OfferCardImage extends StatelessWidget {
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    6.0,
-                  ), // Valeur réduite pour cohérence
+                  borderRadius:
+                      borderRadius ??
+                      BorderRadius.circular(
+                        6.0,
+                      ), // Utilise le borderRadius personnalisé ou la valeur par défaut
                   child: EcoCachedImage(
                     imageUrl: offer.merchantLogo!,
                     size: compact ? ImageSize.small : ImageSize.medium,

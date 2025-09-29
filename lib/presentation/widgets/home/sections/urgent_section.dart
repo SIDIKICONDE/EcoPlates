@@ -66,7 +66,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
     // (titre + description + pickup info + séparateur + prix + espacements)
     final contentHeight = ResponsiveUtils.responsiveValue(
       context,
-      mobile: 110.0,  // Contenu compact avec séparateur
+      mobile: 110.0, // Contenu compact avec séparateur
       tablet: 110.0,
       tabletLarge: 120.0,
       desktop: 130.0,
@@ -143,8 +143,8 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                   // Navigation vers la page complète des offres urgentes
                   unawaited(
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (context) => const AllUrgentOffersScreen(),
+                      MaterialPageRoute(
+                        builder: (_) => const AllUrgentOffersScreen(),
                       ),
                     ),
                   );

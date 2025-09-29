@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 import 'step_details_dialog.dart';
 
@@ -31,14 +30,14 @@ class FunnelStepWidget extends StatelessWidget {
         : analytics.conversionFunnel[index - 1].percentage - step.percentage;
 
     return SizedBox(
-      height: ConversionFunnelConstants.stepHeight,
+      height: 80.0,
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
           // Conteneur principal de l'étape
           Container(
-            height: ConversionFunnelConstants.stepHeight,
+            height: 80.0,
             width: width,
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -47,22 +46,22 @@ class FunnelStepWidget extends StatelessWidget {
                 colors: [
                   Color(step.color),
                   Color(step.color).withValues(
-                    alpha: ConversionFunnelConstants.stepGradientAlpha,
+                    alpha: 0.8,
                   ),
                 ],
               ),
               borderRadius: BorderRadius.circular(
-                ConversionFunnelConstants.stepBorderRadius,
+                16.0,
               ),
               boxShadow: [
                 BoxShadow(
                   color: Color(
                     step.color,
-                  ).withValues(alpha: ConversionFunnelConstants.stepColorAlpha),
-                  blurRadius: ConversionFunnelConstants.stepShadowBlurRadius,
+                  ).withValues(alpha: 0.3),
+                  blurRadius: 8.0,
                   offset: const Offset(
                     0,
-                    ConversionFunnelConstants.shadowOffsetY,
+                    4.0,
                   ),
                 ),
               ],
@@ -71,46 +70,44 @@ class FunnelStepWidget extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(
-                  ConversionFunnelConstants.stepBorderRadius,
+                  16.0,
                 ),
                 onTap: () async {
                   await StepDetailsDialog.show(context, step, dropRate);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: ConversionFunnelConstants.stepPaddingHorizontal,
+                    horizontal: 16.0,
                   ),
                   child: Row(
                     children: [
                       // Icône de l'étape
                       Container(
                         padding: const EdgeInsets.all(
-                          ConversionFunnelConstants.stepIconPadding,
+                          12.0,
                         ),
                         decoration: BoxDecoration(
-                          color: ConversionFunnelConstants.white.withValues(
-                            alpha:
-                                ConversionFunnelConstants.iconBackgroundAlpha,
+                          color: Colors.white.withValues(
+                            alpha: 0.2,
                           ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           _getStepIcon(step.label),
-                          color: ConversionFunnelConstants.white,
-                          size: ConversionFunnelConstants.stepIconSize,
+                          color: Colors.white,
+                          size: 24.0,
                         ),
                       ),
                       const SizedBox(
-                        width: ConversionFunnelConstants.stepStatsSpacing,
+                        width: 16.0,
                       ),
                       // Label
                       Expanded(
                         child: Text(
                           step.label,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: ConversionFunnelConstants.white,
-                            fontWeight:
-                                ConversionFunnelConstants.stepLabelWeight,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -124,37 +121,30 @@ class FunnelStepWidget extends StatelessWidget {
                               locale: 'fr_FR',
                             ).format(step.count),
                             style: TextStyle(
-                              color: ConversionFunnelConstants.white,
-                              fontWeight:
-                                  ConversionFunnelConstants.stepCountWeight,
-                              fontSize: EcoPlatesDesignTokens.analyticsCharts
-                                  .valueFontSize(context),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: ConversionFunnelConstants
-                                  .stepStatsPaddingHorizontal,
-                              vertical: ConversionFunnelConstants
-                                  .stepStatsPaddingVertical,
+                              horizontal: 8.0,
+                              vertical: 4.0,
                             ),
                             decoration: BoxDecoration(
-                              color: ConversionFunnelConstants.white.withValues(
-                                alpha: ConversionFunnelConstants
-                                    .statsBackgroundAlpha,
+                              color: Colors.white.withValues(
+                                alpha: 0.15,
                               ),
                               borderRadius: BorderRadius.circular(
-                                ConversionFunnelConstants.stepStatsBorderRadius,
+                                12.0,
                               ),
                             ),
                             child: Text(
                               '${step.percentage.toStringAsFixed(1)}%',
                               style: TextStyle(
-                                color: ConversionFunnelConstants.white,
-                                fontWeight: ConversionFunnelConstants
-                                    .stepPercentageWeight,
-                                fontSize: EcoPlatesDesignTokens.analyticsCharts
-                                    .counterFontSize(context),
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.0,
                               ),
                             ),
                           ),
@@ -181,11 +171,11 @@ class FunnelStepWidget extends StatelessWidget {
     BuildContext context,
   ) {
     return Positioned(
-      right: ConversionFunnelConstants.dropIndicatorOffsetX,
-      top: ConversionFunnelConstants.dropIndicatorOffsetY,
+      right: -40.0,
+      top: -8.0,
       child: Container(
         padding: const EdgeInsets.all(
-          ConversionFunnelConstants.dropIndicatorPadding,
+          8.0,
         ),
         decoration: BoxDecoration(
           color: theme.colorScheme.error,
@@ -193,10 +183,9 @@ class FunnelStepWidget extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: theme.colorScheme.error.withValues(
-                alpha: ConversionFunnelConstants.dropIndicatorShadowAlpha,
+                alpha: 0.3,
               ),
-              blurRadius:
-                  ConversionFunnelConstants.dropIndicatorShadowBlurRadius,
+              blurRadius: 6.0,
             ),
           ],
         ),
@@ -205,20 +194,18 @@ class FunnelStepWidget extends StatelessWidget {
           children: [
             const Icon(
               Icons.trending_down,
-              color: ConversionFunnelConstants.white,
-              size: ConversionFunnelConstants.dropIndicatorIconSize,
+              color: Colors.white,
+              size: 16.0,
             ),
             const SizedBox(
-              width: ConversionFunnelConstants.dropIndicatorSpacing,
+              width: 8.0,
             ),
             Text(
               '-${dropRate.toStringAsFixed(1)}%',
               style: TextStyle(
-                color: ConversionFunnelConstants.white,
-                fontSize: EcoPlatesDesignTokens.analyticsCharts.counterFontSize(
-                  context,
-                ),
-                fontWeight: ConversionFunnelConstants.dropRateWeight,
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],

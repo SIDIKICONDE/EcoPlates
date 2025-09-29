@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/responsive.dart';
 import 'favorites_models.dart';
 
 /// Tuile affichant un plat favori
 class FavoriteDishTile extends StatelessWidget {
   const FavoriteDishTile({
-    required this.dish, super.key,
+    required this.dish,
+    super.key,
     this.onToggleFavorite,
   });
 
@@ -20,22 +20,10 @@ class FavoriteDishTile extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Container(
-      padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: 10,
-          tablet: 12,
-          desktop: 14,
-        ),
-      ),
+      padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(
-          context.responsiveValue(
-            mobile: 6,
-            tablet: 8,
-            desktop: 10,
-          ),
-        ),
+        borderRadius: BorderRadius.circular(6.0),
         border: Border.all(
           color: colors.outline.withOpacity(0.3),
         ),
@@ -44,44 +32,20 @@ class FavoriteDishTile extends StatelessWidget {
         children: [
           // Image du plat (placeholder)
           Container(
-            width: context.responsiveValue(
-              mobile: 40,
-              tablet: 50,
-              desktop: 60,
-            ),
-            height: context.responsiveValue(
-              mobile: 40,
-              tablet: 50,
-              desktop: 60,
-            ),
+            width: 40.0,
+            height: 40.0,
             decoration: BoxDecoration(
               color: colors.primaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(
-                context.responsiveValue(
-                  mobile: 6,
-                  tablet: 8,
-                  desktop: 10,
-                ),
-              ),
+              borderRadius: BorderRadius.circular(6.0),
             ),
             child: Icon(
               Icons.restaurant,
               color: colors.primary,
-              size: context.responsiveValue(
-                mobile: 18,
-                tablet: 24,
-                desktop: 28,
-              ),
+              size: 18.0,
             ),
           ),
 
-          SizedBox(
-            width: context.responsiveValue(
-              mobile: 10,
-              tablet: 12,
-              desktop: 14,
-            ),
-          ),
+          const SizedBox(width: 10.0),
 
           // Informations du plat
           Expanded(
@@ -94,26 +58,14 @@ class FavoriteDishTile extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(
-                  height: context.responsiveValue(
-                    mobile: 2,
-                    tablet: 2,
-                    desktop: 3,
-                  ),
-                ),
+                const SizedBox(height: 2.0),
                 Text(
                   dish.restaurantName,
                   style: textTheme.bodySmall?.copyWith(
                     color: colors.onSurface.withOpacity(0.6),
                   ),
                 ),
-                SizedBox(
-                  height: context.responsiveValue(
-                    mobile: 3,
-                    tablet: 4,
-                    desktop: 5,
-                  ),
-                ),
+                const SizedBox(height: 3.0),
                 Row(
                   children: [
                     Text(
@@ -123,18 +75,12 @@ class FavoriteDishTile extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
-                      width: context.responsiveValue(
-                        mobile: 6,
-                        tablet: 8,
-                        desktop: 10,
-                      ),
-                    ),
+                    const SizedBox(width: 6.0),
                     Text(
                       'Commandé ${dish.orderCount}x',
                       style: textTheme.labelSmall?.copyWith(
                         color: colors.onSurface.withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.disabled,
+                          alpha: 0.5,
                         ),
                       ),
                     ),
@@ -151,11 +97,7 @@ class FavoriteDishTile extends StatelessWidget {
               Icons.favorite,
               color: colors.error,
             ),
-            iconSize: context.responsiveValue(
-              mobile: 18,
-              tablet: 20,
-              desktop: 24,
-            ),
+            iconSize: 18.0,
           ),
         ],
       ),

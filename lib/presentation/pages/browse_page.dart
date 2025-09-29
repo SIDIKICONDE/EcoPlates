@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/responsive/design_tokens.dart';
 import '../providers/all_offers_provider.dart';
 import '../providers/browse_search_provider.dart';
 import '../providers/browse_view_provider.dart';
@@ -37,7 +36,7 @@ class BrowsePage extends ConsumerWidget {
             // Segment de navigation Liste/Carte
             const BrowseViewSegment(),
 
-            SizedBox(height: EcoPlatesDesignTokens.spacing.dialogGap(context)),
+            SizedBox(height: 16),
 
             // Contenu principal
             Expanded(
@@ -45,8 +44,7 @@ class BrowsePage extends ConsumerWidget {
                 data: (offers) {
                   // Afficher la vue selon le mode sélectionné
                   return AnimatedSwitcher(
-                    duration:
-                        EcoPlatesDesignTokens.layout.viewTransitionDuration,
+                    duration: Duration(milliseconds: 300),
                     child: viewMode == BrowseViewMode.list
                         ? BrowseListView(
                             key: const ValueKey('list'),
@@ -67,31 +65,20 @@ class BrowsePage extends ConsumerWidget {
                     children: [
                       Icon(
                         Icons.error_outline,
-                        size: EcoPlatesDesignTokens.layout.errorStateIconSize,
-                        color:
-                            Theme.of(
-                              context,
-                            ).colorScheme.error.withValues(
-                              alpha:
-                                  EcoPlatesDesignTokens.opacity.textSecondary,
-                            ),
-                      ),
-                      SizedBox(
-                        height: EcoPlatesDesignTokens.spacing.dialogGap(
+                        size: 48,
+                        color: Theme.of(
                           context,
-                        ),
+                        ).colorScheme.error.withOpacity(0.7),
                       ),
                       Text(
                         'Erreur de chargement',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: EcoPlatesDesignTokens.typography.medium,
+                          fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.error,
                         ),
                       ),
-                      SizedBox(
-                        height: EcoPlatesDesignTokens.spacing.microGap(context),
-                      ),
+                      SizedBox(height: 16),
                       TextButton.icon(
                         onPressed: () {
                           ref.invalidate(allOffersProvider);
@@ -117,22 +104,18 @@ class BrowsePage extends ConsumerWidget {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (context) => Container(
-          height:
-              MediaQuery.of(context).size.height *
-              EcoPlatesDesignTokens.layout.filtersModalHeightRatio,
+          height: MediaQuery.of(context).size.height * 0.8,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.vertical(
-              top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+              top: Radius.circular(16),
             ),
           ),
           child: Column(
             children: [
               // Header
               Container(
-                padding: EdgeInsets.all(
-                  EcoPlatesDesignTokens.spacing.dialogGap(context),
-                ),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -146,10 +129,8 @@ class BrowsePage extends ConsumerWidget {
                     Text(
                       'Filtres',
                       style: TextStyle(
-                        fontSize: EcoPlatesDesignTokens.typography.titleSize(
-                          context,
-                        ),
-                        fontWeight: EcoPlatesDesignTokens.typography.bold,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Row(
@@ -185,7 +166,7 @@ class BrowsePage extends ConsumerWidget {
                     '• Disponibilité',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.text(context),
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -193,9 +174,7 @@ class BrowsePage extends ConsumerWidget {
 
               // Bouton appliquer
               Container(
-                padding: EdgeInsets.all(
-                  EcoPlatesDesignTokens.spacing.dialogGap(context),
-                ),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
@@ -208,26 +187,12 @@ class BrowsePage extends ConsumerWidget {
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(
-                        vertical: EcoPlatesDesignTokens.spacing.dialogGap(
-                          context,
-                        ),
-                      ),
+                      padding: EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          EcoPlatesDesignTokens.radius.sm,
-                        ),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text(
-                      'Appliquer les filtres',
-                      style: TextStyle(
-                        fontSize: EcoPlatesDesignTokens.typography.button(
-                          context,
-                        ),
-                        fontWeight: EcoPlatesDesignTokens.typography.bold,
-                      ),
-                    ),
+                    child: const Text('Appliquer'),
                   ),
                 ),
               ),

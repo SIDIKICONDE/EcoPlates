@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/categories.dart';
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/food_offer.dart';
 
 /// Chip affichant la catégorie de l'offre (centralisé)
@@ -16,24 +15,22 @@ class OfferCategoryChip extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: context.scaleXS_SM_MD_LG,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 10.0,
+        vertical: 5.0,
       ),
       decoration: BoxDecoration(
-        color: color.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
+        color: color.withOpacity(0.1),
         border: Border.all(
-          color: color.withValues(alpha: EcoPlatesDesignTokens.opacity.subtle),
+          color: color.withOpacity(0.2),
         ),
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: EcoPlatesDesignTokens.typography.hint(context),
+          fontSize: 12.0,
+          fontWeight: FontWeight.w500,
           color: color,
-          fontWeight: EcoPlatesDesignTokens.typography.semiBold,
         ),
       ),
     );

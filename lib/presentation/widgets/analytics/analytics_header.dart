@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/analytics_stats.dart';
 import '../../providers/analytics_provider.dart';
 import 'kpi_cards/kpi_cards.dart';
@@ -31,10 +30,10 @@ class AnalyticsHeader extends ConsumerWidget {
 
   Widget _buildHeader(BuildContext context, AnalyticsStats analytics) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isWide = screenWidth > DesignConstants.tabletBreakpoint;
+    final isWide = screenWidth > 768.0;
 
     return Padding(
-      padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+      padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,33 +45,31 @@ class AnalyticsHeader extends ConsumerWidget {
                 children: [
                   Container(
                     padding: EdgeInsets.all(
-                      context.scaleXXS_XS_SM_MD,
+                      2.0,
                     ),
                     decoration: BoxDecoration(
                       color:
                           Theme.of(
                             context,
                           ).colorScheme.primaryContainer.withValues(
-                            alpha: EcoPlatesDesignTokens.opacity.subtle,
+                            alpha: 0.3,
                           ),
                       borderRadius: BorderRadius.circular(
-                        context.scaleFieldRadius,
+                        8.0,
                       ),
                     ),
                     child: Icon(
                       Icons.insights,
-                      size: context.scaleIconStandard,
+                      size: 18.0,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  SizedBox(width: context.scaleSM_MD_LG_XL),
+                  SizedBox(width: 6.0),
                   Text(
                     'Business Insights',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w800,
-                      letterSpacing: EcoPlatesDesignTokens
-                          .analyticsCharts
-                          .kpiCardValueLetterSpacing,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ],
@@ -82,29 +79,21 @@ class AnalyticsHeader extends ConsumerWidget {
                 label: Text(
                   analytics.period.label,
                   style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                    fontWeight: EcoPlatesDesignTokens.typography.semiBold,
+                    fontSize: 11.0,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                backgroundColor:
-                    Theme.of(
-                      context,
-                    ).colorScheme.secondaryContainer.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .secondaryContainer
+                    .withValues(
+                      alpha: 0.3,
                     ),
-                side: BorderSide(
-                  color:
-                      Theme.of(
-                        context,
-                      ).colorScheme.secondary.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.subtle,
-                      ),
-                ),
               ),
             ],
           ),
 
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 10.0),
 
           // Grille des KPIs
           if (isWide)
@@ -122,9 +111,7 @@ class AnalyticsHeader extends ConsumerWidget {
         return Expanded(
           child: Padding(
             padding: EdgeInsets.only(
-              right: config != KpiConfigs.all.last
-                  ? context.scaleSM_MD_LG_XL
-                  : 0,
+              right: config != KpiConfigs.all.last ? 6.0 : 0,
             ),
             child: KpiCard(
               config: config,
@@ -147,7 +134,7 @@ class AnalyticsHeader extends ConsumerWidget {
             return Expanded(
               child: Padding(
                 padding: EdgeInsets.only(
-                  right: config != firstRow.last ? context.scaleSM_MD_LG_XL : 0,
+                  right: config != firstRow.last ? 6.0 : 0,
                 ),
                 child: KpiCard(
                   config: config,
@@ -157,15 +144,13 @@ class AnalyticsHeader extends ConsumerWidget {
             );
           }).toList(),
         ),
-        SizedBox(height: context.scaleSM_MD_LG_XL),
+        SizedBox(height: 6.0),
         Row(
           children: secondRow.map((config) {
             return Expanded(
               child: Padding(
                 padding: EdgeInsets.only(
-                  right: config != secondRow.last
-                      ? context.scaleSM_MD_LG_XL
-                      : 0,
+                  right: config != secondRow.last ? 6.0 : 0,
                 ),
                 child: KpiCard(
                   config: config,
@@ -181,26 +166,26 @@ class AnalyticsHeader extends ConsumerWidget {
 
   Widget _buildLoadingHeader(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isWide = screenWidth > DesignConstants.tabletBreakpoint;
+    final isWide = screenWidth > 768.0;
 
     return Padding(
-      padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+      padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Skeleton du titre
           Container(
-            height: EcoPlatesDesignTokens.size.buttonHeight(context),
-            width: DesignConstants.hundred + DesignConstants.fifty,
+            height: 16.0,
+            width: 150.0,
             decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.xs,
+                4.0,
               ),
             ),
           ),
 
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 10.0),
 
           // Skeleton des cartes KPI avec shimmer
           if (isWide)
@@ -209,9 +194,7 @@ class AnalyticsHeader extends ConsumerWidget {
                 return Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      right: config != KpiConfigs.all.last
-                          ? context.scaleSM_MD_LG_XL
-                          : 0,
+                      right: config != KpiConfigs.all.last ? 6.0 : 0,
                     ),
                     child: const KpiCardShimmer(),
                   ),
@@ -227,7 +210,7 @@ class AnalyticsHeader extends ConsumerWidget {
                       child: Padding(
                         padding: EdgeInsets.only(
                           right: config != KpiConfigs.all.take(2).last
-                              ? context.scaleSM_MD_LG_XL
+                              ? 6.0
                               : 0,
                         ),
                         child: const KpiCardShimmer(),
@@ -235,14 +218,14 @@ class AnalyticsHeader extends ConsumerWidget {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: context.scaleSM_MD_LG_XL),
+                SizedBox(height: 6.0),
                 Row(
                   children: KpiConfigs.all.skip(2).map((config) {
                     return Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(
                           right: config != KpiConfigs.all.skip(2).last
-                              ? context.scaleSM_MD_LG_XL
+                              ? 6.0
                               : 0,
                         ),
                         child: const KpiCardShimmer(),
@@ -259,23 +242,23 @@ class AnalyticsHeader extends ConsumerWidget {
 
   Widget _buildErrorHeader(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+      padding: EdgeInsets.all(16.0),
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
+          padding: EdgeInsets.all(20.0),
           child: Column(
             children: [
               Icon(
                 Icons.error_outline,
-                size: EcoPlatesDesignTokens.size.minTouchTarget,
+                size: 48.0,
                 color: Theme.of(context).colorScheme.error,
               ),
-              SizedBox(height: context.scaleMD_LG_XL_XXL),
+              SizedBox(height: 10.0),
               Text(
                 'Erreur de chargement',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              SizedBox(height: context.scaleXXS_XS_SM_MD),
+              SizedBox(height: 2.0),
               Text(
                 'Impossible de charger les données analytiques',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -283,7 +266,7 @@ class AnalyticsHeader extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: context.scaleMD_LG_XL_XXL),
+              SizedBox(height: 10.0),
               FilledButton.icon(
                 onPressed: () => ref.refreshAnalytics(),
                 icon: const Icon(Icons.refresh),

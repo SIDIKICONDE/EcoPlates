@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod/src/providers/provider.dart';
 
 import '../../../../core/constants/categories.dart';
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/offers_catalog_provider.dart';
 
@@ -77,14 +76,14 @@ class CategoriesSection extends ConsumerWidget {
         // Slider horizontal de catégories
         Padding(
           padding: EdgeInsets.only(
-            top: context.scaleXXS_XS_SM_MD,
+            top: 2.0,
           ),
           child: SizedBox(
-            height: EcoPlatesDesignTokens.size.minTouchTarget,
+            height: 48.0,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(
-                horizontal: context.scaleMD_LG_XL_XXL,
+                horizontal: 10.0,
               ),
               physics: const BouncingScrollPhysics(),
               itemCount: categories.length,
@@ -99,7 +98,7 @@ class CategoriesSection extends ConsumerWidget {
 
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: context.scaleXXS_XS_SM_MD,
+                    horizontal: 2.0,
                   ),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -107,7 +106,7 @@ class CategoriesSection extends ConsumerWidget {
                       color: Colors.transparent,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(
-                          EcoPlatesDesignTokens.radius.md,
+                          12.0,
                         ),
                         onTap: isEnabled
                             ? () {
@@ -119,8 +118,8 @@ class CategoriesSection extends ConsumerWidget {
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           padding: EdgeInsets.symmetric(
-                            horizontal: context.scaleMD_LG_XL_XXL,
-                            vertical: context.scaleXXS_XS_SM_MD,
+                            horizontal: 10.0,
+                            vertical: 2.0,
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
@@ -133,7 +132,7 @@ class CategoriesSection extends ConsumerWidget {
                                           context,
                                         ).colorScheme.surfaceContainerLow),
                             borderRadius: BorderRadius.circular(
-                              EcoPlatesDesignTokens.radius.xl,
+                              20.0,
                             ),
                             border: Border.all(
                               color: isSelected
@@ -142,19 +141,14 @@ class CategoriesSection extends ConsumerWidget {
                                         ? Theme.of(
                                             context,
                                           ).colorScheme.outline.withValues(
-                                            alpha: EcoPlatesDesignTokens
-                                                .opacity
-                                                .subtle,
+                                            alpha: 0.3,
                                           )
                                         : Theme.of(
                                             context,
                                           ).colorScheme.outline.withValues(
-                                            alpha: EcoPlatesDesignTokens
-                                                .opacity
-                                                .disabled,
+                                            alpha: 0.5,
                                           )),
-                              width:
-                                  EcoPlatesDesignTokens.layout.cardBorderWidth,
+                              width: 0.5,
                             ),
                             boxShadow: isSelected
                                 ? [
@@ -163,16 +157,10 @@ class CategoriesSection extends ConsumerWidget {
                                           .colorScheme
                                           .primary
                                           .withValues(
-                                            alpha: EcoPlatesDesignTokens
-                                                .opacity
-                                                .subtle,
+                                            alpha: 0.3,
                                           ),
-                                      blurRadius: EcoPlatesDesignTokens
-                                          .elevation
-                                          .smallBlur,
-                                      offset: EcoPlatesDesignTokens
-                                          .elevation
-                                          .standardOffset,
+                                      blurRadius: 4.0,
+                                      offset: const Offset(0, 2),
                                     ),
                                   ]
                                 : null,
@@ -184,34 +172,25 @@ class CategoriesSection extends ConsumerWidget {
                                 if (category != null) ...[
                                   Icon(
                                     Categories.iconOf(category),
-                                    size: EcoPlatesDesignTokens.size.indicator(
-                                      context,
-                                    ),
+                                    size: 16.0,
                                     color: isSelected
-                                        ? EcoPlatesDesignTokens
-                                              .colors
-                                              .textPrimary
+                                        ? Colors.white
                                         : (isEnabled
                                               ? Categories.colorOf(category)
                                               : Theme.of(context)
                                                     .colorScheme
                                                     .onSurface
                                                     .withValues(
-                                                      alpha:
-                                                          EcoPlatesDesignTokens
-                                                              .opacity
-                                                              .disabled,
+                                                      alpha: 0.5,
                                                     )),
                                   ),
-                                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                                  SizedBox(width: 2.0),
                                 ],
                                 Text(
                                   label,
                                   style: TextStyle(
                                     color: isSelected
-                                        ? EcoPlatesDesignTokens
-                                              .colors
-                                              .textPrimary
+                                        ? Colors.white
                                         : (isEnabled
                                               ? Theme.of(
                                                   context,
@@ -220,20 +199,12 @@ class CategoriesSection extends ConsumerWidget {
                                                     .colorScheme
                                                     .onSurface
                                                     .withValues(
-                                                      alpha:
-                                                          EcoPlatesDesignTokens
-                                                              .opacity
-                                                              .disabled,
+                                                      alpha: 0.5,
                                                     )),
                                     fontWeight: isSelected
-                                        ? EcoPlatesDesignTokens
-                                              .typography
-                                              .semiBold
-                                        : EcoPlatesDesignTokens
-                                              .typography
-                                              .medium,
-                                    fontSize: EcoPlatesDesignTokens.typography
-                                        .hint(context),
+                                        ? FontWeight.w600
+                                        : FontWeight.w500,
+                                    fontSize: 16.0,
                                   ),
                                 ),
                               ],
@@ -249,7 +220,7 @@ class CategoriesSection extends ConsumerWidget {
           ),
         ),
 
-        SizedBox(height: context.scaleXXS_XS_SM_MD),
+        SizedBox(height: 2.0),
       ],
     );
   }

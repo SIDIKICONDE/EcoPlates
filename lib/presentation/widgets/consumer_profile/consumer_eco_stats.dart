@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../../core/themes/tokens/color_tokens.dart';
-import '../../../core/themes/tokens/spacing_tokens.dart';
 import '../../../domain/entities/user.dart';
 import '../../providers/consumer_profile_provider.dart';
 import 'eco_calculations.dart';
@@ -22,37 +20,20 @@ class ConsumerEcoStats extends ConsumerWidget {
     final textTheme = theme.textTheme;
 
     return Container(
-      padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: EcoSpacing.md,
-          tablet: EcoSpacing.lg,
-          desktop: EcoSpacing.xl,
-        ),
-      ),
+      padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
             EcoColorTokens.success.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              alpha: 0.1,
             ),
-            EcoColorTokens.eco.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle / 2,
-            ),
+            colors.surface,
           ],
         ),
         borderRadius: BorderRadius.circular(
-          context.responsiveValue(
-            mobile: EcoPlatesDesignTokens.radius.md,
-            tablet: EcoPlatesDesignTokens.radius.lg,
-            desktop: EcoPlatesDesignTokens.radius.xl,
-          ),
-        ),
-        border: Border.all(
-          color: EcoColorTokens.success.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-          ),
+          20.0,
         ),
       ),
       child: SingleChildScrollView(
@@ -63,44 +44,18 @@ class ConsumerEcoStats extends ConsumerWidget {
             Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(
-                    context.responsiveValue(
-                      mobile: EcoSpacing.xs,
-                      tablet: EcoSpacing.sm,
-                      desktop: EcoSpacing.md,
-                    ),
-                  ),
+                  padding: EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                     color: EcoColorTokens.success,
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveValue(
-                        mobile: EcoPlatesDesignTokens.radius.xs,
-                        tablet: EcoPlatesDesignTokens.radius.sm,
-                        desktop: EcoPlatesDesignTokens.radius.md,
-                      ),
-                    ),
+                    borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: Icon(
                     Icons.eco,
-                    color: colors.onPrimary,
-                    size: context.responsiveValue(
-                      mobile:
-                          context.scaleIconStandard *
-                          0.9, // 10% smaller on mobile
-                      tablet: context.scaleIconStandard,
-                      desktop:
-                          context.scaleIconStandard *
-                          1.1, // 10% larger on desktop
-                    ),
+                    color: Colors.white,
+                    size: 16.0,
                   ),
                 ),
-                SizedBox(
-                  width: context.responsiveValue(
-                    mobile: EcoSpacing.sm,
-                    tablet: EcoSpacing.md,
-                    desktop: EcoSpacing.lg,
-                  ),
-                ),
+                SizedBox(width: 12.0),
                 Text(
                   'Impact Écologique',
                   style: textTheme.titleLarge?.copyWith(
@@ -111,38 +66,18 @@ class ConsumerEcoStats extends ConsumerWidget {
               ],
             ),
 
-            SizedBox(
-              height: context.responsiveValue(
-                mobile: EcoSpacing.lg,
-                tablet: EcoSpacing.xl,
-                desktop: EcoSpacing.xxl,
-              ),
-            ),
+            SizedBox(height: 20.0),
 
             // Grille de statistiques
             GridView.count(
-              crossAxisCount: context.responsiveValue(
-                mobile: DesignConstants.two.toInt(), // 2 colonnes sur mobile
-                tablet: DesignConstants.two.toInt(),
-                desktop: DesignConstants.four.toInt(),
-              ),
+              crossAxisCount: MediaQuery.of(context).size.width > 768 ? 4 : 2,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: context.responsiveValue(
-                mobile: 1.5, // Ratio plus allongé sur mobile
-                tablet: 1.2,
-                desktop: 1,
-              ),
-              mainAxisSpacing: context.responsiveValue(
-                mobile: EcoSpacing.sm,
-                tablet: EcoSpacing.md,
-                desktop: EcoSpacing.lg,
-              ),
-              crossAxisSpacing: context.responsiveValue(
-                mobile: EcoSpacing.sm,
-                tablet: EcoSpacing.md,
-                desktop: EcoSpacing.lg,
-              ),
+              childAspectRatio: MediaQuery.of(context).size.width > 768
+                  ? 1.0
+                  : 1.5,
+              mainAxisSpacing: 12.0,
+              crossAxisSpacing: 12.0,
               children: [
                 EcoStatCard(
                   title: 'EcoScore Total',
@@ -182,13 +117,7 @@ class ConsumerEcoStats extends ConsumerWidget {
               ],
             ),
 
-            SizedBox(
-              height: context.responsiveValue(
-                mobile: EcoSpacing.lg,
-                tablet: EcoSpacing.xl,
-                desktop: EcoSpacing.xxl,
-              ),
-            ),
+            SizedBox(height: 20.0),
 
             // Progression vers le prochain niveau
             TierProgressWidget(
@@ -196,33 +125,14 @@ class ConsumerEcoStats extends ConsumerWidget {
               currentScore: consumerProfile?.ecoScore ?? 0,
             ),
 
-            SizedBox(
-              height: context.responsiveValue(
-                mobile: EcoSpacing.md,
-                tablet: EcoSpacing.lg,
-                desktop: EcoSpacing.xl,
-              ),
-            ),
+            SizedBox(height: 16.0),
 
             // Message motivationnel
             Container(
-              padding: EdgeInsets.all(
-                context.responsiveValue(
-                  mobile: EcoSpacing.md,
-                  tablet: EcoSpacing.lg,
-                  desktop: EcoSpacing.xl,
-                ),
-              ),
+              padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: colors.surface.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
-                ),
-                borderRadius: BorderRadius.circular(
-                  context.responsiveValue(
-                    mobile: EcoPlatesDesignTokens.radius.sm,
-                    tablet: EcoPlatesDesignTokens.radius.md,
-                    desktop: EcoPlatesDesignTokens.radius.lg,
-                  ),
+                  alpha: 0.1,
                 ),
               ),
               child: Row(
@@ -230,23 +140,9 @@ class ConsumerEcoStats extends ConsumerWidget {
                   Icon(
                     Icons.lightbulb_outline,
                     color: EcoColorTokens.warning,
-                    size: context.responsiveValue(
-                      mobile: context.scaleIconStandard,
-                      tablet:
-                          context.scaleIconStandard *
-                          1.2, // 20% larger on tablet
-                      desktop:
-                          context.scaleIconStandard *
-                          1.4, // 40% larger on desktop
-                    ),
+                    size: MediaQuery.of(context).size.width > 768 ? 28.0 : 20.0,
                   ),
-                  SizedBox(
-                    width: context.responsiveValue(
-                      mobile: EcoSpacing.sm,
-                      tablet: EcoSpacing.md,
-                      desktop: EcoSpacing.lg,
-                    ),
-                  ),
+                  SizedBox(width: 12.0),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,11 +155,9 @@ class ConsumerEcoStats extends ConsumerWidget {
                           ),
                         ),
                         SizedBox(
-                          height: context.responsiveValue(
-                            mobile: DesignConstants.two,
-                            tablet: DesignConstants.four,
-                            desktop: DesignConstants.six,
-                          ),
+                          height: MediaQuery.of(context).size.width > 768
+                              ? 6.0
+                              : 2.0,
                         ),
                         Text(
                           EcoCalculations.getEcoTip(
@@ -271,8 +165,7 @@ class ConsumerEcoStats extends ConsumerWidget {
                           ),
                           style: textTheme.bodySmall?.copyWith(
                             color: colors.onSurface.withValues(
-                              alpha:
-                                  EcoPlatesDesignTokens.opacity.gradientPrimary,
+                              alpha: 0.7,
                             ),
                           ),
                         ),

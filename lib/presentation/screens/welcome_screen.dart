@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/responsive/responsive.dart';
 import '../../core/router/routes/route_constants.dart';
-import '../widgets/common/responsive_button.dart';
 
 /// Page de bienvenue pour choisir le type d'utilisateur
 class WelcomeScreen extends ConsumerWidget {
@@ -12,7 +11,7 @@ class WelcomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return ResponsiveScaffoldInit(
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -22,266 +21,147 @@ class WelcomeScreen extends ConsumerWidget {
             end: Alignment.bottomCenter,
             colors: [
               Theme.of(context).primaryColor.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                alpha: 0.8,
               ),
               Theme.of(context).primaryColor.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.gradientSecondary,
+                alpha: 0.9,
               ),
             ],
           ),
         ),
         child: SafeArea(
-          child: ResponsiveLayout(
-            mobile: _buildMobileLayout,
-            tablet: _buildTabletLayout,
-            desktop: _buildDesktopLayout,
-            desktopLarge: _buildDesktopLayout,
+          child: CenteredResponsiveLayout(
+            child: ResponsiveLayout(
+              mobile: _buildMobileLayout(context),
+              tablet: _buildTabletLayout(context),
+              desktop: _buildDesktopLayout(context),
+            ),
           ),
         ),
       ),
     );
   }
 
-  /// Layout pour mobile (écrans étroits)
+  /// Layout pour mobile (écrans étroits) - Utilise les widgets responsifs
   Widget _buildMobileLayout(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final safeAreaTop = MediaQuery.of(context).padding.top;
-    final safeAreaBottom = MediaQuery.of(context).padding.bottom;
-    final availableHeight = screenHeight - safeAreaTop - safeAreaBottom;
-
-    // Adaptation pour très petits écrans
-    final isVerySmallScreen =
-        availableHeight < EcoPlatesDesignTokens.layout.verySmallScreenThreshold;
-
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: availableHeight,
-          minWidth: screenWidth,
-        ),
-        child: IntrinsicHeight(
-          child: Column(
-            mainAxisAlignment: isVerySmallScreen
-                ? MainAxisAlignment.start
-                : MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: isVerySmallScreen
-                    ? EcoPlatesDesignTokens.layout.compactScreenSpacing
-                    : EcoPlatesDesignTokens.layout.mobileScreenSpacing,
-              ),
-              _buildHeader(context),
-              Flexible(
-                child: SizedBox(
-                  height: isVerySmallScreen
-                      ? EcoPlatesDesignTokens.layout.compactScreenSpacing *
-                            EcoPlatesDesignTokens.layout.extendedSpacingFactor /
-                            EcoPlatesDesignTokens.layout.verySmallScreenFactor
-                      : EcoPlatesDesignTokens.layout.mobileSectionSpacing,
-                ),
-              ),
-              _buildButtons(context),
-              Flexible(
-                child: SizedBox(
-                  height: isVerySmallScreen
-                      ? EcoPlatesDesignTokens.layout.compactScreenSpacing *
-                            (EcoPlatesDesignTokens
-                                        .layout
-                                        .extendedSpacingFactor /
-                                    EcoPlatesDesignTokens
-                                        .layout
-                                        .verySmallScreenFactor)
-                                .round()
-                      : EcoPlatesDesignTokens.layout.mobileContentSpacing,
-                ),
-              ),
-              _buildFooterMessage(context),
-              SizedBox(
-                height: isVerySmallScreen
-                    ? EcoPlatesDesignTokens.layout.compactScreenSpacing
-                    : EcoPlatesDesignTokens.layout.mobileScreenSpacing,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Layout pour tablette
-  Widget _buildTabletLayout(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final orientation = MediaQuery.of(context).orientation;
-
-    // Adaptation selon l'orientation
-    final isLandscape = orientation == Orientation.landscape;
-    final containerWidth = isLandscape
-        ? screenWidth * EcoPlatesDesignTokens.layout.landscapeContainerRatio
-        : screenWidth * EcoPlatesDesignTokens.layout.portraitContainerRatio;
-
-    return Center(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: containerWidth.clamp(
-              EcoPlatesDesignTokens.layout.mainContainerMinWidth,
-              EcoPlatesDesignTokens.layout.mainContainerMaxWidth(context),
-            ),
-            minHeight:
-                screenHeight *
-                EcoPlatesDesignTokens.layout.minContainerHeightRatio,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildHeader(context),
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: EcoPlatesDesignTokens.layout.buttonSectionMaxWidth(
-                    context,
-                  ),
-                ),
-                child: _buildButtons(context),
-              ),
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-              ),
-              _buildFooterMessage(context),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Layout pour desktop
-  Widget _buildDesktopLayout(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isLargeDesktop =
-        screenWidth > EcoPlatesDesignTokens.layout.largeDesktopThreshold;
-
-    return Center(
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: EcoPlatesDesignTokens.layout.mainContainerMaxWidth(context),
-        ),
-        child: Row(
+      child: ResponsiveContainer(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Côté gauche - Header
-            Expanded(
-              flex: isLargeDesktop
-                  ? EcoPlatesDesignTokens.layout.largeDesktopMainFlex
-                  : EcoPlatesDesignTokens.layout.standardFlex,
-              child: Container(
-                padding: EdgeInsets.all(
-                  EcoPlatesDesignTokens.layout.sectionPadding(context),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildHeader(context),
-                  ],
-                ),
-              ),
-            ),
-            // Séparateur visuel optionnel
-            Container(
-              width: EcoPlatesDesignTokens.layout.verticalSeparatorWidth,
-              height: EcoPlatesDesignTokens.layout.separatorHeight,
-              color: EcoPlatesDesignTokens.colors.decorative,
-              margin: EdgeInsets.symmetric(
-                horizontal:
-                    EcoPlatesDesignTokens.layout.separatorHorizontalMargin,
-              ),
-            ),
-            // Côté droit - Boutons et message
-            Expanded(
-              flex: isLargeDesktop
-                  ? EcoPlatesDesignTokens.layout.largeDesktopSecondaryFlex
-                  : EcoPlatesDesignTokens.layout.standardFlex,
-              child: Container(
-                padding: EdgeInsets.all(
-                  EcoPlatesDesignTokens.layout.sectionPadding(context),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: EcoPlatesDesignTokens.layout
-                            .buttonSectionMaxWidth(context),
-                      ),
-                      child: _buildButtons(context),
-                    ),
-                    SizedBox(
-                      height: EcoPlatesDesignTokens.spacing.sectionSpacing(
-                        context,
-                      ),
-                    ),
-                    _buildFooterMessage(context),
-                  ],
-                ),
-              ),
-            ),
+            const VerticalGap(multiplier: 2),
+            _buildHeader(context),
+            const VerticalGap(multiplier: 3),
+            _buildButtons(context),
+            const VerticalGap(multiplier: 2),
+            _buildFooterMessage(context),
+            const VerticalGap(multiplier: 2),
           ],
         ),
       ),
     );
   }
 
-  /// Header avec titre et sous-titres
-  Widget _buildHeader(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final isVerySmallScreen =
-        screenHeight < EcoPlatesDesignTokens.layout.verySmallScreenThreshold;
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Logo/Titre principal avec adaptation pour très petits écrans
-        Text(
-          'EcoPlates',
-          style: TextStyle(
-            fontSize: isVerySmallScreen
-                ? EcoPlatesDesignTokens.typography.titleSize(context) *
-                      EcoPlatesDesignTokens.layout.verySmallScreenFactor
-                : EcoPlatesDesignTokens.typography.titleSize(context),
-            fontWeight: EcoPlatesDesignTokens.typography.bold,
-            color: EcoPlatesDesignTokens.colors.textPrimary,
-            letterSpacing: EcoPlatesDesignTokens.typography.titleLetterSpacing(
-              context,
+  /// Layout pour tablette - Utilise ResponsiveConstrainedBox
+  Widget _buildTabletLayout(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: ResponsiveConstrainedBox(
+          maxWidth: 800,
+          child: ResponsiveContainer(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildHeader(context),
+                const VerticalGap(multiplier: 1.5),
+                ResponsiveConstrainedBox(
+                  maxWidth: 400,
+                  child: _buildButtons(context),
+                ),
+                const VerticalGap(multiplier: 1.5),
+                _buildFooterMessage(context),
+              ],
             ),
           ),
-          textAlign: TextAlign.center,
         ),
-        SizedBox(height: EcoPlatesDesignTokens.spacing.sm),
-        // Sous-titre de bienvenue
-        Text(
-          'Bienvenue !',
+      ),
+    );
+  }
+
+  /// Layout pour desktop - Utilise ResponsiveColumns
+  Widget _buildDesktopLayout(BuildContext context) {
+    return Center(
+      child: ResponsiveConstrainedBox(
+        maxWidth: 1200,
+        child: ResponsiveColumns(
+          sidebar: ResponsiveContainer(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildHeader(context),
+              ],
+            ),
+          ),
+          content: ResponsiveContainer(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ResponsiveConstrainedBox(
+                  maxWidth: 400,
+                  child: _buildButtons(context),
+                ),
+                const VerticalGap(multiplier: 1.5),
+                _buildFooterMessage(context),
+              ],
+            ),
+          ),
+          sidebarWidth: context.responsive(
+            mobile: 300,
+            tablet: 350,
+            desktop: 400,
+          ),
+          spacing: context.horizontalSpacing,
+        ),
+      ),
+    );
+  }
+
+  /// Header avec titre et sous-titres - Utilise ResponsiveText
+  Widget _buildHeader(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        // Logo/Titre principal avec tailles responsives
+        ResponsiveText(
+          'EcoPlates',
+          fontSize: FontSizes.titleLarge,
           style: TextStyle(
-            fontSize: isVerySmallScreen
-                ? EcoPlatesDesignTokens.typography.subtitleSize(context) *
-                      EcoPlatesDesignTokens.layout.verySmallScreenFactor
-                : EcoPlatesDesignTokens.typography.subtitleSize(context),
-            color: EcoPlatesDesignTokens.colors.textPrimary,
-            fontWeight: EcoPlatesDesignTokens.typography.regular,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            letterSpacing: 1.2,
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: EcoPlatesDesignTokens.spacing.xs),
-        // Instructions
-        Text(
-          'Choisissez votre profil',
+        VerticalGap(multiplier: 0.5),
+        // Sous-titre de bienvenue
+        ResponsiveText(
+          'Bienvenue !',
+          fontSize: FontSizes.subtitleLarge,
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.text(context),
-            color: EcoPlatesDesignTokens.colors.textSecondary,
+            color: Colors.white,
+            fontWeight: FontWeight.normal,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        VerticalGap(multiplier: 0.25),
+        // Instructions
+        ResponsiveText(
+          'Choisissez votre profil',
+          fontSize: FontSizes.bodyMedium,
+          style: TextStyle(
+            color: Colors.white70,
           ),
           textAlign: TextAlign.center,
         ),
@@ -289,50 +169,93 @@ class WelcomeScreen extends ConsumerWidget {
     );
   }
 
-  /// Boutons de sélection du profil
+  /// Boutons de sélection du profil - Utilise ResponsiveButton
   Widget _buildButtons(BuildContext context) {
-    final buttonSpacing = EcoPlatesDesignTokens.spacing.md;
-
-    final horizontalPadding = context.responsiveValue(
-      mobile: EcoPlatesDesignTokens.spacing.lg,
-      tablet: EcoPlatesDesignTokens.radius.none,
-      desktop: EcoPlatesDesignTokens.radius.none,
-    );
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+    return ResponsiveContainer(
+      padding: EdgeInsets.symmetric(
+        horizontal: context.responsive(
+          mobile: 24.0,
+          tablet: 32.0,
+          desktop: 48.0,
+        ),
+      ),
       child: Column(
         children: [
-          // Bouton Merchant
+          // Bouton Merchant avec hauteur responsive
           FractionallySizedBox(
-            widthFactor: EcoPlatesDesignTokens.layout.buttonWidthFactor(
-              context,
-            ),
+            widthFactor: 0.8,
             child: ResponsiveButton(
-              isFullWidth: false,
-              text: 'Merchant',
-              icon: Icons.store,
               onPressed: () {
                 context.go(RouteConstants.merchantStore);
               },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ResponsiveIcon(
+                    Icons.store,
+                    size: context.responsive(
+                      mobile: 20,
+                      tablet: 24,
+                      desktop: 28,
+                    ),
+                  ),
+                  const HorizontalGap(multiplier: 0.5),
+                  ResponsiveText(
+                    'Merchant',
+                    fontSize: FontSizes.buttonMedium,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 
-          SizedBox(height: buttonSpacing),
+          const VerticalGap(),
 
-          // Bouton Consommateur
+          // Bouton Consommateur avec style responsive
           FractionallySizedBox(
-            widthFactor: EcoPlatesDesignTokens.layout.buttonWidthFactor(
-              context,
-            ),
-            child: ResponsiveButton(
-              isFullWidth: false,
-              text: 'Consommateur',
-              icon: Icons.person,
-              variant: ButtonVariant.secondary,
-              onPressed: () {
-                context.go(RouteConstants.consumerDiscover);
-              },
+            widthFactor: 0.8,
+            child: SizedBox(
+              height: context.buttonHeight,
+              child: OutlinedButton(
+                onPressed: () {
+                  context.go(RouteConstants.consumerDiscover);
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.white, width: 2),
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.horizontalSpacing,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(context.borderRadius),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ResponsiveIcon(
+                      Icons.person,
+                      size: context.responsive(
+                        mobile: 20,
+                        tablet: 24,
+                        desktop: 28,
+                      ),
+                    ),
+                    const HorizontalGap(multiplier: 0.5),
+                    ResponsiveText(
+                      'Consommateur',
+                      fontSize: FontSizes.buttonMedium,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -340,41 +263,20 @@ class WelcomeScreen extends ConsumerWidget {
     );
   }
 
-  /// Message informatif en bas
+  /// Message informatif en bas - Utilise ResponsiveConstrainedBox et ResponsiveText
   Widget _buildFooterMessage(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final orientation = MediaQuery.of(context).orientation;
-    final isLandscape = orientation == Orientation.landscape;
-
-    final horizontalPadding = context.responsiveValue(
-      mobile:
-          screenWidth < EcoPlatesDesignTokens.layout.veryNarrowScreenThreshold
-          ? EcoPlatesDesignTokens.spacing.md
-          : EcoPlatesDesignTokens.spacing.xxxl,
-      tablet: isLandscape
-          ? EcoPlatesDesignTokens.spacing.xxxl
-          : EcoPlatesDesignTokens.spacing.xxl,
-      desktop: EcoPlatesDesignTokens.spacing.xxxl,
-      desktopLarge:
-          EcoPlatesDesignTokens.spacing.xxxl *
-          EcoPlatesDesignTokens.layout.extendedSpacingFactor,
-    );
-
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: EcoPlatesDesignTokens.layout.contentContainerMaxWidth(
-          context,
-        ),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-      child: Text(
-        "Les deux options mènent à la même page d'accueil pour le moment",
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: EcoPlatesDesignTokens.typography.hint(context),
-          color: EcoPlatesDesignTokens.colors.textSecondary,
-          fontStyle: FontStyle.italic,
-          height: EcoPlatesDesignTokens.layout.textLineHeight,
+    return ResponsiveConstrainedBox(
+      maxWidth: 600,
+      child: ResponsiveContainer(
+        child: ResponsiveText(
+          "Les deux options mènent à la même page d'accueil pour le moment",
+          fontSize: FontSizes.bodySmall,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontStyle: FontStyle.italic,
+            height: 1.4,
+          ),
         ),
       ),
     );

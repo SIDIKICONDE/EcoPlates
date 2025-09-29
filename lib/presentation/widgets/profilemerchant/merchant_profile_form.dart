@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/enums/merchant_enums.dart';
-import '../../../core/responsive/design_tokens.dart';
 import '../../../data/services/merchant_profile_service.dart';
 import '../../../domain/entities/merchant_profile.dart';
 
@@ -92,57 +91,57 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
     return Form(
       key: _formKey,
       child: ListView(
-        padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+        padding: EdgeInsets.all(16.0),
         children: [
           // Informations générales
           _buildSectionTitle(context, 'Informations générales', colors),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           _buildNameField(),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           _buildCategoryDropdown(colors),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           _buildDescriptionField(),
-          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+          SizedBox(height: 24.0),
 
           // Coordonnées
           _buildSectionTitle(context, 'Coordonnées', colors),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           _buildPhoneField(),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           _buildEmailField(),
-          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+          SizedBox(height: 24.0),
 
           // Adresse
           _buildSectionTitle(context, 'Adresse', colors),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           _buildStreetField(),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: _buildPostalCodeField()),
-              SizedBox(width: context.scaleMD_LG_XL_XXL),
+              SizedBox(width: 16.0),
               Expanded(flex: 2, child: _buildCityField()),
             ],
           ),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           _buildComplementField(),
-          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+          SizedBox(height: 24.0),
 
           // Horaires
           _buildSectionTitle(context, "Horaires d'ouverture", colors),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           _buildOpeningHoursSection(context, colors),
-          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+          SizedBox(height: 24.0),
 
           // Boutons d'action
           _buildActionButtons(context, colors),
@@ -159,9 +158,9 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
     return Text(
       title,
       style: TextStyle(
-        fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-        fontWeight: EcoPlatesDesignTokens.typography.bold,
-        color: colors.primary,
+        fontSize: 16.0,
+        fontWeight: FontWeight.w600,
+        color: colors.onSurface,
       ),
     );
   }
@@ -201,9 +200,9 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
             children: [
               Icon(
                 _getIconForCategory(category),
-                size: EcoPlatesDesignTokens.size.indicator(context),
+                size: 16.0,
               ),
-              SizedBox(width: context.scaleXXS_XS_SM_MD),
+              SizedBox(width: 8.0),
               Text(category.displayName),
             ],
           ),
@@ -341,14 +340,14 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
         final isClosed = hours?.isClosed ?? true;
 
         return Card(
-          margin: EdgeInsets.only(bottom: context.scaleXXS_XS_SM_MD),
+          margin: EdgeInsets.only(bottom: 8.0),
           child: ExpansionTile(
             title: Text(day.displayName),
             subtitle: Text(
               isClosed ? 'Fermé' : hours?.displayFormat ?? 'Non défini',
               style: TextStyle(
                 color: isClosed ? colors.error : Colors.green,
-                fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                fontSize: 16.0,
               ),
             ),
             trailing: Switch(
@@ -369,7 +368,7 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
             children: [
               if (!isClosed)
                 Padding(
-                  padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+                  padding: EdgeInsets.all(16.0),
                   child: _buildDayHoursEditor(context, day, hours!),
                 ),
             ],
@@ -400,7 +399,7 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
                 },
               ),
             ),
-            SizedBox(width: context.scaleMD_LG_XL_XXL),
+            SizedBox(width: 16.0),
             Expanded(
               child: _TimePickerField(
                 widgetContext: context,
@@ -427,7 +426,7 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
           onPressed: _isSaving ? null : () => context.pop(),
           child: const Text('Annuler'),
         ),
-        SizedBox(width: context.scaleMD_LG_XL_XXL),
+        SizedBox(width: 16.0),
         ElevatedButton(
           onPressed: _isSaving ? null : _saveProfile,
           style: ElevatedButton.styleFrom(
@@ -436,12 +435,10 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
           ),
           child: _isSaving
               ? SizedBox(
-                  width: EcoPlatesDesignTokens.size.indicator(context),
-                  height: EcoPlatesDesignTokens.size.indicator(context),
+                  width: 16.0,
+                  height: 16.0,
                   child: CircularProgressIndicator(
-                    strokeWidth: EcoPlatesDesignTokens
-                        .layout
-                        .loadingIndicatorStrokeWidth,
+                    strokeWidth: 2.0,
                   ),
                 )
               : const Text('Enregistrer'),

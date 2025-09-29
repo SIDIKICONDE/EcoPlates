@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/responsive/design_tokens.dart' hide Size;
 import '../../../../domain/entities/food_offer.dart';
 
 /// Widget affichant le contenu textuel d'une carte d'offre
@@ -36,10 +35,10 @@ class OfferCardContent extends StatelessWidget {
       // Version compacte avec tous les éléments demandés
       return Padding(
         padding: EdgeInsets.fromLTRB(
-          context.scaleXXS_XS_SM_MD, // Très réduit pour éviter overflow
-          context.scaleXXS_XS_SM_MD / 2, // Très réduit pour éviter overflow
-          context.scaleXXS_XS_SM_MD, // Très réduit pour éviter overflow
-          context.scaleXXS_XS_SM_MD, // Très réduit pour éviter overflow
+          8.0, // Très réduit pour éviter overflow
+          4.0, // Très réduit pour éviter overflow
+          8.0, // Très réduit pour éviter overflow
+          8.0, // Très réduit pour éviter overflow
         ),
         child: Stack(
           children: [
@@ -49,28 +48,26 @@ class OfferCardContent extends StatelessWidget {
               children: [
                 // Ligne 1 : Nom de l'enseigne
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(child: _buildCompactMerchantName(theme, context)),
                   ],
                 ),
-                SizedBox(height: context.scaleXXS_XS_SM_MD / 8), // Très réduit
+                SizedBox(height: 1.0), // Très réduit
                 // Ligne 2 : Description
                 _buildCompactDescription(context),
-                SizedBox(height: context.scaleXXS_XS_SM_MD / 4), // Très réduit
+                SizedBox(height: 2.0), // Très réduit
                 // Ligne 3 : À récupérer + distance
                 _buildCompactPickupWithDistance(context),
-                SizedBox(height: context.scaleXXS_XS_SM_MD / 4), // Très réduit
+                SizedBox(height: 2.0), // Très réduit
                 // Ligne de séparation en pointillés
                 SizedBox(
-                  height: EcoPlatesDesignTokens.layout.cardBorderWidth,
+                  height: 16.0,
                   child: CustomPaint(
-                    size: const Size(double.infinity, 1),
                     painter: _DottedLinePainter(color: _getLineColor()),
                   ),
                 ),
                 SizedBox(
-                  height: context.scaleXXS_XS_SM_MD / 4,
+                  height: 2.0,
                 ), // Très réduit pour mode compact
                 // Ligne 4 : Prix aligné à droite
                 Row(
@@ -96,10 +93,10 @@ class OfferCardContent extends StatelessWidget {
     // Version normale (inchangée)
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        context.scaleMD_LG_XL_XXL,
-        context.scaleXS_SM_MD_LG,
-        context.scaleMD_LG_XL_XXL,
-        context.scaleMD_LG_XL_XXL,
+        16.0,
+        12.0,
+        16.0,
+        16.0,
       ),
       child: Stack(
         children: [
@@ -109,25 +106,24 @@ class OfferCardContent extends StatelessWidget {
             children: [
               // Section nom du commerçant avec style distinctif
               _buildMerchantName(theme, context),
-              SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+              SizedBox(height: 4.0),
 
               // Section description du produit (tronquée si trop longue)
               _buildDescription(context),
-              SizedBox(height: context.scaleXXS_XS_SM_MD),
+              SizedBox(height: 8.0),
 
               // Section date de récupération
               _buildPickupDate(context),
-              SizedBox(height: context.scaleXXS_XS_SM_MD),
+              SizedBox(height: 8.0),
 
               // Ligne de séparation en pointillés (couleur selon fraîcheur)
               SizedBox(
-                height: EcoPlatesDesignTokens.layout.cardBorderWidth,
+                height: 16.0,
                 child: CustomPaint(
-                  size: const Size(double.infinity, 1),
                   painter: _DottedLinePainter(color: _getLineColor()),
                 ),
               ),
-              SizedBox(height: context.scaleXS_SM_MD_LG),
+              SizedBox(height: 12.0),
 
               // Section prix
               _buildPriceOnly(theme, context),
@@ -138,7 +134,9 @@ class OfferCardContent extends StatelessWidget {
           Positioned(
             top: 0,
             right: 0,
-            child: _FloatingFavoriteButton(),
+            child: _FloatingFavoriteButton(
+              initialIsFavorite: offer.isFavorite,
+            ),
           ),
         ],
       ),
@@ -152,19 +150,17 @@ class OfferCardContent extends StatelessWidget {
     return Text(
       offer.merchantName,
       style: TextStyle(
-        fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
+        fontSize: 16.0,
         color: theme.colorScheme.primary,
-        fontWeight: EcoPlatesDesignTokens.typography.bold,
-        height: EcoPlatesDesignTokens.layout.textLineHeight,
+        fontWeight: FontWeight.w600,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  /// Construit le widget pour afficher la description du produit
-  /// Tronque automatiquement si la description dépasse 20 caractères
-  /// Utilise une hauteur de ligne optimisée pour la lisibilité
+  /// Construit le widget pour la description du produit
+  /// Tronque le texte si trop long pour éviter l'overflow
   Widget _buildDescription(BuildContext context) {
     final truncatedDescription = offer.description.length > 20
         ? '${offer.description.substring(0, 20)}...'
@@ -173,38 +169,29 @@ class OfferCardContent extends StatelessWidget {
     return Text(
       truncatedDescription,
       style: TextStyle(
-        fontSize: EcoPlatesDesignTokens.typography.hint(context),
-        color: Theme.of(context).colorScheme.onSurface.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-        ),
-        height: EcoPlatesDesignTokens.layout.textLineHeight,
+        fontSize: 14.0,
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
       ),
-      maxLines: 1,
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  /// Construit le widget pour afficher la date de récupération
+  /// Construit le widget pour la date de récupération
   Widget _buildPickupDate(BuildContext context) {
     return Text(
       'Récupération: ${_formatPickupTime()}',
       style: TextStyle(
-        fontSize: EcoPlatesDesignTokens.typography.hint(context),
-        color: Theme.of(context).colorScheme.onSurface.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-        ),
-        fontWeight: EcoPlatesDesignTokens.typography.medium,
-        height: EcoPlatesDesignTokens.layout.textLineHeight,
+        fontSize: 12.0,
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
       ),
     );
   }
 
-  /// Construit le widget pour afficher le prix
+  /// Construit le widget pour afficher uniquement le prix
   Widget _buildPriceOnly(ThemeData theme, BuildContext context) {
     return SizedBox(
-      height: EcoPlatesDesignTokens
-          .size
-          .minTouchTarget, // Hauteur fixe pour éviter l'espace blanc
+      height: 44.0, // Hauteur fixe pour éviter l'espace blanc
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -212,25 +199,19 @@ class OfferCardContent extends StatelessWidget {
             Text(
               '€${offer.originalPrice.toStringAsFixed(2)}',
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                fontSize: 14.0,
                 decoration: TextDecoration.lineThrough,
-                color: Theme.of(context).colorScheme.onSurface.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                ),
-                height: EcoPlatesDesignTokens.layout.textLineHeight,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
-            SizedBox(width: context.scaleXS_SM_MD_LG),
+            SizedBox(width: 8.0),
           ],
           Text(
             offer.priceText,
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-              fontWeight: EcoPlatesDesignTokens.typography.bold,
-              color: offer.isFree
-                  ? EcoPlatesDesignTokens.colors.snackbarSuccess
-                  : theme.colorScheme.primary,
-              height: EcoPlatesDesignTokens.layout.textLineHeight,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
             ),
           ),
         ],
@@ -238,9 +219,7 @@ class OfferCardContent extends StatelessWidget {
     );
   }
 
-  /// Formate les horaires de récupération au format HH:MM - HH:MM
-  /// Gère les erreurs en retournant un message par défaut si nécessaire
-  /// Utilise le padding pour garantir un format uniforme (ex: 09:30 - 17:45)
+  /// Formate l'heure de récupération
   String _formatPickupTime() {
     try {
       final start =
@@ -260,21 +239,15 @@ class OfferCardContent extends StatelessWidget {
 
     // Moins de 2 heures = rouge (urgent)
     if (timeUntilEnd.inHours < 2) {
-      return EcoPlatesDesignTokens.colors.snackbarError.withValues(
-        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-      );
+      return Colors.red;
     }
     // Moins de 6 heures = orange (bientôt)
     else if (timeUntilEnd.inHours < 6) {
-      return EcoPlatesDesignTokens.colors.snackbarWarning.withValues(
-        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-      );
+      return Colors.orange;
     }
     // Plus de 6 heures = vert (frais)
     else {
-      return EcoPlatesDesignTokens.colors.snackbarSuccess.withValues(
-        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-      );
+      return Colors.green;
     }
   }
 
@@ -283,19 +256,16 @@ class OfferCardContent extends StatelessWidget {
     return Text(
       offer.merchantName,
       style: TextStyle(
-        fontSize: EcoPlatesDesignTokens.typography.text(
-          context,
-        ), // Réduit pour éviter overflow
+        fontSize: 14.0, // Réduit pour éviter overflow
         color: theme.colorScheme.primary,
-        fontWeight: EcoPlatesDesignTokens.typography.semiBold,
-        height: EcoPlatesDesignTokens.layout.textLineHeight,
+        fontWeight: FontWeight.w600,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  /// Version compacte du prix (avec prix barré)
+  /// Version compacte du prix
   Widget _buildCompactPrice(ThemeData theme, BuildContext context) {
     return Row(
       children: [
@@ -303,27 +273,19 @@ class OfferCardContent extends StatelessWidget {
           Text(
             '€${offer.originalPrice.toStringAsFixed(2)}',
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              fontSize: 12.0,
               decoration: TextDecoration.lineThrough,
-              color: Theme.of(context).colorScheme.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-              ),
-              height: EcoPlatesDesignTokens.layout.textLineHeight,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             ),
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 4.0),
         ],
         Text(
           offer.priceText,
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.text(
-              context,
-            ), // Réduit pour mode compact
-            fontWeight: EcoPlatesDesignTokens.typography.bold,
-            color: offer.isFree
-                ? EcoPlatesDesignTokens.colors.snackbarSuccess
-                : theme.colorScheme.primary,
-            height: EcoPlatesDesignTokens.layout.textLineHeight,
+            fontSize: 14.0, // Réduit pour mode compact
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.primary,
           ),
         ),
       ],
@@ -339,18 +301,15 @@ class OfferCardContent extends StatelessWidget {
     return Text(
       truncatedDescription,
       style: TextStyle(
-        fontSize: EcoPlatesDesignTokens.typography.hint(context),
-        color: Theme.of(context).colorScheme.onSurface.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-        ),
-        height: EcoPlatesDesignTokens.layout.textLineHeight,
+        fontSize: 12.0,
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  /// Version compacte "À récupérer" avec distance et horaires
+  /// Version compacte pour pickup avec distance
   Widget _buildCompactPickupWithDistance(BuildContext context) {
     final pickupText = _getSmartPickupText();
     final timeText = _formatPickupTime();
@@ -361,18 +320,15 @@ class OfferCardContent extends StatelessWidget {
     return Text(
       '$pickupText • $timeText$distanceText',
       style: TextStyle(
-        fontSize: EcoPlatesDesignTokens.typography.hint(context),
-        color: Theme.of(context).colorScheme.onSurface.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-        ),
-        height: EcoPlatesDesignTokens.layout.textLineHeight,
+        fontSize: 10.0,
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  /// Génère un texte intelligent selon l'horaire de récupération
+  /// Génère un texte intelligent pour la récupération
   String _getSmartPickupText() {
     final now = DateTime.now();
     final startTime = offer.pickupStartTime;
@@ -462,10 +418,10 @@ class _FloatingFavoriteButtonState extends State<_FloatingFavoriteButton>
     super.initState();
     _isFavorite = widget.initialIsFavorite;
     _controller = AnimationController(
-      duration: EcoPlatesDesignTokens.animation.normal,
+      duration: Duration(milliseconds: 200),
       vsync: this,
     );
-    _scale = Tween<double>(begin: 1.0, end: 1.25).animate(
+    _scale = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(
         parent: _controller,
         curve: Curves.easeOutBack,
@@ -493,20 +449,18 @@ class _FloatingFavoriteButtonState extends State<_FloatingFavoriteButton>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return GestureDetector(
       onTap: _onTap,
       child: ScaleTransition(
         scale: _scale,
         child: Container(
-          padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+          padding: EdgeInsets.all(8.0),
           decoration: const BoxDecoration(
             color: Colors.transparent,
             shape: BoxShape.circle,
           ),
           child: AnimatedSwitcher(
-            duration: EcoPlatesDesignTokens.animation.fast,
+            duration: Duration(milliseconds: 200),
             transitionBuilder: (child, animation) => ScaleTransition(
               scale: animation,
               child: child,
@@ -514,12 +468,8 @@ class _FloatingFavoriteButtonState extends State<_FloatingFavoriteButton>
             child: Icon(
               _isFavorite ? Icons.favorite : Icons.favorite_border,
               key: ValueKey<bool>(_isFavorite),
-              size:
-                  EcoPlatesDesignTokens.size.modalIcon(context) *
-                  EcoPlatesDesignTokens.size.largeIconMultiplier,
-              color: _isFavorite
-                  ? theme.colorScheme.error
-                  : theme.colorScheme.primary,
+              size: 24.0,
+              color: _isFavorite ? Colors.red : Colors.white,
             ),
           ),
         ),
@@ -528,22 +478,23 @@ class _FloatingFavoriteButtonState extends State<_FloatingFavoriteButton>
   }
 }
 
-/// Painter pour dessiner une ligne en pointillés
+/// Painter pour dessiner les lignes en pointillés
 class _DottedLinePainter extends CustomPainter {
-  _DottedLinePainter({required this.color});
+  const _DottedLinePainter({required this.color});
+
   final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
-      ..strokeWidth = EcoPlatesDesignTokens.layout.cardBorderWidth;
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
 
-    const double dashWidth = 5;
-    const double dashSpace = 5;
+    final dashWidth = 4.0;
+    final dashSpace = 4.0;
     double startX = 0;
 
-    // Dessiner les pointillés
     while (startX < size.width) {
       canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
       startX += dashWidth + dashSpace;

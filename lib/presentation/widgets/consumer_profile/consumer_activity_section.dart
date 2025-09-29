@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-import '../../../core/responsive/responsive.dart';
 import '../../../core/themes/tokens/color_tokens.dart';
-import '../../../core/themes/tokens/spacing_tokens.dart';
 
 /// Section d'activité récente du consommateur
 class ConsumerActivitySection extends StatelessWidget {
@@ -20,28 +17,18 @@ class ConsumerActivitySection extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: EcoSpacing.md,
-          tablet: EcoSpacing.lg,
-          desktop: EcoSpacing.xl,
-        ),
+        16.0,
       ),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(
-          context.responsiveValue(
-            mobile: EcoPlatesDesignTokens.radius.md,
-            tablet: EcoPlatesDesignTokens.radius.lg,
-            desktop: EcoPlatesDesignTokens.radius.xl,
-          ),
-        ),
+        borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
             color: colors.shadow.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              alpha: 0.08,
             ),
-            blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            blurRadius: 8.0,
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -54,20 +41,10 @@ class ConsumerActivitySection extends StatelessWidget {
               Icon(
                 Icons.history,
                 color: colors.primary,
-                size: context.responsiveValue(
-                  mobile: context.scaleIconStandard,
-                  tablet:
-                      context.scaleIconStandard * 1.2, // 20% larger on tablet
-                  desktop:
-                      context.scaleIconStandard * 1.4, // 40% larger on desktop
-                ),
+                size: 24.0,
               ),
               SizedBox(
-                width: context.responsiveValue(
-                  mobile: EcoSpacing.xs,
-                  tablet: EcoSpacing.sm,
-                  desktop: EcoSpacing.md,
-                ),
+                width: 8.0,
               ),
               Text(
                 'Activité Récente',
@@ -84,11 +61,7 @@ class ConsumerActivitySection extends StatelessWidget {
           ),
 
           SizedBox(
-            height: context.responsiveValue(
-              mobile: EcoSpacing.md,
-              tablet: EcoSpacing.lg,
-              desktop: EcoSpacing.xl,
-            ),
+            height: 16.0,
           ),
 
           // Liste des activités
@@ -98,15 +71,9 @@ class ConsumerActivitySection extends StatelessWidget {
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: activities.length > DesignConstants.five.toInt()
-                  ? DesignConstants.five.toInt()
-                  : activities.length,
+              itemCount: activities.length > 5 ? 5 : activities.length,
               separatorBuilder: (context, index) => SizedBox(
-                height: context.responsiveValue(
-                  mobile: EcoSpacing.sm,
-                  tablet: EcoSpacing.md,
-                  desktop: EcoSpacing.lg,
-                ),
+                height: 12.0,
               ),
               itemBuilder: (context, index) {
                 final activity = activities[index];
@@ -125,26 +92,16 @@ class ConsumerActivitySection extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: EcoSpacing.md,
-          tablet: EcoSpacing.lg,
-          desktop: EcoSpacing.xl,
-        ),
+        16.0,
       ),
       decoration: BoxDecoration(
         color: activity.color.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+          alpha: 0.08,
         ),
-        borderRadius: BorderRadius.circular(
-          context.responsiveValue(
-            mobile: EcoPlatesDesignTokens.radius.sm,
-            tablet: EcoPlatesDesignTokens.radius.md,
-            desktop: EcoPlatesDesignTokens.radius.lg,
-          ),
-        ),
+        borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
           color: activity.color.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+            alpha: 0.08,
           ),
         ),
       ),
@@ -153,43 +110,23 @@ class ConsumerActivitySection extends StatelessWidget {
           // Icône d'activité
           Container(
             padding: EdgeInsets.all(
-              context.responsiveValue(
-                mobile: EcoSpacing.xs,
-                tablet: EcoSpacing.sm,
-                desktop: EcoSpacing.md,
-              ),
+              8.0,
             ),
             decoration: BoxDecoration(
               color: activity.color.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+                alpha: 0.08,
               ),
-              borderRadius: BorderRadius.circular(
-                context.responsiveValue(
-                  mobile: EcoPlatesDesignTokens.radius.xs,
-                  tablet: EcoPlatesDesignTokens.radius.sm,
-                  desktop: EcoPlatesDesignTokens.radius.md,
-                ),
-              ),
+              borderRadius: BorderRadius.circular(6.0),
             ),
             child: Icon(
               activity.icon,
               color: activity.color,
-              size: context.responsiveValue(
-                mobile:
-                    context.scaleIconStandard * 0.9, // 10% smaller on mobile
-                tablet: context.scaleIconStandard,
-                desktop:
-                    context.scaleIconStandard * 1.1, // 10% larger on desktop
-              ),
+              size: 24.0,
             ),
           ),
 
           SizedBox(
-            width: context.responsiveValue(
-              mobile: EcoSpacing.sm,
-              tablet: EcoSpacing.md,
-              desktop: EcoSpacing.lg,
-            ),
+            width: 12.0,
           ),
 
           // Contenu
@@ -204,17 +141,13 @@ class ConsumerActivitySection extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: context.responsiveValue(
-                    mobile: DesignConstants.one,
-                    tablet: DesignConstants.two,
-                    desktop: DesignConstants.three,
-                  ),
+                  height: 2.0,
                 ),
                 Text(
                   activity.subtitle,
                   style: textTheme.bodySmall?.copyWith(
                     color: colors.onSurface.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                      alpha: 0.87,
                     ),
                   ),
                 ),
@@ -230,40 +163,22 @@ class ConsumerActivitySection extends StatelessWidget {
                 activity.timeAgo,
                 style: textTheme.labelSmall?.copyWith(
                   color: colors.onSurface.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.disabled,
+                    alpha: 0.38,
                   ),
                 ),
               ),
               if (activity.badge != null) ...[
                 SizedBox(
-                  height: context.responsiveValue(
-                    mobile: DesignConstants.two,
-                    tablet: DesignConstants.four,
-                    desktop: DesignConstants.six,
-                  ),
+                  height: 4.0,
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: context.responsiveValue(
-                      mobile: EcoSpacing.xs,
-                      tablet: EcoSpacing.sm,
-                      desktop: EcoSpacing.md,
-                    ),
-                    vertical: context.responsiveValue(
-                      mobile: DesignConstants.one,
-                      tablet: DesignConstants.two,
-                      desktop: DesignConstants.three,
-                    ),
+                    horizontal: 8.0,
+                    vertical: 2.0,
                   ),
                   decoration: BoxDecoration(
                     color: activity.color,
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveValue(
-                        mobile: EcoPlatesDesignTokens.radius.sm,
-                        tablet: EcoPlatesDesignTokens.radius.md,
-                        desktop: EcoPlatesDesignTokens.radius.lg,
-                      ),
-                    ),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: Text(
                     activity.badge!,
@@ -287,57 +202,35 @@ class ConsumerActivitySection extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Container(
-      padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: EcoSpacing.xxl,
-          tablet: EcoSpacing.xxxl,
-          desktop: EcoSpacing.huge,
-        ),
-      ),
+      padding: EdgeInsets.all(32.0),
       child: Column(
         children: [
           Icon(
             Icons.eco_outlined,
-            size: context.responsiveValue(
-              mobile: EcoPlatesDesignTokens.size.minTouchTarget,
-              tablet:
-                  EcoPlatesDesignTokens.size.minTouchTarget *
-                  1.17, // ~17% larger on tablet
-              desktop:
-                  EcoPlatesDesignTokens.size.minTouchTarget *
-                  1.33, // ~33% larger on desktop
-            ),
+            size: 48.0,
             color: colors.onSurface.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.subtle,
+              alpha: 0.38,
             ),
           ),
           SizedBox(
-            height: context.responsiveValue(
-              mobile: EcoSpacing.md,
-              tablet: EcoSpacing.lg,
-              desktop: EcoSpacing.xl,
-            ),
+            height: 16.0,
           ),
           Text(
             'Aucune activité pour le moment',
             style: textTheme.titleMedium?.copyWith(
               color: colors.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                alpha: 0.87,
               ),
             ),
           ),
           SizedBox(
-            height: context.responsiveValue(
-              mobile: EcoSpacing.xs,
-              tablet: EcoSpacing.sm,
-              desktop: EcoSpacing.md,
-            ),
+            height: 8.0,
           ),
           Text(
             'Commencez à utiliser EcoPlates pour voir votre impact ici !',
             style: textTheme.bodySmall?.copyWith(
               color: colors.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.disabled,
+                alpha: 0.38,
               ),
             ),
             textAlign: TextAlign.center,

@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../core/enums/merchant_enums.dart';
-import '../../core/responsive/design_tokens.dart';
 import '../../data/services/merchant_profile_service.dart';
 import '../../domain/entities/merchant_profile.dart';
 import '../widgets/profilemerchant/merchant_contact_info.dart';
@@ -67,9 +66,7 @@ class MerchantProfilePage extends ConsumerWidget {
         await ref.read(merchantProfileProvider.notifier).refresh();
       },
       child: ListView(
-        padding: EdgeInsets.all(
-          EcoPlatesDesignTokens.spacing.dialogGap(context),
-        ),
+        padding: const EdgeInsets.all(16.0),
         children: [
           // En-tête du profil
           MerchantProfileHeader(
@@ -77,20 +74,20 @@ class MerchantProfilePage extends ConsumerWidget {
             onEditPhoto: () => _showPhotoOptions(context, ref),
             onEditProfile: () => _showEditForm(context, profile),
           ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          SizedBox(height: 16.0),
 
           // Informations de contact
           MerchantContactInfo(profile: profile),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          SizedBox(height: 16.0),
 
           // Horaires d'ouverture
           MerchantOpeningHours(profile: profile),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          SizedBox(height: 16.0),
 
           // Actions supplémentaires
           _buildAdditionalActions(context, ref, profile),
           SizedBox(
-            height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+            height: 16.0,
           ),
         ],
       ),
@@ -103,38 +100,27 @@ class MerchantProfilePage extends ConsumerWidget {
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(
-          EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-        ),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.person_outline,
-              size: EcoPlatesDesignTokens.layout.emptyStateIconSize,
-              color: colors.onSurfaceVariant.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.emptyStateIconOpacity,
-              ),
+              size: 64.0,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-            ),
+            const SizedBox(height: 16.0),
             Text(
               'Aucun profil trouvé',
               style: theme.textTheme.headlineSmall,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-            ),
+            const SizedBox(height: 16.0),
             Text(
               'Créez votre profil pour commencer',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colors.onSurfaceVariant,
               ),
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-            ),
+            const SizedBox(height: 16.0),
             ElevatedButton.icon(
               onPressed: () => _createNewProfile(context, ref),
               icon: const Icon(Icons.add),
@@ -142,11 +128,9 @@ class MerchantProfilePage extends ConsumerWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primary,
                 foregroundColor: colors.onPrimary,
-                padding: EdgeInsets.symmetric(
-                  horizontal: EcoPlatesDesignTokens.spacing.sectionSpacing(
-                    context,
-                  ),
-                  vertical: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 12.0,
                 ),
               ),
             ),
@@ -166,27 +150,21 @@ class MerchantProfilePage extends ConsumerWidget {
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(
-          EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-        ),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.error_outline,
-              size: EcoPlatesDesignTokens.layout.errorViewIconSize,
+              size: 48.0,
               color: colors.error,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-            ),
+            const SizedBox(height: 16.0),
             Text(
               'Erreur de chargement',
               style: theme.textTheme.headlineSmall,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-            ),
+            const SizedBox(height: 8.0),
             Text(
               error.toString(),
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -194,9 +172,7 @@ class MerchantProfilePage extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-            ),
+            const SizedBox(height: 24.0),
             ElevatedButton.icon(
               onPressed: () {
                 unawaited(ref.read(merchantProfileProvider.notifier).refresh());
@@ -219,21 +195,14 @@ class MerchantProfilePage extends ConsumerWidget {
     final colors = theme.colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(
-          EcoPlatesDesignTokens.radius.lg,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(
+          color: colors.outline.withOpacity(0.1),
+          width: 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: colors.shadow.withValues(
-              alpha: EcoPlatesDesignTokens.layout.actionCardShadowOpacity,
-            ),
-            blurRadius: EcoPlatesDesignTokens.layout.actionCardShadowBlurRadius,
-            offset: EcoPlatesDesignTokens.layout.actionCardShadowOffset,
-          ),
-        ],
       ),
       child: Column(
         children: [
@@ -321,45 +290,33 @@ class MerchantProfilePage extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize:
-            EcoPlatesDesignTokens.layout.profileEditModalInitialSize,
-        minChildSize: EcoPlatesDesignTokens.layout.profileEditModalMinSize,
-        maxChildSize: EcoPlatesDesignTokens.layout.profileEditModalMaxSize,
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
         builder: (context, scrollController) => Container(
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(
-                EcoPlatesDesignTokens.radius.xl,
-              ),
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(16.0),
             ),
           ),
           child: Column(
             children: [
-              // Poignée
+              // Indicateur de glissement
               Container(
-                margin: EdgeInsets.only(
-                  top: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-                ),
-                width: EcoPlatesDesignTokens.layout.modalHandleWidth,
-                height: EcoPlatesDesignTokens.layout.modalHandleHeight,
+                margin: const EdgeInsets.only(top: 8.0),
+                width: 40.0,
+                height: 4.0,
                 decoration: BoxDecoration(
-                  color:
-                      Theme.of(
-                        context,
-                      ).colorScheme.outline.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-                      ),
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.xs,
-                  ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurfaceVariant.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2.0),
                 ),
               ),
               // Titre
               Padding(
-                padding: EdgeInsets.all(
-                  EcoPlatesDesignTokens.spacing.dialogGap(context),
-                ),
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -377,14 +334,11 @@ class MerchantProfilePage extends ConsumerWidget {
                   ],
                 ),
               ),
-              Divider(height: EcoPlatesDesignTokens.dividerHeight),
+              const Divider(height: 1.0),
               // Formulaire
               Expanded(
                 child: MerchantProfileForm(
                   profile: profile,
-                  onSaved: () {
-                    // Le formulaire gère déjà la fermeture
-                  },
                 ),
               ),
             ],
@@ -402,9 +356,9 @@ class MerchantProfilePage extends ConsumerWidget {
       showModalBottomSheet<void>(
         context: context,
         backgroundColor: colors.surface,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(EcoPlatesDesignTokens.radius.xl),
+            top: Radius.circular(16.0),
           ),
         ),
         builder: (context) => SafeArea(
@@ -486,11 +440,10 @@ class MerchantProfilePage extends ConsumerWidget {
     try {
       final image = await picker.pickImage(
         source: source,
-        maxWidth: EcoPlatesDesignTokens.layout.imageMaxWidth,
-        maxHeight: EcoPlatesDesignTokens.layout.imageMaxHeight,
-        imageQuality: EcoPlatesDesignTokens.layout.imageQuality,
+        maxWidth: 1024.0,
+        maxHeight: 1024.0,
+        imageQuality: 85,
       );
-
       if (image != null) {
         await ref.read(merchantProfileProvider.notifier).uploadLogo(image.path);
         if (context.mounted) {

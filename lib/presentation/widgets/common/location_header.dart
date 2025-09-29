@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/router/routes/route_constants.dart';
 import '../../providers/browse_view_provider.dart';
 import '../../providers/location_state_provider.dart';
@@ -49,13 +48,13 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
               ? Theme.of(context).colorScheme.surfaceContainerHighest
               : Colors.transparent,
           borderRadius: BorderRadius.circular(
-            EcoPlatesDesignTokens.radius.md,
+            12.0,
           ),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: context.scaleMD_LG_XL_XXL,
-            vertical: context.scaleXS_SM_MD_LG,
+            horizontal: 16.0,
+            vertical: 8.0,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -65,12 +64,12 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                   locationState.isActive
                       ? Icons.location_on
                       : Icons.location_off,
-                  size: context.scaleIconStandard,
+                  size: 20.0,
                   color: locationState.isActive
                       ? theme.primaryColor
-                      : Colors.grey,
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
-                SizedBox(width: context.scaleSM_MD_LG_XL),
+                SizedBox(width: 12.0),
               ],
 
               Flexible(
@@ -84,16 +83,13 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                           style:
                               widget.style ??
                               theme.textTheme.titleMedium?.copyWith(
-                                fontWeight:
-                                    EcoPlatesDesignTokens.typography.semiBold,
+                                fontWeight: FontWeight.w600,
                                 color: locationState.isActive
                                     ? Theme.of(context).colorScheme.onSurface
                                     : Theme.of(
                                         context,
                                       ).colorScheme.onSurface.withValues(
-                                        alpha: EcoPlatesDesignTokens
-                                            .opacity
-                                            .almostOpaque,
+                                        alpha: 0.8,
                                       ),
                               ),
                           maxLines: 1,
@@ -102,24 +98,24 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                 ),
               ),
 
-              SizedBox(width: context.scaleSM_MD_LG_XL),
+              SizedBox(width: 12.0),
               Text(
                 'emplacement choisi',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 14.0,
                   color: Theme.of(context).colorScheme.onSurface.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                    alpha: 0.6,
                   ),
-                  fontWeight: EcoPlatesDesignTokens.typography.regular,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
 
-              SizedBox(width: context.scaleXXS_XS_SM_MD),
+              SizedBox(width: 8.0),
               Icon(
                 Icons.arrow_drop_down,
-                size: context.scaleIconStandard,
+                size: 20.0,
                 color: Theme.of(context).colorScheme.onSurface.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                  alpha: 0.6,
                 ),
               ),
             ],
@@ -134,25 +130,25 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: context.scaleSM_MD_LG_XL,
-          height: context.scaleSM_MD_LG_XL,
+          width: 12.0,
+          height: 12.0,
           child: CircularProgressIndicator(
-            strokeWidth: DesignConstants.two,
+            strokeWidth: 2.0,
             valueColor: AlwaysStoppedAnimation<Color>(
               Theme.of(context).colorScheme.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                alpha: 0.6,
               ),
             ),
           ),
         ),
-        SizedBox(width: context.scaleSM_MD_LG_XL),
+        SizedBox(width: 12.0),
         Text(
           'Recherche...',
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+              alpha: 0.6,
             ),
-            fontWeight: EcoPlatesDesignTokens.typography.medium,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],
@@ -195,12 +191,10 @@ class LocationOptionsSheet extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Container(
-      margin: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+      margin: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(
-          EcoPlatesDesignTokens.radius.xxl,
-        ),
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: SafeArea(
         child: Column(
@@ -208,18 +202,16 @@ class LocationOptionsSheet extends ConsumerWidget {
           children: [
             // Poignée
             Container(
-              margin: EdgeInsets.only(top: context.scaleMD_LG_XL_XXL),
-              width: context.scaleLG_XL_XXL_XXXL,
-              height: DesignConstants.four,
+              margin: const EdgeInsets.only(top: 16.0),
+              width: 40.0,
+              height: 4.0,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(
-                  DesignConstants.two,
-                ),
+                color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2.0),
               ),
             ),
 
-            SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+            const SizedBox(height: 16.0),
 
             // Titre
             Text(
@@ -229,12 +221,12 @@ class LocationOptionsSheet extends ConsumerWidget {
               ),
             ),
 
-            SizedBox(height: context.scaleXS_SM_MD_LG),
+            SizedBox(height: 8.0),
 
             // Adresse actuelle
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.scaleLG_XL_XXL_XXXL,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
               ),
               child: Text(
                 locationText.address,
@@ -243,7 +235,7 @@ class LocationOptionsSheet extends ConsumerWidget {
               ),
             ),
 
-            SizedBox(height: context.scaleLG_XL_XXL_XXXL * 1.5),
+            SizedBox(height: 24.0 * 1.5),
 
             // Options
             _buildOption(
@@ -299,7 +291,7 @@ class LocationOptionsSheet extends ConsumerWidget {
               },
             ),
 
-            SizedBox(height: context.scaleXS_SM_MD_LG),
+            SizedBox(height: 8.0),
           ],
         ),
       ),
@@ -320,8 +312,8 @@ class LocationOptionsSheet extends ConsumerWidget {
         onTap: enabled ? onTap : null,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: context.scaleLG_XL_XXL_XXXL,
-            vertical: context.scaleMD_LG_XL_XXL,
+            horizontal: 24.0,
+            vertical: 16.0,
           ),
           child: Row(
             children: [
@@ -329,14 +321,14 @@ class LocationOptionsSheet extends ConsumerWidget {
                 icon,
                 color: enabled
                     ? Theme.of(context).colorScheme.onSurface.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                        alpha: 0.8,
                       )
                     : Theme.of(context).colorScheme.onSurface.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                        alpha: 0.6,
                       ),
-                size: context.scaleLG_XL_XXL_XXXL,
+                size: 24.0,
               ),
-              SizedBox(width: context.scaleMD_LG_XL_XXL),
+              SizedBox(width: 16.0),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,33 +336,26 @@ class LocationOptionsSheet extends ConsumerWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                          context,
-                        ),
-                        fontWeight: EcoPlatesDesignTokens.typography.medium,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
                         color: enabled
                             ? Theme.of(context).colorScheme.onSurface
                             : Theme.of(
                                 context,
                               ).colorScheme.onSurface.withValues(
-                                alpha: EcoPlatesDesignTokens
-                                    .opacity
-                                    .veryTransparent,
+                                alpha: 0.6,
                               ),
                       ),
                     ),
                     if (subtitle != null) ...[
-                      SizedBox(height: context.scaleXXS_XS_SM_MD),
+                      SizedBox(height: 8.0),
                       Text(
                         subtitle,
                         style: TextStyle(
-                          fontSize: EcoPlatesDesignTokens.typography.hint(
-                            context,
-                          ),
+                          fontSize: 14.0,
                           color: Theme.of(context).colorScheme.onSurface
                               .withValues(
-                                alpha:
-                                    EcoPlatesDesignTokens.opacity.almostOpaque,
+                                alpha: 0.6,
                               ),
                         ),
                       ),

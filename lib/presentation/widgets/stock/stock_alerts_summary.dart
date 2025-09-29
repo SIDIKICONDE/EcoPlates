@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Widget affichant un résumé des alertes de stock
@@ -21,20 +20,16 @@ class StockAlertsSummary extends ConsumerWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: context.scaleMD_LG_XL_XXL,
-        vertical: context.scaleSM_MD_LG_XL,
+        horizontal: 20.0,
+        vertical: 12.0,
       ),
-      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+      padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest.withValues(
-          alpha: DesignConstants.opacitySubtle,
+          alpha: 0.15,
         ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: DesignConstants.opacitySubtle,
-          ),
-          width: DesignConstants.zeroPointFive,
+        borderRadius: BorderRadius.circular(
+          16.0,
         ),
       ),
       child: Column(
@@ -44,27 +39,25 @@ class StockAlertsSummary extends ConsumerWidget {
             children: [
               Icon(
                 Icons.notifications_active_outlined,
-                size: context.scaleIconStandard,
+                size: 24.0,
                 color: theme.colorScheme.primary,
               ),
-              SizedBox(width: context.scaleSM_MD_LG_XL),
+              SizedBox(width: 12.0),
               Text(
                 'Alertes de stock',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                    context,
-                  ),
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
             ],
           ),
-          SizedBox(height: context.scaleXS_SM_MD_LG),
+          SizedBox(height: 12.0),
 
           Wrap(
-            spacing: context.scaleXS_SM_MD_LG,
-            runSpacing: context.scaleSM_MD_LG_XL,
+            spacing: 12.0,
+            runSpacing: 8.0,
             children: [
               if (outOfStockItems.isNotEmpty)
                 _buildAlertChip(
@@ -106,15 +99,13 @@ class StockAlertsSummary extends ConsumerWidget {
   }) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: context.scaleXS_SM_MD_LG,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 12.0,
+        vertical: 6.0,
       ),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: DesignConstants.opacityVeryTransparent),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xxl),
-        border: Border.all(
-          color: color.withValues(alpha: DesignConstants.opacitySubtle),
-          width: DesignConstants.zeroPointFive,
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(
+          16.0,
         ),
       ),
       child: Row(
@@ -122,25 +113,25 @@ class StockAlertsSummary extends ConsumerWidget {
         children: [
           Icon(
             icon,
-            size: context.scaleIconStandard,
+            size: 20.0,
             color: color,
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 6.0),
           Text(
             '$count',
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.modalContent(context),
+              fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 6.0),
           Text(
             label,
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              fontSize: 16.0,
               color: color.withValues(
-                alpha: DesignConstants.opacityAlmostOpaque,
+                alpha: 0.85,
               ),
             ),
           ),

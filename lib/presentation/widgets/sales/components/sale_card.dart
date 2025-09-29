@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/categories.dart';
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/sale.dart';
 import '../../../providers/sales_provider.dart';
 import '../../qr_code/qr_code_display_widget.dart';
@@ -26,12 +25,12 @@ class SaleCard extends ConsumerWidget {
 
     return InkWell(
       onTap: () => _showSaleDetails(context, ref),
-      borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+      borderRadius: BorderRadius.circular(16.0),
       child: Container(
-        padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+        padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+          borderRadius: BorderRadius.circular(16.0),
           border: Border.all(color: theme.colorScheme.outlineVariant),
         ),
         child: Column(
@@ -52,15 +51,15 @@ class SaleCard extends ConsumerWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: context.scaleXXS_XS_SM_MD),
+                      SizedBox(height: 4.0),
                       Row(
                         children: [
                           Icon(
                             Icons.access_time,
-                            size: EcoPlatesDesignTokens.size.indicator(context),
+                            size: 16.0,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
-                          SizedBox(width: context.scaleXXS_XS_SM_MD),
+                          SizedBox(width: 4.0),
                           Text(
                             _formatTime(sale.createdAt),
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -75,33 +74,29 @@ class SaleCard extends ConsumerWidget {
                 // Statut
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: context.scaleXS_SM_MD_LG,
-                    vertical: context.scaleXXS_XS_SM_MD,
+                    horizontal: 8.0,
+                    vertical: 4.0,
                   ),
                   decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(
-                      EcoPlatesDesignTokens.radius.xxl,
-                    ),
+                    color: statusColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(24.0),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        width: EcoPlatesDesignTokens.layout.statusDotSize,
-                        height: EcoPlatesDesignTokens.layout.statusDotSize,
+                        width: 8.0,
+                        height: 8.0,
                         decoration: BoxDecoration(
                           color: statusColor,
                           shape: BoxShape.circle,
                         ),
                       ),
-                      SizedBox(width: context.scaleXXS_XS_SM_MD),
+                      SizedBox(width: 4.0),
                       Text(
                         sale.status.label,
                         style: TextStyle(
-                          fontSize: EcoPlatesDesignTokens.typography.hint(
-                            context,
-                          ),
+                          fontSize: 12.0,
                           color: statusColor,
                           fontWeight: FontWeight.w500,
                         ),
@@ -112,20 +107,20 @@ class SaleCard extends ConsumerWidget {
               ],
             ),
 
-            SizedBox(height: context.scaleSM_MD_LG_XL),
+            SizedBox(height: 12.0),
 
             // Articles
             ...sale.items.map(
               (item) => Padding(
-                padding: EdgeInsets.only(bottom: context.scaleXXS_XS_SM_MD),
+                padding: EdgeInsets.only(bottom: 4.0),
                 child: Row(
                   children: [
                     Icon(
                       Categories.iconOf(item.category),
-                      size: EcoPlatesDesignTokens.size.icon(context),
+                      size: 16.0,
                       color: Categories.colorOf(item.category),
                     ),
-                    SizedBox(width: context.scaleXXS_XS_SM_MD),
+                    SizedBox(width: 8.0),
                     Expanded(
                       child: Text(
                         '${item.quantity}x ${item.offerTitle}',
@@ -143,7 +138,7 @@ class SaleCard extends ConsumerWidget {
               ),
             ),
 
-            Divider(height: context.scaleSM_MD_LG_XL),
+            Divider(height: 12.0),
 
             // Footer avec prix et actions
             Row(
@@ -174,9 +169,7 @@ class SaleCard extends ConsumerWidget {
                       Text(
                         'Économie: ${sale.discountAmount.toStringAsFixed(2)}€ (${sale.savingsPercentage.toStringAsFixed(0)}%)',
                         style: TextStyle(
-                          fontSize: EcoPlatesDesignTokens.typography.hint(
-                            context,
-                          ),
+                          fontSize: 12.0,
                           color: Colors.green[700],
                           fontWeight: FontWeight.w500,
                         ),
@@ -197,7 +190,7 @@ class SaleCard extends ConsumerWidget {
                                 ? Icons.qr_code_scanner
                                 : Icons.qr_code,
                           ),
-                          iconSize: EcoPlatesDesignTokens.size.icon(context),
+                          iconSize: 20.0,
                           tooltip: sale.secureQrEnabled
                               ? 'QR Code Sécurisé'
                               : 'Voir QR Code',
@@ -264,17 +257,17 @@ class SaleCard extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 200,
-                height: 200,
+                width: 200.0,
+                height: 200.0,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: const Center(
-                  child: Icon(Icons.qr_code, size: 150, color: Colors.grey),
+                  child: Icon(Icons.qr_code, size: 150.0, color: Colors.grey),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 16.0),
               Text(
                 _sale.qrCode ?? 'QR Code',
                 style: const TextStyle(
@@ -302,10 +295,10 @@ class SaleCard extends ConsumerWidget {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (context) => Container(
-          margin: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+          margin: EdgeInsets.all(16.0),
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
           ),
           child: DraggableScrollableSheet(
             initialChildSize: 0.8,
@@ -316,37 +309,35 @@ class SaleCard extends ConsumerWidget {
               children: [
                 // Handle
                 Container(
-                  margin: EdgeInsets.only(top: context.scaleXXS_XS_SM_MD),
-                  width: 40,
-                  height: 4,
+                  margin: EdgeInsets.only(top: 8.0),
+                  width: 40.0,
+                  height: 4.0,
                   decoration: BoxDecoration(
                     color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(2.0),
                   ),
                 ),
                 // Content
                 Expanded(
                   child: SingleChildScrollView(
                     controller: scrollController,
-                    padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+                    padding: EdgeInsets.all(16.0),
                     child: Column(
                       children: [
                         QRCodeDisplayWidget(
                           orderId: _sale.id,
-                          size: 250,
+                          size: 250.0,
                           onExpired: () {
                             // Vibration ou notification si disponible
                           },
                         ),
-                        SizedBox(height: context.scaleMD_LG_XL_XXL),
+                        SizedBox(height: 16.0),
                         // Informations de sécurité
                         Container(
-                          padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+                          padding: EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
                             color: Colors.green[50],
-                            borderRadius: BorderRadius.circular(
-                              EcoPlatesDesignTokens.radius.md,
-                            ),
+                            borderRadius: BorderRadius.circular(12.0),
                             border: Border.all(color: Colors.green),
                           ),
                           child: Row(
@@ -354,9 +345,9 @@ class SaleCard extends ConsumerWidget {
                               const Icon(
                                 Icons.security,
                                 color: Colors.green,
-                                size: 32,
+                                size: 24.0,
                               ),
-                              SizedBox(width: context.scaleXS_SM_MD_LG),
+                              SizedBox(width: 12.0),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,14 +357,13 @@ class SaleCard extends ConsumerWidget {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.green,
+                                        fontSize: 16.0,
                                       ),
                                     ),
                                     Text(
                                       "Ce code ne peut être utilisé qu'une seule fois",
                                       style: TextStyle(
-                                        fontSize: EcoPlatesDesignTokens
-                                            .typography
-                                            .hint(context),
+                                        fontSize: 14.0,
                                         color: Colors.green[700],
                                       ),
                                     ),
@@ -401,9 +391,9 @@ class SaleCard extends ConsumerWidget {
           .read(salesProvider.notifier)
           .updateSaleStatus(_sale.id, SaleStatus.confirmed),
     );
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Vente confirmée')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Vente confirmée')),
+    );
   }
 
   void _collectSale(BuildContext context, WidgetRef ref) {

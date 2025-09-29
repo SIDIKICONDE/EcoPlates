@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../pages/stock_item_form/page.dart';
 import 'stock_alert_badge.dart';
@@ -51,30 +50,16 @@ class StockListItem extends StatelessWidget {
         Container(
           margin: EdgeInsets.symmetric(
             horizontal: dense
-                ? (compactMode
-                      ? context.scaleXXS_XS_SM_MD
-                      : context.scaleXS_SM_MD_LG)
-                : (compactMode
-                      ? context.scaleXS_SM_MD_LG
-                      : context.scaleSM_MD_LG_XL),
+                ? (compactMode ? 4.0 : 8.0)
+                : (compactMode ? 8.0 : 12.0),
             vertical: dense
-                ? (compactMode
-                      ? context.scaleXXS_XS_SM_MD / 2
-                      : context.scaleXXS_XS_SM_MD)
-                : (compactMode
-                      ? context.scaleXXS_XS_SM_MD
-                      : context.scaleXS_SM_MD_LG),
+                ? (compactMode ? 2.0 : 4.0)
+                : (compactMode ? 4.0 : 8.0),
           ),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(
-              dense
-                  ? (compactMode
-                        ? EcoPlatesDesignTokens.radius.sm
-                        : EcoPlatesDesignTokens.radius.md)
-                  : (compactMode
-                        ? EcoPlatesDesignTokens.radius.md
-                        : EcoPlatesDesignTokens.radius.lg),
+              dense ? (compactMode ? 8.0 : 12.0) : (compactMode ? 12.0 : 16.0),
             ),
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.1),
@@ -82,30 +67,18 @@ class StockListItem extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-                ),
+                color: theme.colorScheme.shadow.withValues(alpha: 0.1),
                 blurRadius: dense
-                    ? (compactMode
-                          ? EcoPlatesDesignTokens.elevation.smallBlur
-                          : EcoPlatesDesignTokens.elevation.mediumBlur)
-                    : (compactMode
-                          ? EcoPlatesDesignTokens.elevation.mediumBlur
-                          : EcoPlatesDesignTokens.elevation.largeBlur),
-                offset: EcoPlatesDesignTokens.elevation.standardOffset,
+                    ? (compactMode ? 2.0 : 4.0)
+                    : (compactMode ? 4.0 : 8.0),
+                offset: const Offset(0, 1),
               ),
               BoxShadow(
-                color: theme.colorScheme.shadow.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-                ),
+                color: theme.colorScheme.shadow.withValues(alpha: 0.01),
                 blurRadius: dense
-                    ? (compactMode
-                          ? EcoPlatesDesignTokens.elevation.mediumBlur
-                          : EcoPlatesDesignTokens.elevation.largeBlur)
-                    : (compactMode
-                          ? EcoPlatesDesignTokens.elevation.largeBlur
-                          : EcoPlatesDesignTokens.elevation.largeBlur * 2),
-                offset: EcoPlatesDesignTokens.elevation.elevatedOffset,
+                    ? (compactMode ? 4.0 : 8.0)
+                    : (compactMode ? 8.0 : 16.0),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -114,9 +87,7 @@ class StockListItem extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               borderRadius: BorderRadius.circular(
-                compactMode
-                    ? EcoPlatesDesignTokens.radius.md
-                    : EcoPlatesDesignTokens.radius.lg,
+                compactMode ? 12.0 : 16.0,
               ),
               child: AnimatedContainer(
                 duration: showAnimations
@@ -125,12 +96,8 @@ class StockListItem extends StatelessWidget {
                 curve: Curves.easeInOut,
                 padding: EdgeInsets.all(
                   dense
-                      ? (compactMode
-                            ? context.scaleXS_SM_MD_LG
-                            : context.scaleSM_MD_LG_XL)
-                      : (compactMode
-                            ? context.scaleSM_MD_LG_XL
-                            : context.scaleMD_LG_XL_XXL),
+                      ? (compactMode ? 3.0 : 6.0)
+                      : (compactMode ? 6.0 : 10.0),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,12 +107,8 @@ class StockListItem extends StatelessWidget {
 
                     SizedBox(
                       width: dense
-                          ? (compactMode
-                                ? context.scaleXXS_XS_SM_MD
-                                : context.scaleXS_SM_MD_LG)
-                          : (compactMode
-                                ? context.scaleXXS_XS_SM_MD
-                                : context.scaleXS_SM_MD_LG),
+                          ? (compactMode ? 2.0 : 3.0)
+                          : (compactMode ? 2.0 : 3.0),
                     ),
 
                     // Contrôles (quantité et statut)
@@ -162,26 +125,12 @@ class StockListItem extends StatelessWidget {
 
   Widget _buildItemInfo(BuildContext context, ThemeData theme) {
     final fontSize = dense
-        ? (compactMode
-              ? EcoPlatesDesignTokens.typography.hint(context)
-              : EcoPlatesDesignTokens.typography.text(context))
-        : (compactMode
-              ? EcoPlatesDesignTokens.typography.text(context)
-              : EcoPlatesDesignTokens.typography.titleSize(context));
+        ? (compactMode ? 11.0 : 13.0)
+        : (compactMode ? 13.0 : 18.0);
     final smallFontSize = dense
-        ? (compactMode
-              ? EcoPlatesDesignTokens.typography.hint(context) - 2
-              : EcoPlatesDesignTokens.typography.hint(context))
-        : (compactMode
-              ? EcoPlatesDesignTokens.typography.hint(context)
-              : EcoPlatesDesignTokens.typography.text(context));
-    final spacing = dense
-        ? (compactMode
-              ? context.scaleXXS_XS_SM_MD / 4
-              : context.scaleXXS_XS_SM_MD / 2)
-        : (compactMode
-              ? context.scaleXXS_XS_SM_MD / 2
-              : context.scaleXXS_XS_SM_MD);
+        ? (compactMode ? 11.0 - 2 : 11.0)
+        : (compactMode ? 11.0 : 13.0);
+    const spacing = 6.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,12 +159,8 @@ class StockListItem extends StatelessWidget {
             // Badge d'alerte avec animation
             SizedBox(
               width: dense
-                  ? (compactMode
-                        ? context.scaleXXS_XS_SM_MD / 2
-                        : context.scaleXXS_XS_SM_MD)
-                  : (compactMode
-                        ? context.scaleXXS_XS_SM_MD
-                        : context.scaleXS_SM_MD_LG),
+                  ? (compactMode ? 2.0 / 2 : 2.0)
+                  : (compactMode ? 2.0 : 3.0),
             ),
             AnimatedScale(
               scale: showAnimations ? 1.0 : 0.8,
@@ -235,31 +180,21 @@ class StockListItem extends StatelessWidget {
 
         // SKU et catégorie avec amélioration visuelle
         Wrap(
-          spacing: compactMode
-              ? context.scaleXXS_XS_SM_MD
-              : context.scaleXS_SM_MD_LG,
-          runSpacing: compactMode
-              ? context.scaleXXS_XS_SM_MD
-              : context.scaleXXS_XS_SM_MD,
+          spacing: compactMode ? 2.0 : 3.0,
+          runSpacing: compactMode ? 2.0 : 2.0,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: compactMode
-                    ? context.scaleXXS_XS_SM_MD
-                    : context.scaleXXS_XS_SM_MD,
-                vertical: compactMode
-                    ? context.scaleXXS_XS_SM_MD / 4
-                    : context.scaleXXS_XS_SM_MD / 2,
+                horizontal: compactMode ? 2.0 : 2.0,
+                vertical: compactMode ? 2.0 / 4 : 2.0 / 2,
               ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
+                  alpha: 0.3,
                 ),
                 borderRadius: BorderRadius.circular(
-                  compactMode
-                      ? EcoPlatesDesignTokens.radius.xs
-                      : EcoPlatesDesignTokens.radius.sm,
+                  compactMode ? 4.0 : 8.0,
                 ),
               ),
               child: Text(
@@ -276,27 +211,21 @@ class StockListItem extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: compactMode
-                    ? context.scaleXXS_XS_SM_MD
-                    : context.scaleXS_SM_MD_LG,
-                vertical: compactMode
-                    ? context.scaleXXS_XS_SM_MD / 2
-                    : context.scaleXXS_XS_SM_MD / 4 * 3,
+                horizontal: compactMode ? 2.0 : 3.0,
+                vertical: compactMode ? 2.0 / 2 : 2.0 / 4 * 3,
               ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                  alpha: 0.1,
                 ),
                 borderRadius: BorderRadius.circular(
-                  compactMode
-                      ? EcoPlatesDesignTokens.radius.sm
-                      : EcoPlatesDesignTokens.radius.md,
+                  compactMode ? 8.0 : 12.0,
                 ),
                 border: Border.all(
                   color: theme.colorScheme.primary.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                    alpha: 0.1,
                   ),
-                  width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+                  width: 0.25,
                 ),
               ),
               child: Text(
@@ -313,44 +242,26 @@ class StockListItem extends StatelessWidget {
           ],
         ),
 
-        SizedBox(
-          height: dense
-              ? (compactMode
-                    ? context.scaleXXS_XS_SM_MD / 2
-                    : context.scaleXXS_XS_SM_MD)
-              : (compactMode
-                    ? context.scaleXXS_XS_SM_MD
-                    : context.scaleXS_SM_MD_LG),
-        ),
+        SizedBox(height: 6.0),
 
         // Prix et dernière mise à jour avec amélioration
         Wrap(
-          spacing: compactMode
-              ? context.scaleXS_SM_MD_LG
-              : context.scaleSM_MD_LG_XL,
-          runSpacing: compactMode
-              ? context.scaleXXS_XS_SM_MD
-              : context.scaleXXS_XS_SM_MD,
+          spacing: compactMode ? 3.0 : 6.0,
+          runSpacing: compactMode ? 2.0 : 2.0,
           crossAxisAlignment: WrapCrossAlignment.center,
           alignment: WrapAlignment.spaceBetween,
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: compactMode
-                    ? context.scaleXXS_XS_SM_MD
-                    : context.scaleXS_SM_MD_LG,
-                vertical: compactMode
-                    ? context.scaleXXS_XS_SM_MD / 2
-                    : context.scaleXXS_XS_SM_MD,
+                horizontal: compactMode ? 2.0 : 3.0,
+                vertical: compactMode ? 2.0 / 2 : 2.0,
               ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.secondaryContainer.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
+                  alpha: 0.3,
                 ),
                 borderRadius: BorderRadius.circular(
-                  compactMode
-                      ? EcoPlatesDesignTokens.radius.sm
-                      : EcoPlatesDesignTokens.radius.md,
+                  compactMode ? 8.0 : 12.0,
                 ),
               ),
               child: Row(
@@ -359,26 +270,20 @@ class StockListItem extends StatelessWidget {
                   Text(
                     item.formattedPrice,
                     style: TextStyle(
-                      fontSize: compactMode
-                          ? EcoPlatesDesignTokens.typography.hint(context)
-                          : EcoPlatesDesignTokens.typography.text(context),
+                      fontSize: compactMode ? 11.0 : 13.0,
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.onSecondaryContainer,
                     ),
                   ),
                   SizedBox(
-                    width: compactMode
-                        ? context.scaleXXS_XS_SM_MD / 2
-                        : context.scaleXXS_XS_SM_MD,
+                    width: compactMode ? 2.0 / 2 : 2.0,
                   ),
                   Text(
                     '/ ${item.unit}',
                     style: TextStyle(
-                      fontSize: compactMode
-                          ? EcoPlatesDesignTokens.typography.hint(context) - 2
-                          : EcoPlatesDesignTokens.typography.hint(context),
+                      fontSize: compactMode ? 11.0 - 2 : 11.0,
                       color: theme.colorScheme.onSecondaryContainer.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                        alpha: 0.9,
                       ),
                     ),
                   ),
@@ -391,17 +296,13 @@ class StockListItem extends StatelessWidget {
               children: [
                 Icon(
                   Icons.update,
-                  size: compactMode
-                      ? EcoPlatesDesignTokens.size.indicator(context)
-                      : EcoPlatesDesignTokens.size.icon(context),
+                  size: compactMode ? 6.0 : 18.0,
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                    alpha: 0.9,
                   ),
                 ),
                 SizedBox(
-                  width: compactMode
-                      ? context.scaleXXS_XS_SM_MD / 2
-                      : context.scaleXXS_XS_SM_MD,
+                  width: compactMode ? 2.0 / 2 : 2.0,
                 ),
                 Text(
                   _formatLastUpdate(item.updatedAt),
@@ -421,47 +322,31 @@ class StockListItem extends StatelessWidget {
 
         // Description optionnelle avec animation
         if (item.description?.isNotEmpty ?? false) ...[
-          SizedBox(
-            height: dense
-                ? (compactMode
-                      ? context.scaleXXS_XS_SM_MD / 2
-                      : context.scaleXXS_XS_SM_MD / 4 * 5)
-                : (compactMode
-                      ? context.scaleXXS_XS_SM_MD
-                      : context.scaleXXS_XS_SM_MD / 4 * 6),
-          ),
+          SizedBox(height: 6.0),
           AnimatedOpacity(
-            opacity: showAnimations
-                ? EcoPlatesDesignTokens.opacity.almostOpaque
-                : 1.0,
+            opacity: showAnimations ? 0.9 : 1.0,
             duration: showAnimations
                 ? const Duration(milliseconds: 400)
                 : Duration.zero,
             child: Container(
               padding: EdgeInsets.all(
-                compactMode
-                    ? context.scaleXXS_XS_SM_MD
-                    : context.scaleXS_SM_MD_LG,
+                compactMode ? 2.0 : 3.0,
               ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                  alpha: 0.1,
                 ),
                 borderRadius: BorderRadius.circular(
-                  compactMode
-                      ? EcoPlatesDesignTokens.radius.sm
-                      : EcoPlatesDesignTokens.radius.md,
+                  compactMode ? 8.0 : 12.0,
                 ),
               ),
               child: Text(
                 item.description!,
                 style: TextStyle(
-                  fontSize: compactMode
-                      ? EcoPlatesDesignTokens.typography.hint(context)
-                      : EcoPlatesDesignTokens.typography.text(context),
+                  fontSize: compactMode ? 11.0 : 13.0,
                   color: theme.colorScheme.onSurfaceVariant,
                   fontStyle: FontStyle.italic,
-                  height: EcoPlatesDesignTokens.layout.textLineHeight,
+                  height: 1.4,
                 ),
                 maxLines: compactMode ? 1 : 2,
                 overflow: TextOverflow.ellipsis,
@@ -487,12 +372,8 @@ class StockListItem extends StatelessWidget {
             icon: Icon(
               Icons.edit_outlined,
               size: dense
-                  ? (compactMode
-                        ? EcoPlatesDesignTokens.size.icon(context) - 4
-                        : EcoPlatesDesignTokens.size.icon(context) - 2)
-                  : (compactMode
-                        ? EcoPlatesDesignTokens.size.icon(context) - 2
-                        : EcoPlatesDesignTokens.size.icon(context)),
+                  ? (compactMode ? 18.0 - 4 : 18.0 - 2)
+                  : (compactMode ? 18.0 - 2 : 18.0),
               color: theme.colorScheme.primary,
             ),
             onPressed: () {
@@ -508,34 +389,22 @@ class StockListItem extends StatelessWidget {
             tooltip: 'Modifier',
             constraints: BoxConstraints(
               minWidth: dense
-                  ? (compactMode
-                        ? EcoPlatesDesignTokens.size.minTouchTarget / 2
-                        : EcoPlatesDesignTokens.size.minTouchTarget / 4 * 3)
-                  : (compactMode
-                        ? EcoPlatesDesignTokens.size.minTouchTarget / 4 * 3
-                        : EcoPlatesDesignTokens.size.minTouchTarget),
+                  ? (compactMode ? 48.0 / 2 : 48.0 / 4 * 3)
+                  : (compactMode ? 48.0 / 4 * 3 : 48.0),
               minHeight: dense
-                  ? (compactMode
-                        ? EcoPlatesDesignTokens.size.minTouchTarget / 2
-                        : EcoPlatesDesignTokens.size.minTouchTarget / 4 * 3)
-                  : (compactMode
-                        ? EcoPlatesDesignTokens.size.minTouchTarget / 4 * 3
-                        : EcoPlatesDesignTokens.size.minTouchTarget),
+                  ? (compactMode ? 48.0 / 2 : 48.0 / 4 * 3)
+                  : (compactMode ? 48.0 / 4 * 3 : 48.0),
             ),
             style: IconButton.styleFrom(
               backgroundColor: theme.colorScheme.primary.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+                alpha: 0.1,
               ),
               foregroundColor: theme.colorScheme.primary,
             ),
           ),
         ),
 
-        SizedBox(
-          height: compactMode
-              ? context.scaleXXS_XS_SM_MD
-              : context.scaleXS_SM_MD_LG,
-        ),
+        SizedBox(height: 6.0),
 
         // Toggle statut sans animation
         StockStatusToggle(
@@ -544,11 +413,7 @@ class StockListItem extends StatelessWidget {
           showLabel: !compactMode,
         ),
 
-        SizedBox(
-          height: compactMode
-              ? context.scaleXS_SM_MD_LG
-              : context.scaleSM_MD_LG_XL,
-        ),
+        SizedBox(height: 6.0),
 
         // Ajusteur de quantité avec animation
         AnimatedScale(

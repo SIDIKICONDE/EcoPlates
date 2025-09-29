@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/router/routes/route_constants.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/store_offers_provider.dart';
 import '../widgets/store/global_promotion_dialog.dart';
 import '../widgets/store/store_filter_chips.dart';
 import '../widgets/store/store_offers_grid.dart';
-import '../widgets/store/store_search_bar.dart';
 
 /// Page principale de gestion de la boutique pour les marchands
 ///
@@ -70,8 +68,7 @@ class MerchantStorePage extends ConsumerWidget {
       leading: const _MerchantLogo(),
       title: Row(
         children: [
-          Icon(Icons.storefront, size: EcoPlatesDesignTokens.errorIconSize),
-          SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
+          Icon(Icons.storefront, size: 16),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -84,7 +81,7 @@ class MerchantStorePage extends ConsumerWidget {
                   Text(
                     '$offersCount actives${inactiveOffersCount > 0 ? ' • $inactiveOffersCount inactives' : ''}${promotionsCount > 0 ? ' • $promotionsCount promo' : ''}',
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                      fontSize: 16,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -212,15 +209,13 @@ class MerchantStorePage extends ConsumerWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(
-                    EcoPlatesDesignTokens.spacing.dialogGap(context),
+                    16,
                   ),
                   child: Text(
                     'Trier les offres par',
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.modalTitle(
-                        context,
-                      ),
-                      fontWeight: EcoPlatesDesignTokens.typography.title,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -377,28 +372,27 @@ class _StoreHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(
-        EcoPlatesDesignTokens.spacing.microGap(context),
-        EcoPlatesDesignTokens.spacing.microGap(context),
-        EcoPlatesDesignTokens.spacing.microGap(context),
-        EcoPlatesDesignTokens.spacing.microGap(context),
+        16,
+        16,
+        16,
+        16,
       ),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
             color: Colors.black12,
-            width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+            width: 1,
           ),
         ),
       ),
       child: Column(
-        children: [
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
           // Barre de recherche
-          const StoreSearchBar(),
-
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          SizedBox(height: 16),
 
           // Chips de filtrage
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: StoreFilterChips(),
           ),
@@ -420,17 +414,16 @@ class _MerchantLogo extends StatelessWidget {
         'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center';
 
     return Container(
-      margin: EdgeInsets.all(EcoPlatesDesignTokens.spacing.microGap(context)),
+      margin: EdgeInsets.all(16),
       child: CircleAvatar(
-        radius: EcoPlatesDesignTokens.radius.lg,
-        backgroundColor: theme.colorScheme.surface,
-        backgroundImage: const NetworkImage(merchantLogoUrl),
+        backgroundImage: NetworkImage(merchantLogoUrl),
+        radius: 16,
         onBackgroundImageError: (_, _) {
           // Fallback si l'image ne charge pas
         },
         child: Icon(
           Icons.store,
-          size: EcoPlatesDesignTokens.layout.loadingIndicatorSize,
+          size: 16,
           color: theme.colorScheme.onSurfaceVariant,
         ),
       ),

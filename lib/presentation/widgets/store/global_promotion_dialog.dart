@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/services/promotion_service.dart';
 import '../../providers/store_offers_provider.dart';
 
@@ -34,14 +33,12 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return AlertDialog(
       title: Row(
-        children: [
-          Icon(Icons.local_offer, color: theme.colorScheme.primary),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
-          const Text('Promotion globale'),
+        children: const [
+          Icon(Icons.local_offer, color: Colors.blue),
+          SizedBox(width: 8.0),
+          Text('Promotion globale'),
         ],
       ),
       content: Form(
@@ -53,11 +50,12 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
             children: [
               Text(
                 'Appliquer une réduction sur toutes vos offres actives',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: Colors.grey.shade600,
                 ),
               ),
-              SizedBox(height: context.scaleMD_LG_XL_XXL),
+              SizedBox(height: 16.0),
 
               // Pourcentage de réduction
               TextFormField(
@@ -80,7 +78,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                   return null;
                 },
               ),
-              SizedBox(height: context.scaleSM_MD_LG_XL),
+              SizedBox(height: 12.0),
 
               // Prix minimum (optionnel)
               TextFormField(
@@ -102,7 +100,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                   return null;
                 },
               ),
-              SizedBox(height: context.scaleSM_MD_LG_XL),
+              SizedBox(height: 12.0),
 
               // Dates de début et fin
               Row(
@@ -117,7 +115,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                       },
                     ),
                   ),
-                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                  SizedBox(width: 8.0),
                   Expanded(
                     child: _buildDateField(
                       context: context,
@@ -131,29 +129,27 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                 ],
               ),
 
-              SizedBox(height: context.scaleMD_LG_XL_XXL),
+              SizedBox(height: 16.0),
 
               // Résumé
               Container(
-                padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+                padding: EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.subtle,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.sm,
-                  ),
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Résumé de la promotion',
-                      style: theme.textTheme.titleSmall?.copyWith(
+                      style: TextStyle(
+                        fontSize: 16.0,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: context.scaleXXS_XS_SM_MD),
+                    SizedBox(height: 8.0),
                     _buildSummaryItem(
                       'Réduction',
                       '${_discountController.text.isEmpty ? "0" : _discountController.text}%',
@@ -183,8 +179,8 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
           onPressed: _isLoading ? null : _applyPromotion,
           child: _isLoading
               ? SizedBox(
-                  width: EcoPlatesDesignTokens.size.icon(context),
-                  height: EcoPlatesDesignTokens.size.icon(context),
+                  width: 16.0,
+                  height: 16.0,
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
                   ),
@@ -221,7 +217,10 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
         ),
         child: Text(
           '${date.day}/${date.month}/${date.year}',
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: TextStyle(
+            fontSize: 14.0,
+            color: Colors.black87,
+          ),
         ),
       ),
     );
@@ -229,21 +228,24 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
 
   Widget _buildSummaryItem(String label, String value) {
     return Padding(
-      padding: EdgeInsets.only(bottom: context.scaleXXS_XS_SM_MD / 2),
+      padding: EdgeInsets.only(bottom: 4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Colors.grey.shade600,
             ),
           ),
           Text(
             value,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
           ),
         ],
       ),

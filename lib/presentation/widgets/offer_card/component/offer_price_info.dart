@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
-
 /// Widget affichant les informations de prix de l'offre
 class OfferPriceInfo extends StatelessWidget {
   const OfferPriceInfo({
@@ -24,23 +22,19 @@ class OfferPriceInfo extends StatelessWidget {
           Text(
             '€${originalPrice.toStringAsFixed(2)}',
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
+              fontSize: 14.0,
               decoration: TextDecoration.lineThrough,
-              color: Theme.of(context).colorScheme.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-              ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             ),
           ),
-          SizedBox(width: context.scaleXS_SM_MD_LG),
+          SizedBox(width: 8.0),
         ],
         Text(
           priceText,
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-            fontWeight: EcoPlatesDesignTokens.typography.bold,
-            color: isFree
-                ? EcoPlatesDesignTokens.colors.snackbarSuccess
-                : primaryColor,
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: isFree ? Colors.green : primaryColor,
           ),
         ),
       ],

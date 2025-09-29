@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/analytics_stats.dart';
 import '../../providers/analytics_provider.dart';
 
@@ -24,34 +23,31 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
         Row(
           children: [
             Container(
-              padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+              padding: EdgeInsets.all(4.0),
               decoration: BoxDecoration(
                 color: theme.colorScheme.tertiaryContainer.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                ),
-                borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.sm,
+                  alpha: 0.1,
                 ),
               ),
               child: Icon(
                 Icons.calendar_view_day,
-                size: context.scaleIconStandard,
+                size: 20.0,
                 color: theme.colorScheme.tertiary,
               ),
             ),
-            SizedBox(width: context.scaleSM_MD_LG_XL),
+            SizedBox(width: 12.0),
             Text(
               "Période d'analyse",
               style: theme.textTheme.titleSmall?.copyWith(
                 color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w700,
-                letterSpacing: DesignConstants.zeroPointFive / 2.5,
+                letterSpacing: 0.2,
               ),
             ),
           ],
         ),
 
-        SizedBox(height: context.scaleMD_LG_XL_XXL),
+        SizedBox(height: 16.0),
 
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -60,19 +56,19 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
               final isSelected = period == selectedPeriod;
 
               return Padding(
-                padding: EdgeInsets.only(right: context.scaleMD_LG_XL_XXL),
+                padding: EdgeInsets.only(right: 16.0),
                 child: ChoiceChip(
                   label: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         _getPeriodIcon(period),
-                        size: EcoPlatesDesignTokens.size.icon(context) * 0.875,
+                        size: 16.0 * 0.875,
                         color: isSelected
                             ? theme.colorScheme.onPrimary
                             : theme.colorScheme.onSurfaceVariant,
                       ),
-                      SizedBox(width: context.scaleXXS_XS_SM_MD),
+                      SizedBox(width: 4.0),
                       Text(period.shortLabel),
                     ],
                   ),
@@ -84,91 +80,57 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
                   },
                   selectedColor: _getPeriodColor(period, theme),
                   backgroundColor: theme.colorScheme.surface.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
-                  ),
-                  side: BorderSide(
-                    color: isSelected
-                        ? _getPeriodColor(period, theme)
-                        : theme.colorScheme.outline.withValues(
-                            alpha: EcoPlatesDesignTokens.opacity.disabled,
-                          ),
-                    width: isSelected ? 2 : 1,
-                  ),
-                  labelStyle: TextStyle(
-                    color: isSelected
-                        ? Colors.white
-                        : theme.colorScheme.onSurface,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                    alpha: 0.1,
                   ),
                   showCheckmark: false,
-                  pressElevation: EcoPlatesDesignTokens.elevation.button(
-                    context,
-                  ),
-                  elevation: isSelected
-                      ? EcoPlatesDesignTokens.elevation.card
-                      : 0,
-                  shadowColor: isSelected
-                      ? _getPeriodColor(period, theme).withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.subtle,
-                        )
-                      : theme.colorScheme.shadow.withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-                        ),
+                  pressElevation: 16.0,
+                  elevation: isSelected ? 8.0 : 0.0,
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   visualDensity: const VisualDensity(
                     horizontal: VisualDensity.minimumDensity,
                     vertical: VisualDensity.minimumDensity,
                   ),
-                  padding: EcoPlatesDesignTokens.spacing.contentPadding(
-                    context,
-                  ),
+                  padding: EdgeInsets.all(16.0),
                 ),
               );
             }).toList(),
           ),
         ),
 
-        SizedBox(height: context.scaleXXS_XS_SM_MD),
+        SizedBox(height: 4.0),
 
         // Sous-titre avec description de la période sélectionnée
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: context.scaleMD_LG_XL_XXL,
-            vertical: context.scaleXXS_XS_SM_MD,
+            horizontal: 16.0,
+            vertical: 4.0,
           ),
           decoration: BoxDecoration(
             color: _getPeriodColor(
               selectedPeriod,
               theme,
-            ).withValues(alpha: EcoPlatesDesignTokens.opacity.verySubtle),
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.md,
-            ),
+            ).withValues(alpha: 0.1),
             border: Border.all(
               color: _getPeriodColor(
                 selectedPeriod,
                 theme,
-              ).withValues(alpha: EcoPlatesDesignTokens.opacity.verySubtle),
+              ).withValues(alpha: 0.3),
             ),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                _getPeriodIcon(selectedPeriod),
-                size: EcoPlatesDesignTokens.size.icon(context) * 0.875,
+                Icons.info_outline,
+                size: 14.0,
                 color: _getPeriodColor(selectedPeriod, theme),
               ),
-              SizedBox(width: context.scaleSM_MD_LG_XL),
+              SizedBox(width: 12.0),
               Text(
                 _getPeriodDescription(selectedPeriod),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                    alpha: 0.8,
                   ),
-                  fontSize:
-                      EcoPlatesDesignTokens.typography.hint(context) * 0.916,
                   fontWeight: FontWeight.w500,
                 ),
               ),

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Barre de recherche avancée pour filtrer les articles de stock
@@ -89,36 +88,31 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
     final theme = Theme.of(context);
 
     return Container(
-      height: EcoPlatesDesignTokens.size.minTouchTarget,
+      height: 48.0,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
         border: Border.all(
           color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+            alpha: 16.0,
           ),
         ),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: TextField(
         controller: _controller,
         onChanged: _onSearchChanged,
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontSize: EcoPlatesDesignTokens.typography.text(context),
-          ),
           prefixIcon: Icon(
             Icons.search,
             color: theme.colorScheme.onSurfaceVariant,
-            size: EcoPlatesDesignTokens.size.icon(context),
+            size: 20.0,
           ),
           suffixIcon: _controller.text.isNotEmpty
               ? IconButton(
                   icon: Icon(
                     Icons.clear,
                     color: theme.colorScheme.onSurfaceVariant,
-                    size: EcoPlatesDesignTokens.size.icon(context),
+                    size: 20.0,
                   ),
                   onPressed: _clearSearch,
                   tooltip: 'Effacer la recherche',
@@ -127,14 +121,14 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: context.scaleXS_SM_MD_LG,
-            vertical: context.scaleXXS_XS_SM_MD,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 12.0,
           ),
         ),
         style: TextStyle(
-          color: Colors.black,
-          fontSize: EcoPlatesDesignTokens.typography.text(context),
+          color: theme.colorScheme.onSurface,
+          fontSize: 16.0,
           height: 1.2,
         ),
         textInputAction: TextInputAction.search,

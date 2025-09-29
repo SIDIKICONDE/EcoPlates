@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/services/image_cache_service.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import 'category_helper.dart';
@@ -33,9 +32,7 @@ class CardBackground extends StatelessWidget {
                         : Theme.of(context).colorScheme.surfaceContainerLowest,
                     child: Center(
                       child: CircularProgressIndicator(
-                        strokeWidth: EcoPlatesDesignTokens
-                            .layout
-                            .loadingIndicatorStrokeWidth,
+                        strokeWidth: 3.0,
                       ),
                     ),
                   ),
@@ -47,23 +44,17 @@ class CardBackground extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               colors: [
-                EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                ),
-                EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                ),
+                Colors.black.withOpacity(0.3),
+                Colors.black.withOpacity(0.2),
                 Colors.transparent,
                 Colors.transparent,
                 Colors.transparent,
-                EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                ),
+                Colors.black.withOpacity(0.4),
               ],
-              stops: EcoPlatesDesignTokens.layout.analyticsGradientStops,
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
+              stops: const [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
             ),
           ),
         ),
@@ -78,19 +69,33 @@ class CardBackground extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            color,
-            color.withValues(alpha: EcoPlatesDesignTokens.opacity.almostOpaque),
-          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
+          colors: [
+            color.withOpacity(0.8),
+            color.withOpacity(0.6),
+          ],
         ),
       ),
-      child: Icon(
-        icon,
-        size: EcoPlatesDesignTokens.size.modalIcon(context),
-        color: Colors.white.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.subtle,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 48.0,
+              color: Colors.white.withOpacity(0.8),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              category,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
     );

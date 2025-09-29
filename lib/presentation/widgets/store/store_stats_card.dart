@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../providers/store_offers_provider.dart';
 
 /// Carte affichant les statistiques rapides de la boutique
@@ -15,8 +14,8 @@ class StoreStatsCard extends ConsumerWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: context.scaleMD_LG_XL_XXL,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 16,
+        vertical: 8,
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -24,24 +23,20 @@ class StoreStatsCard extends ConsumerWidget {
           end: Alignment.bottomRight,
           colors: [
             theme.colorScheme.primaryContainer,
-            theme.colorScheme.primaryContainer.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-            ),
+            theme.colorScheme.primaryContainer.withOpacity(0.6),
           ],
         ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-            ),
-            blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            color: theme.colorScheme.primary.withOpacity(0.1),
+            blurRadius: 8,
+            offset: Offset(0, 4),
           ),
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
             // Titre
@@ -51,7 +46,7 @@ class StoreStatsCard extends ConsumerWidget {
                   Icons.analytics,
                   color: theme.colorScheme.onPrimaryContainer,
                 ),
-                SizedBox(width: context.scaleXXS_XS_SM_MD),
+                SizedBox(width: 8),
                 Text(
                   "Vue d'ensemble",
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -63,14 +58,15 @@ class StoreStatsCard extends ConsumerWidget {
                 Text(
                   "Aujourd'hui",
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                    color: theme.colorScheme.onPrimaryContainer.withOpacity(
+                      0.7,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: context.scaleXXS_XS_SM_MD),
+
+            SizedBox(height: 16),
 
             // Statistiques principales
             Row(
@@ -103,36 +99,31 @@ class StoreStatsCard extends ConsumerWidget {
             ),
 
             if (stats.lowStockCount > 0) ...[
-              SizedBox(height: context.scaleXXS_XS_SM_MD),
+              SizedBox(height: 8),
               // Alerte stock faible
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.scaleXXS_XS_SM_MD,
-                  vertical: context.scaleXXS_XS_SM_MD / 2,
+                  horizontal: 12,
+                  vertical: 6,
                 ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.xs,
-                  ),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       Icons.warning,
-                      size: EcoPlatesDesignTokens.size.indicator(context),
+                      size: 16,
                       color: theme.colorScheme.onErrorContainer,
                     ),
-                    SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
+                    SizedBox(width: 4),
                     Text(
                       '${stats.lowStockCount} stock faible',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onErrorContainer,
                         fontWeight: FontWeight.w500,
-                        fontSize: EcoPlatesDesignTokens.typography.hint(
-                          context,
-                        ),
                       ),
                     ),
                   ],
@@ -141,15 +132,12 @@ class StoreStatsCard extends ConsumerWidget {
             ],
 
             if (stats.averageDiscount > 0) ...[
-              SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+              SizedBox(height: 4),
               // Réduction moyenne
               Text(
                 'Réduction moy. : ${stats.averageDiscount.toStringAsFixed(0)}%',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                  ),
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  color: theme.colorScheme.onPrimaryContainer.withOpacity(0.7),
                 ),
               ),
             ],
@@ -181,35 +169,29 @@ class _StatItem extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD / 2),
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-            ),
-            shape: BoxShape.circle,
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
             icon,
-            size: EcoPlatesDesignTokens.size.icon(context),
             color: color,
+            size: 24,
           ),
         ),
-        SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+        SizedBox(height: 4),
         Text(
           value,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onPrimaryContainer,
-            fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
           ),
         ),
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onPrimaryContainer.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-            ),
-            fontSize: EcoPlatesDesignTokens.typography.hint(context) - 2,
+            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.7),
           ),
           textAlign: TextAlign.center,
         ),

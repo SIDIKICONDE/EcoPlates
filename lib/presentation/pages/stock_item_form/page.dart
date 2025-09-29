@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 import '../../widgets/stock/stock_threshold_field.dart';
@@ -113,14 +112,14 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Veuillez sélectionner une catégorie'),
-          backgroundColor: EcoPlatesDesignTokens.colors.snackbarWarning,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
     }
 
-    // En mode édition, si aucun changement, on retourne simplement
-    if (isEditMode && !_hasChanges && _selectedStatus == _originalStatus) {
+    // En mode édition, si pas de changement, juste fermer
+    if (isEditMode && !_hasChanges) {
       context.pop();
       return;
     }
@@ -154,13 +153,13 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Article "${_nameController.text}" mis à jour'),
-              backgroundColor: EcoPlatesDesignTokens.colors.snackbarSuccess,
-              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green.shade700,
             ),
           );
+          context.pop();
         }
       } else {
-        // Mode création : ajouter un nouvel article
+        // Mode création : créer un nouvel article
         await ref
             .read(stockItemsProvider.notifier)
             .createItem(
@@ -185,15 +184,11 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
               content: Text(
                 'Article "${_nameController.text}" ajouté avec succès',
               ),
-              backgroundColor: EcoPlatesDesignTokens.colors.snackbarSuccess,
-              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green.shade700,
             ),
           );
+          context.pop();
         }
-      }
-
-      if (mounted) {
-        context.pop();
       }
     } on Exception catch (e) {
       if (mounted) {
@@ -249,8 +244,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Article "${widget.item!.name}" supprimé'),
-              backgroundColor: EcoPlatesDesignTokens.colors.snackbarWarning,
-              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.orange.shade700,
             ),
           );
           context.pop();
@@ -290,12 +284,11 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
             onPressed: _isSubmitting ? null : _submitForm,
             child: _isSubmitting
                 ? SizedBox(
-                    width: EcoPlatesDesignTokens.layout.loadingIndicatorSize,
-                    height: EcoPlatesDesignTokens.layout.loadingIndicatorSize,
+                    width: 20.0,
+                    height: 20.0,
                     child: CircularProgressIndicator(
-                      strokeWidth: EcoPlatesDesignTokens
-                          .layout
-                          .loadingIndicatorStrokeWidth,
+                      strokeWidth: 2.0,
+                      color: theme.colorScheme.onSurface,
                     ),
                   )
                 : Text(
@@ -305,13 +298,11 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
           ),
-          SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
+          SizedBox(width: 16.0),
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(
-          EcoPlatesDesignTokens.spacing.dialogGap(context),
-        ),
+        padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -320,62 +311,56 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
               // Infos système en mode édition
               if (isEditMode) ...[
                 Wrap(
-                  spacing: EcoPlatesDesignTokens.spacing.microGap(context),
-                  runSpacing: EcoPlatesDesignTokens.spacing.microGap(context),
+                  spacing: 12.0,
+                  runSpacing: 8.0,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Icon(
                       Icons.info_outline,
-                      size: EcoPlatesDesignTokens.size.indicator(context),
+                      size: 20.0,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                     Text(
                       'SKU: ',
                       style: TextStyle(
                         color: theme.colorScheme.onSurfaceVariant,
-                        fontSize: EcoPlatesDesignTokens.typography.hint(
-                          context,
-                        ),
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     Container(
-                      padding: EcoPlatesDesignTokens.spacing.skuChipPadding,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                        vertical: 4.0,
+                      ),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          EcoPlatesDesignTokens.radius.xs,
-                        ),
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(6.0),
                         border: Border.all(
-                          color: theme.colorScheme.outline.withValues(
-                            alpha: EcoPlatesDesignTokens.opacity.decorative,
-                          ),
+                          color: theme.colorScheme.outline.withOpacity(0.3),
+                          width: 1.0,
                         ),
                       ),
                       child: Text(
                         widget.item!.sku,
                         style: TextStyle(
                           fontFamily: 'monospace',
-                          fontSize: EcoPlatesDesignTokens.typography.hint(
-                            context,
-                          ),
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: EcoPlatesDesignTokens.spacing.microGap(context),
-                    ),
+                    SizedBox(width: 8.0),
                     Text(
                       'Dernière maj: ${formatDateTime(widget.item!.updatedAt)}',
                       style: TextStyle(
-                        fontSize: EcoPlatesDesignTokens.typography.hint(
-                          context,
-                        ),
+                        fontSize: 12.0,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                ),
+                SizedBox(height: 20.0),
               ],
 
               // Nom
@@ -398,9 +383,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 },
               ),
 
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              SizedBox(height: 16.0),
 
               // SKU seulement en mode création
               if (!isEditMode) ...[
@@ -420,9 +403,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                     return null;
                   },
                 ),
-                SizedBox(
-                  height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-                ),
+                SizedBox(height: 16.0),
               ],
 
               // Catégorie
@@ -452,9 +433,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 ),
               ),
 
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              SizedBox(height: 16.0),
 
               // Statut
               InkWell(
@@ -475,13 +454,9 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                   child: Row(
                     children: [
                       Container(
-                        width: EcoPlatesDesignTokens.layout.statusDotSize,
-                        height: EcoPlatesDesignTokens.layout.statusDotSize,
-                        margin: EdgeInsets.only(
-                          right: EcoPlatesDesignTokens.spacing.microGap(
-                            context,
-                          ),
-                        ),
+                        width: 12.0,
+                        height: 12.0,
+                        margin: EdgeInsets.only(right: 12.0),
                         decoration: BoxDecoration(
                           color: _selectedStatus == StockItemStatus.active
                               ? Theme.of(context).colorScheme.primary
@@ -498,9 +473,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 ),
               ),
 
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              SizedBox(height: 16.0),
 
               // Prix
               TextFormField(
@@ -528,15 +501,13 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 },
               ),
 
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              SizedBox(height: 16.0),
 
               // Quantité et unité
               Row(
                 children: [
                   Expanded(
-                    flex: EcoPlatesDesignTokens.layout.wideFieldFlex,
+                    flex: 2,
                     child: TextFormField(
                       controller: _quantityController,
                       keyboardType: TextInputType.number,
@@ -566,8 +537,9 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                       },
                     ),
                   ),
-                  SizedBox(width: EcoPlatesDesignTokens.spacing.sm),
+                  SizedBox(width: 12.0),
                   Expanded(
+                    flex: 1,
                     child: InkWell(
                       onTap: () => showUnitModal(
                         context,
@@ -593,26 +565,22 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 ],
               ),
 
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              SizedBox(height: 16.0),
 
               // Description
               TextFormField(
                 controller: _descriptionController,
-                maxLines: EcoPlatesDesignTokens.layout.descriptionMaxLines,
-                textCapitalization: TextCapitalization.sentences,
+                maxLines: 3,
                 decoration: const InputDecoration(
                   labelText: 'Description',
-                  hintText: "Informations complémentaires sur l'article",
+                  hintText: 'Détails optionnels sur l\'article...',
+                  prefixIcon: Icon(Icons.description_outlined),
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                 ),
               ),
 
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              SizedBox(height: 16.0),
 
               // Seuil d'alerte de stock faible
               StockThresholdField(
@@ -627,46 +595,33 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 },
               ),
 
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              SizedBox(height: 16.0),
 
               // Note informative sur le statut en mode création
               if (!isEditMode)
                 Container(
-                  padding: EdgeInsets.all(
-                    EcoPlatesDesignTokens.spacing.interfaceGap(context),
-                  ),
+                  padding: EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.overlay,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                      EcoPlatesDesignTokens.radius.sm,
-                    ),
+                    color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(
-                      color: theme.colorScheme.primary.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.overlay,
-                      ),
+                      color: theme.colorScheme.primary.withOpacity(0.5),
+                      width: 1.0,
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         Icons.info_outline,
-                        color: theme.colorScheme.primary,
-                        size: EcoPlatesDesignTokens.size.modalIcon(context),
+                        color: theme.colorScheme.onPrimaryContainer,
+                        size: 20.0,
                       ),
-                      SizedBox(
-                        width: EcoPlatesDesignTokens.spacing.microGap(context),
-                      ),
+                      SizedBox(width: 8.0),
                       Expanded(
                         child: Text(
                           'L\'article sera créé avec le statut "${_selectedStatus.label}"',
                           style: TextStyle(
-                            fontSize: EcoPlatesDesignTokens.typography.hint(
-                              context,
-                            ),
+                            fontSize: 14.0,
                             color: theme.colorScheme.onPrimaryContainer,
                           ),
                         ),
@@ -675,10 +630,8 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                   ),
                 ),
 
-              SizedBox(
-                height:
-                    EcoPlatesDesignTokens.spacing.sectionSpacing(context) * 3,
-              ), // Espace pour éviter le clavier
+              // Espace pour éviter le clavier
+              SizedBox(height: 80.0),
             ],
           ),
         ),

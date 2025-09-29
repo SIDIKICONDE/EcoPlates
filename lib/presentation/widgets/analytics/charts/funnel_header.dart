@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Widget pour l'en-tête du graphique du tunnel de conversion
@@ -19,9 +18,7 @@ class FunnelHeader extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(
-            ConversionFunnelConstants.dropIndicatorPadding,
-          ),
+          padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -29,29 +26,24 @@ class FunnelHeader extends StatelessWidget {
                 theme.colorScheme.secondary,
               ],
             ),
-            borderRadius: BorderRadius.circular(
-              ConversionFunnelConstants.stepBorderRadius,
-            ),
+            borderRadius: BorderRadius.circular(12.0),
             boxShadow: [
               BoxShadow(
                 color: theme.colorScheme.primary.withValues(
-                  alpha: ConversionFunnelConstants.headerPrimaryAlpha,
+                  alpha: 0.24,
                 ),
-                blurRadius: ConversionFunnelConstants.headerShadowBlurRadius,
-                offset: const Offset(
-                  0,
-                  ConversionFunnelConstants.headerShadowOffsetY,
-                ),
+                blurRadius: 8.0,
+                offset: const Offset(0, 4.0),
               ),
             ],
           ),
           child: const Icon(
             Icons.insights,
-            size: ConversionFunnelConstants.headerIconSize,
-            color: ConversionFunnelConstants.white,
+            size: 24.0,
+            color: Colors.white,
           ),
         ),
-        const SizedBox(width: ConversionFunnelConstants.headerSpacing),
+        const SizedBox(width: 8.0),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,59 +51,42 @@ class FunnelHeader extends StatelessWidget {
               Text(
                 'Tunnel de Conversion',
                 style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: ConversionFunnelConstants.titleWeight,
-                  fontSize: EcoPlatesDesignTokens.analyticsCharts
-                      .chartTitleFontSize(context),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(
-                height: ConversionFunnelConstants.headerExpandedSpacing,
-              ),
+              const SizedBox(height: 4.0),
               Row(
                 children: [
                   Icon(
                     Icons.trending_up,
-                    size:
-                        EcoPlatesDesignTokens.analyticsCharts.iconSize(
-                          context,
-                        ) *
-                        0.75,
+                    size: 16.0 * 0.75,
                     color: theme.colorScheme.primary,
                   ),
-                  const SizedBox(
-                    width: ConversionFunnelConstants.dropIndicatorSpacing,
-                  ),
+                  const SizedBox(width: 4.0),
                   Text(
                     'Taux global: ${analytics.conversionRate.toStringAsFixed(1)}%',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.primary,
-                      fontWeight: ConversionFunnelConstants.bodyWeight,
-                      fontSize: EcoPlatesDesignTokens.analyticsCharts
-                          .labelFontSize(context),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
                     ),
                   ),
-                  const SizedBox(
-                    width: ConversionFunnelConstants.contentSpacing,
-                  ),
+                  const SizedBox(width: 8.0),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: ConversionFunnelConstants
-                          .headerPeriodPaddingHorizontal,
-                      vertical:
-                          ConversionFunnelConstants.headerPeriodPaddingVertical,
+                      horizontal: 8.0,
+                      vertical: 4.0,
                     ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(
-                        ConversionFunnelConstants.headerPeriodBorderRadius,
-                      ),
+                      borderRadius: BorderRadius.circular(4.0),
                     ),
                     child: Text(
                       analytics.period.label,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        fontSize: EcoPlatesDesignTokens.analyticsCharts
-                            .counterFontSize(context),
-                        fontWeight: ConversionFunnelConstants.labelWeight,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),

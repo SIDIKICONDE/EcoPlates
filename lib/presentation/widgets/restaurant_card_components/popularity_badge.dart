@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/responsive/design_tokens.dart';
 
 /// Badge pour indiquer qu'un restaurant est populaire
 class PopularityBadge extends StatelessWidget {
@@ -9,37 +8,35 @@ class PopularityBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: context.scaleXS_SM_MD_LG,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 12.0,
+        vertical: 6.0,
       ),
       decoration: BoxDecoration(
-        color: EcoPlatesDesignTokens.colors.snackbarWarning,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xxl),
+        color: Colors.orange,
+        borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
-            color: EcoPlatesDesignTokens.colors.snackbarWarning.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-            ),
-            blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 4.0,
+            offset: Offset(0, 2.0),
           ),
         ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
+        children: const [
           Icon(
-            Icons.star,
-            size: EcoPlatesDesignTokens.size.indicator(context),
+            Icons.local_fire_department,
+            size: 14.0,
             color: Colors.white,
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 4.0),
           Text(
             'POPULAIRE',
             style: TextStyle(
               color: Colors.white,
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
-              fontWeight: EcoPlatesDesignTokens.typography.bold,
+              fontSize: 12.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/utils/offer_formatters.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -12,7 +11,7 @@ class OfferMetadataSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+      padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
           // Type d'offre et catégorie
@@ -27,7 +26,7 @@ class OfferMetadataSection extends StatelessWidget {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(width: context.scaleMD_LG_XL_XXL),
+              SizedBox(width: 16.0),
               Expanded(
                 child: _buildInfoSection(
                   context,
@@ -39,7 +38,7 @@ class OfferMetadataSection extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           // Date de création et statut
           Row(
@@ -53,7 +52,7 @@ class OfferMetadataSection extends StatelessWidget {
                   color: Colors.purple,
                 ),
               ),
-              SizedBox(width: context.scaleMD_LG_XL_XXL),
+              SizedBox(width: 16.0),
               Expanded(
                 child: _buildInfoSection(
                   context,
@@ -78,15 +77,13 @@ class OfferMetadataSection extends StatelessWidget {
     required Color color,
   }) {
     return Container(
-      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+      padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: color.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        color: color.withOpacity(0.1),
         border: Border.all(
-          color: color.withValues(alpha: EcoPlatesDesignTokens.opacity.subtle),
+          color: color.withOpacity(0.2),
         ),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,26 +92,26 @@ class OfferMetadataSection extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: EcoPlatesDesignTokens.size.indicator(context),
+                size: 16.0,
                 color: color,
               ),
-              SizedBox(width: context.scaleXXS_XS_SM_MD),
+              SizedBox(width: 8.0),
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 12.0,
                   color: color,
-                  fontWeight: EcoPlatesDesignTokens.typography.medium,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-          SizedBox(height: context.scaleXXS_XS_SM_MD),
+          SizedBox(height: 4.0),
           Text(
             content,
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
-              fontWeight: EcoPlatesDesignTokens.typography.semiBold,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ],

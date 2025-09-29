@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-import '../../../core/responsive/context_responsive_extensions.dart';
 import '../../../core/services/geo_location_service.dart';
 import '../../../core/services/map_service.dart';
 import '../../../domain/entities/food_offer.dart';
@@ -92,6 +90,17 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
     }
   }
 
+  /// Détermine si l'appareil est un mobile (largeur < 768px)
+  bool _isMobileDevice(BuildContext context) {
+    return MediaQuery.of(context).size.width < 768.0;
+  }
+
+  /// Détermine si l'appareil est une tablette (largeur >= 768px et < 1024px)
+  bool _isTabletDevice(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return width >= 768.0 && width < 1024.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -105,9 +114,9 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
             return GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: _initialPosition,
-                zoom: context.isMobileDevice
+                zoom: _isMobileDevice(context)
                     ? 11.0
-                    : context.isTabletDevice
+                    : _isTabletDevice(context)
                     ? 12.0
                     : 13.0,
               ),
@@ -124,13 +133,13 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
 
         // Bouton de recentrage
         Positioned(
-          bottom: context.scaleMD_LG_XL_XXL,
-          right: context.scaleMD_LG_XL_XXL,
+          bottom: 16.0,
+          right: 16.0,
           child: Consumer(
             builder: (context, ref, child) {
               final isLocationActive = ref.watch(isLocationActiveProvider);
               return FloatingActionButton(
-                mini: context.isMobileDevice,
+                mini: _isMobileDevice(context),
                 onPressed: _centerOnUserLocation,
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
@@ -138,9 +147,9 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
                   isLocationActive ? Icons.near_me : Icons.near_me_outlined,
                   color: isLocationActive
                       ? Theme.of(context).primaryColor
-                      : Theme.of(context).colorScheme.onSurface.withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
-                        ),
+                      : Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.6),
                 ),
               );
             },

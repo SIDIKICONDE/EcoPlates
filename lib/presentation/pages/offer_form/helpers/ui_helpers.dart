@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/food_offer.dart';
 
 /// Helpers pour les composants UI du formulaire d'offre
@@ -13,17 +12,13 @@ class OfferFormUiHelpers {
     FoodOffer offer,
   ) {
     return Container(
-      padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+      padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
+        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
-          ),
+          color: theme.colorScheme.outline.withOpacity(0.3),
         ),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,49 +27,43 @@ class OfferFormUiHelpers {
             children: [
               Icon(
                 Icons.info_outline,
-                size: EcoPlatesDesignTokens.size.icon(context),
-                color: theme.colorScheme.onSurfaceVariant,
+                size: 20.0,
+                color: theme.colorScheme.primary,
               ),
-              SizedBox(
-                width: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              SizedBox(width: 8.0),
               Text(
                 'Informations système',
                 style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: EcoPlatesDesignTokens.typography.medium,
-                  fontSize: EcoPlatesDesignTokens.typography.label(context),
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          SizedBox(height: 16.0),
           Wrap(
-            spacing: EcoPlatesDesignTokens.spacing.dialogGap(context),
-            runSpacing: EcoPlatesDesignTokens.spacing.microGap(context),
+            spacing: 16.0,
+            runSpacing: 8.0,
             children: [
               Text(
                 'ID: ${offer.id}',
                 style: TextStyle(
                   fontFamily: 'monospace',
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 14.0,
                   color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: EcoPlatesDesignTokens.typography.regular,
                 ),
               ),
               Text(
-                'Créée: ${formatDateTime(offer.createdAt)}',
+                'Créé: ${_formatDateTime(offer.createdAt)}',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 14.0,
                   color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: EcoPlatesDesignTokens.typography.regular,
                 ),
               ),
               Text(
-                'Modifiée: ${formatDateTime(offer.updatedAt)}',
+                'Modifié: ${_formatDateTime(offer.updatedAt)}',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 14.0,
                   color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: EcoPlatesDesignTokens.typography.regular,
                 ),
               ),
             ],
@@ -84,8 +73,8 @@ class OfferFormUiHelpers {
     );
   }
 
-  /// Formate une date et heure
-  static String formatDateTime(DateTime dateTime) {
+  /// Formate une date pour l'affichage
+  static String _formatDateTime(DateTime dateTime) {
     return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
   }
 }

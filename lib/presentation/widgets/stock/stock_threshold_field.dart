@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-
 /// Champ de saisie pour configurer le seuil d'alerte de stock faible
 class StockThresholdField extends StatefulWidget {
   const StockThresholdField({
@@ -56,14 +54,10 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
       margin: EdgeInsets.zero,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
-        side: BorderSide(
-          color: theme.colorScheme.outlineVariant,
-          width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
-        ),
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Padding(
-        padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -71,17 +65,15 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
               children: [
                 Icon(
                   Icons.notifications_outlined,
-                  size: EcoPlatesDesignTokens.size.icon(context),
+                  size: 16.0,
                   color: theme.colorScheme.primary,
                 ),
-                SizedBox(width: context.scaleXXS_XS_SM_MD),
+                SizedBox(width: 8.0),
                 Expanded(
                   child: Text(
                     'Alerte de stock faible',
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.titleSize(
-                        context,
-                      ),
+                      fontSize: 16.0,
                       fontWeight: FontWeight.w500,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -96,17 +88,17 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
             ),
 
             if (_isEnabled) ...[
-              SizedBox(height: context.scaleMD_LG_XL_XXL),
+              SizedBox(height: 16.0),
 
               Text(
                 "Seuil d'alerte",
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 16.0,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
 
-              SizedBox(height: context.scaleXXS_XS_SM_MD),
+              SizedBox(height: 8.0),
 
               Row(
                 children: [
@@ -123,30 +115,17 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
                         suffixText: widget.unit,
                         isDense: true,
                         contentPadding: EdgeInsets.symmetric(
-                          horizontal: context.scaleXS_SM_MD_LG,
-                          vertical: context.scaleXS_SM_MD_LG,
+                          horizontal: 12.0,
+                          vertical: 12.0,
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            EcoPlatesDesignTokens.radius.sm,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            EcoPlatesDesignTokens.radius.sm,
-                          ),
+                          borderRadius: BorderRadius.circular(16.0),
                           borderSide: BorderSide(
                             color: theme.colorScheme.outlineVariant,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            EcoPlatesDesignTokens.radius.sm,
-                          ),
-                          borderSide: BorderSide(
-                            color: theme.colorScheme.primary,
-                            width: EcoPlatesDesignTokens.layout.cardBorderWidth,
-                          ),
+                          borderRadius: BorderRadius.circular(16.0),
                         ),
                       ),
                       onChanged: (value) {
@@ -155,38 +134,25 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
                       },
                     ),
                   ),
-                  SizedBox(width: context.scaleXS_SM_MD_LG),
+                  SizedBox(width: 12.0),
                   Container(
-                    padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+                    padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      color: Colors.orange.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        EcoPlatesDesignTokens.radius.sm,
-                      ),
+                      color: Colors.orange.withValues(alpha: 16.0),
                       border: Border.all(
-                        color: Colors.orange.withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.subtle,
-                        ),
-                        width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+                        color: Colors.orange,
                       ),
-                    ),
-                    child: Icon(
-                      Icons.warning_outlined,
-                      size: EcoPlatesDesignTokens.size.icon(context),
-                      color: Colors.orange,
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(height: context.scaleXXS_XS_SM_MD),
+              SizedBox(height: 8.0),
 
               Text(
                 'Une notification sera envoyée lorsque le stock atteint ou passe sous ce seuil',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 16.0,
                   color: theme.colorScheme.onSurfaceVariant,
                   fontStyle: FontStyle.italic,
                 ),

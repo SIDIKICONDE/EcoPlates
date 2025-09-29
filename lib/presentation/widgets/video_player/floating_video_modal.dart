@@ -4,10 +4,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/services/image_cache_service.dart';
 import '../../../core/services/video_background_service.dart';
 import '../../../core/services/video_pool_manager.dart';
+import '../../../core/themes/design_tokens.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/video_preview.dart';
 
@@ -117,13 +117,18 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
   // Taille du player (16:9)
   late double _baseWidth; // taille normale
   late double _baseHeight;
-  double get _miniWidth => EcoPlatesDesignTokens.size.minTouchTarget * 2;
+  double get _miniWidth => 160;
   double get _miniHeight => _miniWidth * 9 / 16;
-  bool _isMini = false;
 
-  bool _muted = true;
+  // Controls visibility
   bool _showControls = true;
   Timer? _hideTimer;
+
+  // Player state
+  bool _muted = false;
+
+  // Mini mode
+  bool _isMini = false;
 
   @override
   void initState() {
@@ -257,7 +262,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
   void _onDrag(DragUpdateDetails d) {
     if (_position == null) return;
     final size = MediaQuery.of(context).size;
-    final margin = context.scaleXXS_XS_SM_MD;
+    const margin = EcoSpacing.sm;
     var next = _position! + d.delta;
     // Contrainte dans l'écran
     final maxX = size.width - _currentWidth - margin;
@@ -269,14 +274,14 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
   void _onDragEnd(DragEndDetails details) {
     if (_position == null) return;
     final size = MediaQuery.of(context).size;
-    final margin = context.scaleMD_LG_XL_XXL;
+    const margin = EcoSpacing.lg;
 
     // Hauteur approximative d'une bottom bar pour "dock" au-dessus
-    final bottomDock = context.scaleMD_LG_XL_XXL * 2; // ~56 (nav) + marge
+    const bottomDock = EcoSpacing.lg * 2; // ~56 (nav) + marge
 
     final candidates = <Offset>[
       // Coins
-      Offset(margin, margin),
+      const Offset(margin, margin),
       Offset(size.width - _currentWidth - margin, margin),
       Offset(margin, size.height - _currentHeight - margin - bottomDock),
       Offset(
@@ -324,7 +329,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
       _isMini = !_isMini;
       // S'assurer que la position reste dans l'écran
       final size = MediaQuery.of(context).size;
-      final margin = context.scaleXXS_XS_SM_MD;
+      const margin = EcoSpacing.sm;
       final maxX = size.width - _currentWidth - margin;
       final maxY = size.height - _currentHeight - margin;
       _position = Offset(
@@ -407,177 +412,136 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                       },
                       child: Material(
                         elevation: 12,
-                        borderRadius: BorderRadius.circular(
-                          EcoPlatesDesignTokens.radius.md,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(
-                              EcoPlatesDesignTokens.radius.md,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(
-                                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                                ),
-                                blurRadius:
-                                    EcoPlatesDesignTokens.elevation.largeBlur,
-                                offset: EcoPlatesDesignTokens
-                                    .elevation
-                                    .elevatedOffset,
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              // Vidéo
-                              Positioned.fill(
-                                child: isReady
-                                    ? FittedBox(
-                                        fit: BoxFit.cover,
-                                        child: SizedBox(
-                                          width: _controller!.value.size.width,
-                                          height:
-                                              _controller!.value.size.height,
-                                          child: VideoPlayer(_controller!),
-                                        ),
-                                      )
-                                    : _buildLoading(),
-                              ),
+                        color: Colors.black,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            if (isReady) AspectRatio(
+                                    aspectRatio: _controller!.value.aspectRatio,
+                                    child: VideoPlayer(_controller!),
+                                  ) else _buildLoading(),
 
-                              // Top bar
-                              if (_showControls) ...[
-                                Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  top: 0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: context.scaleXXS_XS_SM_MD,
-                                      vertical: context.scaleXXS_XS_SM_MD / 2,
-                                    ),
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.black87,
-                                          Colors.transparent,
-                                        ],
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            widget.video.title,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: EcoPlatesDesignTokens
-                                                  .typography
-                                                  .hint(context),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          tooltip: _isMini
-                                              ? 'Agrandir'
-                                              : 'Minimiser',
-                                          onPressed: _toggleMini,
-                                          icon: Icon(
-                                            _isMini
-                                                ? Icons.open_in_full_rounded
-                                                : Icons
-                                                      .close_fullscreen_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          iconSize: EcoPlatesDesignTokens.size
-                                              .icon(context),
-                                          padding: EdgeInsets.zero,
-                                        ),
-                                        IconButton(
-                                          tooltip: _muted
-                                              ? 'Activer le son'
-                                              : 'Couper le son',
-                                          onPressed: _toggleMute,
-                                          icon: Icon(
-                                            _muted
-                                                ? Icons.volume_off_rounded
-                                                : Icons.volume_up_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          iconSize: EcoPlatesDesignTokens.size
-                                              .icon(context),
-                                          padding: EdgeInsets.zero,
-                                        ),
-                                        SizedBox(
-                                          width: context.scaleXXS_XS_SM_MD,
-                                        ),
-                                        IconButton(
-                                          tooltip: 'Fermer',
-                                          onPressed: widget.onClose,
-                                          icon: const Icon(
-                                            Icons.close_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          iconSize: EcoPlatesDesignTokens.size
-                                              .icon(context),
-                                          padding: EdgeInsets.zero,
-                                        ),
+                            // Top bar
+                            if (_showControls) ...[
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: EcoSpacing.sm,
+                                    vertical: EcoSpacing.sm / 2,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.black87,
+                                        Colors.transparent,
                                       ],
                                     ),
                                   ),
-                                ),
-                              ],
-
-                              // Centre: Play/Pause
-                              if (_showControls) ...[
-                                Center(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withValues(
-                                        alpha: EcoPlatesDesignTokens
-                                            .opacity
-                                            .pressed,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          widget.video.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.circular(
-                                        EcoPlatesDesignTokens.radius.xl,
+                                      IconButton(
+                                        tooltip: _isMini
+                                            ? 'Agrandir'
+                                            : 'Minimiser',
+                                        onPressed: _toggleMini,
+                                        icon: Icon(
+                                          _isMini
+                                              ? Icons.open_in_full_rounded
+                                              : Icons.close_fullscreen_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        iconSize: 16.0,
+                                        padding: EdgeInsets.zero,
                                       ),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: _togglePlayPause,
-                                      icon: Icon(
-                                        (_controller?.value.isPlaying ?? false)
-                                            ? Icons.pause_rounded
-                                            : Icons.play_arrow_rounded,
+                                      IconButton(
+                                        tooltip: _muted
+                                            ? 'Activer le son'
+                                            : 'Couper le son',
+                                        onPressed: _toggleMute,
+                                        icon: Icon(
+                                          _muted
+                                              ? Icons.volume_off_rounded
+                                              : Icons.volume_up_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        iconSize: 16.0,
+                                        padding: EdgeInsets.zero,
                                       ),
-                                      color: Colors.white,
-                                      iconSize:
-                                          EcoPlatesDesignTokens.size.icon(
-                                            context,
-                                          ) *
-                                          2,
-                                    ),
+                                      const SizedBox(
+                                        width: EcoSpacing.sm,
+                                      ),
+                                      IconButton(
+                                        tooltip: 'Fermer',
+                                        onPressed: widget.onClose,
+                                        icon: const Icon(
+                                          Icons.close_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        iconSize: 16.0,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-
-                              // Bas: timeline (compacte)
-                              if (_showControls) ...[
-                                Positioned(
-                                  left: context.scaleXXS_XS_SM_MD,
-                                  right: context.scaleXXS_XS_SM_MD,
-                                  bottom: context.scaleXXS_XS_SM_MD / 2,
-                                  child: _buildTimeline(),
-                                ),
-                              ],
+                              ),
                             ],
-                          ),
+
+                            // Centre: Play/Pause
+                            if (_showControls && isReady) ...[
+                              Center(
+                                child: IconButton(
+                                  onPressed: _togglePlayPause,
+                                  style: IconButton.styleFrom(
+                                    backgroundColor: Colors.black.withOpacity(
+                                      EcoColorTokens.opacity24,
+                                    ),
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(12),
+                                  ),
+                                  icon: Icon(
+                                    _controller!.value.isPlaying
+                                        ? Icons.pause_rounded
+                                        : Icons.play_arrow_rounded,
+                                    color: Colors.white,
+                                    size: 32,
+                                  ),
+                                ),
+                              ),
+                            ],
+
+                            // Bas: timeline (compacte)
+                            if (_showControls && isReady) ...[
+                              Positioned(
+                                left: EcoSpacing.sm,
+                                right: EcoSpacing.sm,
+                                bottom: EcoSpacing.sm / 2,
+                                child: _buildTimeline(),
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                     ),
@@ -623,7 +587,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
           _fmt(position),
           style: TextStyle(
             color: Colors.white70,
-            fontSize: EcoPlatesDesignTokens.typography.hint(context) - 2,
+            fontSize: 16.0 - 2,
           ),
         ),
         Expanded(
@@ -642,7 +606,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
           _fmt(duration),
           style: TextStyle(
             color: Colors.white70,
-            fontSize: EcoPlatesDesignTokens.typography.hint(context) - 2,
+            fontSize: 16.0 - 2,
           ),
         ),
       ],

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../../core/themes/tokens/color_tokens.dart';
-import '../../../core/themes/tokens/spacing_tokens.dart';
 import '../../../domain/entities/user.dart';
 import 'consumer_tier_utils.dart';
 
@@ -33,11 +31,7 @@ class ConsumerProfileHeader extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: EcoSpacing.lg,
-          tablet: EcoSpacing.xl,
-          desktop: EcoSpacing.xxl,
-        ),
+        16.0,
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -45,41 +39,37 @@ class ConsumerProfileHeader extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             EcoColorTokens.success.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              alpha: 0.01,
             ),
             colors.surface,
             EcoColorTokens.eco.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle / 2,
+              alpha: 0.01 / 2,
             ),
           ],
           stops: const [0.0, 0.5, 1.0],
         ),
         borderRadius: BorderRadius.circular(
-          context.responsiveValue(
-            mobile: EcoPlatesDesignTokens.radius.lg,
-            tablet: EcoPlatesDesignTokens.radius.xl,
-            desktop: EcoPlatesDesignTokens.radius.xxl,
-          ),
+          16.0,
         ),
         border: Border.all(
           color: EcoColorTokens.success.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+            alpha: 0.01,
           ),
         ),
         boxShadow: [
           BoxShadow(
             color: EcoColorTokens.success.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              alpha: 0.01,
             ),
-            blurRadius: EcoPlatesDesignTokens.elevation.largeBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset * 2,
+            blurRadius: 12.0,
+            offset: Offset(0, 2),
           ),
           BoxShadow(
             color: colors.shadow.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              alpha: 0.01,
             ),
-            blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            blurRadius: 8.0,
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -87,35 +77,35 @@ class ConsumerProfileHeader extends StatelessWidget {
         children: [
           // Éléments décoratifs écologiques
           Positioned(
-            top: -context.scaleMD_LG_XL_XXL,
-            right: -context.scaleMD_LG_XL_XXL,
+            top: -16.0,
+            right: -16.0,
             child: Icon(
               Icons.eco,
-              size: EcoPlatesDesignTokens.size.minTouchTarget,
+              size: 48.0,
               color: EcoColorTokens.success.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+                alpha: 0.01,
               ),
             ),
           ),
           Positioned(
-            bottom: -context.scaleXXS_XS_SM_MD,
-            left: -context.scaleXXS_XS_SM_MD,
+            bottom: -4.0,
+            left: -4.0,
             child: Icon(
               Icons.recycling,
-              size: EcoPlatesDesignTokens.size.buttonHeight(context) * 1.33,
+              size: 56.0 * 1.33,
               color: EcoColorTokens.eco.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+                alpha: 0.01,
               ),
             ),
           ),
           Positioned(
-            top: context.scaleLG_XL_XXL_XXXL,
-            left: context.scaleLG_XL_XXL_XXXL,
+            top: 24.0,
+            left: 24.0,
             child: Icon(
               Icons.spa,
-              size: EcoPlatesDesignTokens.size.buttonHeight(context),
+              size: 56.0,
               color: EcoColorTokens.success.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+                alpha: 0.01,
               ),
             ),
           ),
@@ -130,16 +120,8 @@ class ConsumerProfileHeader extends StatelessWidget {
                     children: [
                       // Cercle extérieur décoratif
                       Container(
-                        width: context.responsiveValue(
-                          mobile: 80.0.toDouble(),
-                          tablet: 90.0.toDouble(),
-                          desktop: DesignConstants.hundred.toDouble(),
-                        ),
-                        height: context.responsiveValue(
-                          mobile: 80.0.toDouble(),
-                          tablet: 90.0.toDouble(),
-                          desktop: DesignConstants.hundred.toDouble(),
-                        ),
+                        width: 80.0,
+                        height: 80.0,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
@@ -147,28 +129,20 @@ class ConsumerProfileHeader extends StatelessWidget {
                             end: Alignment.bottomRight,
                             colors: [
                               EcoColorTokens.success.withValues(
-                                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+                                alpha: 0.01,
                               ),
                               EcoColorTokens.eco.withValues(
-                                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+                                alpha: 0.01,
                               ),
                             ],
                           ),
                         ),
                       ),
                       CircleAvatar(
-                        radius: context.responsiveValue(
-                          mobile: 36.0,
-                          tablet: 42.0,
-                          desktop: 48.0,
-                        ),
+                        radius: 36.0,
                         backgroundColor: colors.surface,
                         child: CircleAvatar(
-                          radius: context.responsiveValue(
-                            mobile: 34.0,
-                            tablet: 40.0,
-                            desktop: 46.0,
-                          ),
+                          radius: 34.0,
                           backgroundColor: colors.primaryContainer,
                           child: Text(
                             _getInitials(displayName),
@@ -185,21 +159,19 @@ class ConsumerProfileHeader extends StatelessWidget {
                           right: 0,
                           child: Container(
                             padding: EdgeInsets.all(
-                              context.scaleXXS_XS_SM_MD,
+                              4.0,
                             ),
                             decoration: BoxDecoration(
                               color: colors.primary,
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: colors.surface,
-                                width: DesignConstants.two,
+                                width: 2.0,
                               ),
                             ),
                             child: Icon(
                               Icons.camera_alt,
-                              size:
-                                  EcoPlatesDesignTokens.size.icon(context) *
-                                  0.8,
+                              size: 20.0 * 0.8,
                               color: colors.onPrimary,
                             ),
                           ),
@@ -207,11 +179,7 @@ class ConsumerProfileHeader extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    width: context.responsiveValue(
-                      mobile: EcoSpacing.md,
-                      tablet: EcoSpacing.lg,
-                      desktop: EcoSpacing.xl,
-                    ),
+                    width: 16.0,
                   ),
 
                   // Informations utilisateur
@@ -225,23 +193,22 @@ class ConsumerProfileHeader extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: context.scaleXXS_XS_SM_MD),
+                        SizedBox(height: 4.0),
                         Text(
                           email,
                           style: textTheme.bodyMedium?.copyWith(
                             color: colors.onSurface.withValues(
-                              alpha:
-                                  EcoPlatesDesignTokens.opacity.semiTransparent,
+                              alpha: 0.5,
                             ),
                           ),
                         ),
-                        SizedBox(height: context.scaleXS_SM_MD_LG),
+                        SizedBox(height: 8.0),
 
                         // Badge de niveau
                         Container(
                           padding: EdgeInsets.symmetric(
-                            horizontal: context.scaleMD_LG_XL_XXL,
-                            vertical: context.scaleXXS_XS_SM_MD,
+                            horizontal: 16.0,
+                            vertical: 4.0,
                           ),
                           decoration: BoxDecoration(
                             color:
@@ -249,11 +216,10 @@ class ConsumerProfileHeader extends StatelessWidget {
                                   tier,
                                   brightness: Theme.of(context).brightness,
                                 ).withValues(
-                                  alpha:
-                                      EcoPlatesDesignTokens.opacity.verySubtle,
+                                  alpha: 0.01,
                                 ),
                             borderRadius: BorderRadius.circular(
-                              EcoPlatesDesignTokens.radius.md,
+                              12.0,
                             ),
                           ),
                           child: Row(
@@ -261,15 +227,13 @@ class ConsumerProfileHeader extends StatelessWidget {
                             children: [
                               Icon(
                                 _getTierIcon(tier),
-                                size:
-                                    EcoPlatesDesignTokens.size.icon(context) *
-                                    0.8,
+                                size: 20.0 * 0.8,
                                 color: ConsumerTierUtils.getTierColor(
                                   tier,
                                   brightness: Theme.of(context).brightness,
                                 ),
                               ),
-                              SizedBox(width: context.scaleXXS_XS_SM_MD),
+                              SizedBox(width: 4.0),
                               Text(
                                 _getTierLabel(tier),
                                 style: textTheme.labelSmall?.copyWith(
@@ -297,7 +261,7 @@ class ConsumerProfileHeader extends StatelessWidget {
                       ),
                       style: IconButton.styleFrom(
                         backgroundColor: colors.primaryContainer.withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.subtle,
+                          alpha: 0.3,
                         ),
                       ),
                     ),
@@ -305,47 +269,27 @@ class ConsumerProfileHeader extends StatelessWidget {
               ),
 
               SizedBox(
-                height: context.responsiveValue(
-                  mobile: EcoSpacing.md,
-                  tablet: EcoSpacing.lg,
-                  desktop: EcoSpacing.xl,
-                ),
+                height: 16.0,
               ),
 
               // Statistiques rapides avec fond décoratif
               Container(
-                padding: EdgeInsets.all(
-                  context.responsiveValue(
-                    mobile: EcoSpacing.md,
-                    tablet: EcoSpacing.lg,
-                    desktop: EcoSpacing.xl,
-                  ),
-                ),
+                padding: EdgeInsets.all(16.0),
                 margin: EdgeInsets.only(
-                  top: context.responsiveValue(
-                    mobile: EcoSpacing.xs,
-                    tablet: EcoSpacing.sm,
-                    desktop: EcoSpacing.md,
-                  ),
+                  top: 8.0,
                 ),
                 decoration: BoxDecoration(
                   color: colors.surface.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+                    alpha: 0.8,
                   ),
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveValue(
-                      mobile: EcoPlatesDesignTokens.radius.md,
-                      tablet: EcoPlatesDesignTokens.radius.lg,
-                      desktop: EcoPlatesDesignTokens.radius.xl,
-                    ),
-                  ),
+                  borderRadius: BorderRadius.circular(12.0),
                   border: Border.all(
                     color: EcoColorTokens.success.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+                      alpha: 0.01,
                     ),
                   ),
                 ),
-                child: context.isMobileDevice
+                child: MediaQuery.of(context).size.width < 600
                     ? Column(
                         children: _buildMobileStats(context, consumerProfile),
                       )
@@ -377,7 +321,7 @@ class ConsumerProfileHeader extends StatelessWidget {
               EcoColorTokens.success,
             ),
           ),
-          const SizedBox(width: EcoSpacing.sm),
+          const SizedBox(width: 8.0),
           Expanded(
             child: _buildQuickStat(
               context,
@@ -389,7 +333,7 @@ class ConsumerProfileHeader extends StatelessWidget {
           ),
         ],
       ),
-      const SizedBox(height: EcoSpacing.sm),
+      const SizedBox(height: 8.0),
       _buildQuickStat(
         context,
         'CO₂ économisé',
@@ -441,18 +385,10 @@ class ConsumerProfileHeader extends StatelessWidget {
   Widget _buildVerticalDivider(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Container(
-      height: context.responsiveValue(
-        mobile: 40.0,
-        tablet: 50.0,
-        desktop: 60.0,
-      ),
-      width: DesignConstants.one,
+      height: 40.0,
+      width: 1.0,
       margin: EdgeInsets.symmetric(
-        horizontal: context.responsiveValue(
-          mobile: EcoSpacing.xs,
-          tablet: EcoSpacing.sm,
-          desktop: EcoSpacing.md,
-        ),
+        horizontal: 8.0,
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -461,7 +397,7 @@ class ConsumerProfileHeader extends StatelessWidget {
           colors: [
             Colors.transparent,
             colors.outline.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.subtle,
+              alpha: 0.3,
             ),
             Colors.transparent,
           ],
@@ -484,14 +420,10 @@ class ConsumerProfileHeader extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: context.responsiveValue(
-            mobile: context.scaleIconStandard * 0.9,
-            tablet: context.scaleIconStandard,
-            desktop: context.scaleIconStandard * 1.1,
-          ),
+          size: 24.0,
           color: color,
         ),
-        SizedBox(height: context.scaleXXS_XS_SM_MD),
+        SizedBox(height: 4.0),
         Text(
           value,
           style: textTheme.labelLarge?.copyWith(
@@ -502,7 +434,7 @@ class ConsumerProfileHeader extends StatelessWidget {
           label,
           style: textTheme.labelSmall?.copyWith(
             color: Theme.of(context).colorScheme.onSurface.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+              alpha: 0.9,
             ),
           ),
           textAlign: TextAlign.center,

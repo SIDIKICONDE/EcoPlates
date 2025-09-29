@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/categories.dart';
-import '../../../core/responsive/design_tokens.dart';
-import '../../../core/responsive/responsive.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -24,8 +22,6 @@ class _StockCategoryFloatingMenuState
     extends ConsumerState<StockCategoryFloatingMenu>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _rotationAnimation;
   bool _isOpen = false;
 
   // Catégories centralisées avec icônes et couleurs
@@ -57,13 +53,6 @@ class _StockCategoryFloatingMenuState
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
-    );
-    _scaleAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutBack,
-    );
-    _rotationAnimation = Tween<double>(begin: 0, end: 0.5).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
   }
 
@@ -105,195 +94,125 @@ class _StockCategoryFloatingMenuState
         // Menu des catégories
         if (_isOpen)
           Positioned(
-            bottom: context.applyPattern([
-              EcoPlatesDesignTokens.size.minTouchTarget, // mobile
-              EcoPlatesDesignTokens.size.minTouchTarget + 10, // tablet
-              EcoPlatesDesignTokens.size.minTouchTarget + 20, // desktop
-              EcoPlatesDesignTokens.size.minTouchTarget + 30, // desktop large
-            ]),
-            right: context.scaleMD_LG_XL_XXL,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              alignment: Alignment.bottomRight,
-              child: Container(
-                width: context.applyPattern([
-                  EcoPlatesDesignTokens.layout.mainContainerMaxWidth(context) *
-                      0.75, // mobile
-                  EcoPlatesDesignTokens.layout.mainContainerMaxWidth(context) *
-                      0.7, // tablet
-                  EcoPlatesDesignTokens.layout.mainContainerMaxWidth(context) *
-                      0.6, // desktop
-                  EcoPlatesDesignTokens.layout.mainContainerMaxWidth(context) *
-                      0.5, // desktop large
-                ]),
-                constraints: BoxConstraints(
-                  maxHeight: context.applyPattern([
-                    MediaQuery.of(context).size.height * 0.6, // mobile
-                    MediaQuery.of(context).size.height * 0.5, // tablet
-                    MediaQuery.of(context).size.height * 0.4, // desktop
-                    MediaQuery.of(context).size.height * 0.35, // desktop large
-                  ]),
-                ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.lg,
+            bottom: 80.0,
+            right: 16.0,
+            child: Container(
+              constraints: const BoxConstraints(
+                maxHeight: 400.0,
+              ),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(16.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 16.0,
+                    offset: const Offset(0, 4),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.colorScheme.shadow.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.pressed,
+                ],
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Titre du menu
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Catégories',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
-                      blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
-                      offset: EcoPlatesDesignTokens.elevation.standardOffset,
                     ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.lg,
-                  ),
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      vertical: context.scaleSM_MD_LG_XL,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Titre du menu
-                        Padding(
-                          padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
-                          child: Text(
-                            'Catégories',
-                            style: TextStyle(
-                              fontSize: EcoPlatesDesignTokens.typography
-                                  .modalTitle(context),
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurface,
+                    const Divider(height: 1),
+                    // Liste des catégories
+                    ..._categories.map((c) {
+                      final isSelected =
+                          selectedCategory == c.label ||
+                          selectedCategory == c.slug;
+                      final color = c.color;
+
+                      return Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            // Mettre à jour le filtre en stockant le slug (ou vide pour 'Tous')
+                            ref
+                                .read(stockFiltersProvider.notifier)
+                                .updateSearchQuery(c.slug);
+                            _toggleMenu();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 12.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? color.withValues(alpha: 0.1)
+                                  : Colors.transparent,
+                              border: isSelected
+                                  ? Border(
+                                      left: BorderSide(
+                                        color: color,
+                                        width: 2.0,
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 24.0,
+                                  height: 24.0,
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? color.withValues(alpha: 0.2)
+                                        : color.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Icon(
+                                    c.icon,
+                                    size: 16.0,
+                                    color: isSelected
+                                        ? color
+                                        : color.withValues(alpha: 0.7),
+                                  ),
+                                ),
+                                const SizedBox(width: 12.0),
+                                Expanded(
+                                  child: Text(
+                                    c.label,
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w400,
+                                      color: isSelected
+                                          ? color
+                                          : theme.colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ),
+                                if (isSelected)
+                                  Icon(
+                                    Icons.check_circle,
+                                    size: 16.0,
+                                    color: color,
+                                  ),
+                              ],
                             ),
                           ),
                         ),
-                        const Divider(height: 1),
-                        // Liste des catégories
-                        ..._categories.map((c) {
-                          final isSelected =
-                              selectedCategory == c.label ||
-                              selectedCategory == c.slug;
-                          final color = c.color;
-
-                          return Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                                // Mettre à jour le filtre en stockant le slug (ou vide pour 'Tous')
-                                ref
-                                    .read(stockFiltersProvider.notifier)
-                                    .updateSearchQuery(c.slug);
-                                _toggleMenu();
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: context.scaleMD_LG_XL_XXL,
-                                  vertical: context.scaleXS_SM_MD_LG,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? color.withValues(alpha: 0.1)
-                                      : Colors.transparent,
-                                  border: isSelected
-                                      ? Border(
-                                          left: BorderSide(
-                                            color: color,
-                                            width: EcoPlatesDesignTokens
-                                                .layout
-                                                .cardBorderWidth,
-                                          ),
-                                        )
-                                      : null,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width:
-                                          EcoPlatesDesignTokens.size.icon(
-                                            context,
-                                          ) *
-                                          EcoPlatesDesignTokens
-                                              .size
-                                              .largeIconMultiplier,
-                                      height:
-                                          EcoPlatesDesignTokens.size.icon(
-                                            context,
-                                          ) *
-                                          EcoPlatesDesignTokens
-                                              .size
-                                              .largeIconMultiplier,
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? color.withValues(
-                                                alpha: EcoPlatesDesignTokens
-                                                    .opacity
-                                                    .pressed,
-                                              )
-                                            : color.withValues(
-                                                alpha: EcoPlatesDesignTokens
-                                                    .opacity
-                                                    .veryTransparent,
-                                              ),
-                                        borderRadius: BorderRadius.circular(
-                                          EcoPlatesDesignTokens.radius.xs,
-                                        ),
-                                      ),
-                                      child: Icon(
-                                        c.icon,
-                                        size: EcoPlatesDesignTokens.size.icon(
-                                          context,
-                                        ),
-                                        color: isSelected
-                                            ? color
-                                            : color.withValues(
-                                                alpha: EcoPlatesDesignTokens
-                                                    .opacity
-                                                    .almostOpaque,
-                                              ),
-                                      ),
-                                    ),
-                                    SizedBox(width: context.scaleXS_SM_MD_LG),
-                                    Expanded(
-                                      child: Text(
-                                        c.label,
-                                        style: TextStyle(
-                                          fontSize: EcoPlatesDesignTokens
-                                              .typography
-                                              .modalContent(context),
-                                          fontWeight: isSelected
-                                              ? FontWeight.w600
-                                              : FontWeight.w400,
-                                          color: isSelected
-                                              ? color
-                                              : theme.colorScheme.onSurface,
-                                        ),
-                                      ),
-                                    ),
-                                    if (isSelected)
-                                      Icon(
-                                        Icons.check_circle,
-                                        size: EcoPlatesDesignTokens.size.icon(
-                                          context,
-                                        ),
-                                        color: color,
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                        SizedBox(height: context.scaleSM_MD_LG_XL),
-                      ],
-                    ),
-                  ),
+                      );
+                    }),
+                    const SizedBox(height: 16.0),
+                  ],
                 ),
               ),
             ),
@@ -303,16 +222,10 @@ class _StockCategoryFloatingMenuState
         FloatingActionButton.small(
           onPressed: _toggleMenu,
           backgroundColor: theme.colorScheme.primary,
-          elevation: EcoPlatesDesignTokens.elevation.card,
-          highlightElevation: EcoPlatesDesignTokens.elevation.modal,
-          tooltip: _isOpen ? 'Fermer' : 'Filtrer par catégorie',
-          child: RotationTransition(
-            turns: _rotationAnimation,
-            child: Icon(
-              _isOpen ? Icons.close : Icons.category,
-              color: theme.colorScheme.onPrimary,
-              size: context.scaleIconStandard,
-            ),
+          elevation: 16.0,
+          child: Icon(
+            _isOpen ? Icons.close : Icons.filter_list,
+            color: theme.colorScheme.onPrimary,
           ),
         ),
       ],

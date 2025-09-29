@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-import '../../../core/responsive/context_responsive_extensions.dart';
-
 /// Section des paramètres et options du profil consommateur
 class ConsumerSettingsSection extends StatelessWidget {
   const ConsumerSettingsSection({super.key});
@@ -15,17 +12,17 @@ class ConsumerSettingsSection extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Container(
-      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+      padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
             color: colors.shadow.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              alpha: 0.01,
             ),
-            blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            blurRadius: 8.0,
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -38,9 +35,9 @@ class ConsumerSettingsSection extends StatelessWidget {
               Icon(
                 Icons.settings,
                 color: colors.primary,
-                size: context.scaleIconStandard,
+                size: 24.0,
               ),
-              SizedBox(width: context.scaleSM_MD_LG_XL),
+              SizedBox(width: 12.0),
               Text(
                 'Paramètres & Préférences',
                 style: textTheme.titleLarge?.copyWith(
@@ -50,7 +47,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+          SizedBox(height: 24.0),
 
           // Liste des options
           _buildSettingsTile(
@@ -61,7 +58,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             onTap: () => _showNotificationSettings(context),
           ),
 
-          Divider(height: context.scaleLG_XL_XXL_XXXL),
+          Divider(height: 24.0),
 
           _buildSettingsTile(
             context,
@@ -71,7 +68,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             onTap: () => _showLocationSettings(context),
           ),
 
-          Divider(height: context.scaleLG_XL_XXL_XXXL),
+          Divider(height: 24.0),
 
           _buildSettingsTile(
             context,
@@ -81,7 +78,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             onTap: () => _showDietaryPreferences(context),
           ),
 
-          Divider(height: context.scaleLG_XL_XXL_XXXL),
+          Divider(height: 24.0),
 
           _buildSettingsTile(
             context,
@@ -91,7 +88,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             onTap: () => _showPaymentSettings(context),
           ),
 
-          Divider(height: context.scaleLG_XL_XXL_XXXL),
+          Divider(height: 24.0),
 
           _buildSettingsTile(
             context,
@@ -101,7 +98,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             onTap: () => _showPrivacySettings(context),
           ),
 
-          Divider(height: context.scaleLG_XL_XXL_XXXL),
+          Divider(height: 24.0),
 
           _buildSettingsTile(
             context,
@@ -111,7 +108,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             onTap: () => _showHelpSupport(context),
           ),
 
-          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+          SizedBox(height: 24.0),
 
           // Actions supplémentaires
           Row(
@@ -123,7 +120,7 @@ class ConsumerSettingsSection extends StatelessWidget {
                   label: const Text('Exporter mes données'),
                 ),
               ),
-              SizedBox(width: context.scaleMD_LG_XL_XXL),
+              SizedBox(width: 16.0),
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _showDeleteAccount(context),
@@ -157,31 +154,31 @@ class ConsumerSettingsSection extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
+      borderRadius: BorderRadius.circular(8.0),
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: context.scaleXS_SM_MD_LG,
+          vertical: 8.0,
         ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(context.scaleSM_MD_LG_XL),
+              padding: EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 color: colors.primaryContainer.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
+                  alpha: 0.3,
                 ),
                 borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.sm,
+                  8.0,
                 ),
               ),
               child: Icon(
                 icon,
                 color: colors.primary,
-                size: context.scaleIconStandard,
+                size: 24.0,
               ),
             ),
 
-            SizedBox(width: context.scaleMD_LG_XL_XXL),
+            SizedBox(width: 16.0),
 
             Expanded(
               child: Column(
@@ -193,12 +190,12 @@ class ConsumerSettingsSection extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: context.scaleXXS_XS_SM_MD),
+                  SizedBox(height: 4.0),
                   Text(
                     subtitle,
                     style: textTheme.bodySmall?.copyWith(
                       color: colors.onSurface.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                        alpha: 0.9,
                       ),
                     ),
                   ),
@@ -209,7 +206,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               color: colors.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.disabled,
+                alpha: 0.5,
               ),
             ),
           ],
@@ -225,7 +222,7 @@ class ConsumerSettingsSection extends StatelessWidget {
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(EcoPlatesDesignTokens.radius.xl),
+            top: Radius.circular(20.0),
           ),
         ),
         builder: _buildNotificationBottomSheet,
@@ -239,22 +236,22 @@ class ConsumerSettingsSection extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Padding(
-      padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
+      padding: EdgeInsets.all(24.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Indicateur
           Container(
-            width: context.scaleLG_XL_XXL_XXXL,
-            height: DesignConstants.four,
+            width: 24.0,
+            height: 4.0,
             margin: EdgeInsets.only(
-              bottom: context.scaleLG_XL_XXL_XXXL,
+              bottom: 24.0,
             ),
             decoration: BoxDecoration(
               color: colors.outline.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.subtle,
+                alpha: 0.3,
               ),
-              borderRadius: BorderRadius.circular(DesignConstants.two),
+              borderRadius: BorderRadius.circular(2.0),
             ),
           ),
 
@@ -265,7 +262,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+          SizedBox(height: 24.0),
 
           // Options de notification
           _buildNotificationSwitch('Nouvelles offres près de vous', true),
@@ -274,7 +271,7 @@ class ConsumerSettingsSection extends StatelessWidget {
           _buildNotificationSwitch('Récompenses et niveaux', false),
           _buildNotificationSwitch('Conseils écologiques', false),
 
-          SizedBox(height: context.scaleLG_XL_XXL_XXXL),
+          SizedBox(height: 24.0),
         ],
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../responsive/design_tokens.dart';
 import 'routes/route_constants.dart';
 
 /// Types d'erreurs supportés par la page d'erreur
@@ -40,7 +39,10 @@ class EcoPlatesErrorPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 24.0,
+          ),
           child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight:
@@ -59,7 +61,7 @@ class EcoPlatesErrorPage extends StatelessWidget {
                       scale: value,
                       child: Container(
                         padding: EdgeInsets.all(
-                          EcoPlatesDesignTokens.spacing.md,
+                          12.0,
                         ),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -69,7 +71,7 @@ class EcoPlatesErrorPage extends StatelessWidget {
                         ),
                         child: Icon(
                           _getErrorIcon(),
-                          size: EcoPlatesDesignTokens.size.icon(context),
+                          size: 20.0,
                           color: theme.colorScheme.error,
                         ),
                       ),
@@ -77,7 +79,7 @@ class EcoPlatesErrorPage extends StatelessWidget {
                   },
                 ),
 
-                SizedBox(height: EcoPlatesDesignTokens.spacing.xl),
+                SizedBox(height: 20.0),
 
                 // Titre de l'erreur
                 Text(
@@ -85,42 +87,36 @@ class EcoPlatesErrorPage extends StatelessWidget {
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
-                    fontSize: EcoPlatesDesignTokens.typography.titleSize(
-                      context,
-                    ),
+                    fontSize: 24.0,
                   ),
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: EcoPlatesDesignTokens.spacing.md),
+                SizedBox(height: 12.0),
 
                 // Description de l'erreur
                 Text(
                   _getErrorDescription(),
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                      context,
-                    ),
+                    fontSize: 16.0,
                   ),
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: EcoPlatesDesignTokens.spacing.lg),
+                SizedBox(height: 16.0),
 
                 // URL de l'erreur (en mode debug)
                 if (state.uri.toString().isNotEmpty)
                   Container(
-                    padding: EcoPlatesDesignTokens.spacing
-                        .contentPadding(context)
-                        .copyWith(
-                          top: EcoPlatesDesignTokens.spacing.sm,
-                          bottom: EcoPlatesDesignTokens.spacing.sm,
-                        ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 8.0,
+                    ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(
-                        EcoPlatesDesignTokens.radius.md,
+                        12.0,
                       ),
                     ),
                     child: Text(
@@ -128,14 +124,12 @@ class EcoPlatesErrorPage extends StatelessWidget {
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontFamily: 'monospace',
                         color: theme.colorScheme.onSurfaceVariant,
-                        fontSize: EcoPlatesDesignTokens.typography.hint(
-                          context,
-                        ),
+                        fontSize: 14.0,
                       ),
                     ),
                   ),
 
-                SizedBox(height: EcoPlatesDesignTokens.spacing.xxl),
+                SizedBox(height: 24.0),
 
                 // Boutons d'action
                 _buildActionButtons(context, theme),
@@ -217,18 +211,18 @@ class EcoPlatesErrorPage extends StatelessWidget {
             onPressed: () => context.go(RouteConstants.mainHome),
             icon: Icon(
               Icons.home_rounded,
-              size: EcoPlatesDesignTokens.size.icon(context),
+              size: 20.0,
             ),
             label: const Text("Retour à l'accueil"),
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(
-                vertical: EcoPlatesDesignTokens.spacing.md,
+                vertical: 12.0,
               ),
             ),
           ),
         ),
 
-        SizedBox(height: EcoPlatesDesignTokens.spacing.sm),
+        SizedBox(height: 8.0),
 
         // Bouton secondaire - Retour en arrière
         SizedBox(
@@ -243,12 +237,12 @@ class EcoPlatesErrorPage extends StatelessWidget {
             },
             icon: Icon(
               Icons.arrow_back_rounded,
-              size: EcoPlatesDesignTokens.size.icon(context),
+              size: 20.0,
             ),
             label: const Text('Retour'),
             style: OutlinedButton.styleFrom(
               padding: EdgeInsets.symmetric(
-                vertical: EcoPlatesDesignTokens.spacing.md,
+                vertical: 12.0,
               ),
             ),
           ),

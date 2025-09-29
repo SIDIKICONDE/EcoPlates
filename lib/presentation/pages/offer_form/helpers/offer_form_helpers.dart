@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/offer_form_provider.dart';
 
@@ -71,17 +70,15 @@ class OfferFormHelpers {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Offre "${formState.title}" mise à jour'),
-              backgroundColor: EcoPlatesDesignTokens.notificationSuccess(
-                context,
-              ),
+              backgroundColor: Colors.green.shade700,
               behavior: SnackBarBehavior.floating,
               margin: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                vertical: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                horizontal: 16.0,
+                vertical: 16.0,
               ),
               padding: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                vertical: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                horizontal: 16.0,
+                vertical: 12.0,
               ),
             ),
           );
@@ -94,17 +91,15 @@ class OfferFormHelpers {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Offre "${formState.title}" créée avec succès'),
-              backgroundColor: EcoPlatesDesignTokens.notificationSuccess(
-                context,
-              ),
+              backgroundColor: Colors.green.shade700,
               behavior: SnackBarBehavior.floating,
               margin: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                vertical: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                horizontal: 16.0,
+                vertical: 16.0,
               ),
               padding: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                vertical: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                horizontal: 16.0,
+                vertical: 12.0,
               ),
             ),
           );
@@ -119,15 +114,15 @@ class OfferFormHelpers {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Erreur : $e'),
-            backgroundColor: EcoPlatesDesignTokens.notificationError(context),
+            backgroundColor: Colors.red.shade700,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.symmetric(
-              horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-              vertical: EcoPlatesDesignTokens.spacing.dialogGap(context),
+              horizontal: 16.0,
+              vertical: 16.0,
             ),
             padding: EdgeInsets.symmetric(
-              horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-              vertical: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              horizontal: 16.0,
+              vertical: 12.0,
             ),
           ),
         );
@@ -148,32 +143,22 @@ class OfferFormHelpers {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            EcoPlatesDesignTokens.radius.lg,
-          ),
-        ),
         title: Text(
-          "Supprimer l'offre ?",
+          'Supprimer l\'offre',
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.modalTitle(context),
-            fontWeight: EcoPlatesDesignTokens.typography.bold,
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         content: Text(
-          'Êtes-vous sûr de vouloir supprimer "${offer.title}" ?\n'
-          'Cette action est irréversible.',
+          'Voulez-vous vraiment supprimer l\'offre "${offer.title}" ?\n\nCette action est irréversible.',
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.modalContent(context),
-            height: EcoPlatesDesignTokens.layout.textLineHeight,
+            fontSize: 16.0,
+            height: 1.5,
           ),
         ),
-        contentPadding: EdgeInsets.all(
-          EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-        ),
-        actionsPadding: EdgeInsets.symmetric(
-          horizontal: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-          vertical: EcoPlatesDesignTokens.spacing.dialogGap(context),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
         ),
         actions: [
           TextButton(
@@ -181,21 +166,21 @@ class OfferFormHelpers {
             child: Text(
               'Annuler',
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.button(context),
-                fontWeight: EcoPlatesDesignTokens.typography.medium,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(
-              foregroundColor: EcoPlatesDesignTokens.errorColorGeneral(context),
+              foregroundColor: Colors.red.shade700,
             ),
             child: Text(
               'Supprimer',
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.button(context),
-                fontWeight: EcoPlatesDesignTokens.typography.medium,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -203,7 +188,7 @@ class OfferFormHelpers {
       ),
     );
 
-    if ((confirmed ?? false) && context.mounted) {
+    if (confirmed == true && context.mounted) {
       try {
         await ref.read(offerFormProvider.notifier).deleteOffer(offer.id);
 
@@ -211,15 +196,15 @@ class OfferFormHelpers {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Offre "${offer.title}" supprimée'),
-              backgroundColor: EcoPlatesDesignTokens.notificationInfo(context),
+              backgroundColor: Colors.orange.shade700,
               behavior: SnackBarBehavior.floating,
               margin: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                vertical: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                horizontal: 16.0,
+                vertical: 16.0,
               ),
               padding: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                vertical: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                horizontal: 16.0,
+                vertical: 12.0,
               ),
             ),
           );
@@ -230,15 +215,15 @@ class OfferFormHelpers {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Erreur lors de la suppression : $e'),
-              backgroundColor: EcoPlatesDesignTokens.notificationError(context),
+              backgroundColor: Colors.red.shade700,
               behavior: SnackBarBehavior.floating,
               margin: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                vertical: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                horizontal: 16.0,
+                vertical: 16.0,
               ),
               padding: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                vertical: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                horizontal: 16.0,
+                vertical: 12.0,
               ),
             ),
           );

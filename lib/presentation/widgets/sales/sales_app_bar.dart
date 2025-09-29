@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../providers/sales_provider.dart';
 
@@ -24,7 +23,7 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
         // Menu d'actions
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert),
-          iconSize: context.scaleIconStandard,
+          iconSize: 20.0,
           tooltip: 'Actions',
           onSelected: (value) => _handleMenuAction(context, ref, value),
           itemBuilder: (context) {
@@ -34,18 +33,16 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.download,
-                    size: context.scaleIconStandard,
+                    size: 20.0,
                   ),
                   title: Text(
                     'Exporter',
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                        context,
-                      ),
+                      fontSize: 14.0,
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: context.scaleSM_MD_LG_XL,
+                    horizontal: 10.0,
                   ),
                   dense: true,
                 ),
@@ -55,18 +52,16 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.refresh,
-                    size: context.scaleIconStandard,
+                    size: 20.0,
                   ),
                   title: Text(
                     'Actualiser',
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                        context,
-                      ),
+                      fontSize: 14.0,
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: context.scaleSM_MD_LG_XL,
+                    horizontal: 10.0,
                   ),
                   dense: true,
                 ),
@@ -75,7 +70,7 @@ class SalesAppBar extends ConsumerWidget implements PreferredSizeWidget {
           },
         ),
 
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
+        const SizedBox(width: 10.0),
       ],
     );
   }
@@ -106,9 +101,9 @@ class _MerchantLogo extends StatelessWidget {
         'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center';
 
     return Container(
-      margin: EdgeInsets.all(context.scaleSM_MD_LG_XL),
+      margin: const EdgeInsets.all(10.0),
       child: CircleAvatar(
-        radius: context.scaleXS_SM_MD_LG,
+        radius: 24.0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
         onBackgroundImageError: (_, _) {
@@ -116,7 +111,7 @@ class _MerchantLogo extends StatelessWidget {
         },
         child: Icon(
           Icons.store,
-          size: context.scaleIconStandard,
+          size: 24.0,
           color: Colors.grey,
         ),
       ),

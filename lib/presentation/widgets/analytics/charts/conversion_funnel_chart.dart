@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 import 'funnel_animation_mixin.dart';
 import 'funnel_header.dart';
@@ -38,64 +37,41 @@ class _ConversionFunnelChartState extends State<ConversionFunnelChart>
             scale: scaleAnimation.value,
             child: Container(
               margin: const EdgeInsets.symmetric(
-                horizontal: ConversionFunnelConstants.containerMargin,
+                horizontal: 16.0,
               ),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    theme.colorScheme.primaryContainer.withValues(
-                      alpha: ConversionFunnelConstants.primaryContainerAlpha,
-                    ),
-                    theme.colorScheme.secondaryContainer.withValues(
-                      alpha: ConversionFunnelConstants.secondaryContainerAlpha,
-                    ),
-                    theme.colorScheme.tertiaryContainer.withValues(
-                      alpha: ConversionFunnelConstants.tertiaryContainerAlpha,
-                    ),
+                    theme.colorScheme.primaryContainer.withOpacity(0.8),
+                    theme.colorScheme.secondaryContainer.withOpacity(0.6),
+                    theme.colorScheme.tertiaryContainer.withOpacity(0.4),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(
-                  ConversionFunnelConstants.containerBorderRadius,
-                ),
+                borderRadius: BorderRadius.circular(16.0),
                 border: Border.all(
-                  color: theme.colorScheme.outline.withValues(
-                    alpha: ConversionFunnelConstants.outlineAlpha,
-                  ),
+                  color: theme.colorScheme.outline.withOpacity(0.2),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.primary.withValues(
-                      alpha: ConversionFunnelConstants.primaryShadowAlpha,
-                    ),
-                    blurRadius: ConversionFunnelConstants.shadowBlurRadius,
-                    offset: const Offset(
-                      0,
-                      ConversionFunnelConstants.shadowOffsetY,
-                    ),
+                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    blurRadius: 12.0,
+                    offset: const Offset(0, 4.0),
                   ),
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  ConversionFunnelConstants.containerBorderRadius,
-                ),
+                borderRadius: BorderRadius.circular(16.0),
                 child: Container(
-                  padding: const EdgeInsets.all(
-                    ConversionFunnelConstants.headerPadding,
-                  ),
+                  padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        ConversionFunnelConstants.white.withValues(
-                          alpha: ConversionFunnelConstants.whiteOverlayAlpha1,
-                        ),
-                        ConversionFunnelConstants.white.withValues(
-                          alpha: ConversionFunnelConstants.whiteOverlayAlpha2,
-                        ),
+                        Colors.white.withOpacity(0.1),
+                        Colors.white.withOpacity(0.05),
                       ],
                     ),
                   ),
@@ -105,16 +81,12 @@ class _ConversionFunnelChartState extends State<ConversionFunnelChart>
                       // Header
                       FunnelHeader(analytics: widget.analytics),
 
-                      const SizedBox(
-                        height: ConversionFunnelConstants.contentSpacing,
-                      ),
+                      const SizedBox(height: 16.0),
 
                       // Funnel visuel avec animations
                       const _FunnelVisualization(),
 
-                      const SizedBox(
-                        height: ConversionFunnelConstants.contentSpacing,
-                      ),
+                      const SizedBox(height: 16.0),
 
                       // Statistiques clés
                       FunnelStatsSection(analytics: widget.analytics),
@@ -143,43 +115,29 @@ class _FunnelVisualization extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final availableWidth =
-            constraints.maxWidth -
-            ConversionFunnelConstants.funnelChartHorizontalPadding;
-        final maxWidth = availableWidth.clamp(
-          ConversionFunnelConstants.maxWidthClamped,
-          ConversionFunnelConstants.maxWidthDefault,
-        );
-        const minWidth = ConversionFunnelConstants.minWidth;
+        final availableWidth = constraints.maxWidth - 32.0;
+        final maxWidth = availableWidth.clamp(200.0, 400.0);
+        const minWidth = 80.0;
 
         return SizedBox(
-          height:
-              analytics.conversionFunnel.length *
-                  ConversionFunnelConstants.funnelHeight +
-              ConversionFunnelConstants.funnelSpacing,
+          height: analytics.conversionFunnel.length * 60.0 + 20.0,
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
             children: [
               // Ligne centrale de guidage
               Positioned(
-                top: ConversionFunnelConstants.centerLineTop,
-                bottom: ConversionFunnelConstants.centerLineBottom,
+                top: 20.0,
+                bottom: 20.0,
                 child: Container(
-                  width: ConversionFunnelConstants.centerLineWidth,
+                  width: 2.0,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        theme.colorScheme.primary.withValues(
-                          alpha:
-                              ConversionFunnelConstants.primaryContainerAlpha,
-                        ),
-                        theme.colorScheme.primary.withValues(
-                          alpha:
-                              ConversionFunnelConstants.tertiaryContainerAlpha,
-                        ),
+                        theme.colorScheme.primary.withOpacity(0.8),
+                        theme.colorScheme.primary.withOpacity(0.4),
                       ],
                     ),
                   ),
@@ -196,7 +154,7 @@ class _FunnelVisualization extends StatelessWidget {
                         (analytics.conversionFunnel.length - 1));
 
                 return Positioned(
-                  top: index * ConversionFunnelConstants.funnelHeight,
+                  top: index * 60.0,
                   left: (availableWidth - stepWidth) / 2,
                   right: (availableWidth - stepWidth) / 2,
                   child: FunnelStepWidget(

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/extensions/food_offer_extensions.dart';
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -22,50 +20,39 @@ class OfferBackgroundImage extends StatelessWidget {
         // Image de fond
         Positioned.fill(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.lg,
-            ),
+            borderRadius: BorderRadius.circular(16.0),
             child: EcoCachedImage(
-              imageUrl: offer.images.isNotEmpty
-                  ? offer.images.first
-                  : offer.backgroundImageUrl,
-              placeholder: Container(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              ),
+              imageUrl: offer.images.isNotEmpty ? offer.images.first : '',
+              fit: BoxFit.cover,
               errorWidget: Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.lg,
-                  ),
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(16.0),
                 ),
                 child: Icon(
-                  Icons.fastfood,
-                  size: EcoPlatesDesignTokens.size.modalIcon(context),
-                  color: Theme.of(context).colorScheme.onSurface.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                  ),
+                  Icons.restaurant,
+                  color: Colors.grey,
+                  size: 40.0,
                 ),
               ),
             ),
           ),
         ),
 
-        // Overlay gradient pour lisibilité
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.lg,
-            ),
-            gradient: LinearGradient(
-              colors: [
-                EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                ),
-                EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                ),
-              ],
+        // Overlay dégradé
+        Positioned.fill(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.0),
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Colors.black.withOpacity(0.7),
+                  Colors.black.withOpacity(0.3),
+                  Colors.transparent,
+                ],
+              ),
             ),
           ),
         ),

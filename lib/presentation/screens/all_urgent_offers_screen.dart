@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/responsive/design_tokens.dart' as design_tokens;
 import '../../domain/entities/food_offer.dart';
 import '../providers/offer_reservation_provider.dart';
 import '../providers/offers_catalog_provider.dart';
 import '../providers/urgent_offers_provider.dart';
+import '../widgets/common/offers_list_view.dart';
+import '../widgets/common/urgency_indicator.dart';
 import '../widgets/offer_card.dart';
 import '../widgets/offer_detail/index.dart';
 
@@ -29,17 +30,14 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: design_tokens
-          .EcoPlatesDesignTokens
-          .urgentOffers
-          .pulseAnimationDuration,
+      duration: Duration(milliseconds: 1500),
       vsync: this,
-    )..repeat();
+    )..repeat(reverse: true);
 
     _pulseAnimation =
         Tween<double>(
-          begin: design_tokens.EcoPlatesDesignTokens.urgentOffers.pulseBegin,
-          end: design_tokens.EcoPlatesDesignTokens.urgentOffers.pulseEnd,
+          begin: 0.9,
+          end: 1.1,
         ).animate(
           CurvedAnimation(
             parent: _animationController,
@@ -71,24 +69,14 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                 );
               },
             ),
-            SizedBox(
-              width: design_tokens.EcoPlatesDesignTokens.spacing.microGap(
-                context,
-              ),
-            ),
+            SizedBox(width: 8.0),
             const Text("À sauver d'urgence"),
           ],
         ),
         centerTitle: false,
-        backgroundColor:
-            Theme.of(
-              context,
-            ).colorScheme.errorContainer.withValues(
-              alpha: design_tokens
-                  .EcoPlatesDesignTokens
-                  .urgentOffers
-                  .backgroundOpacity,
-            ),
+        backgroundColor: Theme.of(
+          context,
+        ).colorScheme.errorContainer.withOpacity(0.1),
         actions: [
           IconButton(
             icon: const Icon(Icons.sort),
@@ -104,347 +92,86 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
           ),
         ],
       ),
-      body: Builder(
-        builder: (context) {
-          if (offers.isEmpty) {
-            return _buildEmptyState(context);
-          }
+      body: UrgentOffersListView(
+        offers: offers,
+        enableRefresh: true,
+        onRefresh: () async {
+          await ref.read(offersRefreshProvider.notifier).refreshIfStale();
+        },
+        customCardBuilder: (BuildContext context, FoodOffer offer, int index) {
+          final remainingTime = offer.pickupEndTime.difference(DateTime.now());
 
-          // Trier les offres par urgence
-          final sortedOffers = List<FoodOffer>.from(offers)
-            ..sort((a, b) {
-              final aTime = a.pickupEndTime.difference(DateTime.now());
-              final bTime = b.pickupEndTime.difference(DateTime.now());
-              return aTime.compareTo(bTime);
-            });
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              // Rafraîchir intelligemment avec TTL
-              await ref.read(offersRefreshProvider.notifier).refreshIfStale();
-            },
-            child: ListView.builder(
-              padding: EdgeInsets.all(
-                design_tokens.EcoPlatesDesignTokens.spacing.dialogGap(context),
+          return Stack(
+            children: [
+              OfferCard(
+                offer: offer,
+                distance: 0.5 + (index * 0.3),
+                onTap: () {
+                  _navigateToOfferDetail(context, offer);
+                },
               ),
-              itemCount: sortedOffers.length,
-              itemBuilder: (context, index) {
-                final offer = sortedOffers[index];
-                final remainingTime = offer.pickupEndTime.difference(
-                  DateTime.now(),
-                );
 
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: design_tokens.EcoPlatesDesignTokens.spacing
-                        .interfaceGap(context),
-                  ),
-                  child: Stack(
-                    children: [
-                      OfferCard(
-                        offer: offer,
-                        distance:
-                            design_tokens
-                                .EcoPlatesDesignTokens
-                                .urgentOffers
-                                .baseDistance +
-                            (index *
-                                design_tokens
-                                    .EcoPlatesDesignTokens
-                                    .urgentOffers
-                                    .distanceIncrement),
-                        onTap: () {
-                          _navigateToOfferDetail(context, offer);
-                        },
-                      ),
+              // Badge urgence en overlay avec le nouveau widget
+              Positioned(
+                top: 16.0,
+                right: 16.0,
+                child: UrgencyIndicator(
+                  remainingTime: remainingTime,
+                  animate: true,
+                  animationController: _animationController,
+                  pulseAnimation: _pulseAnimation,
+                ),
+              ),
 
-                      // Badge urgence en overlay
-                      Positioned(
-                        top: design_tokens.EcoPlatesDesignTokens.spacing
-                            .interfaceGap(context),
-                        right: design_tokens.EcoPlatesDesignTokens.spacing
-                            .interfaceGap(context),
-                        child: _buildUrgencyIndicator(remainingTime),
-                      ),
-
-                      // Indicateur de stock faible
-                      if (offer.quantity <=
-                          design_tokens
-                              .EcoPlatesDesignTokens
-                              .urgentOffers
-                              .lowStockThreshold)
-                        Positioned(
-                          bottom:
-                              design_tokens.EcoPlatesDesignTokens.spacing
-                                  .sectionSpacing(context) *
-                              2,
-                          left: design_tokens.EcoPlatesDesignTokens.spacing
-                              .dialogGap(context),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: design_tokens
-                                  .EcoPlatesDesignTokens
-                                  .spacing
-                                  .microGap(context),
-                              vertical: design_tokens
-                                  .EcoPlatesDesignTokens
-                                  .spacing
-                                  .xxs,
-                            ),
-                            decoration: BoxDecoration(
-                              color: offer.quantity == 1
-                                  ? Theme.of(context).colorScheme.error
-                                  : Theme.of(context).colorScheme.tertiary,
-                              borderRadius: BorderRadius.circular(
-                                design_tokens.EcoPlatesDesignTokens.radius.sm,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                      Theme.of(
-                                        context,
-                                      ).colorScheme.shadow.withValues(
-                                        alpha: design_tokens
-                                            .EcoPlatesDesignTokens
-                                            .urgentOffers
-                                            .shadowOpacity,
-                                      ),
-                                  blurRadius: design_tokens
-                                      .EcoPlatesDesignTokens
-                                      .elevation
-                                      .mediumBlur,
-                                  offset: design_tokens
-                                      .EcoPlatesDesignTokens
-                                      .elevation
-                                      .elevatedOffset,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.flash_on,
-                                  color: Theme.of(context).colorScheme.onError,
-                                  size: design_tokens
-                                      .EcoPlatesDesignTokens
-                                      .typography
-                                      .label(context),
-                                ),
-                                SizedBox(
-                                  width: design_tokens
-                                      .EcoPlatesDesignTokens
-                                      .spacing
-                                      .xxs,
-                                ),
-                                Text(
-                                  offer.quantity == 1
-                                      ? 'Dernier disponible !'
-                                      : 'Plus que ${offer.quantity} restants',
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onError,
-                                        fontWeight: design_tokens
-                                            .EcoPlatesDesignTokens
-                                            .typography
-                                            .bold,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              },
-            ),
+              // Indicateur de stock faible
+              if (offer.quantity <= 3)
+                Positioned(
+                  bottom: 32.0,
+                  left: 16.0,
+                  child: _buildLowStockIndicator(context, offer),
+                ),
+            ],
           );
         },
       ),
     );
   }
 
-  Widget _buildUrgencyIndicator(Duration remainingTime) {
-    if (remainingTime.isNegative) {
-      return Container(); // Offre expirée
-    }
-
-    final hours = remainingTime.inHours;
-    final minutes = remainingTime.inMinutes % 60;
-
-    Color bgColor;
-    Color textColor;
-    String label;
-    IconData icon;
-
-    if (hours == 0 &&
-        minutes <=
-            design_tokens
-                .EcoPlatesDesignTokens
-                .urgentOffers
-                .criticalTimeThreshold) {
-      bgColor = Theme.of(context).colorScheme.error;
-      textColor = Theme.of(context).colorScheme.onError;
-      label = '⚡ $minutes min';
-      icon = Icons.warning;
-    } else if (hours == 0) {
-      bgColor = Theme.of(context).colorScheme.tertiary;
-      textColor = Theme.of(context).colorScheme.onTertiary;
-      label = '⏰ $minutes min';
-      icon = Icons.timer;
-    } else if (hours <=
-        (design_tokens
-                .EcoPlatesDesignTokens
-                .urgentOffers
-                .warningTimeThreshold ~/
-            60)) {
-      bgColor = Theme.of(context).colorScheme.secondary;
-      textColor = Theme.of(context).colorScheme.onSecondary;
-      label = '${hours}h ${minutes}min';
-      icon = Icons.access_time;
-    } else {
-      bgColor = Theme.of(context).colorScheme.primary;
-      textColor = Theme.of(context).colorScheme.onPrimary;
-      label = '${hours}h';
-      icon = Icons.schedule;
-    }
-
-    return AnimatedBuilder(
-      animation: _pulseAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: hours == 0 ? _pulseAnimation.value : 1.0,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: design_tokens.EcoPlatesDesignTokens.spacing.microGap(
-                context,
-              ),
-              vertical: design_tokens.EcoPlatesDesignTokens.spacing.xxs,
-            ),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(
-                design_tokens.EcoPlatesDesignTokens.radius.sm,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: bgColor.withValues(
-                    alpha: design_tokens
-                        .EcoPlatesDesignTokens
-                        .urgentOffers
-                        .overlayOpacity,
-                  ),
-                  blurRadius:
-                      design_tokens.EcoPlatesDesignTokens.elevation.largeBlur,
-                  offset: design_tokens
-                      .EcoPlatesDesignTokens
-                      .elevation
-                      .elevatedOffset,
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icon,
-                  color: textColor,
-                  size: design_tokens.EcoPlatesDesignTokens.typography.label(
-                    context,
-                  ),
-                ),
-                SizedBox(
-                  width: design_tokens.EcoPlatesDesignTokens.spacing.xxs,
-                ),
-                Text(
-                  label,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: textColor,
-                    fontWeight:
-                        design_tokens.EcoPlatesDesignTokens.typography.bold,
-                  ),
-                ),
-              ],
-            ),
+  Widget _buildLowStockIndicator(BuildContext context, FoodOffer offer) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8.0,
+        vertical: 4.0,
+      ),
+      decoration: BoxDecoration(
+        color: offer.quantity == 1
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.tertiary,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4.0,
+            offset: const Offset(0, 2.0),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width:
-                design_tokens.EcoPlatesDesignTokens.layout.emptyStateIconSize *
-                design_tokens
-                    .EcoPlatesDesignTokens
-                    .urgentOffers
-                    .emptyStateIconMultiplier,
-            height:
-                design_tokens.EcoPlatesDesignTokens.layout.emptyStateIconSize *
-                design_tokens
-                    .EcoPlatesDesignTokens
-                    .urgentOffers
-                    .emptyStateIconMultiplier,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.check_circle,
-              size:
-                  design_tokens.EcoPlatesDesignTokens.layout.emptyStateIconSize,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          Icon(
+            Icons.flash_on,
+            color: Theme.of(context).colorScheme.onError,
+            size: 16.0,
           ),
-          SizedBox(
-            height: design_tokens.EcoPlatesDesignTokens.spacing.sectionSpacing(
-              context,
-            ),
-          ),
+          const SizedBox(width: 4.0),
           Text(
-            'Tout a été sauvé ! 🎉',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: design_tokens.EcoPlatesDesignTokens.typography.bold,
-            ),
-          ),
-          SizedBox(
-            height: design_tokens.EcoPlatesDesignTokens.spacing.interfaceGap(
-              context,
-            ),
-          ),
-          Text(
-            'Aucune offre urgente en ce moment.\nRevenez plus tard pour sauver de la nourriture !',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: design_tokens.EcoPlatesDesignTokens.spacing.sectionSpacing(
-              context,
-            ),
-          ),
-          OutlinedButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back),
-            label: const Text('Retour'),
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.symmetric(
-                horizontal: design_tokens.EcoPlatesDesignTokens.spacing
-                    .sectionSpacing(context),
-                vertical: design_tokens.EcoPlatesDesignTokens.spacing
-                    .interfaceGap(context),
-              ),
+            offer.quantity == 1
+                ? 'Dernier disponible !'
+                : 'Plus que ${offer.quantity} restants',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onError,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
@@ -452,17 +179,12 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
     );
   }
 
-  // _buildErrorState n'est plus utilisé après simplification en Provider synchrone
-
   void _navigateToOfferDetail(BuildContext context, FoodOffer offer) {
     unawaited(
       showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
-        backgroundColor: design_tokens
-            .EcoPlatesDesignTokens
-            .urgentOffers
-            .modalBackgroundColor,
+        backgroundColor: Colors.transparent,
         builder: (context) => _buildOfferDetailModal(context, offer),
       ),
     );
@@ -470,27 +192,19 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
 
   Widget _buildOfferDetailModal(BuildContext context, FoodOffer offer) {
     final remainingTime = offer.pickupEndTime.difference(DateTime.now());
-    final isVeryUrgent =
-        remainingTime.inMinutes <=
-        design_tokens.EcoPlatesDesignTokens.urgentOffers.urgentTimeThreshold;
+    final isVeryUrgent = remainingTime.inMinutes <= 30;
 
     return Container(
-      height:
-          MediaQuery.of(context).size.height *
-          design_tokens.EcoPlatesDesignTokens.urgentOffers.modalHeightRatio,
+      height: MediaQuery.of(context).size.height * 0.9,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(design_tokens.EcoPlatesDesignTokens.radius.lg),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
       ),
       child: Column(
         children: [
-          // Header avec indication d'urgence
+          // Header avec gradient et bouton fermer
           Container(
-            padding: EdgeInsets.all(
-              design_tokens.EcoPlatesDesignTokens.spacing.dialogGap(context),
-            ),
+            padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isVeryUrgent
@@ -505,49 +219,44 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(
-                  design_tokens.EcoPlatesDesignTokens.radius.lg,
-                ),
-              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.local_fire_department,
-                            color: Theme.of(context).colorScheme.error,
-                            size: design_tokens.EcoPlatesDesignTokens.typography
-                                .titleSize(context),
-                          ),
-                          SizedBox(
-                            width:
-                                design_tokens.EcoPlatesDesignTokens.spacing.xxs,
-                          ),
-                          Text(
-                            'Offre très urgente !',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.error,
-                                  fontWeight: design_tokens
-                                      .EcoPlatesDesignTokens
-                                      .typography
-                                      .bold,
-                                ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: design_tokens.EcoPlatesDesignTokens.spacing.xxs,
+                      if (isVeryUrgent) ...[
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.warning,
+                              color: Theme.of(context).colorScheme.error,
+                              size: 20.0,
+                            ),
+                            SizedBox(width: 8.0),
+                            Text(
+                              'URGENT - ${remainingTime.inMinutes} minutes restantes',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context).colorScheme.error,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8.0),
+                      ],
+                      Text(
+                        offer.title,
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
-                        'À récupérer avant ${_formatTime(offer.pickupEndTime)}',
+                        'Chez ${offer.merchantName}',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -566,35 +275,18 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(
-                design_tokens.EcoPlatesDesignTokens.spacing.dialogGap(context),
-              ),
+              padding: EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Badge quantité limitée si applicable
-                  if (offer.quantity <=
-                      design_tokens
-                          .EcoPlatesDesignTokens
-                          .urgentOffers
-                          .lowStockThreshold)
+                  if (offer.quantity <= 3)
                     Container(
-                      margin: EdgeInsets.only(
-                        bottom: design_tokens.EcoPlatesDesignTokens.spacing
-                            .interfaceGap(context),
-                      ),
-                      padding: EdgeInsets.all(
-                        design_tokens.EcoPlatesDesignTokens.spacing
-                            .interfaceGap(context),
-                      ),
+                      margin: EdgeInsets.only(bottom: 16.0),
+                      padding: EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.tertiaryContainer,
-                        borderRadius: BorderRadius.circular(
-                          design_tokens.EcoPlatesDesignTokens.radius.md,
-                        ),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.tertiary,
-                        ),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: Row(
                         children: [
@@ -602,16 +294,9 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                             Icons.inventory_2,
                             color: Theme.of(context).colorScheme.tertiary,
                           ),
-                          SizedBox(
-                            width: design_tokens.EcoPlatesDesignTokens.spacing
-                                .interfaceGap(context),
-                          ),
+                          SizedBox(width: 12.0),
                           Text(
-                            offer.quantity ==
-                                    design_tokens
-                                        .EcoPlatesDesignTokens
-                                        .urgentOffers
-                                        .criticalStockThreshold
+                            offer.quantity == 1
                                 ? 'Dernier article disponible !'
                                 : 'Plus que ${offer.quantity} articles disponibles',
                             style: Theme.of(context).textTheme.bodyMedium
@@ -619,10 +304,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                                   color: Theme.of(
                                     context,
                                   ).colorScheme.onTertiaryContainer,
-                                  fontWeight: design_tokens
-                                      .EcoPlatesDesignTokens
-                                      .typography
-                                      .bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                           ),
                         ],
@@ -631,40 +313,23 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
 
                   // Informations principales
                   OfferInfoSection(offer: offer),
-                  SizedBox(
-                    height: design_tokens.EcoPlatesDesignTokens.spacing
-                        .sectionSpacing(context),
-                  ),
+                  SizedBox(height: 16.0),
 
                   // Détails pratiques
                   OfferDetailsSection(offer: offer),
-                  SizedBox(
-                    height: design_tokens.EcoPlatesDesignTokens.spacing
-                        .sectionSpacing(context),
-                  ),
+                  SizedBox(height: 16.0),
 
                   // Adresse
                   OfferAddressSection(offer: offer),
-                  SizedBox(
-                    height: design_tokens.EcoPlatesDesignTokens.spacing
-                        .sectionSpacing(context),
-                  ),
+                  SizedBox(height: 16.0),
 
                   // Badges allergènes
                   OfferBadgesSection(offer: offer),
-                  SizedBox(
-                    height: design_tokens.EcoPlatesDesignTokens.spacing
-                        .sectionSpacing(context),
-                  ),
+                  SizedBox(height: 16.0),
 
                   // Métadonnées
                   OfferMetadataSection(offer: offer),
-                  SizedBox(
-                    height: design_tokens
-                        .EcoPlatesDesignTokens
-                        .urgentOffers
-                        .reservationBarSpacing,
-                  ),
+                  SizedBox(height: 80.0), // Espace pour la barre de réservation
                 ],
               ),
             ),
@@ -672,9 +337,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
 
           // Barre de réservation urgente
           Container(
-            padding: EdgeInsets.all(
-              design_tokens.EcoPlatesDesignTokens.spacing.dialogGap(context),
-            ),
+            padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -713,10 +376,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                             : '${offer.discountedPrice.toStringAsFixed(2)}€',
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(
-                              fontWeight: design_tokens
-                                  .EcoPlatesDesignTokens
-                                  .typography
-                                  .bold,
+                              fontWeight: FontWeight.bold,
                               color: offer.discountedPrice == 0
                                   ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).colorScheme.onSurface,
@@ -724,10 +384,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                       ),
                     ],
                   ),
-                  SizedBox(
-                    width: design_tokens.EcoPlatesDesignTokens.spacing
-                        .interfaceGap(context),
-                  ),
+                  SizedBox(width: 16.0),
                   // Bouton de réservation
                   Expanded(
                     child: Consumer(
@@ -742,18 +399,12 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                                 Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    backgroundColor: design_tokens
-                                        .EcoPlatesDesignTokens
-                                        .urgentOffers
-                                        .successSnackBarColor,
+                                    backgroundColor: Colors.green.shade700,
                                     content: Row(
                                       children: [
                                         Icon(
                                           Icons.check_circle,
-                                          color: design_tokens
-                                              .EcoPlatesDesignTokens
-                                              .urgentOffers
-                                              .snackBarTextColor,
+                                          color: Colors.white,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -766,10 +417,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                                         ),
                                       ],
                                     ),
-                                    duration: design_tokens
-                                        .EcoPlatesDesignTokens
-                                        .urgentOffers
-                                        .successSnackBarDuration,
+                                    duration: Duration(seconds: 3),
                                   ),
                                 );
                               }
@@ -777,10 +425,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    backgroundColor: design_tokens
-                                        .EcoPlatesDesignTokens
-                                        .urgentOffers
-                                        .errorSnackBarColor,
+                                    backgroundColor: Colors.red.shade700,
                                     content: Text('Réservation impossible: $e'),
                                   ),
                                 );
@@ -791,42 +436,26 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                             backgroundColor: Theme.of(
                               context,
                             ).colorScheme.error,
-                            padding: EdgeInsets.symmetric(
-                              vertical: design_tokens
-                                  .EcoPlatesDesignTokens
-                                  .spacing
-                                  .interfaceGap(context),
-                            ),
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                design_tokens.EcoPlatesDesignTokens.radius.md,
-                              ),
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.shopping_bag,
-                                size: design_tokens
-                                    .EcoPlatesDesignTokens
-                                    .typography
-                                    .titleSize(context),
+                                Icons.flash_on,
+                                color: Colors.white,
+                                size: 20.0,
                               ),
-                              SizedBox(
-                                width: design_tokens
-                                    .EcoPlatesDesignTokens
-                                    .spacing
-                                    .microGap(context),
-                              ),
+                              SizedBox(width: 8.0),
                               Text(
                                 'Sauver maintenant',
                                 style: Theme.of(context).textTheme.titleMedium
                                     ?.copyWith(
-                                      fontWeight: design_tokens
-                                          .EcoPlatesDesignTokens
-                                          .typography
-                                          .bold,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                               ),
                             ],
@@ -844,110 +473,52 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
     );
   }
 
-  String _formatTime(DateTime time) {
-    final hour = time.hour.toString().padLeft(2, '0');
-    final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
-
   void _showSortBottomSheet(BuildContext context) {
     unawaited(
       showModalBottomSheet<void>(
         context: context,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(
-              design_tokens
-                  .EcoPlatesDesignTokens
-                  .urgentOffers
-                  .bottomSheetBorderRadius,
-            ),
-          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
         ),
         builder: (context) {
           return Container(
-            padding: EdgeInsets.all(
-              design_tokens
-                  .EcoPlatesDesignTokens
-                  .urgentOffers
-                  .bottomSheetPadding,
-            ),
+            padding: EdgeInsets.all(24.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Trier par',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: design_tokens
-                      .EcoPlatesDesignTokens
-                      .urgentOffers
-                      .bottomSheetVerticalSpacing,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.timer,
-                    color: design_tokens
-                        .EcoPlatesDesignTokens
-                        .urgentOffers
-                        .sortUrgentColor,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+                SizedBox(height: 16.0),
+                ListTile(
+                  leading: Icon(Icons.timer, color: Colors.red.shade700),
                   title: const Text("Plus urgent d'abord"),
                   subtitle: const Text('Offres qui expirent bientôt'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  onTap: () => Navigator.pop(context),
                   selected: true,
-                  selectedTileColor: design_tokens
-                      .EcoPlatesDesignTokens
-                      .urgentOffers
-                      .sortSelectedBackgroundColor,
+                  selectedTileColor: Colors.red.shade50,
                 ),
                 ListTile(
-                  leading: Icon(
-                    Icons.location_on,
-                    color: design_tokens
-                        .EcoPlatesDesignTokens
-                        .urgentOffers
-                        .sortLocationColor,
-                  ),
+                  leading: Icon(Icons.location_on, color: Colors.blue.shade700),
                   title: const Text('Plus proche'),
                   subtitle: const Text('Distance la plus courte'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  onTap: () => Navigator.pop(context),
                 ),
                 ListTile(
-                  leading: Icon(
-                    Icons.euro,
-                    color: design_tokens
-                        .EcoPlatesDesignTokens
-                        .urgentOffers
-                        .sortPriceColor,
-                  ),
+                  leading: Icon(Icons.euro, color: Colors.green.shade700),
                   title: const Text('Prix le plus bas'),
                   subtitle: const Text('Meilleures affaires'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  onTap: () => Navigator.pop(context),
                 ),
                 ListTile(
-                  leading: Icon(
-                    Icons.inventory,
-                    color: design_tokens
-                        .EcoPlatesDesignTokens
-                        .urgentOffers
-                        .sortStockColor,
-                  ),
+                  leading: Icon(Icons.inventory, color: Colors.orange.shade700),
                   title: const Text('Stock faible'),
                   subtitle: const Text('Derniers articles disponibles'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  onTap: () => Navigator.pop(context),
                 ),
               ],
             ),
@@ -962,24 +533,12 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
       showModalBottomSheet<void>(
         context: context,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(
-              design_tokens
-                  .EcoPlatesDesignTokens
-                  .urgentOffers
-                  .bottomSheetBorderRadius,
-            ),
-          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
         ),
         isScrollControlled: true,
         builder: (context) {
           return Container(
-            padding: EdgeInsets.all(
-              design_tokens
-                  .EcoPlatesDesignTokens
-                  .urgentOffers
-                  .bottomSheetPadding,
-            ),
+            padding: EdgeInsets.all(24.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -999,12 +558,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: design_tokens
-                      .EcoPlatesDesignTokens
-                      .urgentOffers
-                      .bottomSheetVerticalSpacing,
-                ),
+                SizedBox(height: 16.0),
 
                 // Filtre par temps restant
                 Text(
@@ -1075,9 +629,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                        onPressed: () => Navigator.pop(context),
                         child: const Text('Réinitialiser'),
                       ),
                     ),
@@ -1089,10 +641,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: const Text('Filtres appliqués'),
-                              duration: design_tokens
-                                  .EcoPlatesDesignTokens
-                                  .urgentOffers
-                                  .infoSnackBarDuration,
+                              duration: Duration(seconds: 2),
                             ),
                           );
                         },

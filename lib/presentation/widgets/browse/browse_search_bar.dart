@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-import '../../../core/responsive/context_responsive_extensions.dart';
 import '../../../core/services/map_service.dart';
 import '../../providers/browse_search_provider.dart';
 
@@ -41,28 +39,30 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
 
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: context.scaleMD_LG_XL_XXL,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 16.0,
+        vertical: 8.0,
       ),
-      padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+      padding: EdgeInsets.all(8.0),
       child: Row(
         children: [
           // Champ de recherche
           Expanded(
             child: Container(
-              height: EcoPlatesDesignTokens.size.buttonHeight(context),
+              height: 48.0,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
-                ),
-                borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.md,
-                ),
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(12.0),
                 border: Border.all(
-                  color: Colors.grey[300]!.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.disabled,
-                  ),
+                  color: Colors.grey.shade300,
+                  width: 1.0,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4.0,
+                    offset: Offset(0, 2.0),
+                  ),
+                ],
               ),
               child: TextField(
                 controller: _searchController,
@@ -73,46 +73,48 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                   hintText: 'Rechercher...',
                   hintStyle: TextStyle(
                     color: Colors.grey,
-                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                    fontSize: 16.0,
                   ),
                   border: InputBorder.none,
                   prefixIcon: Icon(
                     Icons.search,
                     color: Colors.grey,
-                    size: context.scaleIconStandard,
+                    size: 20.0,
                   ),
                   prefixIconConstraints: BoxConstraints(
-                    minWidth: context.scaleLG_XL_XXL_XXXL,
-                    minHeight: context.scaleSM_MD_LG_XL,
+                    minWidth: 40.0,
+                    minHeight: 20.0,
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: context.scaleXXS_XS_SM_MD,
-                    vertical: context.scaleXXS_XS_SM_MD,
+                    horizontal: 8.0,
+                    vertical: 8.0,
                   ),
                 ),
               ),
             ),
           ),
 
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 8.0),
 
           // Bouton GPS
           Container(
-            height: EcoPlatesDesignTokens.size.buttonHeight(context),
-            width: EcoPlatesDesignTokens.size.buttonHeight(context),
+            height: 48.0,
+            width: 48.0,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.md,
-              ),
-              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(12.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4.0,
+                  offset: Offset(0, 2.0),
+                ),
+              ],
             ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.md,
-                ),
+                borderRadius: BorderRadius.circular(12.0),
                 onTap: () async {
                   FocusScope.of(context).unfocus();
 
@@ -137,34 +139,36 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                   isLocationActive ? Icons.near_me : Icons.near_me_outlined,
                   color: isLocationActive
                       ? Theme.of(context).primaryColor
-                      : Theme.of(context).colorScheme.onSurface.withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
-                        ),
-                  size: context.scaleIconStandard,
+                      : Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.6),
+                  size: 20.0,
                 ),
               ),
             ),
           ),
 
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 8.0),
 
           // Bouton Filtres avec badge
           Container(
-            height: EcoPlatesDesignTokens.size.buttonHeight(context),
-            width: EcoPlatesDesignTokens.size.buttonHeight(context),
+            height: 48.0,
+            width: 48.0,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.md,
-              ),
-              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(12.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4.0,
+                  offset: Offset(0, 2.0),
+                ),
+              ],
             ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.md,
-                ),
+                borderRadius: BorderRadius.circular(12.0),
                 onTap: () {
                   FocusScope.of(context).unfocus();
                   widget.onFilterTap?.call();
@@ -180,21 +184,17 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                             ? Theme.of(context).primaryColor
                             : Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withValues(
-                                alpha: EcoPlatesDesignTokens
-                                    .opacity
-                                    .gradientPrimary,
-                              ),
-                        size: context.scaleIconStandard,
+                              ).colorScheme.onSurface.withOpacity(0.6),
+                        size: 20.0,
                       ),
                     ),
                     if (filters.activeFiltersCount > 0)
                       Positioned(
-                        top: context.scaleXXS_XS_SM_MD,
-                        right: context.scaleXXS_XS_SM_MD,
+                        top: 8.0,
+                        right: 8.0,
                         child: Container(
-                          width: context.scaleSM_MD_LG_XL,
-                          height: context.scaleSM_MD_LG_XL,
+                          width: 16.0,
+                          height: 16.0,
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
                             shape: BoxShape.circle,
@@ -204,7 +204,7 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                               '${filters.activeFiltersCount}',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: context.scaleXXS_XS_SM_MD,
+                                fontSize: 10.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

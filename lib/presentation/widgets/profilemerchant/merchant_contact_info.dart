@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/merchant_profile.dart';
 
 /// Widget pour afficher les informations de contact du merchant
@@ -26,53 +24,33 @@ class MerchantContactInfo extends ConsumerWidget {
     final colors = theme.colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+      padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xl),
-        boxShadow: [
-          BoxShadow(
-            color: EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.subtle,
-            ),
-            blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
-          ),
-        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Titre
-          Row(
-            children: [
-              Icon(
-                Icons.contact_phone,
-                color: colors.primary,
-                size: EcoPlatesDesignTokens.size.icon(context),
-              ),
-              SizedBox(width: context.scaleMD_LG_XL_XXL),
-              Text(
-                'Coordonnées',
-                style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-                  fontWeight: EcoPlatesDesignTokens.typography.bold,
-                ),
-              ),
-            ],
+          SizedBox(height: 20.0),
+          Text(
+            'Coordonnées',
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
 
           // Adresse
           if (profile.address != null) ...[
             _buildAddressSection(context, colors),
-            SizedBox(height: context.scaleMD_LG_XL_XXL),
+            SizedBox(height: 16.0),
           ],
 
           // Téléphone
           if (profile.phoneNumber != null) ...[
             _buildPhoneSection(context, colors),
-            SizedBox(height: context.scaleMD_LG_XL_XXL),
+            SizedBox(height: 16.0),
           ],
 
           // Email
@@ -95,21 +73,18 @@ class MerchantContactInfo extends ConsumerWidget {
 
     return InkWell(
       onTap: () => _openInMaps(address),
-      borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+      borderRadius: BorderRadius.circular(16.0),
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: context.scaleXXS_XS_SM_MD,
-          horizontal: context.scaleXS_SM_MD_LG,
-        ),
+        padding: EdgeInsets.all(12.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
               Icons.location_on,
-              color: colors.secondary,
-              size: EcoPlatesDesignTokens.size.indicator(context),
+              color: Colors.blue,
+              size: 20.0,
             ),
-            SizedBox(width: context.scaleXS_SM_MD_LG),
+            SizedBox(width: 12.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,17 +92,16 @@ class MerchantContactInfo extends ConsumerWidget {
                   Text(
                     'Adresse',
                     style: TextStyle(
-                      color: colors.onSurfaceVariant,
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                      fontWeight: EcoPlatesDesignTokens.typography.medium,
+                      color: Colors.grey,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
                   Text(
                     address.formatted,
                     style: TextStyle(
-                      color: colors.onSurface,
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                      color: Colors.black,
+                      fontSize: 16.0,
                     ),
                   ),
                 ],
@@ -135,8 +109,8 @@ class MerchantContactInfo extends ConsumerWidget {
             ),
             Icon(
               Icons.directions,
-              color: colors.primary,
-              size: EcoPlatesDesignTokens.size.indicator(context),
+              color: Colors.green,
+              size: 16.0,
             ),
           ],
         ),
@@ -149,20 +123,17 @@ class MerchantContactInfo extends ConsumerWidget {
       onTap: () => _callPhone(profile.phoneNumber!),
       onLongPress: () =>
           _copyToClipboard(context, profile.phoneNumber!, 'Numéro copié'),
-      borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+      borderRadius: BorderRadius.circular(16.0),
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: context.scaleXXS_XS_SM_MD,
-          horizontal: context.scaleXS_SM_MD_LG,
-        ),
+        padding: EdgeInsets.all(12.0),
         child: Row(
           children: [
             Icon(
               Icons.phone,
-              color: colors.secondary,
-              size: EcoPlatesDesignTokens.size.indicator(context),
+              color: Colors.blue,
+              size: 20.0,
             ),
-            SizedBox(width: context.scaleXS_SM_MD_LG),
+            SizedBox(width: 12.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,17 +141,16 @@ class MerchantContactInfo extends ConsumerWidget {
                   Text(
                     'Téléphone',
                     style: TextStyle(
-                      color: colors.onSurfaceVariant,
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                      fontWeight: EcoPlatesDesignTokens.typography.medium,
+                      color: Colors.grey,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
                   Text(
                     _formatPhoneNumber(profile.phoneNumber!),
                     style: TextStyle(
-                      color: colors.onSurface,
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                      color: Colors.black,
+                      fontSize: 16.0,
                     ),
                   ),
                 ],
@@ -188,8 +158,8 @@ class MerchantContactInfo extends ConsumerWidget {
             ),
             Icon(
               Icons.call,
-              color: colors.primary,
-              size: EcoPlatesDesignTokens.size.indicator(context),
+              color: Colors.green,
+              size: 16.0,
             ),
           ],
         ),
@@ -202,20 +172,17 @@ class MerchantContactInfo extends ConsumerWidget {
       onTap: () => _sendEmail(profile.email!),
       onLongPress: () =>
           _copyToClipboard(context, profile.email!, 'Email copié'),
-      borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+      borderRadius: BorderRadius.circular(16.0),
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: context.scaleXXS_XS_SM_MD,
-          horizontal: context.scaleXS_SM_MD_LG,
-        ),
+        padding: EdgeInsets.all(12.0),
         child: Row(
           children: [
             Icon(
               Icons.email,
-              color: colors.secondary,
-              size: EcoPlatesDesignTokens.size.indicator(context),
+              color: Colors.blue,
+              size: 20.0,
             ),
-            SizedBox(width: context.scaleXS_SM_MD_LG),
+            SizedBox(width: 12.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,17 +190,16 @@ class MerchantContactInfo extends ConsumerWidget {
                   Text(
                     'Email',
                     style: TextStyle(
-                      color: colors.onSurfaceVariant,
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                      fontWeight: EcoPlatesDesignTokens.typography.medium,
+                      color: Colors.grey,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
                   Text(
                     profile.email!,
                     style: TextStyle(
-                      color: colors.onSurface,
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                      color: Colors.black,
+                      fontSize: 16.0,
                     ),
                   ),
                 ],
@@ -241,8 +207,8 @@ class MerchantContactInfo extends ConsumerWidget {
             ),
             Icon(
               Icons.send,
-              color: colors.primary,
-              size: EcoPlatesDesignTokens.size.indicator(context),
+              color: Colors.green,
+              size: 16.0,
             ),
           ],
         ),
@@ -257,22 +223,20 @@ class MerchantContactInfo extends ConsumerWidget {
   ) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
+        padding: EdgeInsets.all(32.0),
         child: Column(
           children: [
             Icon(
               Icons.info_outline,
-              color: colors.onSurfaceVariant.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-              ),
-              size: EcoPlatesDesignTokens.size.modalIcon(context),
+              color: Colors.grey.withOpacity(0.6),
+              size: 48.0,
             ),
-            SizedBox(height: context.scaleXS_SM_MD_LG),
+            SizedBox(height: 16.0),
             Text(
               'Aucune information de contact disponible',
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.text(context),
-                color: colors.onSurfaceVariant,
+                fontSize: 16.0,
+                color: Colors.grey,
               ),
               textAlign: TextAlign.center,
             ),

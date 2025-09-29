@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/responsive/design_tokens.dart';
 import '../providers/sort_provider.dart';
 import '../widgets/sort_modal.dart';
 
@@ -15,8 +14,8 @@ class SortSection extends ConsumerWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: context.scaleMD_LG_XL_XXL,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 16.0,
+        vertical: 8.0,
       ),
       child: Row(
         children: [
@@ -24,7 +23,7 @@ class SortSection extends ConsumerWidget {
             'Trier par : ',
             style: TextStyle(
               color: Colors.grey[600],
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
+              fontSize: 14.0,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -37,14 +36,14 @@ class SortSection extends ConsumerWidget {
                   currentSort.label,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
-                    fontSize: EcoPlatesDesignTokens.typography.text(context),
+                    fontSize: 14.0,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
+                SizedBox(width: 4.0),
                 Icon(
                   Icons.keyboard_arrow_down,
-                  size: EcoPlatesDesignTokens.size.icon(context) / 1.2,
+                  size: 20.0,
                   color: Theme.of(context).primaryColor,
                 ),
               ],
@@ -63,14 +62,12 @@ class SortSection extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         builder: (context) => Container(
           constraints: BoxConstraints(
-            maxHeight:
-                MediaQuery.of(context).size.height *
-                EcoPlatesDesignTokens.layout.modalMaxHeightFactor,
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
           ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(
-              top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+              top: Radius.circular(12.0),
             ),
           ),
           child: const SortModal(),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../responsive/design_tokens.dart';
 import '../tokens/color_tokens.dart';
 import '../tokens/elevation_tokens.dart';
 import '../tokens/radius_tokens.dart';
@@ -51,21 +50,19 @@ class EcoButtonTheme {
 
             // Forme et bordures
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.buttonRadius(context),
-              ),
+              borderRadius: BorderRadius.circular(12.0),
             ),
 
             // Padding responsif
             padding: EdgeInsets.symmetric(
-              horizontal: EcoPlatesDesignTokens.spacing.lg,
-              vertical: EcoPlatesDesignTokens.spacing.md,
+              horizontal: 16.0,
+              vertical: 12.0,
             ),
 
             // Style de texte responsif
             textStyle: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.button(context),
-              fontWeight: EcoPlatesDesignTokens.typography.buttonWeight,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
               color: onBaseColor,
             ),
           ).copyWith(
@@ -130,21 +127,19 @@ class EcoButtonTheme {
 
             // Forme
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.buttonRadius(context),
-              ),
+              borderRadius: BorderRadius.circular(12.0),
             ),
 
             // Padding responsif
             padding: EdgeInsets.symmetric(
-              horizontal: EcoPlatesDesignTokens.spacing.lg,
-              vertical: EcoPlatesDesignTokens.spacing.md,
+              horizontal: 16.0,
+              vertical: 12.0,
             ),
 
             // Style de texte responsif
             textStyle: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.button(context),
-              fontWeight: EcoPlatesDesignTokens.typography.buttonWeight,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
               color: textColor,
             ),
           ).copyWith(
@@ -528,17 +523,17 @@ class EcoButtonTheme {
     backgroundColor: backgroundColor,
     foregroundColor: foregroundColor,
     padding: EdgeInsets.symmetric(
-      horizontal: horizontalPadding ?? EcoPlatesDesignTokens.spacing.lg,
-      vertical: verticalPadding ?? EcoPlatesDesignTokens.spacing.md,
+      horizontal: horizontalPadding ?? 16.0,
+      vertical: verticalPadding ?? 12.0,
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(
-        borderRadius ?? EcoPlatesDesignTokens.radius.buttonRadius(context),
+        borderRadius ?? 12.0,
       ),
     ),
     textStyle: TextStyle(
-      fontSize: EcoPlatesDesignTokens.typography.button(context),
-      fontWeight: EcoPlatesDesignTokens.typography.buttonWeight,
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
     ),
   );
 
@@ -559,17 +554,17 @@ class EcoButtonTheme {
       width: borderWidth,
     ),
     padding: EdgeInsets.symmetric(
-      horizontal: horizontalPadding ?? EcoPlatesDesignTokens.spacing.lg,
-      vertical: verticalPadding ?? EcoPlatesDesignTokens.spacing.md,
+      horizontal: horizontalPadding ?? 16.0,
+      vertical: verticalPadding ?? 12.0,
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(
-        borderRadius ?? EcoPlatesDesignTokens.radius.buttonRadius(context),
+        borderRadius ?? 12.0,
       ),
     ),
     textStyle: TextStyle(
-      fontSize: EcoPlatesDesignTokens.typography.button(context),
-      fontWeight: EcoPlatesDesignTokens.typography.buttonWeight,
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
     ),
   );
 
@@ -603,9 +598,9 @@ class EcoButtonTheme {
         context: context,
         backgroundColor: EcoColorTokens.primary,
         foregroundColor: EcoColorTokens.neutral0,
-        horizontalPadding: EcoPlatesDesignTokens.spacing.xxl,
-        verticalPadding: EcoPlatesDesignTokens.spacing.sm,
-        borderRadius: EcoPlatesDesignTokens.radius.xxl,
+        horizontalPadding: 24.0,
+        verticalPadding: 8.0,
+        borderRadius: 20.0,
       );
 
   /// Bouton ghost responsive (transparent avec bordure)
@@ -636,10 +631,8 @@ class EcoButtonTheme {
       ).copyWith(
         textStyle: WidgetStateProperty.all(
           TextStyle(
-            fontSize:
-                fontSize ?? EcoPlatesDesignTokens.typography.button(context),
-            fontWeight:
-                fontWeight ?? EcoPlatesDesignTokens.typography.buttonWeight,
+            fontSize: fontSize ?? 14.0,
+            fontWeight: fontWeight ?? FontWeight.w500,
           ),
         ),
       );
@@ -667,10 +660,8 @@ class EcoButtonTheme {
       ).copyWith(
         textStyle: WidgetStateProperty.all(
           TextStyle(
-            fontSize:
-                fontSize ?? EcoPlatesDesignTokens.typography.button(context),
-            fontWeight:
-                fontWeight ?? EcoPlatesDesignTokens.typography.buttonWeight,
+            fontSize: fontSize ?? 14.0,
+            fontWeight: fontWeight ?? FontWeight.w500,
           ),
         ),
       );

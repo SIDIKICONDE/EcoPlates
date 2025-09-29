@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/store_offers_provider.dart';
 import 'store_offer_actions_dialog.dart';
@@ -60,12 +59,12 @@ class _OffersGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      padding: const EdgeInsets.all(8.0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 0.55, // Encore plus réduit pour éviter l'overflow
-        crossAxisSpacing: context.scaleXXS_XS_SM_MD,
-        mainAxisSpacing: context.scaleXXS_XS_SM_MD,
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
       ),
       itemCount: offers.length,
       itemBuilder: (context, index) {
@@ -89,12 +88,12 @@ class _OffersListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+      padding: const EdgeInsets.all(16.0),
       itemCount: offers.length,
       itemBuilder: (context, index) {
         final offer = offers[index];
         return Padding(
-          padding: EdgeInsets.only(bottom: context.scaleXS_SM_MD_LG),
+          padding: const EdgeInsets.only(bottom: 12.0),
           child: StoreOfferListCard(
             offer: offer,
             onTap: () => StoreOfferActionsDialog.show(context, offer),

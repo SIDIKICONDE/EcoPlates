@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../responsive/design_tokens.dart';
 import 'failures.dart';
 
 /// Gestionnaire d'erreurs centralisé pour le côté commerçant
@@ -288,12 +287,12 @@ class MerchantErrorHandler {
       SnackBar(
         content: Text(message),
         backgroundColor: isRecoverable
-            ? EcoPlatesDesignTokens.errorColorNetwork(context)
-            : EcoPlatesDesignTokens.errorColorGeneral(context),
+            ? Colors.orange.shade700
+            : Colors.red.shade700,
         action: isRecoverable
             ? SnackBarAction(
                 label: 'Réessayer',
-                textColor: EcoPlatesDesignTokens.colors.textPrimary,
+                textColor: Colors.white,
                 onPressed: () {
                   // Trigger retry logic
                 },
@@ -311,8 +310,6 @@ class MerchantErrorHandler {
     List<Widget>? actions,
     bool dismissible = true,
   }) async {
-    final theme = Theme.of(context);
-
     await showDialog<void>(
       context: context,
       barrierDismissible: dismissible,
@@ -322,10 +319,12 @@ class MerchantErrorHandler {
             Icon(
               _getErrorIcon(failure),
               color: _getErrorColor(context, failure),
-              size: EcoPlatesDesignTokens.errorIconSize,
+              size: 24.0,
             ),
-            SizedBox(width: EcoPlatesDesignTokens.errorDialogSpacing),
-            Text(title ?? _getErrorTitle(failure)),
+            SizedBox(width: 8.0),
+            Expanded(
+              child: Text(title ?? _getErrorTitle(failure)),
+            ),
           ],
         ),
         content: Column(
@@ -334,26 +333,24 @@ class MerchantErrorHandler {
           children: [
             Text(failure.userMessage),
             if (failure.code != null) ...[
-              SizedBox(height: EcoPlatesDesignTokens.errorDialogSpacing),
+              SizedBox(height: 8.0),
               Text(
                 'Code: ${failure.code}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: EcoPlatesDesignTokens.errorTextSecondary(context),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey.shade600,
                 ),
               ),
             ],
             if (failure is ValidationFailure &&
                 failure.fieldErrors != null) ...[
-              SizedBox(height: EcoPlatesDesignTokens.errorDialogFieldSpacing),
+              SizedBox(height: 16.0),
               ...failure.fieldErrors!.entries.map(
                 (entry) => Padding(
-                  padding: EdgeInsets.only(
-                    bottom: EcoPlatesDesignTokens.errorFieldErrorSpacing,
-                  ),
+                  padding: EdgeInsets.only(bottom: 4.0),
                   child: Text(
-                    '• ${entry.key}: ${entry.value.join(', ')}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: EcoPlatesDesignTokens.errorFieldText(context),
+                    '${entry.key}: ${entry.value.join(', ')}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.red.shade700,
                     ),
                   ),
                 ),
@@ -395,16 +392,16 @@ class MerchantErrorHandler {
   /// Retourne la couleur appropriée pour le type d'erreur
   static Color _getErrorColor(BuildContext context, Failure failure) {
     if (failure is NetworkFailure || failure is TimeoutFailure) {
-      return EcoPlatesDesignTokens.errorColorNetwork(context);
+      return Colors.orange.shade700;
     } else if (failure is AuthenticationFailure ||
         failure is PermissionFailure) {
-      return EcoPlatesDesignTokens.errorColorAuth(context);
+      return Colors.red.shade700;
     } else if (failure is ValidationFailure) {
-      return EcoPlatesDesignTokens.errorColorValidation(context);
+      return Colors.amber.shade700;
     } else if (failure is PaymentFailure) {
-      return EcoPlatesDesignTokens.errorColorPayment(context);
+      return Colors.red.shade900;
     } else {
-      return EcoPlatesDesignTokens.errorColorGeneral(context);
+      return Colors.red.shade700;
     }
   }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/enums/merchant_enums.dart';
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/merchant_profile.dart';
 
 /// Widget pour afficher les horaires d'ouverture du merchant
@@ -25,42 +24,24 @@ class MerchantOpeningHours extends ConsumerWidget {
     final colors = theme.colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+      padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xl),
-        boxShadow: [
-          BoxShadow(
-            color: EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.subtle,
-            ),
-            blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Titre
-          Row(
-            children: [
-              Icon(
-                Icons.access_time,
-                color: colors.primary,
-                size: EcoPlatesDesignTokens.size.icon(context),
-              ),
-              SizedBox(width: context.scaleMD_LG_XL_XXL),
-              Text(
-                "Horaires d'ouverture",
-                style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-                  fontWeight: EcoPlatesDesignTokens.typography.bold,
-                ),
-              ),
-            ],
+          SizedBox(height: 16.0),
+          Text(
+            "Horaires d'ouverture",
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+
+          SizedBox(height: 16.0),
 
           // Tableau des horaires
           if (profile.openingHours.isNotEmpty)
@@ -107,48 +88,36 @@ class MerchantOpeningHours extends ConsumerWidget {
     final isClosed = hours == null || hours.isClosed;
 
     return Container(
-      margin: EdgeInsets.only(bottom: context.scaleXXS_XS_SM_MD),
+      margin: EdgeInsets.only(bottom: 8.0),
       padding: EdgeInsets.symmetric(
-        horizontal: context.scaleXS_SM_MD_LG,
-        vertical: context.scaleXS_SM_MD_LG,
+        horizontal: 12.0,
+        vertical: 12.0,
       ),
       decoration: BoxDecoration(
-        color: isToday
-            ? colors.primary.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-              )
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
+        color: isToday ? colors.primary.withOpacity(0.1) : null,
         border: isToday
             ? Border.all(
-                color: colors.primary.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                ),
+                color: colors.primary.withOpacity(0.2),
+                width: 1.0,
               )
             : null,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
         children: [
-          // Jour de la semaine
-          SizedBox(
-            width: isCompact ? 60 : 100,
-            child: Text(
-              isCompact ? day.displayName.substring(0, 3) : day.displayName,
-              style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.text(context),
-                fontWeight: isToday
-                    ? EcoPlatesDesignTokens.typography.bold
-                    : FontWeight.normal,
-                color: isToday ? colors.primary : colors.onSurface,
-              ),
+          Text(
+            day.displayName,
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
+              color: isToday ? colors.primary : colors.onSurface,
             ),
           ),
 
-          // Statut ouvert/fermé (pour aujourd'hui)
           if (isToday && !isCompact) ...[
-            SizedBox(width: context.scaleXXS_XS_SM_MD),
+            SizedBox(width: 8.0),
             _buildTodayStatus(colors, isClosed),
-            SizedBox(width: context.scaleXXS_XS_SM_MD),
+            SizedBox(width: 8.0),
           ],
 
           // Horaires
@@ -156,7 +125,7 @@ class MerchantOpeningHours extends ConsumerWidget {
             child: Text(
               isClosed ? 'Fermé' : hours.displayFormat,
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.text(context),
+                fontSize: 14.0,
                 color: isClosed ? colors.onSurfaceVariant : colors.onSurface,
                 fontStyle: isClosed ? FontStyle.italic : null,
               ),
@@ -187,22 +156,20 @@ class MerchantOpeningHours extends ConsumerWidget {
     ColorScheme colors,
   ) {
     return Container(
-      padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
+      padding: EdgeInsets.all(32.0),
       child: Center(
         child: Column(
           children: [
             Icon(
               Icons.schedule,
-              color: colors.onSurfaceVariant.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-              ),
-              size: EcoPlatesDesignTokens.size.modalIcon(context),
+              color: colors.onSurfaceVariant.withOpacity(0.6),
+              size: 48.0,
             ),
-            SizedBox(height: context.scaleXS_SM_MD_LG),
+            SizedBox(height: 16.0),
             Text(
               'Horaires non renseignés',
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.text(context),
+                fontSize: 16.0,
                 color: colors.onSurfaceVariant,
               ),
             ),
@@ -232,25 +199,17 @@ class TodayOpeningHours extends ConsumerWidget {
     final status = profile.getCurrentStatus();
 
     return Container(
-      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+      padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
-          color: _getStatusColor(status, colors).withValues(
-            alpha: EcoPlatesDesignTokens.opacity.subtle,
-          ),
+          color: _getStatusColor(status, colors).withOpacity(0.3),
+          width: 2.0,
         ),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.access_time,
-            size: EcoPlatesDesignTokens.size.indicator(context),
-            color: _getStatusColor(status, colors),
-          ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,44 +217,41 @@ class TodayOpeningHours extends ConsumerWidget {
                 Text(
                   "Aujourd'hui",
                   style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                    fontSize: 14.0,
                     color: colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+                SizedBox(height: 4.0),
                 Text(
                   todayHours == null || todayHours.isClosed
                       ? 'Fermé'
                       : todayHours.displayFormat,
                   style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                    fontWeight: EcoPlatesDesignTokens.typography.medium,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                    color: colors.onSurface,
                   ),
                 ),
               ],
             ),
           ),
-
-          // Statut
+          SizedBox(width: 12.0),
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: context.scaleXXS_XS_SM_MD,
-              vertical: context.scaleXXS_XS_SM_MD / 2,
+              horizontal: 12.0,
+              vertical: 6.0,
             ),
             decoration: BoxDecoration(
-              color: _getStatusColor(status, colors).withValues(
-                alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-              ),
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.lg,
-              ),
+              color: _getStatusColor(status, colors).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12.0),
             ),
             child: Text(
               status.displayName,
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                fontSize: 12.0,
                 color: _getStatusColor(status, colors),
-                fontWeight: EcoPlatesDesignTokens.typography.medium,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),

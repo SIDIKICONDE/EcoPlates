@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
-
 /// Mixin pour gérer les animations du tunnel de conversion
 mixin FunnelAnimationMixin<T extends StatefulWidget> on State<T>
     implements TickerProvider {
@@ -19,36 +17,36 @@ mixin FunnelAnimationMixin<T extends StatefulWidget> on State<T>
 
     // Initialisation SYNCHRONE pour éviter LateInitializationError
     _animationController = AnimationController(
-      duration: ConversionFunnelConstants.animationDuration,
+      duration: Duration(milliseconds: 1500),
       vsync: this,
     );
 
     _fadeAnimation =
         Tween<double>(
-          begin: ConversionFunnelConstants.fadeBegin,
-          end: ConversionFunnelConstants.fadeEnd,
+          begin: 0.0,
+          end: 1.0,
         ).animate(
           CurvedAnimation(
             parent: _animationController,
             curve: const Interval(
-              ConversionFunnelConstants.fadeIntervalBegin,
-              ConversionFunnelConstants.fadeIntervalEnd,
-              curve: ConversionFunnelConstants.fadeCurve,
+              0.0,
+              0.6,
+              curve: Curves.easeOut,
             ),
           ),
         );
 
     _scaleAnimation =
         Tween<double>(
-          begin: ConversionFunnelConstants.scaleBegin,
-          end: ConversionFunnelConstants.scaleEnd,
+          begin: 0.8,
+          end: 1.0,
         ).animate(
           CurvedAnimation(
             parent: _animationController,
             curve: const Interval(
-              ConversionFunnelConstants.scaleIntervalBegin,
-              ConversionFunnelConstants.scaleIntervalEnd,
-              curve: ConversionFunnelConstants.scaleCurve,
+              0.2,
+              0.8,
+              curve: Curves.elasticOut,
             ),
           ),
         );
@@ -64,16 +62,15 @@ mixin FunnelAnimationMixin<T extends StatefulWidget> on State<T>
   /// Crée une animation de slide pour une étape spécifique
   Animation<double> createStepSlideAnimation(int index) {
     return Tween<double>(
-      begin: ConversionFunnelConstants.slideBegin,
-      end: ConversionFunnelConstants.slideEnd,
+      begin: -50.0,
+      end: 0.0,
     ).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Interval(
-          index * ConversionFunnelConstants.stepAnimationDelay,
-          ConversionFunnelConstants.fadeIntervalEnd +
-              index * ConversionFunnelConstants.stepAnimationDelay,
-          curve: ConversionFunnelConstants.slideCurve,
+          index * 0.2,
+          0.6 + index * 0.2,
+          curve: Curves.easeOutBack,
         ),
       ),
     );

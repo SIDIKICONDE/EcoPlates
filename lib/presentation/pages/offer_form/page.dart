@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../providers/offer_form_provider.dart';
@@ -90,21 +89,21 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
             onPressed: _isSubmitting ? null : _submitForm,
             child: _isSubmitting
                 ? SizedBox(
-                    width: EcoPlatesDesignTokens.size.icon(context),
-                    height: EcoPlatesDesignTokens.size.icon(context),
+                    width: 20.0,
+                    height: 20.0,
                     child: CircularProgressIndicator(
-                      strokeWidth: EcoPlatesDesignTokens.layout
-                          .buttonBorderWidth(context),
+                      strokeWidth: 2.0,
+                      color: theme.colorScheme.onSurface,
                     ),
                   )
                 : Text(
                     l10n.offerFormPageSave,
                     style: TextStyle(
-                      fontWeight: EcoPlatesDesignTokens.typography.bold,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.primary,
                     ),
                   ),
           ),
-          SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
         ],
       ),
       body: Consumer(
@@ -120,9 +119,7 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
           return Form(
             key: _formKey,
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(
-                EcoPlatesDesignTokens.spacing.dialogGap(context),
-              ),
+              padding: EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -138,6 +135,7 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                         'Préférences',
                       ],
                     ),
+                    SizedBox(height: 16.0),
                   ],
 
                   // Infos système en mode édition
@@ -147,11 +145,7 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                       theme,
                       widget.offer!,
                     ),
-                    SizedBox(
-                      height: EcoPlatesDesignTokens.spacing.sectionSpacing(
-                        context,
-                      ),
-                    ),
+                    SizedBox(height: 16.0),
                   ],
 
                   // Sections du formulaire
@@ -170,11 +164,8 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                     ),
                   ),
 
-                  SizedBox(
-                    height:
-                        EcoPlatesDesignTokens.spacing.sectionSpacing(context) *
-                        3,
-                  ), // Espace pour éviter le clavier + FAB
+                  // Espace pour éviter le clavier + FAB
+                  SizedBox(height: 80.0),
                 ],
               ),
             ),
@@ -191,8 +182,8 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                 final canSave = progress > 0.5; // Au moins 50% complété
 
                 return AnimatedScale(
-                  scale: canSave ? EcoPlatesDesignTokens.opacity.overlay : 0.8,
-                  duration: const Duration(milliseconds: 250),
+                  scale: canSave ? 1.0 : 0.8,
+                  duration: const Duration(milliseconds: 200),
                   child: FloatingActionButton.extended(
                     onPressed: canSave && !_isSubmitting ? _submitForm : null,
                     backgroundColor: canSave
@@ -203,14 +194,15 @@ class _OfferFormPageState extends ConsumerState<OfferFormPage> {
                         : theme.colorScheme.onSurfaceVariant,
                     icon: Icon(
                       _isSubmitting ? Icons.hourglass_empty : Icons.save,
-                      size: EcoPlatesDesignTokens.size.icon(context),
+                      size: 20.0,
                     ),
                     label: Text(
                       _isSubmitting
                           ? l10n.offerFormPageSaving
                           : 'Sauvegarder (${(progress * 100).round()}%)',
                       style: TextStyle(
-                        fontWeight: EcoPlatesDesignTokens.typography.semiBold,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14.0,
                       ),
                     ),
                   ),

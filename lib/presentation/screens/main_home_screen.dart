@@ -32,8 +32,8 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
           children: const [
             SizedBox(height: 0),
 
-            // Sections de l'écran d'accueil (ordre défini dans EcoPlatesDesignTokens.homeScreen.sectionOrder)
-            BrandSection(), // Grandes enseignes (toujours en premier)
+            // Sections de l'écran d'accueil (ordre défini dans 16.0, // Grandes enseignes (toujours en premier)
+            BrandSection(), // Grandes enseignes
             SizedBox(height: 0),
             CategoriesSection(), // Catégories
             SizedBox(height: 0),

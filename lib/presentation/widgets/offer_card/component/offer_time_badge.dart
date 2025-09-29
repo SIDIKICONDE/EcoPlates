@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
-
 /// Badge affichant le temps restant pour collecter l'offre
 class OfferTimeBadge extends StatelessWidget {
   const OfferTimeBadge({required this.timeRemaining, super.key});
@@ -11,19 +9,17 @@ class OfferTimeBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: context.scaleMD_LG_XL_XXL,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 12.0,
+        vertical: 6.0,
       ),
       decoration: BoxDecoration(
-        color: EcoPlatesDesignTokens.colors.snackbarError,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xxl),
+        color: Colors.orange,
+        borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.subtle,
-            ),
-            blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 4.0,
+            offset: Offset(0, 2.0),
           ),
         ],
       ),
@@ -32,16 +28,16 @@ class OfferTimeBadge extends StatelessWidget {
         children: [
           Icon(
             Icons.access_time,
-            size: EcoPlatesDesignTokens.size.indicator(context),
-            color: EcoPlatesDesignTokens.colors.textPrimary,
+            size: 14.0,
+            color: Colors.white,
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 4.0),
           Text(
             _formatTimeRemaining(timeRemaining),
             style: TextStyle(
-              color: EcoPlatesDesignTokens.colors.textPrimary,
-              fontWeight: EcoPlatesDesignTokens.typography.bold,
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              color: Colors.white,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

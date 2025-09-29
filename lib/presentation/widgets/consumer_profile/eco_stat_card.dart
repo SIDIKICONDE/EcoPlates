@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-import '../../../core/responsive/responsive.dart';
-import '../../../core/themes/tokens/spacing_tokens.dart';
-
 /// Widget représentant une carte de statistique écologique
 class EcoStatCard extends StatelessWidget {
   const EcoStatCard({
@@ -30,31 +26,19 @@ class EcoStatCard extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Container(
-      padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: EcoSpacing.md,
-          tablet: EcoSpacing.lg,
-          desktop: EcoSpacing.xl,
-        ),
-      ),
+      padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: colors.surface.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.gradientPrimary,
+          alpha: 0.8,
         ),
-        borderRadius: BorderRadius.circular(
-          context.responsiveValue(
-            mobile: EcoPlatesDesignTokens.radius.sm,
-            tablet: EcoPlatesDesignTokens.radius.md,
-            desktop: EcoPlatesDesignTokens.radius.lg,
-          ),
-        ),
+        borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
             color: color.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              alpha: 0.01,
             ),
-            blurRadius: DesignConstants.four,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            blurRadius: 4.0,
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -66,16 +50,12 @@ class EcoStatCard extends StatelessWidget {
               Icon(
                 icon,
                 color: color,
-                size: context.responsiveValue(
-                  mobile: context.scaleIconStandard * 0.9,
-                  tablet: context.scaleIconStandard,
-                  desktop: context.scaleIconStandard * 1.1,
-                ),
+                size: 21.6,
               ),
               const Spacer(),
               Container(
-                width: DesignConstants.four,
-                height: DesignConstants.four,
+                width: 4.0,
+                height: 4.0,
                 decoration: BoxDecoration(
                   color: color,
                   shape: BoxShape.circle,
@@ -84,11 +64,7 @@ class EcoStatCard extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: context.responsiveValue(
-              mobile: 8,
-              tablet: 12,
-              desktop: 16,
-            ),
+            height: 8.0,
           ),
           RichText(
             text: TextSpan(
@@ -104,7 +80,7 @@ class EcoStatCard extends StatelessWidget {
                   text: ' $unit',
                   style: textTheme.bodySmall?.copyWith(
                     color: colors.onSurface.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                      alpha: 0.9,
                     ),
                   ),
                 ),
@@ -112,11 +88,7 @@ class EcoStatCard extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: context.responsiveValue(
-              mobile: DesignConstants.two,
-              tablet: DesignConstants.four,
-              desktop: DesignConstants.six,
-            ),
+            height: 2.0,
           ),
           Text(
             title,
@@ -125,17 +97,13 @@ class EcoStatCard extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: context.responsiveValue(
-              mobile: DesignConstants.one,
-              tablet: DesignConstants.two,
-              desktop: DesignConstants.three,
-            ),
+            height: 1.0,
           ),
           Text(
             subtitle,
             style: textTheme.labelSmall?.copyWith(
               color: colors.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                alpha: 0.9,
               ),
             ),
             maxLines: 2,

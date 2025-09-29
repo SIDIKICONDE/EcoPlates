@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Configuration pour un graphique réutilisable
@@ -55,12 +54,12 @@ class _ReusableChartState extends State<ReusableChart> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: EcoPlatesDesignTokens.analyticsCharts.chartPadding(context),
+        horizontal: 16.0,
       ),
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(
-            EcoPlatesDesignTokens.analyticsCharts.headerElementPadding(context),
+            16.0,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,68 +67,38 @@ class _ReusableChartState extends State<ReusableChart> {
               // Header avec titre, icône et compteur
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: EcoPlatesDesignTokens.analyticsCharts
-                      .headerElementPadding(context),
-                  vertical:
-                      EcoPlatesDesignTokens.analyticsCharts
-                          .headerElementPadding(context) -
-                      EcoPlatesDesignTokens
-                          .analyticsCharts
-                          .headerVerticalPaddingAdjustment,
+                  horizontal: 16.0,
+                  vertical: 12.0,
                 ),
                 decoration: BoxDecoration(
                   color: widget.config.iconColor.withValues(
-                    alpha: EcoPlatesDesignTokens.analyticsCharts.tertiaryAlpha,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.analyticsCharts.defaultBorderRadius,
+                    alpha: 0.1,
                   ),
                   border: Border.all(
                     color: widget.config.iconColor.withValues(
-                      alpha: EcoPlatesDesignTokens.analyticsCharts.surfaceAlpha,
+                      alpha: 0.2,
                     ),
                   ),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(
-                        EcoPlatesDesignTokens.analyticsCharts
-                                .headerElementPadding(context) -
-                            EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .iconPaddingAdjustment,
-                      ),
+                      padding: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
                         color: widget.config.iconColor.withValues(
-                          alpha:
-                              EcoPlatesDesignTokens
-                                  .analyticsCharts
-                                  .surfaceAlpha -
-                              EcoPlatesDesignTokens
-                                  .analyticsCharts
-                                  .surfaceAlphaAdjustmentSmall,
+                          alpha: 0.1,
                         ),
-                        borderRadius: BorderRadius.circular(
-                          EcoPlatesDesignTokens
-                                  .analyticsCharts
-                                  .defaultBorderRadius -
-                              EcoPlatesDesignTokens
-                                  .analyticsCharts
-                                  .iconBorderRadiusAdjustment,
-                        ),
+                        borderRadius: BorderRadius.circular(6.0),
                       ),
                       child: Icon(
                         widget.config.icon,
-                        size: EcoPlatesDesignTokens.analyticsCharts.iconSize(
-                          context,
-                        ),
+                        size: 16.0,
                         color: widget.config.iconColor,
                       ),
                     ),
                     SizedBox(
-                      width: EcoPlatesDesignTokens.analyticsCharts
-                          .iconTextSpacing(context),
+                      width: 12.0,
                     ),
                     Expanded(
                       child: Text(
@@ -137,46 +106,23 @@ class _ReusableChartState extends State<ReusableChart> {
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: theme.colorScheme.onSurface,
-                          fontSize: EcoPlatesDesignTokens.analyticsCharts
-                              .titleFontSize(context),
+                          fontSize: 16.0,
                         ),
                       ),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal:
-                            EcoPlatesDesignTokens.analyticsCharts
-                                .headerElementPadding(context) -
-                            EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .counterHorizontalPaddingAdjustment,
-                        vertical:
-                            EcoPlatesDesignTokens.analyticsCharts
-                                .headerElementPadding(context) -
-                            EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .counterVerticalPaddingAdjustment,
+                        horizontal: 12.0,
+                        vertical: 8.0,
                       ),
                       decoration: BoxDecoration(
                         color: widget.config.iconColor.withValues(
-                          alpha:
-                              EcoPlatesDesignTokens
-                                  .analyticsCharts
-                                  .surfaceAlpha -
-                              EcoPlatesDesignTokens
-                                  .analyticsCharts
-                                  .surfaceAlphaAdjustmentSmall,
+                          alpha: 0.1,
                         ),
-                        borderRadius: BorderRadius.circular(
-                          EcoPlatesDesignTokens
-                              .analyticsCharts
-                              .defaultBorderRadius,
-                        ),
+                        borderRadius: BorderRadius.circular(6.0),
                         border: Border.all(
                           color: widget.config.iconColor.withValues(
-                            alpha: EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .secondaryBorderAlpha,
+                            alpha: 0.3,
                           ),
                         ),
                       ),
@@ -185,8 +131,7 @@ class _ReusableChartState extends State<ReusableChart> {
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: widget.config.iconColor,
                           fontWeight: FontWeight.w800,
-                          fontSize: EcoPlatesDesignTokens.analyticsCharts
-                              .counterFontSize(context),
+                          fontSize: 14.0,
                         ),
                       ),
                     ),
@@ -194,8 +139,7 @@ class _ReusableChartState extends State<ReusableChart> {
                 ),
               ),
               SizedBox(
-                height:
-                    EcoPlatesDesignTokens.analyticsCharts.gridToLabelsSpacing,
+                height: 16.0,
               ),
               _buildChartContent(context),
             ],
@@ -211,25 +155,19 @@ class _ReusableChartState extends State<ReusableChart> {
 
     if (points.isEmpty) {
       return Container(
-        height: EcoPlatesDesignTokens.analyticsCharts.chartContainerHeight(
-          context,
-        ),
+        height: 200.0,
         alignment: Alignment.center,
         child: Text(
-          EcoPlatesDesignTokens.analyticsCharts.noDataText,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          'Aucune donnée disponible',
+          style: theme.textTheme.bodyMedium,
         ),
       );
     }
 
     return Container(
-      height: EcoPlatesDesignTokens.analyticsCharts.chartContainerHeight(
-        context,
-      ),
+      height: 300.0,
       padding: EdgeInsets.all(
-        EcoPlatesDesignTokens.analyticsCharts.chartVerticalPadding(context),
+        16.0,
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -237,51 +175,24 @@ class _ReusableChartState extends State<ReusableChart> {
           end: Alignment.bottomRight,
           colors: [
             theme.colorScheme.surfaceContainerHighest.withValues(
-              alpha: EcoPlatesDesignTokens.analyticsCharts.surfaceAlpha,
-            ),
-            theme.colorScheme.surfaceContainerHighest.withValues(
-              alpha: EcoPlatesDesignTokens.analyticsCharts.surfaceHighAlpha,
+              alpha: 0.8,
             ),
             theme.colorScheme.surface.withValues(
-              alpha: EcoPlatesDesignTokens.analyticsCharts.tertiaryAlpha,
+              alpha: 0.6,
             ),
           ],
-          stops: EcoPlatesDesignTokens.analyticsCharts.gradientStops,
-        ),
-        borderRadius: BorderRadius.circular(
-          EcoPlatesDesignTokens.analyticsCharts.chartBorderRadius,
         ),
         border: Border.all(
           color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.analyticsCharts.outlineAlpha,
+            alpha: 0.2,
           ),
-          width: EcoPlatesDesignTokens.analyticsCharts.chartBorderWidth,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(
-              alpha: EcoPlatesDesignTokens.analyticsCharts.shadowAlpha,
-            ),
-            blurRadius: EcoPlatesDesignTokens.analyticsCharts.shadowBlurRadius,
-            offset: EcoPlatesDesignTokens.analyticsCharts.shadowOffset,
-            spreadRadius:
-                EcoPlatesDesignTokens.analyticsCharts.chartShadowSpreadRadius,
-          ),
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(
-              alpha: EcoPlatesDesignTokens.analyticsCharts.tertiaryAlpha,
-            ),
-            blurRadius:
-                EcoPlatesDesignTokens.analyticsCharts.secondaryShadowBlurRadius,
-            offset: EcoPlatesDesignTokens.analyticsCharts.secondaryShadowOffset,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
           // Calculer la largeur dynamique en fonction du nombre de points
-          final calculatedWidth = EcoPlatesDesignTokens.analyticsCharts
-              .calculateTotalWidthResponsive(points.length, context);
+          final calculatedWidth = points.length * 60.0;
           // Utiliser la largeur du conteneur si elle est plus grande
           final chartWidth = calculatedWidth > constraints.maxWidth
               ? calculatedWidth
@@ -316,15 +227,7 @@ class _ReusableChartState extends State<ReusableChart> {
                               useSpaceEvenly: chartWidth > calculatedWidth,
                               horizontalPadding: chartWidth > calculatedWidth
                                   ? 0
-                                  : EcoPlatesDesignTokens.analyticsCharts
-                                            .barSpacing(context) /
-                                        2,
-                              connectionPointRadius: EcoPlatesDesignTokens
-                                  .analyticsCharts
-                                  .connectionPointRadius(context),
-                              connectionPointBackgroundRadius:
-                                  EcoPlatesDesignTokens.analyticsCharts
-                                      .connectionPointBackgroundRadius(context),
+                                  : 8.0,
                             ),
                             child: const SizedBox.expand(),
                           ),
@@ -342,10 +245,7 @@ class _ReusableChartState extends State<ReusableChart> {
                           // Sinon, utiliser l'espacement fixe
                           Padding(
                             padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  EcoPlatesDesignTokens.analyticsCharts
-                                      .barSpacing(context) /
-                                  2,
+                              horizontal: 16.0 / 2,
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -360,9 +260,7 @@ class _ReusableChartState extends State<ReusableChart> {
                   ),
                   // Labels des périodes en bas
                   SizedBox(
-                    height: EcoPlatesDesignTokens
-                        .analyticsCharts
-                        .gridToLabelsSpacing,
+                    height: 40.0,
                   ),
                   if (chartWidth > calculatedWidth)
                     Row(
@@ -372,19 +270,12 @@ class _ReusableChartState extends State<ReusableChart> {
                             (point) => Flexible(
                               child: Container(
                                 constraints: BoxConstraints(
-                                  maxWidth:
-                                      EcoPlatesDesignTokens.analyticsCharts
-                                          .barWidth(context) +
-                                      EcoPlatesDesignTokens
-                                          .analyticsCharts
-                                          .labelConstraintExtraWidth,
+                                  maxWidth: 80.0,
                                 ),
                                 child: Text(
                                   point.label,
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    fontSize: EcoPlatesDesignTokens
-                                        .analyticsCharts
-                                        .labelFontSize(context),
+                                    fontSize: 12.0,
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
                                   textAlign: TextAlign.center,
@@ -399,25 +290,18 @@ class _ReusableChartState extends State<ReusableChart> {
                   else
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal:
-                            EcoPlatesDesignTokens.analyticsCharts.barSpacing(
-                              context,
-                            ) /
-                            2,
+                        horizontal: 16.0 / 2,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: points
                             .map(
                               (point) => SizedBox(
-                                width: EcoPlatesDesignTokens.analyticsCharts
-                                    .barWidth(context),
+                                width: 16.0,
                                 child: Text(
                                   point.label,
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    fontSize: EcoPlatesDesignTokens
-                                        .analyticsCharts
-                                        .labelFontSize(context),
+                                    fontSize: 12.0,
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
                                   textAlign: TextAlign.center,
@@ -442,179 +326,78 @@ class _ReusableChartState extends State<ReusableChart> {
     final pointIndex = points.indexOf(point);
     final maxValue = points.map((p) => p.value).reduce((a, b) => a > b ? a : b);
     final normalizedHeight = point.value / maxValue;
-    final barHeight =
-        normalizedHeight *
-        EcoPlatesDesignTokens.analyticsCharts.maxBarHeight(context);
+    final barHeight = normalizedHeight * 200.0;
 
     // Palette de couleurs variées pour chaque barre
     final barColors = [
       theme.colorScheme.secondary,
       theme.colorScheme.primary,
       theme.colorScheme.tertiary,
-      ...EcoPlatesDesignTokens.analyticsCharts.barColorsHex.map(Color.new),
     ];
 
     final barColor = barColors[pointIndex % barColors.length];
 
     // Calculer si la barre est suffisamment haute pour afficher le texte au-dessus
-    final clampedBarHeight = barHeight.clamp(
-      EcoPlatesDesignTokens.analyticsCharts.minBarHeight,
-      EcoPlatesDesignTokens.analyticsCharts.maxBarHeight(context),
-    );
-    final availableSpaceForText =
-        EcoPlatesDesignTokens.analyticsCharts.chartContainerHeight(context) -
-        EcoPlatesDesignTokens.analyticsCharts.chartVerticalPadding(context) *
-            EcoPlatesDesignTokens
-                .analyticsCharts
-                .chartVerticalPaddingMultiplier -
-        EcoPlatesDesignTokens.analyticsCharts.gridToLabelsSpacing -
-        clampedBarHeight -
-        EcoPlatesDesignTokens.analyticsCharts.valueToBarSpacing;
+    final clampedBarHeight = barHeight.clamp(20.0, 200.0);
+    final showValueText = clampedBarHeight > 40.0;
 
-    // Ne montrer le texte que s'il y a au moins le seuil minimal d'espace disponible
-    final showValueText =
-        availableSpaceForText >=
-        EcoPlatesDesignTokens.analyticsCharts.minSpaceForValueText;
-
-    return SizedBox(
-      width: EcoPlatesDesignTokens.analyticsCharts.barWidth(context),
-      child: Stack(
-        clipBehavior: Clip.none, // Permet le débordement
-        alignment: Alignment.bottomCenter,
-        children: [
-          // Colonne contenant la barre
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // Espace pour la valeur
-              if (showValueText)
-                SizedBox(
-                  height: EcoPlatesDesignTokens.analyticsCharts
-                      .valueTextReservedHeight(context),
-                ),
-              // Barre verticale avec dégradé
-              Container(
-                width: EcoPlatesDesignTokens.analyticsCharts.barWidth(context),
-                height: clampedBarHeight,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      barColor.withValues(
-                        alpha:
-                            EcoPlatesDesignTokens.analyticsCharts.surfaceAlpha +
-                            EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .barGradientAlpha1,
-                      ),
-                      barColor.withValues(
-                        alpha:
-                            EcoPlatesDesignTokens.analyticsCharts.surfaceAlpha +
-                            EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .barGradientAlpha2,
-                      ),
-                      barColor.withValues(
-                        alpha:
-                            EcoPlatesDesignTokens.analyticsCharts.surfaceAlpha +
-                            EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .barGradientAlpha3,
-                      ),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.analyticsCharts.barBorderRadius,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: barColor.withValues(
-                        alpha:
-                            EcoPlatesDesignTokens.analyticsCharts.surfaceAlpha +
-                            EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .barShadowAlpha,
-                      ),
-                      blurRadius: EcoPlatesDesignTokens
-                          .analyticsCharts
-                          .barShadowBlurRadius,
-                      offset:
-                          EcoPlatesDesignTokens.analyticsCharts.barShadowOffset,
-                    ),
-                  ],
-                  border: Border.all(
-                    color: barColor.withValues(
-                      alpha:
-                          EcoPlatesDesignTokens.analyticsCharts.surfaceAlpha +
-                          EcoPlatesDesignTokens.analyticsCharts.barBorderAlpha,
-                    ),
-                  ),
-                ),
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.bottomCenter,
+      children: [
+        // Barre verticale avec dégradé
+        Container(
+          width: 16.0,
+          height: clampedBarHeight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                barColor.withValues(alpha: 0.8),
+                barColor.withValues(alpha: 1.0),
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: barColor.withValues(alpha: 0.3),
+                blurRadius: 4.0,
+                offset: Offset(0, 2),
               ),
             ],
           ),
-          // Valeur positionnée au-dessus de la barre
-          if (showValueText)
-            Positioned(
-              bottom:
-                  clampedBarHeight +
-                  EcoPlatesDesignTokens.analyticsCharts.valueToBarSpacing,
-              child: Container(
-                padding:
-                    EcoPlatesDesignTokens.analyticsCharts.valueContainerPadding,
-                decoration: BoxDecoration(
-                  color: EcoPlatesDesignTokens
-                      .analyticsCharts
-                      .valueContainerBackgroundColor
-                      .withValues(
-                        alpha: EcoPlatesDesignTokens
-                            .analyticsCharts
-                            .valueContainerBackgroundAlpha,
-                      ),
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens
-                        .analyticsCharts
-                        .valueContainerBorderRadius,
+        ),
+        // Valeur positionnée au-dessus de la barre
+        if (showValueText)
+          Positioned(
+            bottom: clampedBarHeight + 8.0,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(4.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: Offset(0, 1),
+                    blurRadius: 2.0,
                   ),
+                ],
+              ),
+              child: Text(
+                widget.config.valueFormatter(point.value),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.w700,
+                  color: barColor,
                 ),
-                child: Text(
-                  widget.config.valueFormatter(point.value),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    fontSize: EcoPlatesDesignTokens.analyticsCharts
-                        .valueFontSize(context),
-                    fontWeight: FontWeight.w700,
-                    color: EcoPlatesDesignTokens.analyticsCharts.valueTextColor,
-                    letterSpacing: EcoPlatesDesignTokens
-                        .analyticsCharts
-                        .valueTextLetterSpacing,
-                    shadows: [
-                      Shadow(
-                        color: EcoPlatesDesignTokens
-                            .analyticsCharts
-                            .valueTextShadowColor
-                            .withValues(
-                              alpha: EcoPlatesDesignTokens
-                                  .analyticsCharts
-                                  .valueTextShadowAlpha,
-                            ),
-                        offset: EcoPlatesDesignTokens
-                            .analyticsCharts
-                            .valueTextShadowOffset,
-                        blurRadius: EcoPlatesDesignTokens
-                            .analyticsCharts
-                            .valueTextShadowBlurRadius,
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.visible,
-                  softWrap: false, // Empêche le retour à la ligne
-                ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.visible,
+                softWrap: false,
               ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }
@@ -630,44 +413,15 @@ class _ChartGridPainter extends CustomPainter {
   void paint(Canvas canvas, ui.Size size) {
     // Peinture pour les lignes principales
     final majorGridPaint = Paint()
-      ..color = theme.colorScheme.outline.withValues(
-        alpha: EcoPlatesDesignTokens.analyticsCharts.surfaceAlpha,
-      )
-      ..strokeWidth =
-          EcoPlatesDesignTokens.analyticsCharts.majorGridStrokeWidth;
+      ..color = theme.colorScheme.outline.withValues(alpha: 0.3);
 
-    // Peinture pour les lignes secondaires (plus subtiles)
     final minorGridPaint = Paint()
-      ..color = theme.colorScheme.outline.withValues(
-        alpha: EcoPlatesDesignTokens.analyticsCharts.surfaceHighAlpha,
-      )
-      ..strokeWidth =
-          EcoPlatesDesignTokens.analyticsCharts.minorGridStrokeWidth;
+      ..color = theme.colorScheme.outline.withValues(alpha: 0.1);
 
     // Lignes horizontales principales
-    for (
-      var i = 1;
-      i <= EcoPlatesDesignTokens.analyticsCharts.majorGridLines;
-      i++
-    ) {
-      final y =
-          (size.height / EcoPlatesDesignTokens.analyticsCharts.majorGridLines) *
-          i;
+    for (var i = 0; i <= 4; i++) {
+      final y = (size.height / 4) * i;
       canvas.drawLine(Offset(0, y), Offset(size.width, y), majorGridPaint);
-
-      // Ajouter des lignes mineures entre les principales
-      if (i < EcoPlatesDesignTokens.analyticsCharts.majorGridLines) {
-        final midY =
-            y +
-            (size.height /
-                    EcoPlatesDesignTokens.analyticsCharts.majorGridLines) /
-                2;
-        canvas.drawLine(
-          Offset(0, midY),
-          Offset(size.width, midY),
-          minorGridPaint,
-        );
-      }
     }
 
     // Lignes verticales espacées pour les points de données
@@ -681,23 +435,9 @@ class _ChartGridPainter extends CustomPainter {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        theme.colorScheme.primary.withValues(
-          alpha:
-              EcoPlatesDesignTokens.analyticsCharts.tertiaryAlpha -
-              EcoPlatesDesignTokens
-                  .analyticsCharts
-                  .backgroundGradientAdjustment1,
-        ),
-        theme.colorScheme.secondary.withValues(
-          alpha:
-              EcoPlatesDesignTokens.analyticsCharts.tertiaryAlpha -
-              EcoPlatesDesignTokens
-                  .analyticsCharts
-                  .backgroundGradientAdjustment2,
-        ),
-        EcoPlatesDesignTokens.analyticsCharts.transparentColor,
+        theme.colorScheme.primary.withValues(alpha: 0.02),
+        Colors.transparent,
       ],
-      stops: EcoPlatesDesignTokens.analyticsCharts.gradientStops,
     );
 
     final backgroundPaint = Paint()
@@ -709,33 +449,6 @@ class _ChartGridPainter extends CustomPainter {
       Rect.fromLTWH(0, 0, size.width, size.height),
       backgroundPaint,
     );
-
-    // Ajouter des points décoratifs subtils
-    final dotPaint = Paint()
-      ..color = theme.colorScheme.outline.withValues(
-        alpha: EcoPlatesDesignTokens.analyticsCharts.tertiaryAlpha,
-      )
-      ..style = PaintingStyle.fill;
-
-    // Points aux intersections de la grille
-    for (
-      var i = 1;
-      i <= EcoPlatesDesignTokens.analyticsCharts.majorGridLines;
-      i++
-    ) {
-      final y =
-          (size.height /
-              EcoPlatesDesignTokens.analyticsCharts.chartGridLinesDivisor) *
-          i;
-      for (var j = 0; j <= pointCount; j++) {
-        final x = (size.width / pointCount) * j;
-        canvas.drawCircle(
-          Offset(x, y),
-          EcoPlatesDesignTokens.analyticsCharts.gridDotRadius,
-          dotPaint,
-        );
-      }
-    }
   }
 
   @override
@@ -795,29 +508,11 @@ class _RevenueLinePainter extends CustomPainter {
     }
 
     // Dessiner la ligne avec une couleur grise subtile pour meilleure lisibilité
-    final lineGradient = LinearGradient(
-      colors: [
-        EcoPlatesDesignTokens.analyticsCharts.connectionLineColor1.withValues(
-          alpha: EcoPlatesDesignTokens.analyticsCharts.connectionLineAlpha1,
-        ),
-        EcoPlatesDesignTokens.analyticsCharts.connectionLineColor2.withValues(
-          alpha: EcoPlatesDesignTokens.analyticsCharts.connectionLineAlpha2,
-        ),
-        EcoPlatesDesignTokens.analyticsCharts.connectionLineColor3.withValues(
-          alpha: EcoPlatesDesignTokens.analyticsCharts.connectionLineAlpha3,
-        ),
-      ],
-      stops: EcoPlatesDesignTokens.analyticsCharts.connectionLineGradientStops,
-    );
-
     final linePaint = Paint()
-      ..strokeWidth =
-          EcoPlatesDesignTokens.analyticsCharts.connectionLineStrokeWidth
+      ..color = baseColor.withValues(alpha: 0.6)
       ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..shader = lineGradient.createShader(
-        Rect.fromPoints(Offset.zero, Offset(size.width, size.height)),
-      );
+      ..strokeWidth = 3.0
+      ..strokeCap = StrokeCap.round;
 
     canvas.drawPath(path, linePaint);
 
@@ -844,44 +539,27 @@ class _RevenueLinePainter extends CustomPainter {
       // Palette de couleurs pour les points (correspond aux barres)
       final pointColors = [
         baseColor,
-        ...EcoPlatesDesignTokens.analyticsCharts.connectionPointColorsHex.map(
-          Color.new,
-        ),
+        baseColor.withValues(alpha: 0.8),
+        baseColor.withValues(alpha: 0.6),
       ];
 
       final pointColor = pointColors[i % pointColors.length];
 
       // Ombre noire pour meilleur contraste
       final shadowPaint = Paint()
-        ..color = EcoPlatesDesignTokens
-            .analyticsCharts
-            .connectionPointShadowColor
-            .withValues(
-              alpha: EcoPlatesDesignTokens
-                  .analyticsCharts
-                  .connectionPointShadowAlpha,
-            )
+        ..color = Colors.black.withValues(alpha: 0.3)
         ..style = PaintingStyle.fill
-        ..maskFilter = MaskFilter.blur(
-          BlurStyle.normal,
-          EcoPlatesDesignTokens.analyticsCharts.connectionPointShadowBlurRadius,
-        );
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 4.0);
+
       canvas.drawCircle(
-        Offset(
-          x,
-          y +
-              EcoPlatesDesignTokens
-                  .analyticsCharts
-                  .connectionPointShadowOffsetY,
-        ),
+        Offset(x, y),
         connectionPointBackgroundRadius,
         shadowPaint,
       );
 
       // Cercle blanc de fond pour visibilité
       final whitePaint = Paint()
-        ..color =
-            EcoPlatesDesignTokens.analyticsCharts.connectionPointBackgroundColor
+        ..color = Colors.white
         ..style = PaintingStyle.fill;
       canvas.drawCircle(
         Offset(x, y),
@@ -901,14 +579,9 @@ class _RevenueLinePainter extends CustomPainter {
 
       // Bordure du point pour définition
       final borderPaint = Paint()
-        ..color = pointColor.withValues(
-          alpha:
-              EcoPlatesDesignTokens.analyticsCharts.connectionPointBorderAlpha,
-        )
+        ..color = pointColor.withValues(alpha: 0.8)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = EcoPlatesDesignTokens
-            .analyticsCharts
-            .connectionPointBorderStrokeWidth;
+        ..strokeWidth = 2.0;
       canvas.drawCircle(
         Offset(x, y),
         connectionPointRadius,
@@ -917,20 +590,13 @@ class _RevenueLinePainter extends CustomPainter {
     }
 
     // Ajouter un effet d'ombre subtile sous la ligne
-    final shadowPaint = Paint()
-      ..color = Colors.black.withValues(
-        alpha: EcoPlatesDesignTokens.analyticsCharts.connectionLineShadowAlpha,
-      )
-      ..strokeWidth =
-          EcoPlatesDesignTokens.analyticsCharts.connectionLineShadowStrokeWidth
+    final lineShadowPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.1)
       ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..maskFilter = MaskFilter.blur(
-        BlurStyle.normal,
-        EcoPlatesDesignTokens.analyticsCharts.connectionLineShadowBlurRadius,
-      );
+      ..strokeWidth = 6.0
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3.0);
 
-    canvas.drawPath(path, shadowPaint);
+    canvas.drawPath(path, lineShadowPaint);
   }
 
   @override

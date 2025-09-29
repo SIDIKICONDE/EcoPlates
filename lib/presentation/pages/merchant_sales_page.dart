@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/responsive/design_tokens.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/sales_provider.dart';
 import '../widgets/sales/sales_app_bar.dart';
 import '../widgets/sales/sales_filter_chips.dart';
 import '../widgets/sales/sales_header.dart';
 import '../widgets/sales/sales_list_view.dart';
-
 
 /// Page principale de gestion des ventes pour les marchands
 ///
@@ -52,7 +50,7 @@ class _SalesFiltersSection extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.all(
-          EcoPlatesDesignTokens.spacing.dialogGap(context),
+          16.0,
         ),
         child: const SalesFilterChips(),
       ),
@@ -68,10 +66,10 @@ class _SalesListSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: EdgeInsets.fromLTRB(
-        EcoPlatesDesignTokens.spacing.dialogGap(context),
+        16.0,
         0,
-        EcoPlatesDesignTokens.spacing.dialogGap(context),
-        EcoPlatesDesignTokens.spacing.dialogGap(context),
+        16.0,
+        16.0,
       ),
       sliver: const SalesListView(),
     );

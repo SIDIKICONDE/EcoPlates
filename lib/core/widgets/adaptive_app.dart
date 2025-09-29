@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/env_config.dart';
+import '../responsive/responsive.dart';
 import '../themes/cupertino_theme.dart';
 import '../themes/eco_theme.dart';
 
@@ -28,33 +29,37 @@ class AdaptiveApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_shouldUseCupertino) {
-      // Application iOS/macOS avec Cupertino
-      return CupertinoApp.router(
-        title: 'EcoPlates',
-        debugShowCheckedModeBanner: !EnvConfig.isProduction,
-        theme: CupertinoThemeConfig.lightTheme,
-        routerConfig: router,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [Locale('fr', 'FR'), Locale('en', 'US')],
+      // Application iOS/macOS avec Cupertino + ScreenUtil adaptatif + Responsive Framework
+      return ResponsiveScreenUtilInit(
+        child: CupertinoApp.router(
+          title: 'EcoPlates',
+          debugShowCheckedModeBanner: !EnvConfig.isProduction,
+          theme: CupertinoThemeConfig.lightTheme,
+          routerConfig: router,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('fr', 'FR'), Locale('en', 'US')],
+        ),
       );
     } else {
-      // Application Android/Web/Windows/Linux avec Material
-      return MaterialApp.router(
-        title: 'EcoPlates',
-        debugShowCheckedModeBanner: !EnvConfig.isProduction,
-        theme: EcoTheme.lightTheme,
-        darkTheme: EcoTheme.darkTheme,
-        routerConfig: router,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [Locale('fr', 'FR'), Locale('en', 'US')],
+      // Application Android/Web/Windows/Linux avec Material + ScreenUtil adaptatif + Responsive Framework
+      return ResponsiveScreenUtilInit(
+        child: MaterialApp.router(
+          title: 'EcoPlates',
+          debugShowCheckedModeBanner: !EnvConfig.isProduction,
+          theme: EcoTheme.lightTheme,
+          darkTheme: EcoTheme.darkTheme,
+          routerConfig: router,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('fr', 'FR'), Locale('en', 'US')],
+        ),
       );
     }
   }

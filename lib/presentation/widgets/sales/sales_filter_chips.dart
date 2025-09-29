@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../../domain/entities/sale.dart';
 import '../../providers/sales_provider.dart';
 
@@ -29,10 +28,10 @@ class SalesFilterChips extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(filters.period.label),
-                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                  const SizedBox(width: 6.0),
                   Icon(
                     Icons.arrow_drop_down,
-                    size: context.scaleIconStandard,
+                    size: 20.0,
                   ),
                 ],
               ),
@@ -50,18 +49,16 @@ class SalesFilterChips extends ConsumerWidget {
                     if (filters.period == period)
                       Icon(
                         Icons.check,
-                        size: context.scaleIconStandard,
+                        size: 20.0,
                         color: theme.colorScheme.primary,
                       )
                     else
-                      SizedBox(width: context.scaleIconStandard),
-                    SizedBox(width: context.scaleSM_MD_LG_XL),
+                      const SizedBox(width: 20.0),
+                    const SizedBox(width: 12.0),
                     Text(
                       period.label,
-                      style: TextStyle(
-                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                          context,
-                        ),
+                      style: const TextStyle(
+                        fontSize: 16.0,
                       ),
                     ),
                   ],
@@ -73,7 +70,7 @@ class SalesFilterChips extends ConsumerWidget {
             },
           ),
 
-          SizedBox(width: context.scaleSM_MD_LG_XL),
+          const SizedBox(width: 12.0),
 
           // Filtre par statut
           PopupMenuButton<Object>(
@@ -83,10 +80,10 @@ class SalesFilterChips extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(filters.status?.label ?? 'Tous les statuts'),
-                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                  const SizedBox(width: 6.0),
                   Icon(
                     Icons.arrow_drop_down,
-                    size: context.scaleIconStandard,
+                    size: 20.0,
                   ),
                 ],
               ),
@@ -112,12 +109,10 @@ class SalesFilterChips extends ConsumerWidget {
               final items = <PopupMenuEntry<Object>>[
                 PopupMenuItem<Object>(
                   value: _StatusMenuCmd.all,
-                  child: Text(
+                  child: const Text(
                     'Tous les statuts',
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                        context,
-                      ),
+                      fontSize: 16.0,
                     ),
                   ),
                 ),
@@ -128,8 +123,8 @@ class SalesFilterChips extends ConsumerWidget {
                     child: Row(
                       children: [
                         Container(
-                          width: context.scaleXXS_XS_SM_MD,
-                          height: context.scaleXXS_XS_SM_MD,
+                          width: 8.0,
+                          height: 8.0,
                           decoration: BoxDecoration(
                             color: Color(
                               int.parse(
@@ -139,12 +134,11 @@ class SalesFilterChips extends ConsumerWidget {
                             shape: BoxShape.circle,
                           ),
                         ),
-                        SizedBox(width: context.scaleSM_MD_LG_XL),
+                        const SizedBox(width: 12.0),
                         Text(
                           status.label,
-                          style: TextStyle(
-                            fontSize: EcoPlatesDesignTokens.typography
-                                .modalContent(context),
+                          style: const TextStyle(
+                            fontSize: 16.0,
                           ),
                         ),
                       ],
@@ -164,39 +158,27 @@ class SalesFilterChips extends ConsumerWidget {
             },
           ),
 
-          SizedBox(width: context.scaleSM_MD_LG_XL),
+          const SizedBox(width: 12.0),
 
           // Recherche
           SizedBox(
-            width: context.applyPattern([
-              180.0, // mobile
-              220.0, // tablet
-              250.0, // desktop
-              280.0, // desktop large
-            ]),
-            height: context.scaleButtonHeight,
+            width: 200.0,
+            height: 40.0,
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Rechercher...',
-                hintStyle: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                hintStyle: const TextStyle(
+                  fontSize: 16.0,
                 ),
                 prefixIcon: Icon(
                   Icons.search,
-                  size: context.scaleIconStandard,
+                  size: 20.0,
                 ),
                 filled: true,
                 fillColor: theme.colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.xxl,
-                  ),
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16.0),
                 ),
-                contentPadding: EdgeInsets.zero,
-              ),
-              style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.text(context),
               ),
               onChanged: (value) {
                 ref.read(salesFilterProvider.notifier).updateSearchQuery(value);

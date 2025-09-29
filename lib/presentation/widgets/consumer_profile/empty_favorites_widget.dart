@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-import '../../../core/responsive/responsive.dart';
-import '../../../core/themes/tokens/spacing_tokens.dart';
-
 /// Widget affiché quand il n'y a aucun favori
 class EmptyFavoritesWidget extends StatelessWidget {
   const EmptyFavoritesWidget({super.key});
@@ -15,53 +11,35 @@ class EmptyFavoritesWidget extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Container(
-      padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: EcoSpacing.xl,
-          tablet: EcoSpacing.xxl,
-          desktop: EcoSpacing.xxxl,
-        ),
-      ),
+      padding: EdgeInsets.all(32.0),
       child: Column(
         children: [
           Icon(
             Icons.favorite_border,
-            size: context.responsiveValue(
-              mobile: EcoPlatesDesignTokens.size.minTouchTarget,
-              tablet: EcoPlatesDesignTokens.size.minTouchTarget * 1.33,
-              desktop: EcoPlatesDesignTokens.size.minTouchTarget * 1.67,
-            ),
+            size: 48.0,
             color: colors.onSurface.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.subtle,
+              alpha: 0.3,
             ),
           ),
           SizedBox(
-            height: context.responsiveValue(
-              mobile: 12,
-              tablet: 16,
-              desktop: 20,
-            ),
+            height: 16.0,
           ),
           Text(
             'Aucun favori pour le moment',
             style: textTheme.titleMedium?.copyWith(
               color: colors.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                alpha: 0.9,
               ),
             ),
           ),
           SizedBox(
-            height: context.responsiveValue(
-              mobile: 6,
-              tablet: 8,
-              desktop: 10,
-            ),
+            height: 8.0,
           ),
           Text(
             'Explorez nos restaurants et ajoutez vos plats préférés !',
             style: textTheme.bodySmall?.copyWith(
               color: colors.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.disabled,
+                alpha: 0.5,
               ),
             ),
             textAlign: TextAlign.center,

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-
 /// Dialogue d'aide pour expliquer les options vidéo
 class VideoHelpDialog extends StatelessWidget {
   const VideoHelpDialog({super.key});
@@ -24,7 +22,7 @@ class VideoHelpDialog extends StatelessWidget {
       title: Row(
         children: [
           Icon(Icons.help_outline, color: theme.colorScheme.primary),
-          SizedBox(width: context.scaleXS_SM_MD_LG),
+          SizedBox(width: 12.0),
           const Text('Options de lecture vidéo'),
         ],
       ),
@@ -41,7 +39,7 @@ class VideoHelpDialog extends StatelessWidget {
                   "Réduit la vidéo en petit format pour continuer à naviguer dans l'app.",
               available: true,
             ),
-            SizedBox(height: context.scaleMD_LG_XL_XXL),
+            SizedBox(height: 16.0),
             _buildOption(
               context,
               icon: Icons.picture_in_picture_alt_rounded,
@@ -50,7 +48,7 @@ class VideoHelpDialog extends StatelessWidget {
                   'Non disponible avec le lecteur Flutter. Utilisez le mode mini à la place.',
               available: false,
             ),
-            SizedBox(height: context.scaleMD_LG_XL_XXL),
+            SizedBox(height: 16.0),
             _buildOption(
               context,
               icon: Icons.notifications_active_rounded,
@@ -59,37 +57,26 @@ class VideoHelpDialog extends StatelessWidget {
                   'Contrôlez la lecture depuis la barre de notification (bientôt disponible).',
               available: false,
             ),
-            SizedBox(height: context.scaleMD_LG_XL_XXL * 1.5),
+            SizedBox(height: 24.0),
             Container(
-              padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+              padding: EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                ),
-                borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.sm,
+                  alpha: 0.1,
                 ),
                 border: Border.all(
                   color: theme.colorScheme.primary.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.subtle,
+                    alpha: 0.1,
                   ),
                 ),
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.lightbulb_outline,
-                    color: theme.colorScheme.primary,
-                    size: EcoPlatesDesignTokens.size.icon(context),
-                  ),
-                  SizedBox(width: context.scaleXXS_XS_SM_MD),
                   Expanded(
                     child: Text(
                       'Astuce : Utilisez le mode mini pour garder la vidéo visible tout en naviguant !',
                       style: TextStyle(
-                        fontSize: EcoPlatesDesignTokens.typography.hint(
-                          context,
-                        ),
+                        fontSize: 16.0,
                         color: theme.colorScheme.onPrimaryContainer,
                       ),
                     ),
@@ -120,24 +107,20 @@ class VideoHelpDialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+          padding: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             color: available
-                ? Colors.green.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-                  )
-                : Colors.grey.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-                  ),
+                ? Colors.green.withValues(alpha: 0.1)
+                : Colors.grey.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
             icon,
             color: available ? Colors.green : Colors.grey,
-            size: EcoPlatesDesignTokens.size.icon(context) * 1.2,
+            size: 16.0 * 1.2,
           ),
         ),
-        SizedBox(width: context.scaleXS_SM_MD_LG),
+        SizedBox(width: 12.0),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,43 +131,29 @@ class VideoHelpDialog extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: EcoPlatesDesignTokens.typography.titleSize(
-                        context,
-                      ),
+                      fontSize: 16.0,
                     ),
                   ),
-                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                  SizedBox(width: 8.0),
                   if (available)
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: context.scaleXXS_XS_SM_MD,
-                        vertical: context.scaleXXS_XS_SM_MD / 2,
+                        horizontal: 8.0,
+                        vertical: 4.0,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.green,
-                        borderRadius: BorderRadius.circular(
-                          EcoPlatesDesignTokens.radius.sm,
-                        ),
-                      ),
-                      child: Text(
-                        'Disponible',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize:
-                              EcoPlatesDesignTokens.typography.hint(context) -
-                              2,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        borderRadius: BorderRadius.circular(14.0),
                       ),
                     ),
                 ],
               ),
-              SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+              SizedBox(height: 4.0),
               Text(
                 description,
                 style: TextStyle(
                   color: Colors.grey[600],
-                  fontSize: EcoPlatesDesignTokens.typography.text(context),
+                  fontSize: 16.0,
                 ),
               ),
             ],

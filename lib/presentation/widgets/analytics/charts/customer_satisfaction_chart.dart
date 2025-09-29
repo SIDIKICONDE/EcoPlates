@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/analytics_stats.dart';
-import 'reusable_chart.dart';
 
 /// Graphique d'évolution de la satisfaction client
 class CustomerSatisfactionChart extends StatelessWidget {
@@ -15,24 +13,176 @@ class CustomerSatisfactionChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReusableChart(
-      config: ChartConfig(
-        title: 'Satisfaction Client',
-        icon: Icons.star,
-        iconColor: EcoPlatesDesignTokens.analyticsCharts.satisfactionGoldColor,
-        totalValue: analytics.customerSatisfactionData.isNotEmpty
-            ? analytics.customerSatisfactionData.last.value
-            : 0.0,
-        data: analytics.customerSatisfactionData,
-        valueFormatter: (value) => '${value.toStringAsFixed(1)} ⭐',
-        showLine: true,
-        lineColor: EcoPlatesDesignTokens.analyticsCharts.satisfactionGoldColor,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8.0,
+            offset: Offset(0.0, 4.0),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Container(
+                width: 40.0,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade100,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.amber.withOpacity(0.3),
+                      blurRadius: 8.0,
+                      offset: Offset(0.0, 2.0),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                  size: 20.0,
+                ),
+              ),
+              SizedBox(width: 12.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Satisfaction Client',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      '${_calculateAverageRating().toStringAsFixed(1)} ⭐ sur ${analytics.totalReviews} avis',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 16.0),
+
+          // Simple bar chart representation
+          Container(
+            height: 120.0,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _buildRatingBar(5, _getRatingCount(5), Colors.green),
+                SizedBox(width: 4.0),
+                _buildRatingBar(4, _getRatingCount(4), Colors.lightGreen),
+                SizedBox(width: 4.0),
+                _buildRatingBar(3, _getRatingCount(3), Colors.yellow),
+                SizedBox(width: 4.0),
+                _buildRatingBar(2, _getRatingCount(2), Colors.orange),
+                SizedBox(width: 4.0),
+                _buildRatingBar(1, _getRatingCount(1), Colors.red),
+              ],
+            ),
+          ),
+
+          SizedBox(height: 16.0),
+
+          // Summary
+          Center(
+            child: Text(
+              'Évolution sur les 30 derniers jours',
+              style: TextStyle(
+                fontSize: 12.0,
+                color: Colors.grey.shade500,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  double _calculateAverageRating() {
+    if (analytics.ratingDistribution.isEmpty || analytics.totalReviews == 0) {
+      return 0.0;
+    }
+
+    double weightedSum = 0.0;
+    for (final rating in analytics.ratingDistribution) {
+      weightedSum += rating.stars * rating.count;
+    }
+
+    return weightedSum / analytics.totalReviews;
+  }
+
+  int _getRatingCount(int stars) {
+    final ratings = analytics.ratingDistribution.where((r) => r.stars == stars);
+    return ratings.isNotEmpty ? ratings.first.count : 0;
+  }
+
+  Widget _buildRatingBar(int stars, int count, Color color) {
+    final maxCount = analytics.ratingDistribution
+        .map((rating) => rating.count)
+        .reduce((a, b) => a > b ? a : b);
+
+    final height = maxCount > 0 ? (count / maxCount) * 80.0 : 0.0;
+
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            width: double.infinity,
+            height: height.clamp(4.0, 80.0),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+          ),
+          SizedBox(height: 8.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              stars,
+              (index) => Icon(
+                Icons.star,
+                size: 10.0,
+                color: Colors.amber,
+              ),
+            ),
+          ),
+          SizedBox(height: 4.0),
+          Text(
+            count.toString(),
+            style: TextStyle(
+              fontSize: 10.0,
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Graphique de répartition des notes clients (1-5 étoiles)
+/// Graphique de répartition des avis
 class RatingDistributionChart extends StatelessWidget {
   const RatingDistributionChart({
     required this.analytics,
@@ -44,117 +194,70 @@ class RatingDistributionChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: EcoPlatesDesignTokens.analyticsCharts.chartPadding(context),
-      ),
-      padding: EdgeInsets.all(
-        EcoPlatesDesignTokens.analyticsCharts.chartContentPadding(context),
-      ),
+      margin: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            EcoPlatesDesignTokens.analyticsCharts.satisfactionGoldColor
-                .withValues(
-                  alpha: EcoPlatesDesignTokens
-                      .analyticsCharts
-                      .satisfactionGradientAlpha,
-                ),
-            EcoPlatesDesignTokens.analyticsCharts.satisfactionGoldLightColor
-                .withValues(
-                  alpha: EcoPlatesDesignTokens
-                      .analyticsCharts
-                      .satisfactionGradientAlpha,
-                ),
-            EcoPlatesDesignTokens.analyticsCharts.satisfactionGoldDarkColor
-                .withValues(
-                  alpha: EcoPlatesDesignTokens
-                      .analyticsCharts
-                      .satisfactionGradientAlpha,
-                ),
+            Colors.blue.shade50,
+            Colors.purple.shade50,
+            Colors.pink.shade50,
           ],
         ),
-        borderRadius: BorderRadius.circular(
-          EcoPlatesDesignTokens.analyticsCharts.chartBorderRadius,
-        ),
-        border: Border.all(
-          color: EcoPlatesDesignTokens.analyticsCharts.satisfactionGoldColor
-              .withValues(
-                alpha: EcoPlatesDesignTokens
-                    .analyticsCharts
-                    .satisfactionBorderAlpha,
-              ),
-          width: EcoPlatesDesignTokens.analyticsCharts.chartBorderWidth,
-        ),
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.purple.withOpacity(0.1),
+            blurRadius: 8.0,
+            offset: Offset(0.0, 4.0),
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header avec icône et titre
+          // Header
           Row(
             children: [
               Container(
-                padding:
-                    EcoPlatesDesignTokens.analyticsCharts.chartHeaderPadding,
+                width: 40.0,
+                height: 40.0,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(
-                    alpha: EcoPlatesDesignTokens
-                        .analyticsCharts
-                        .satisfactionHeaderBackgroundAlpha,
-                  ),
+                  color: Colors.white,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: EcoPlatesDesignTokens
-                          .analyticsCharts
-                          .satisfactionGoldColor
-                          .withValues(
-                            alpha: EcoPlatesDesignTokens
-                                .analyticsCharts
-                                .satisfactionShadowAlpha,
-                          ),
-                      blurRadius: EcoPlatesDesignTokens
-                          .analyticsCharts
-                          .satisfactionHeaderShadowBlurRadius,
-                      offset: EcoPlatesDesignTokens
-                          .analyticsCharts
-                          .satisfactionHeaderShadowOffset,
+                      color: Colors.purple.withOpacity(0.2),
+                      blurRadius: 8.0,
+                      offset: Offset(0.0, 2.0),
                     ),
                   ],
                 ),
                 child: Icon(
                   Icons.pie_chart,
-                  size: EcoPlatesDesignTokens.analyticsCharts.iconSize(context),
-                  color: EcoPlatesDesignTokens
-                      .analyticsCharts
-                      .satisfactionGoldColor,
+                  size: 20.0,
+                  color: Colors.purple,
                 ),
               ),
-              SizedBox(
-                width: EcoPlatesDesignTokens.analyticsCharts.iconTextSpacing(
-                  context,
-                ),
-              ),
+              SizedBox(width: 12.0),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Répartition des Avis',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: TextStyle(
+                        fontSize: 16.0,
                         fontWeight: FontWeight.w700,
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: EcoPlatesDesignTokens.analyticsCharts
-                            .chartTitleFontSize(context),
+                        color: Colors.black,
                       ),
                     ),
                     Text(
                       '${analytics.totalReviews} avis',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: EcoPlatesDesignTokens.analyticsCharts
-                            .labelFontSize(context),
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.grey.shade600,
                       ),
                     ),
                   ],
@@ -163,123 +266,115 @@ class RatingDistributionChart extends StatelessWidget {
             ],
           ),
 
-          SizedBox(
-            height: EcoPlatesDesignTokens.analyticsCharts.chartVerticalPadding(
-              context,
-            ),
-          ),
+          SizedBox(height: 16.0),
 
-          // Distribution des notes
-          ...analytics.ratingDistribution.map(
-            (rating) => Padding(
-              padding: EcoPlatesDesignTokens.analyticsCharts.legendItemMargin,
-              child: _buildRatingBar(rating, context),
-            ),
-          ),
+          // Rating bars
+          ...[5, 4, 3, 2, 1].map((stars) {
+            final count = _getRatingCount(stars);
+            final percentage = analytics.totalReviews > 0
+                ? (count / analytics.totalReviews) * 100
+                : 0.0;
+
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.0),
+              child: _buildRatingBar(stars, count, percentage),
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildRatingBar(RatingData rating, BuildContext context) {
+  int _getRatingCount(int stars) {
+    final ratings = analytics.ratingDistribution.where((r) => r.stars == stars);
+    return ratings.isNotEmpty ? ratings.first.count : 0;
+  }
+
+  Widget _buildRatingBar(int stars, int count, double percentage) {
     return Row(
       children: [
-        // Étoiles
+        // Stars
         Row(
           children: List.generate(
-            EcoPlatesDesignTokens.analyticsCharts.ratingStarsCount,
+            5,
             (index) => Icon(
-              index < rating.stars ? Icons.star : Icons.star_border,
-              size: EcoPlatesDesignTokens
-                  .analyticsCharts
-                  .legendColorIndicatorSize,
-              color: index < rating.stars
-                  ? Color(rating.color)
-                  : Theme.of(
-                      context,
-                    ).colorScheme.onSurfaceVariant.withValues(
-                      alpha: EcoPlatesDesignTokens
-                          .analyticsCharts
-                          .satisfactionUnfilledStarAlpha,
-                    ),
+              index < stars ? Icons.star : Icons.star_border,
+              size: 14.0,
+              color: index < stars ? Colors.amber : Colors.grey.shade300,
             ),
           ),
         ),
 
-        SizedBox(
-          width:
-              EcoPlatesDesignTokens.analyticsCharts.legendColorIndicatorSpacing,
-        ),
+        SizedBox(width: 12.0),
 
-        // Barre de progression
+        // Progress bar
         Expanded(
           child: Container(
-            height: EcoPlatesDesignTokens.analyticsCharts.barWidth(context),
+            height: 8.0,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.analyticsCharts.barBorderRadius,
-              ),
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(4.0),
             ),
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
-              widthFactor: rating.percentage / 100,
+              widthFactor: (percentage / 100).clamp(0.0, 1.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Color(rating.color),
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.analyticsCharts.barBorderRadius,
-                  ),
+                  color: _getRatingColor(stars),
+                  borderRadius: BorderRadius.circular(4.0),
                 ),
               ),
             ),
           ),
         ),
 
-        SizedBox(
-          width: EcoPlatesDesignTokens.analyticsCharts.chartElementSpacing(
-            context,
-          ),
-        ),
+        SizedBox(width: 12.0),
 
-        // Pourcentage et nombre
+        // Percentage and count
         SizedBox(
-          width: EcoPlatesDesignTokens.analyticsCharts.labelWidth(context),
+          width: 50.0,
           child: Text(
-            '${rating.percentage.toStringAsFixed(1)}%',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            '${percentage.toStringAsFixed(1)}%',
+            style: TextStyle(
+              fontSize: 12.0,
               fontWeight: FontWeight.w600,
-              color: Color(rating.color),
-              fontSize: EcoPlatesDesignTokens.analyticsCharts.valueFontSize(
-                context,
-              ),
+              color: _getRatingColor(stars),
             ),
             textAlign: TextAlign.right,
           ),
         ),
 
-        SizedBox(
-          width: EcoPlatesDesignTokens.analyticsCharts.chartElementSpacing(
-            context,
-          ),
-        ),
+        SizedBox(width: 8.0),
 
         SizedBox(
-          width:
-              EcoPlatesDesignTokens.analyticsCharts.counterFontSize(context) *
-              4,
+          width: 40.0,
           child: Text(
-            '(${rating.count})',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontSize: EcoPlatesDesignTokens.analyticsCharts.counterFontSize(
-                context,
-              ),
+            '($count)',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Colors.grey.shade600,
             ),
             textAlign: TextAlign.right,
           ),
         ),
       ],
     );
+  }
+
+  Color _getRatingColor(int stars) {
+    switch (stars) {
+      case 5:
+        return Colors.green;
+      case 4:
+        return Colors.lightGreen;
+      case 3:
+        return Colors.yellow.shade700;
+      case 2:
+        return Colors.orange;
+      case 1:
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

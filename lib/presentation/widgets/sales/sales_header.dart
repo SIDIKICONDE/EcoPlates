@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../../domain/entities/sale.dart';
 import '../../providers/sales_provider.dart';
 
@@ -58,23 +57,16 @@ class SalesHeader extends ConsumerWidget {
         final periodLabel = _getPeriodLabel(filters);
 
         return Container(
-          margin: EdgeInsets.all(context.scaleSM_MD_LG_XL),
-          padding: EdgeInsets.symmetric(
-            horizontal: context.scaleMD_LG_XL_XXL,
-            vertical: context.scaleXS_SM_MD_LG,
+          margin: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 12.0,
           ),
           decoration: BoxDecoration(
             color: theme.colorScheme.primary.withValues(
-              alpha: DesignConstants.opacityVeryTransparent,
+              alpha: 0.1,
             ),
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.lg,
-            ),
-            border: Border.all(
-              color: theme.colorScheme.outlineVariant.withValues(
-                alpha: DesignConstants.opacitySubtle,
-              ),
-            ),
+            borderRadius: BorderRadius.circular(16.0),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -109,7 +101,7 @@ class SalesHeader extends ConsumerWidget {
               if (todaySavings > 0 ||
                   filters.status != null ||
                   filters.searchQuery.isNotEmpty) ...[
-                SizedBox(height: context.scaleSM_MD_LG_XL),
+                const SizedBox(height: 12.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -117,33 +109,24 @@ class SalesHeader extends ConsumerWidget {
                     if (todaySavings > 0)
                       Expanded(
                         child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: context.scaleSM_MD_LG_XL,
-                            vertical: context.scaleXXS_XS_SM_MD,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0,
+                            vertical: 6.0,
                           ),
                           decoration: BoxDecoration(
                             color: Colors.green.withValues(
-                              alpha: DesignConstants.opacityVeryTransparent,
+                              alpha: 0.1,
                             ),
-                            borderRadius: BorderRadius.circular(
-                              EcoPlatesDesignTokens.radius.md,
-                            ),
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Row(
-                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
-                                Icons.eco,
-                                size: context.scaleXXS_XS_SM_MD,
-                                color: Colors.green,
-                              ),
-                              SizedBox(width: context.scaleXXS_XS_SM_MD),
+                              const SizedBox(width: 6.0),
                               Flexible(
                                 child: Text(
                                   '${totalSavings.toStringAsFixed(0)}€ économisés',
                                   style: TextStyle(
-                                    fontSize: EcoPlatesDesignTokens.typography
-                                        .hint(context),
+                                    fontSize: 14.0,
                                     color: Colors.green[700],
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -159,34 +142,24 @@ class SalesHeader extends ConsumerWidget {
                     if (filters.status != null ||
                         filters.searchQuery.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: context.scaleXXS_XS_SM_MD,
-                          vertical: context.scaleXXS_XS_SM_MD,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6.0,
+                          vertical: 6.0,
                         ),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.outlineVariant.withValues(
-                            alpha: DesignConstants.opacitySubtle,
+                            alpha: 0.3,
                           ),
-                          borderRadius: BorderRadius.circular(
-                            EcoPlatesDesignTokens.radius.xs,
-                          ),
+                          borderRadius: BorderRadius.circular(16.0),
                         ),
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.filter_alt,
-                              size: context.scaleXXS_XS_SM_MD,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                            SizedBox(width: context.scaleXXS_XS_SM_MD),
+                            const SizedBox(width: 6.0),
                             Text(
                               'Filtres',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
-                                fontSize: EcoPlatesDesignTokens.typography.hint(
-                                  context,
-                                ),
+                                fontSize: 14.0,
                               ),
                             ),
                           ],
@@ -206,12 +179,12 @@ class SalesHeader extends ConsumerWidget {
 
   Widget _buildShimmer(BuildContext context) {
     return Container(
-      height: context.applyPattern([70.0, 80.0, 90.0, 100.0]),
-      padding: EdgeInsets.symmetric(
-        horizontal: context.scaleMD_LG_XL_XXL,
-        vertical: context.scaleXS_SM_MD_LG,
+      height: 80.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 12.0,
       ),
-      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      child: const Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
     );
   }
 
@@ -251,44 +224,39 @@ class _StatItem extends StatelessWidget {
 
     return Container(
       padding: isHighlight
-          ? EdgeInsets.symmetric(
-              horizontal: context.scaleSM_MD_LG_XL,
-              vertical: context.scaleXXS_XS_SM_MD,
+          ? const EdgeInsets.symmetric(
+              horizontal: 12.0,
+              vertical: 6.0,
             )
           : null,
       decoration: isHighlight
           ? BoxDecoration(
               color: color.withValues(
-                alpha: DesignConstants.opacityVeryTransparent,
+                alpha: 0.1,
               ),
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.xs,
-              ),
-              border: Border.all(
-                color: color.withValues(alpha: DesignConstants.opacitySubtle),
-              ),
+              borderRadius: BorderRadius.circular(16.0),
             )
           : null,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: context.scaleIconStandard),
-          SizedBox(height: context.scaleXXS_XS_SM_MD),
+          Icon(icon, color: color, size: 24.0),
+          const SizedBox(height: 4.0),
           Text(
             value,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
-              fontSize: EcoPlatesDesignTokens.typography.modalTitle(context),
+              fontSize: 16.0,
             ),
           ),
-          SizedBox(height: context.scaleXXS_XS_SM_MD),
+          const SizedBox(height: 4.0),
           Text(
             label,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              fontSize: 12.0,
             ),
           ),
         ],

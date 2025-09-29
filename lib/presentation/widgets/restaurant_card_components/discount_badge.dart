@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/responsive/design_tokens.dart';
-import '../../../core/utils/accessibility_helper.dart';
 
 /// Badge animé pour afficher le pourcentage de réduction avec accessibilité WCAG
 class DiscountBadge extends StatelessWidget {
@@ -18,7 +16,7 @@ class DiscountBadge extends StatelessWidget {
     final shouldAnimate = animationsEnabled && !mediaQuery.disableAnimations;
 
     // Couleurs accessibles WCAG
-    const backgroundColor = AccessibleColors.dangerRed;
+    const backgroundColor = Colors.red;
     const textColor = Colors.white;
 
     final badge = Semantics(
@@ -26,53 +24,40 @@ class DiscountBadge extends StatelessWidget {
       button: false,
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: context.scaleMD_LG_XL_XXL,
-          vertical: context.scaleXXS_XS_SM_MD,
+          horizontal: 12.0,
+          vertical: 6.0,
         ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
               backgroundColor,
-              backgroundColor.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-              ),
+              backgroundColor.withOpacity(0.8),
             ],
           ),
-          borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xxl),
+          borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
-              color: backgroundColor.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.subtle,
-              ),
-              blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-              offset: EcoPlatesDesignTokens.elevation.standardOffset,
+              color: backgroundColor.withOpacity(0.3),
+              blurRadius: 8.0,
+              offset: Offset(0, 4.0),
             ),
           ],
-          border: Border.all(
-            color: Colors.white.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.subtle,
-            ),
-            width: EcoPlatesDesignTokens.layout.cardBorderWidth,
-          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.local_fire_department,
+              Icons.discount,
+              size: 14.0,
               color: textColor,
-              size: EcoPlatesDesignTokens.size.indicator(context),
-              semanticLabel: 'Offre spéciale',
             ),
-            SizedBox(width: context.scaleXXS_XS_SM_MD),
+            SizedBox(width: 4.0),
             Text(
               '-$discountPercentage%',
               style: TextStyle(
                 color: textColor,
-                fontSize: AccessibleFontSizes.normal,
-                fontWeight: EcoPlatesDesignTokens.typography.bold,
-                letterSpacing: EcoPlatesDesignTokens.typography
-                    .titleLetterSpacing(context),
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
@@ -86,12 +71,12 @@ class DiscountBadge extends StatelessWidget {
 
     return TweenAnimationBuilder<double>(
       tween: Tween(
-        begin: EcoPlatesDesignTokens.urgentOffers.pulseBegin,
-        end: EcoPlatesDesignTokens.urgentOffers.pulseEnd,
+        begin: 0.8,
+        end: 1.0,
       ),
-      duration: EcoPlatesDesignTokens.animation.normal,
+      duration: Duration(milliseconds: 600),
       curve: Curves.elasticOut,
-      builder: (context, value, child) {
+      builder: (context, double value, child) {
         return Transform.scale(scale: value, child: badge);
       },
     );

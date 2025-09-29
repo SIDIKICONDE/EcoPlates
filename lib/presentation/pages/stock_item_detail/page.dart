@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
@@ -53,29 +52,29 @@ class StockItemDetailPage extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(
-          EcoPlatesDesignTokens.spacing.dialogGap(context),
+          16.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _HeaderCard(item: currentItem),
             SizedBox(
-              height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+              height: 16.0,
             ),
             _StatsCard(item: currentItem),
             if (currentItem.lowStockThreshold != null) ...[
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                height: 16.0,
               ),
               _AlertThresholdCard(item: currentItem),
             ],
             if (currentItem.description?.isNotEmpty ?? false) ...[
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                height: 16.0,
               ),
               _DescriptionCard(text: currentItem.description!),
             ],
-            SizedBox(height: EcoPlatesDesignTokens.spacing.dialogGap(context)),
+            SizedBox(height: 16.0),
             _ActionsSection(item: currentItem),
           ],
         ),
@@ -93,22 +92,19 @@ class _HeaderCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-          ),
-          width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+          color: theme.colorScheme.outline.withOpacity(0.1),
+          width: 1.0,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Column(
@@ -116,24 +112,15 @@ class _HeaderCard extends StatelessWidget {
                   children: [
                     Text(
                       item.name,
-                      style: TextStyle(
-                        fontSize: EcoPlatesDesignTokens.typography.titleSize(
-                          context,
-                        ),
-                        fontWeight: EcoPlatesDesignTokens.typography.bold,
-                        color: theme.colorScheme.onSurface,
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(
-                      height: EcoPlatesDesignTokens.spacing.microGap(context),
-                    ),
+                    const SizedBox(height: 8.0),
                     Wrap(
-                      spacing: EcoPlatesDesignTokens.spacing.microGap(context),
-                      runSpacing: EcoPlatesDesignTokens.spacing.microGap(
-                        context,
-                      ),
+                      spacing: 8.0,
+                      runSpacing: 8.0,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         _SkuChip(sku: item.sku),
@@ -143,9 +130,7 @@ class _HeaderCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
-                width: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              const SizedBox(width: 16.0),
               _StatusDot(status: item.status),
             ],
           ),
@@ -164,23 +149,21 @@ class _StatsCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-          ),
-          width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+          color: theme.colorScheme.outline.withOpacity(0.1),
+          width: 1.0,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Wrap(
-            spacing: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-            runSpacing: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+            spacing: 16.0,
+            runSpacing: 16.0,
             children: [
               _StatTile(
                 label: 'Prix',
@@ -197,25 +180,21 @@ class _StatsCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          const SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Icon(
                 Icons.update,
-                size: EcoPlatesDesignTokens.size.indicator(context),
-                color: theme.colorScheme.onSurfaceVariant.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                ),
+                size: 16.0,
+                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
               ),
-              SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
+              const SizedBox(width: 4.0),
               Text(
                 _formatLastUpdate(item.updatedAt),
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.textSecondary,
-                  ),
+                  fontSize: 12.0,
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
                 ),
               ),
             ],
@@ -224,24 +203,24 @@ class _StatsCard extends StatelessWidget {
       ),
     );
   }
+}
 
-  String _formatLastUpdate(DateTime updatedAt) {
-    final now = DateTime.now();
-    final difference = now.difference(updatedAt);
+String _formatLastUpdate(DateTime updatedAt) {
+  final now = DateTime.now();
+  final difference = now.difference(updatedAt);
 
-    if (difference.inMinutes < 1) {
-      return "À l'instant";
-    } else if (difference.inMinutes < 60) {
-      return 'Il y a ${difference.inMinutes}min';
-    } else if (difference.inHours < 24) {
-      return 'Il y a ${difference.inHours}h';
-    } else if (difference.inDays == 1) {
-      return 'Hier';
-    } else if (difference.inDays < 7) {
-      return 'Il y a ${difference.inDays}j';
-    } else {
-      return '${updatedAt.day}/${updatedAt.month}/${updatedAt.year}';
-    }
+  if (difference.inMinutes < 1) {
+    return "À l'instant";
+  } else if (difference.inMinutes < 60) {
+    return 'Il y a ${difference.inMinutes}min';
+  } else if (difference.inHours < 24) {
+    return 'Il y a ${difference.inHours}h';
+  } else if (difference.inDays == 1) {
+    return 'Hier';
+  } else if (difference.inDays < 7) {
+    return 'Il y a ${difference.inDays}j';
+  } else {
+    return '${updatedAt.day}/${updatedAt.month}/${updatedAt.year}';
   }
 }
 
@@ -254,55 +233,27 @@ class _AlertThresholdCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-          ),
-          width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+          color: theme.colorScheme.primary.withOpacity(0.3),
+          width: 2.0,
         ),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.notifications_outlined,
-            size: EcoPlatesDesignTokens.size.icon(context),
-            color: theme.colorScheme.primary,
-          ),
-          SizedBox(width: EcoPlatesDesignTokens.spacing.sm),
+          const StockAlertBadge(alertLevel: StockAlertLevel.low),
+          const SizedBox(width: 12.0),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Seuil d'alerte configuré",
-                  style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.text(context),
-                    fontWeight: EcoPlatesDesignTokens.typography.semiBold,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                SizedBox(
-                  height: EcoPlatesDesignTokens.spacing.microGap(context),
-                ),
-                Text(
-                  'Une alerte sera déclenchée quand le stock atteint ${item.lowStockThreshold} ${item.unit}',
-                  style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+            child: Text(
+              'Une alerte sera déclenchée quand le stock atteint ${item.lowStockThreshold} ${item.unit}',
+              style: const TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          SizedBox(width: EcoPlatesDesignTokens.spacing.sm),
-          StockAlertBadge(
-            alertLevel: item.alertLevel,
-            showLabel: false,
-            compact: true,
           ),
         ],
       ),
@@ -318,35 +269,32 @@ class _DescriptionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-          ),
-          width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+          color: theme.colorScheme.outline.withOpacity(0.1),
+          width: 1.0,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Description',
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
-              fontWeight: EcoPlatesDesignTokens.typography.semiBold,
-              color: theme.colorScheme.onSurfaceVariant,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
+          const SizedBox(height: 8.0),
           Text(
             text,
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
+              fontSize: 14.0,
               color: theme.colorScheme.onSurface,
-              height: EcoPlatesDesignTokens.layout.textLineHeight,
+              height: 1.5,
             ),
           ),
         ],
@@ -363,23 +311,21 @@ class _ActionsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-          ),
-          width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+          color: theme.colorScheme.outline.withOpacity(0.1),
+          width: 1.0,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Wrap(
-            spacing: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-            runSpacing: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+            spacing: 16.0,
+            runSpacing: 16.0,
             crossAxisAlignment: WrapCrossAlignment.center,
             alignment: WrapAlignment.spaceBetween,
             children: [
@@ -391,7 +337,7 @@ class _ActionsSection extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          const SizedBox(height: 16.0),
           FilledButton.icon(
             onPressed: () {
               unawaited(
@@ -418,20 +364,18 @@ class _SkuChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EcoPlatesDesignTokens.spacing.skuChipPadding,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.subtle,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text(
         sku,
         style: TextStyle(
-          fontSize: EcoPlatesDesignTokens.typography.hint(context),
+          fontSize: 12.0,
           color: theme.colorScheme.onSurfaceVariant,
           fontFamily: 'monospace',
-          fontWeight: EcoPlatesDesignTokens.typography.regular,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -445,25 +389,17 @@ class _CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EcoPlatesDesignTokens.spacing.categoryChipPadding,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.pressed,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
-        border: Border.all(
-          color: theme.colorScheme.primary.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.pressed,
-          ),
-          width: EcoPlatesDesignTokens.layout.cardBorderWidth,
-        ),
+        color: theme.colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text(
         category,
         style: TextStyle(
-          fontSize: EcoPlatesDesignTokens.typography.hint(context),
+          fontSize: 12.0,
           color: theme.colorScheme.primary,
-          fontWeight: EcoPlatesDesignTokens.typography.medium,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -473,18 +409,22 @@ class _CategoryChip extends StatelessWidget {
 class _StatusDot extends StatelessWidget {
   const _StatusDot({required this.status});
   final StockItemStatus status;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final color = status == StockItemStatus.active
+        ? theme.colorScheme.primary
+        : status == StockItemStatus.inactive
+        ? theme.colorScheme.error
+        : theme.colorScheme.secondary;
 
     return Container(
-      width: EcoPlatesDesignTokens.layout.statusDotSize,
-      height: EcoPlatesDesignTokens.layout.statusDotSize,
+      width: 12.0,
+      height: 12.0,
       decoration: BoxDecoration(
-        color: status == StockItemStatus.active
-            ? theme.colorScheme.primary
-            : theme.colorScheme.secondary,
         shape: BoxShape.circle,
+        color: color,
       ),
     );
   }
@@ -506,12 +446,12 @@ class _StatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EcoPlatesDesignTokens.spacing.statTilePadding,
+      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.pressed,
-        ),
-        borderRadius: BorderRadius.circular(12),
+        color:
+            color?.withOpacity(0.1) ??
+            theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -519,27 +459,29 @@ class _StatTile extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.button(context),
-              fontWeight: EcoPlatesDesignTokens.typography.bold,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
               color: color ?? theme.colorScheme.onSurface,
             ),
           ),
           if (suffix != null) ...[
-            SizedBox(width: EcoPlatesDesignTokens.spacing.xxs),
+            const SizedBox(width: 4.0),
             Text(
               suffix!,
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                color: theme.colorScheme.onSurfaceVariant,
+                fontSize: 14.0,
+                color: color ?? theme.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
-          SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
+          const SizedBox(width: 8.0),
           Text(
             label,
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              fontSize: 12.0,
               color: theme.colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ],

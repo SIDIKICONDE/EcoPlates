@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-import '../../core/responsive/design_tokens.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
 import 'common/location_header.dart';
 
 /// En-tête minimaliste, élégant et professionnel
@@ -39,12 +39,12 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
     final theme = Theme.of(context);
     final bg = backgroundColor ?? theme.colorScheme.surface;
     final dividerColor = theme.dividerColor.withValues(
-      alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+      alpha: 0.12,
     );
 
     // Si aucune action n'est fournie, on réserve l'espace pour éviter les "sauts"
     final right = actions == null || actions!.isEmpty
-        ? SizedBox(width: EcoPlatesDesignTokens.size.minTouchTarget)
+        ? SizedBox(width: 48.0)
         : Row(mainAxisSize: MainAxisSize.min, children: actions!);
 
     return Material(
@@ -64,8 +64,7 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             children: [
               // Leading (ex: bouton retour ou logo compact)
-              leading ??
-                  SizedBox(width: EcoPlatesDesignTokens.size.minTouchTarget),
+              leading ?? SizedBox(width: 48.0),
 
               // Titre centré ou localisation
               Expanded(

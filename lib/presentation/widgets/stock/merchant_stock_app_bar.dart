@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../controllers/merchant_stock_controller.dart';
 import '../../pages/stock_item_form/page.dart';
@@ -27,7 +26,7 @@ class MerchantStockAppBar extends ConsumerWidget
     final outOfStockCount = ref.watch(outOfStockItemsProvider).length;
 
     // Utiliser le système de breakpoints EcoPlates
-    final isSmallScreen = context.isMobileDevice;
+    final isSmallScreen = MediaQuery.of(context).size.width < 768;
 
     return AdaptiveAppBar(
       leading: const _MerchantLogo(),
@@ -39,9 +38,9 @@ class MerchantStockAppBar extends ConsumerWidget
         // Bouton d'ajout d'article
         IconButton(
           icon: const Icon(Icons.add),
-          iconSize: context.scaleIconStandard,
+          iconSize: 20.0,
           tooltip: 'Ajouter',
-          padding: EdgeInsets.all(context.scaleSM_MD_LG_XL),
+          padding: EdgeInsets.all(12.0),
           constraints: const BoxConstraints(),
           onPressed: () => _navigateToStockItemForm(context),
         ),
@@ -53,7 +52,7 @@ class MerchantStockAppBar extends ConsumerWidget
         // Menu d'actions compact
         const _ActionsMenu(),
 
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
+        SizedBox(width: 4.0),
       ],
     );
   }
@@ -79,9 +78,9 @@ class _MerchantLogo extends StatelessWidget {
         'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center';
 
     return Container(
-      margin: EdgeInsets.all(context.scaleSM_MD_LG_XL),
+      margin: EdgeInsets.all(12.0),
       child: CircleAvatar(
-        radius: context.scaleXS_SM_MD_LG,
+        radius: 8.0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
         onBackgroundImageError: (_, _) {
@@ -89,7 +88,7 @@ class _MerchantLogo extends StatelessWidget {
         },
         child: Icon(
           Icons.store,
-          size: context.scaleIconStandard,
+          size: 20.0,
           color: Colors.grey,
         ),
       ),
@@ -107,16 +106,16 @@ class _ViewModeSwitch extends ConsumerWidget {
     final isCompactView = ref.watch(stockViewModeProvider);
 
     return Padding(
-      padding: EdgeInsets.only(right: context.scaleXXS_XS_SM_MD),
+      padding: EdgeInsets.only(right: 4.0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             isCompactView ? Icons.view_agenda : Icons.view_list,
-            size: context.scaleIconStandard,
+            size: 20.0,
             color: theme.colorScheme.onSurfaceVariant,
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 4.0),
           Transform.scale(
             scale: 0.8,
             child: Switch(
@@ -148,13 +147,13 @@ class _StockBadge extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: context.scaleXXS_XS_SM_MD,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 4.0,
+        vertical: 4.0,
       ),
-      margin: EdgeInsets.only(right: context.scaleXXS_XS_SM_MD),
+      margin: EdgeInsets.only(right: 4.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xs),
+        borderRadius: BorderRadius.circular(4.0),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -162,17 +161,17 @@ class _StockBadge extends StatelessWidget {
           Text(
             stockCount > 999 ? '999+' : stockCount.toString(),
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
+              fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSecondaryContainer,
             ),
           ),
 
           if (outOfStockCount > 0) ...[
-            SizedBox(width: context.scaleXXS_XS_SM_MD),
+            SizedBox(width: 4.0),
             Container(
-              width: context.scaleXXS_XS_SM_MD,
-              height: context.scaleXXS_XS_SM_MD,
+              width: 4.0,
+              height: 4.0,
               decoration: BoxDecoration(
                 color: theme.colorScheme.error,
                 shape: BoxShape.circle,
@@ -191,13 +190,13 @@ class _ActionsMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSmallScreen = context.isMobileDevice;
+    final isSmallScreen = MediaQuery.of(context).size.width < 768;
     final stockCount = ref.watch(stockItemsCountProvider);
     final outOfStockCount = ref.watch(outOfStockItemsProvider).length;
 
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
-      iconSize: context.scaleIconStandard,
+      iconSize: 20.0,
       tooltip: 'Actions',
       onSelected: (value) => _handleMenuAction(context, ref, value),
       itemBuilder: (context) {
@@ -209,18 +208,18 @@ class _ActionsMenu extends ConsumerWidget {
               child: ListTile(
                 leading: Icon(
                   Icons.inventory,
-                  size: context.scaleIconStandard,
+                  size: 20.0,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 title: Text(
                   '$stockCount articles${outOfStockCount > 0 ? ' (• $outOfStockCount ruptures)' : ''}',
                   style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                    fontSize: 14.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 contentPadding: EdgeInsets.symmetric(
-                  horizontal: context.scaleSM_MD_LG_XL,
+                  horizontal: 12.0,
                 ),
                 dense: true,
               ),
@@ -236,18 +235,16 @@ class _ActionsMenu extends ConsumerWidget {
                   return ListTile(
                     leading: Icon(
                       isCompactView ? Icons.view_agenda : Icons.view_list,
-                      size: context.scaleIconStandard,
+                      size: 20.0,
                     ),
                     title: Text(
                       isCompactView ? 'Vue détaillée' : 'Vue compacte',
                       style: TextStyle(
-                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                          context,
-                        ),
+                        fontSize: 16.0,
                       ),
                     ),
                     contentPadding: EdgeInsets.symmetric(
-                      horizontal: context.scaleSM_MD_LG_XL,
+                      horizontal: 12.0,
                     ),
                     dense: true,
                   );
@@ -263,18 +260,16 @@ class _ActionsMenu extends ConsumerWidget {
             child: ListTile(
               leading: Icon(
                 Icons.refresh,
-                size: context.scaleIconStandard,
+                size: 20.0,
               ),
               title: Text(
                 'Actualiser',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                    context,
-                  ),
+                  fontSize: 16.0,
                 ),
               ),
               contentPadding: EdgeInsets.symmetric(
-                horizontal: context.scaleSM_MD_LG_XL,
+                horizontal: 12.0,
               ),
               dense: true,
             ),
@@ -284,18 +279,16 @@ class _ActionsMenu extends ConsumerWidget {
             child: ListTile(
               leading: Icon(
                 Icons.sort,
-                size: context.scaleIconStandard,
+                size: 20.0,
               ),
               title: Text(
                 'Trier',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                    context,
-                  ),
+                  fontSize: 16.0,
                 ),
               ),
               contentPadding: EdgeInsets.symmetric(
-                horizontal: context.scaleSM_MD_LG_XL,
+                horizontal: 12.0,
               ),
               dense: true,
             ),
@@ -305,18 +298,16 @@ class _ActionsMenu extends ConsumerWidget {
             child: ListTile(
               leading: Icon(
                 Icons.download,
-                size: context.scaleIconStandard,
+                size: 20.0,
               ),
               title: Text(
                 'Exporter',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                    context,
-                  ),
+                  fontSize: 16.0,
                 ),
               ),
               contentPadding: EdgeInsets.symmetric(
-                horizontal: context.scaleSM_MD_LG_XL,
+                horizontal: 12.0,
               ),
               dense: true,
             ),

@@ -1,8 +1,9 @@
+//
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui' as ui;
+//
 
 import 'core/constants/env_config.dart';
 import 'core/providers/cache_config_provider.dart';
@@ -44,37 +45,10 @@ class EcoPlatesApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
 
-    // Déterminer la taille de design responsive selon le type d'appareil
-    final mediaQuery = MediaQuery.of(context);
-    final screenWidth = mediaQuery.size.width;
+    // L'init responsive/ScreenUtil est gérée par AdaptiveApp -> ResponsiveScreenUtilInit
 
-    // Utiliser une taille de design adaptative
-    late ui.Size designSize;
-    if (screenWidth >= 1440) {
-      // Grand écran desktop
-      designSize = ui.Size(1440, 900);
-    } else if (screenWidth >= 768) {
-      // Tablette
-      designSize = ui.Size(768, 1024);
-    } else if (screenWidth >= 900) {
-      // Écran moyen
-      designSize = ui.Size(900, 1200);
-    } else {
-      // Mobile (par défaut)
-      designSize = ui.Size(375, 812); // iPhone X comme référence
-    }
-
-    // Note: ScreenUtilInit est maintenu pour la compatibilité avec les widgets existants
-    // mais le nouveau système responsive (context.responsiveValue) est prioritaire
-    return ScreenUtilInit(
-      designSize: designSize,
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        // Utilise AdaptiveApp qui détecte automatiquement la plateforme
-        // AdaptiveApp utilise maintenant EcoTheme avec le système responsive intégré
-        return AdaptiveApp(router: router);
-      },
-    );
+    // Éviter la double initialisation: laisser AdaptiveApp + ResponsiveScreenUtilInit gérer
+    // l'init ScreenUtil via ResponsiveScreenUtilInit/ResponsiveConfig.
+    return AdaptiveApp(router: router);
   }
 }

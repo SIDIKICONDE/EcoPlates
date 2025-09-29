@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/enums/merchant_enums.dart';
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/services/image_cache_service.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/merchant_profile.dart';
@@ -31,82 +30,76 @@ class MerchantProfileHeader extends ConsumerWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWideScreen = constraints.maxWidth > 768.0;
-        final avatarSize = isWideScreen
-            ? EcoPlatesDesignTokens.size.modalIcon(context) * 1.5
-            : EcoPlatesDesignTokens.size.modalIcon(context);
+        final avatarSize = isWideScreen ? 120.0 : 80.0;
 
         return Container(
-          padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+          padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: colors.surface,
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.xl,
-            ),
+            borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: EcoPlatesDesignTokens.colors.overlayBlack.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                ),
-                blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-                offset: EcoPlatesDesignTokens.elevation.standardOffset,
+                color: colors.shadow.withOpacity(0.1),
+                blurRadius: 8.0,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
           child: Column(
             children: [
-              // Photo de profil / Logo
+              // Avatar avec bouton d'édition
               Stack(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.center,
                 children: [
                   _buildAvatar(context, avatarSize, colors),
                   if (onEditPhoto != null)
-                    _buildEditPhotoButton(context, colors),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: _buildEditPhotoButton(context, colors),
+                    ),
                 ],
               ),
-              SizedBox(height: context.scaleMD_LG_XL_XXL),
+              const SizedBox(height: 16.0),
 
               // Nom et catégorie
               Text(
                 profile.name,
-                style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-                  fontWeight: EcoPlatesDesignTokens.typography.bold,
+                style: const TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
 
               // Badge catégorie
               _buildCategoryBadge(context, colors),
 
-              SizedBox(height: context.scaleXXS_XS_SM_MD),
+              const SizedBox(height: 8.0),
 
               // Statut d'ouverture
               _buildOpenStatus(context, theme, colors),
 
               // Description
               if (profile.description != null) ...[
-                SizedBox(height: context.scaleMD_LG_XL_XXL),
+                const SizedBox(height: 16.0),
                 Text(
                   profile.description!,
-                  style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.text(context),
+                  style: const TextStyle(
+                    fontSize: 14.0,
                   ),
                   textAlign: TextAlign.center,
-                  maxLines: EcoPlatesDesignTokens.layout.descriptionMaxLines,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                 ),
-              ],
-
-              // Bouton d'édition
-              if (onEditProfile != null) ...[
-                SizedBox(height: context.scaleMD_LG_XL_XXL),
-                _buildEditButton(context, theme, colors),
+                if (onEditProfile != null) ...[
+                  const SizedBox(height: 16.0),
+                  _buildEditButton(context, theme, colors),
+                ],
               ],
 
               // Note et avis
               if (profile.rating > 0) ...[
-                SizedBox(height: context.scaleMD_LG_XL_XXL),
+                const SizedBox(height: 16.0),
                 _buildRatingSection(context, theme, colors),
               ],
             ],
@@ -150,13 +143,11 @@ class MerchantProfileHeader extends ConsumerWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.primary.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-        ),
+        color: colors.primary.withOpacity(0.1),
       ),
       child: Icon(
-        _getIconForCategory(profile.category),
-        size: EcoPlatesDesignTokens.size.icon(context),
+        Icons.store,
+        size: size * 0.5,
         color: colors.primary,
       ),
     );
@@ -171,11 +162,11 @@ class MerchantProfileHeader extends ConsumerWidget {
       child: IconButton(
         icon: Icon(
           Icons.camera_alt,
-          size: EcoPlatesDesignTokens.size.indicator(context),
+          size: 16.0,
         ),
         color: colors.onPrimary,
         onPressed: onEditPhoto,
-        padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+        padding: const EdgeInsets.all(8.0),
         constraints: const BoxConstraints(),
       ),
     );
@@ -183,31 +174,30 @@ class MerchantProfileHeader extends ConsumerWidget {
 
   Widget _buildCategoryBadge(BuildContext context, ColorScheme colors) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.scaleXS_SM_MD_LG,
-        vertical: context.scaleXXS_XS_SM_MD,
+      margin: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12.0,
+        vertical: 6.0,
       ),
       decoration: BoxDecoration(
-        color: colors.secondary.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xxl),
+        color: colors.secondary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20.0),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             _getIconForCategory(profile.category),
-            size: EcoPlatesDesignTokens.size.indicator(context),
+            size: 16.0,
             color: colors.secondary,
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
+          const SizedBox(width: 6.0),
           Text(
             profile.category.displayName,
             style: TextStyle(
               color: colors.secondary,
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
-              fontWeight: EcoPlatesDesignTokens.typography.medium,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -237,31 +227,29 @@ class MerchantProfileHeader extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: EcoPlatesDesignTokens.size.indicator(context) / 2,
-          height: EcoPlatesDesignTokens.size.indicator(context) / 2,
+          width: 8.0,
+          height: 8.0,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: statusColor,
           ),
         ),
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
+        const SizedBox(width: 8.0),
         Text(
           status.displayName,
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.text(context),
+            fontSize: 14.0,
             color: statusColor,
-            fontWeight: EcoPlatesDesignTokens.typography.medium,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        if (todayHours != null && !todayHours.isClosed) ...[
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
-          Text(
-            '• ${todayHours.shortFormat}',
-            style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.hint(context),
-            ),
+        const SizedBox(width: 8.0),
+        Text(
+          '• ${todayHours?.shortFormat ?? 'N/A'}',
+          style: const TextStyle(
+            fontSize: 14.0,
           ),
-        ],
+        ),
       ],
     );
   }
@@ -273,9 +261,9 @@ class MerchantProfileHeader extends ConsumerWidget {
   ) {
     return OutlinedButton.icon(
       onPressed: onEditProfile,
-      icon: Icon(
+      icon: const Icon(
         Icons.edit,
-        size: EcoPlatesDesignTokens.size.indicator(context),
+        size: 16.0,
       ),
       label: const Text('Modifier le profil'),
       style: OutlinedButton.styleFrom(
@@ -293,24 +281,24 @@ class MerchantProfileHeader extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
+        const Icon(
           Icons.star,
           color: Colors.amber,
-          size: EcoPlatesDesignTokens.size.indicator(context),
+          size: 16.0,
         ),
-        SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
+        const SizedBox(width: 4.0),
         Text(
           profile.rating.toStringAsFixed(1),
-          style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.text(context),
-            fontWeight: EcoPlatesDesignTokens.typography.bold,
+          style: const TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
+        const SizedBox(width: 8.0),
         Text(
           '(${profile.totalReviews} avis)',
-          style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.hint(context),
+          style: const TextStyle(
+            fontSize: 14.0,
           ),
         ),
       ],

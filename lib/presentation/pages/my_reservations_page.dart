@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../core/responsive/design_tokens.dart';
 import '../providers/offer_reservation_provider.dart';
 import '../providers/user_reservations_provider.dart';
 
@@ -21,11 +19,11 @@ class MyReservationsPage extends ConsumerWidget {
           ? _EmptyState(colorScheme: colorScheme)
           : ListView.separated(
               padding: EdgeInsets.all(
-                EcoPlatesDesignTokens.spacing.dialogGap(context),
+                16.0,
               ),
               itemCount: reservations.length,
               separatorBuilder: (_, _) => SizedBox(
-                height: EcoPlatesDesignTokens.spacing.microGap(context),
+                height: 16.0,
               ),
               itemBuilder: (context, index) {
                 final r = reservations[index];
@@ -97,7 +95,7 @@ class _EmptyState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.event_busy, size: 64, color: colorScheme.outline),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          SizedBox(height: 16.0),
           Text(
             'Aucune réservation',
             style: TextStyle(
@@ -105,7 +103,7 @@ class _EmptyState extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
+          SizedBox(height: 16.0),
           Text(
             'Vos réservations apparaîtront ici',
             style: TextStyle(color: colorScheme.onSurfaceVariant),

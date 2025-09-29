@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/responsive.dart';
-import '../../../core/themes/tokens/spacing_tokens.dart';
 import '../../../domain/entities/user.dart';
 import 'consumer_tier_utils.dart';
 
@@ -45,42 +43,24 @@ class TierProgressWidget extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(
-          height: context.responsiveValue(
-            mobile: EcoSpacing.xs,
-            tablet: EcoSpacing.sm,
-            desktop: EcoSpacing.md,
-          ),
-        ),
+        const SizedBox(height: 12.0),
         LinearProgressIndicator(
           value: progress.clamp(0.0, 1.0),
-          backgroundColor: colors.surface.withValues(alpha: 0.5),
+          backgroundColor: colors.surface.withOpacity(0.5),
           valueColor: AlwaysStoppedAnimation<Color>(
             ConsumerTierUtils.getTierColor(
               nextTier ?? currentTier,
               brightness: Theme.of(context).brightness,
             ),
           ),
-          minHeight: context.responsiveValue(
-            mobile: 6,
-            tablet: 8,
-            desktop: 10,
-          ),
+          minHeight: 8.0,
         ),
-        SizedBox(
-          height: context.responsiveValue(
-            mobile: 2,
-            tablet: 4,
-            desktop: 6,
-          ),
-        ),
+        const SizedBox(height: 8.0),
         if (nextTier != null)
           Text(
             'Encore ${nextTierThreshold - currentScore} points pour débloquer le niveau ${ConsumerTierUtils.getTierLabel(nextTier)}',
             style: textTheme.bodySmall?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: colors.onSurface.withOpacity(0.6),
             ),
           ),
       ],

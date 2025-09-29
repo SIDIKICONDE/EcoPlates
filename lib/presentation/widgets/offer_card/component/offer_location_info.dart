@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
-
 /// Widget affichant la distance et l'horaire de collecte
 class OfferLocationInfo extends StatelessWidget {
   const OfferLocationInfo({
@@ -23,38 +21,30 @@ class OfferLocationInfo extends StatelessWidget {
         if (showDistance && distance != null) ...[
           Icon(
             Icons.location_on,
-            size: EcoPlatesDesignTokens.size.indicator(context),
-            color: Theme.of(context).colorScheme.onSurface.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-            ),
+            size: 14.0,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD),
+          SizedBox(width: 4.0),
           Text(
             '${distance!.toStringAsFixed(1)} km',
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
-              color: Theme.of(context).colorScheme.onSurface.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-              ),
+              fontSize: 12.0,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
-          SizedBox(width: context.scaleMD_LG_XL_XXL),
+          SizedBox(width: 12.0),
         ],
         Icon(
           Icons.schedule,
-          size: EcoPlatesDesignTokens.size.indicator(context),
-          color: Theme.of(context).colorScheme.onSurface.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-          ),
+          size: 14.0,
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
         ),
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
+        SizedBox(width: 4.0),
         Text(
           _formatPickupTime(),
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.text(context),
-            color: Theme.of(context).colorScheme.onSurface.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-            ),
+            fontSize: 12.0,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
           ),
         ),
       ],

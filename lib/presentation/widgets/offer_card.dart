@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/responsive/design_tokens.dart';
 import '../../domain/entities/food_offer.dart';
 import 'offer_card/component/offer_card_content.dart';
 import 'offer_card/component/offer_card_image.dart';
@@ -79,47 +78,19 @@ class _OfferCardState extends State<OfferCard>
             child: Container(
               decoration: BoxDecoration(
                 color: isDark ? Colors.grey[900] : Colors.white,
-                borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.lg,
-                ),
+                borderRadius: BorderRadius.circular(16.0),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: isDark
-                          ? EcoPlatesDesignTokens.opacity.subtle +
-                                (EcoPlatesDesignTokens.opacity.pressed *
-                                    _elevationAnimation.value)
-                          : EcoPlatesDesignTokens.opacity.veryTransparent +
-                                (EcoPlatesDesignTokens.opacity.verySubtle *
-                                    _elevationAnimation.value),
-                    ),
-                    blurRadius:
-                        EcoPlatesDesignTokens.elevation.mediumBlur +
-                        (EcoPlatesDesignTokens.elevation.smallBlur *
-                            _elevationAnimation.value),
-                    offset: Offset(
-                      0,
-                      EcoPlatesDesignTokens.elevation.standardOffset.dy +
-                          (EcoPlatesDesignTokens.elevation.standardOffset.dy *
-                              _elevationAnimation.value),
-                    ),
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8.0,
+                    offset: Offset(0.0, 4.0),
                   ),
                   // Ombre secondaire pour plus de profondeur
                   if (_elevationAnimation.value > 0)
                     BoxShadow(
-                      color: theme.primaryColor.withValues(
-                        alpha:
-                            EcoPlatesDesignTokens.opacity.veryTransparent *
-                            _elevationAnimation.value,
-                      ),
-                      blurRadius:
-                          EcoPlatesDesignTokens.elevation.largeBlur *
-                          _elevationAnimation.value,
-                      offset: Offset(
-                        0,
-                        EcoPlatesDesignTokens.elevation.elevatedOffset.dy *
-                            _elevationAnimation.value,
-                      ),
+                      color: Colors.blue.withOpacity(0.1),
+                      blurRadius: _elevationAnimation.value * 4.0,
+                      offset: Offset(0.0, _elevationAnimation.value * 2.0),
                     ),
                 ],
               ),

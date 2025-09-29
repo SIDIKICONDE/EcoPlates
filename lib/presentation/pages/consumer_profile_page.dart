@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/responsive/design_tokens.dart';
 import '../providers/consumer_profile_provider.dart';
 import '../widgets/consumer_profile/consumer_activity_section.dart';
 import '../widgets/consumer_profile/consumer_eco_stats.dart';
@@ -48,7 +47,7 @@ class ConsumerProfilePage extends ConsumerWidget {
       body: profileAsyncValue.when(
         data: (user) => Padding(
           padding: EdgeInsets.all(
-            EcoPlatesDesignTokens.spacing.dialogGap(context),
+            16,
           ),
           child: ListView(
             children: [
@@ -59,31 +58,31 @@ class ConsumerProfilePage extends ConsumerWidget {
                 onEditPhoto: () => _editPhoto(context, ref),
               ),
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                height: 16,
               ),
 
               // Statistiques écologiques
               const ConsumerEcoStats(),
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                height: 16,
               ),
 
               // Section activité récente
               const ConsumerActivitySection(),
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                height: 16,
               ),
 
               // Section lieux favoris
               const ConsumerFavoritesSection(),
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                height: 16,
               ),
 
               // Section paramètres
               const ConsumerSettingsSection(),
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                height: 16,
               ),
             ],
           ),
@@ -97,27 +96,18 @@ class ConsumerProfilePage extends ConsumerWidget {
             children: [
               Icon(
                 Icons.error_outline,
-                size: EcoPlatesDesignTokens.errorIconSize,
-                color: colors.error,
-              ),
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                size: 16,
               ),
               Text(
                 'Erreur de chargement',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
+              SizedBox(height: 16),
               Text(
                 'Impossible de charger votre profil',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colors.onSurface.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.textSecondary,
-                  ),
+                  color: colors.onSurface.withOpacity(0.6),
                 ),
-              ),
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.dialogGap(context),
               ),
               FilledButton.icon(
                 onPressed: () =>
@@ -137,7 +127,7 @@ class ConsumerProfilePage extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Paramètres à venir'),
-        duration: EcoPlatesDesignTokens.animation.normal,
+        duration: Duration(seconds: 2),
       ),
     );
   }
@@ -149,53 +139,29 @@ class ConsumerProfilePage extends ConsumerWidget {
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+          top: Radius.circular(16),
         ),
       ),
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: EcoPlatesDesignTokens.layout.modalHeightFactor(
-          context,
-        ),
-        minChildSize:
-            EcoPlatesDesignTokens.layout.modalHeightFactor(context) *
-            EcoPlatesDesignTokens.layout.modalMinHeightFactor,
-        maxChildSize:
-            EcoPlatesDesignTokens.layout.modalHeightFactor(context) *
-            EcoPlatesDesignTokens.layout.modalMaxHeightFactor,
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
         builder: (context, scrollController) => Padding(
-          padding: EdgeInsets.all(
-            EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-          ),
+          padding: EdgeInsets.all(16),
           child: Column(
             children: [
               // Indicateur de glissement
               Container(
-                width: EcoPlatesDesignTokens.layout.modalHandleWidth,
-                height: EcoPlatesDesignTokens.layout.modalHandleHeight,
-                margin: EdgeInsets.only(
-                  bottom: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-                ),
+                width: 40,
+                height: 4,
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.outlineVariant,
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.xs,
-                  ),
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              Text(
-                'Modifier le profil',
-                style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.modalTitle(
-                    context,
-                  ),
-                  fontWeight: EcoPlatesDesignTokens.typography.bold,
-                ),
-              ),
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-              ),
+              SizedBox(height: 16),
               // TODO: Formulaire d'édition
-              const Expanded(
+              Expanded(
                 child: Center(
                   child: Text("Formulaire d'édition à implémenter"),
                 ),
@@ -213,27 +179,20 @@ class ConsumerProfilePage extends ConsumerWidget {
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(EcoPlatesDesignTokens.radius.lg),
+          top: Radius.circular(16),
         ),
       ),
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-            ),
+            SizedBox(height: 16),
             Text(
               'Photo de profil',
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.modalSubtitle(
-                  context,
-                ),
-                fontWeight: EcoPlatesDesignTokens.typography.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
               ),
-            ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
             ),
             ListTile(
               leading: const Icon(Icons.camera_alt),
@@ -266,9 +225,7 @@ class ConsumerProfilePage extends ConsumerWidget {
                   // TODO: Supprimer la photo actuelle
                 },
               ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-            ),
+            SizedBox(height: 16),
           ],
         ),
       ),

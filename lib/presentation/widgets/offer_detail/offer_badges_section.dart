@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 
 /// Section des allergènes avec slider moderne
@@ -20,86 +19,69 @@ class OfferBadgesSection extends StatelessWidget {
         Row(
           children: [
             Container(
-              padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+              padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.sm,
+                borderRadius: BorderRadius.circular(8.0),
+                border: Border.all(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.1),
+                  width: 1.0,
                 ),
               ),
               child: Icon(
-                Icons.info_outline,
-                color: Theme.of(context).colorScheme.onSurface.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                ),
-                size: EcoPlatesDesignTokens.size.indicator(context),
+                Icons.warning_amber_rounded,
+                size: 16.0,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               ),
             ),
-            SizedBox(width: context.scaleMD_LG_XL_XXL),
+            const SizedBox(width: 12.0),
             Text(
               'Allergènes présents',
               style: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.text(context),
-                fontWeight: EcoPlatesDesignTokens.typography.semiBold,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ],
         ),
-        SizedBox(height: context.scaleMD_LG_XL_XXL),
+        const SizedBox(height: 12.0),
 
         // Slider horizontal des allergènes
         SizedBox(
-          height: EcoPlatesDesignTokens.size.minTouchTarget,
+          height: 40.0,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: offer.allergens.length,
-            separatorBuilder: (context, index) =>
-                SizedBox(width: context.scaleXS_SM_MD_LG),
+            separatorBuilder: (context, index) => const SizedBox(width: 8.0),
             itemBuilder: (context, index) {
               final allergen = offer.allergens[index];
               return Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.scaleMD_LG_XL_XXL,
-                  vertical: context.scaleXS_SM_MD_LG,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 8.0,
                 ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.xxl,
-                  ),
+                  borderRadius: BorderRadius.circular(16.0),
                   border: Border.all(
-                    color: Theme.of(context).colorScheme.outline.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.subtle,
-                    ),
-                    width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outline.withOpacity(0.2),
+                    width: 1.0,
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.info,
-                      size: EcoPlatesDesignTokens.size.indicator(context),
-                      color: Theme.of(context).colorScheme.onSurface.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                      ),
-                    ),
-                    SizedBox(width: context.scaleXXS_XS_SM_MD),
-                    Text(
-                      allergen,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface
-                            .withValues(
-                              alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                            ),
-                        fontWeight: EcoPlatesDesignTokens.typography.medium,
-                        fontSize: EcoPlatesDesignTokens.typography.hint(
-                          context,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  allergen,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.8),
+                  ),
                 ),
               );
             },

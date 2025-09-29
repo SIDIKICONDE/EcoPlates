@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/video_preview.dart';
 import 'constants.dart';
 import 'video_card.dart';
@@ -69,7 +68,7 @@ class _VideoSliderState extends State<VideoSlider>
       children: [
         if (widget.title != null) ...[
           _buildHeader(theme),
-          SizedBox(height: context.scaleXS_SM_MD_LG),
+          const SizedBox(height: 8.0),
         ],
         LayoutBuilder(
           builder: (context, constraints) {
@@ -104,40 +103,41 @@ class _VideoSliderState extends State<VideoSlider>
       children: [
         Text(
           widget.title!,
-          style: theme.textTheme.headlineSmall?.copyWith(
+          style: TextStyle(
+            fontSize: 20.0,
             fontWeight: FontWeight.bold,
-            letterSpacing: VideoSliderConstants.letterSpacing,
+            letterSpacing: 0.5,
+            color: Colors.black,
           ),
         ),
         if (widget.onSeeAllTap != null)
           TextButton(
             onPressed: widget.onSeeAllTap,
             style: TextButton.styleFrom(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.scaleSM_MD_LG_XL,
-                vertical: context.scaleXXS_XS_SM_MD,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 4.0,
               ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.lg,
-                ),
+                borderRadius: BorderRadius.circular(12.0),
               ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
+              children: const [
                 Text(
                   'Tout voir',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.primary,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.blue,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
+                SizedBox(width: 2.0),
                 Icon(
                   Icons.chevron_right_rounded,
-                  size: EcoPlatesDesignTokens.size.icon(context),
-                  color: theme.colorScheme.primary,
+                  size: 20.0,
+                  color: Colors.blue,
                 ),
               ],
             ),
@@ -199,33 +199,23 @@ class VideoGrid extends StatelessWidget {
   final bool shrinkWrap;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final crossAxisCount =
-          constraints.maxWidth > VideoGridConstants.responsiveBreakpoint
-          ? VideoGridConstants.desktopCrossAxisCount
-          : VideoGridConstants.mobileCrossAxisCount;
-      return GridView.builder(
-        controller: scrollController,
-        shrinkWrap: shrinkWrap,
-        physics: shrinkWrap
-            ? const NeverScrollableScrollPhysics()
-            : const BouncingScrollPhysics(),
-        padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          childAspectRatio:
-              VideoCardConstants.defaultWidth /
-              VideoCardConstants.defaultHeight,
-          crossAxisSpacing: context.scaleXXS_XS_SM_MD,
-          mainAxisSpacing: context.scaleXXS_XS_SM_MD,
-        ),
-        itemCount: videos.length,
-        itemBuilder: (_, index) => VideoCard(
-          video: videos[index],
-          onTap: () => onVideoTap?.call(videos[index]),
-        ),
-      );
-    },
+  Widget build(BuildContext context) => GridView.builder(
+    controller: scrollController,
+    shrinkWrap: shrinkWrap,
+    physics: shrinkWrap
+        ? const NeverScrollableScrollPhysics()
+        : const BouncingScrollPhysics(),
+    padding: const EdgeInsets.all(8.0),
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      childAspectRatio: 0.75,
+      crossAxisSpacing: 8.0,
+      mainAxisSpacing: 8.0,
+    ),
+    itemCount: videos.length,
+    itemBuilder: (_, index) => VideoCard(
+      video: videos[index],
+      onTap: () => onVideoTap?.call(videos[index]),
+    ),
   );
 }

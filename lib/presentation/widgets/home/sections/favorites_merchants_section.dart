@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../core/router/routes/route_constants.dart';
 import '../../../providers/merchants_provider.dart';
 import '../../favorite_merchant_card.dart';
@@ -21,10 +20,10 @@ class FavoritesMerchantsSection extends ConsumerWidget {
         // En-tête de section
         Padding(
           padding: EdgeInsets.fromLTRB(
-            context.scaleMD_LG_XL_XXL,
-            context.scaleXS_SM_MD_LG,
-            context.scaleMD_LG_XL_XXL,
-            context.scaleMD_LG_XL_XXL,
+            16.0,
+            12.0,
+            16.0,
+            16.0,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,52 +31,53 @@ class FavoritesMerchantsSection extends ConsumerWidget {
               Text(
                 'Vos favoris',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.modalTitle(
-                    context,
-                  ),
-                  fontWeight: EcoPlatesDesignTokens.typography.bold,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-              if (favorites.isNotEmpty)
-                TextButton(
-                  onPressed: () {
-                    // Aller à l’onglet Favoris via GoRouter (reste dans le shell)
-                    context.go(RouteConstants.consumerFavorites);
-                  },
-                  child: const Text('Voir tout'),
+              TextButton(
+                onPressed: () {
+                  // Aller à l’onglet Favoris via GoRouter (reste dans le shell)
+                  context.go(RouteConstants.consumerFavorites);
+                },
+                child: Text(
+                  'Voir tout',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
+              ),
             ],
           ),
         ),
 
         SizedBox(
-          height: favorites.isEmpty ? DesignConstants.eighty.toDouble() : 152,
+          height: favorites.isEmpty ? 80.0 : 152.0,
           child: favorites.isEmpty
               ? Center(
                   child: Text(
                     'Aucun favori pour l’instant',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                      ),
+                      color: Colors.grey,
+                      fontSize: 14.0,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 )
               : ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.scaleMD_LG_XL_XXL,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
                   physics: const BouncingScrollPhysics(),
                   itemCount: favorites.length,
                   itemBuilder: (context, index) {
                     final merchant = favorites[index];
                     return Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.scaleXS_SM_MD_LG,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: SizedBox(
-                        width: context.scaleLG_XL_XXL_XXXL,
+                        width: 140.0,
                         child: FavoriteMerchantCard(
                           merchant: merchant,
                           onTap: () {
@@ -90,9 +90,7 @@ class FavoritesMerchantsSection extends ConsumerWidget {
                 ),
         ),
 
-        SizedBox(
-          height: context.scaleMD_LG_XL_XXL,
-        ),
+        SizedBox(height: 16.0),
       ],
     );
   }

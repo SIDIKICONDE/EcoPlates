@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/responsive/responsive.dart';
 import '../../../providers/offer_form_provider.dart';
 
 /// Section des champs de prix et quantité du formulaire d'offre
@@ -14,14 +13,11 @@ class OfferFormPriceQuantityFields extends ConsumerWidget {
     final theme = Theme.of(context);
     final formState = ref.watch(offerFormProvider);
 
-    // Design tokens responsives
-    final fieldSpacing = EcoPlatesDesignTokens.spacing.dialogGap(context);
-    final sectionSpacing = EcoPlatesDesignTokens.spacing.dialogGap(context);
-    final fieldRadius = EcoPlatesDesignTokens.radius.fieldRadius(context);
-    final contentPadding = EcoPlatesDesignTokens.spacing.contentPadding(
-      context,
-    );
-    final textSize = EcoPlatesDesignTokens.typography.text(context);
+    // Valeurs en dur
+    const fieldSpacing = 16.0;
+    const sectionSpacing = 20.0;
+    const fieldRadius = 12.0;
+    const textSize = 16.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +44,7 @@ class OfferFormPriceQuantityFields extends ConsumerWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(fieldRadius),
                   ),
-                  contentPadding: contentPadding,
+                  contentPadding: EdgeInsets.all(16.0),
                 ),
                 style: TextStyle(fontSize: textSize),
                 validator: (value) {
@@ -89,7 +85,7 @@ class OfferFormPriceQuantityFields extends ConsumerWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(fieldRadius),
                   ),
-                  contentPadding: contentPadding,
+                  contentPadding: EdgeInsets.all(16.0),
                   helperText:
                       formState.originalPrice > 0 &&
                           formState.discountedPrice >= 0
@@ -135,7 +131,7 @@ class OfferFormPriceQuantityFields extends ConsumerWidget {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(fieldRadius),
             ),
-            contentPadding: contentPadding,
+            contentPadding: EdgeInsets.all(16.0),
             helperText: 'Nombre de paniers/plats disponibles',
           ),
           style: TextStyle(fontSize: textSize),
@@ -162,19 +158,13 @@ class OfferFormPriceQuantityFields extends ConsumerWidget {
         if (formState.originalPrice > 0 && formState.discountedPrice >= 0)
           Container(
             margin: EdgeInsets.only(top: sectionSpacing),
-            padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+            padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.subtle,
-              ),
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.fieldRadius(context),
-              ),
+              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12.0),
               border: Border.all(
-                color: theme.colorScheme.primary.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                ),
-                width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+                color: theme.colorScheme.primary.withOpacity(0.5),
+                width: 1.0,
               ),
             ),
             child: Column(
@@ -183,35 +173,24 @@ class OfferFormPriceQuantityFields extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.info_outline,
+                      Icons.calculate,
                       color: theme.colorScheme.primary,
-                      size: EcoPlatesDesignTokens.size.icon(context),
+                      size: 20.0,
                     ),
-                    SizedBox(
-                      width: EcoPlatesDesignTokens.spacing.interfaceGap(
-                        context,
-                      ),
-                    ),
+                    SizedBox(width: 8.0),
                     Text(
                       'Résumé des prix',
                       style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: EcoPlatesDesignTokens.typography.bold,
-                        color: theme.colorScheme.primary,
-                        fontSize: EcoPlatesDesignTokens.typography.text(
-                          context,
-                        ),
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onPrimaryContainer,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-                ),
+                SizedBox(height: 12.0),
                 Wrap(
-                  spacing: EcoPlatesDesignTokens.spacing.sectionSpacing(
-                    context,
-                  ),
-                  runSpacing: EcoPlatesDesignTokens.spacing.microGap(context),
+                  spacing: 16.0,
+                  runSpacing: 8.0,
                   children: [
                     _buildPriceInfo(
                       'Prix original',
@@ -265,17 +244,18 @@ class OfferFormPriceQuantityFields extends ConsumerWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.hint(context),
+            fontSize: 12.0,
             color: theme.colorScheme.onSurfaceVariant,
-            fontWeight: EcoPlatesDesignTokens.typography.medium,
+            fontWeight: FontWeight.w500,
           ),
         ),
+        SizedBox(height: 2.0),
         Text(
           value,
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.text(context),
+            fontSize: 14.0,
             color: theme.colorScheme.onSurface,
-            fontWeight: EcoPlatesDesignTokens.typography.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],

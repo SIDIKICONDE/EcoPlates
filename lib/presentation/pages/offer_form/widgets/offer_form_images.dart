@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../core/responsive/responsive.dart';
 import '../../../../core/widgets/eco_cached_image.dart';
 import '../../../providers/offer_form_provider.dart';
 
@@ -22,9 +21,7 @@ class OfferFormImages extends ConsumerWidget {
       children: [
         // Affichage de l'image unique
         Container(
-          constraints: BoxConstraints(
-            minHeight: EcoPlatesDesignTokens.layout.imageMinHeight,
-          ),
+          constraints: BoxConstraints(minHeight: 200.0),
           child: formState.images.isNotEmpty
               ? _buildImageTile(context, ref, formState.images.first, 0)
               : _buildAddImageButton(context, ref),
@@ -32,19 +29,19 @@ class OfferFormImages extends ConsumerWidget {
 
         // Indicateur de validation
         if (formState.images.isNotEmpty) ...[
-          SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
+          SizedBox(height: 12.0),
           Row(
             children: [
               Icon(
                 Icons.check_circle,
                 color: theme.colorScheme.primary,
-                size: EcoPlatesDesignTokens.size.indicator(context),
+                size: 20.0,
               ),
-              SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
+              SizedBox(width: 8.0),
               Text(
                 'Image ajoutée',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 14.0,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
@@ -58,51 +55,50 @@ class OfferFormImages extends ConsumerWidget {
   Widget _buildAddImageButton(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    // Design tokens responsives
-    final iconSize =
-        EcoPlatesDesignTokens.size.icon(context) *
-        EcoPlatesDesignTokens.size.largeIconMultiplier;
-    final borderRadius = EcoPlatesDesignTokens.radius.fieldRadius(context);
-    final spacing = EcoPlatesDesignTokens.spacing.interfaceGap(context);
-    final textSize = EcoPlatesDesignTokens.typography.text(context);
+    // Valeurs en dur
+    const borderRadius = 12.0;
+    const iconSize = 48.0;
+    const spacing = 12.0;
+    const textSize = 16.0;
 
     return InkWell(
       onTap: () => _showImageSourceDialog(context, ref),
       borderRadius: BorderRadius.circular(borderRadius),
       child: AspectRatio(
-        aspectRatio: EcoPlatesDesignTokens.layout.imageAspectRatio,
+        aspectRatio: 16 / 9,
         child: Container(
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
-            ),
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
-              color: theme.colorScheme.outline.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.subtle,
-              ),
-              width: EcoPlatesDesignTokens.layout.decorativeBorderWidth,
+              color: theme.colorScheme.outline.withOpacity(0.3),
+              width: 2.0,
+              style: BorderStyle.solid,
             ),
+            color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.1),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.image,
-                color: theme.colorScheme.onSurfaceVariant.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
-                ),
+                Icons.add_a_photo,
+                color: theme.colorScheme.primary,
                 size: iconSize,
               ),
               SizedBox(height: spacing),
               Text(
-                'Votre image ici',
+                'Ajouter une image',
                 style: TextStyle(
                   fontSize: textSize,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.textSecondary,
-                  ),
+                  color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 4.0),
+              Text(
+                'Votre image ici',
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
                 ),
               ),
             ],
@@ -116,9 +112,8 @@ class OfferFormImages extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
-    // Design tokens responsives pour la modale
-    final modalPadding = EcoPlatesDesignTokens.spacing.contentPadding(context);
-    final titleSize = EcoPlatesDesignTokens.typography.modalTitle(context);
+    // Valeurs en dur pour la modale
+    const titleSize = 18.0;
 
     await showModalBottomSheet<void>(
       context: context,
@@ -128,7 +123,7 @@ class OfferFormImages extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: modalPadding,
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   'Sélectionner une photo',
                   style: TextStyle(
@@ -138,40 +133,30 @@ class OfferFormImages extends ConsumerWidget {
                 ),
               ),
               ListTile(
-                leading: Icon(
-                  Icons.camera_alt,
-                  size: EcoPlatesDesignTokens.size.icon(context),
-                ),
+                leading: Icon(Icons.camera_alt, size: 24.0),
                 title: Text(
                   'Prendre une photo',
-                  style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.text(context),
-                  ),
+                  style: TextStyle(fontSize: 16.0),
                 ),
-                contentPadding: modalPadding,
+                contentPadding: EdgeInsets.all(16.0),
                 onTap: () async {
                   Navigator.of(context).pop();
                   await _pickImage(ref, ImageSource.camera);
                 },
               ),
               ListTile(
-                leading: Icon(
-                  Icons.photo_library,
-                  size: EcoPlatesDesignTokens.size.icon(context),
-                ),
+                leading: Icon(Icons.photo_library, size: 24.0),
                 title: Text(
                   'Choisir depuis la galerie',
-                  style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.text(context),
-                  ),
+                  style: TextStyle(fontSize: 16.0),
                 ),
-                contentPadding: modalPadding,
+                contentPadding: EdgeInsets.all(16.0),
                 onTap: () async {
                   Navigator.of(context).pop();
                   await _pickImage(ref, ImageSource.gallery);
                 },
               ),
-              SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
+              SizedBox(height: 16.0),
             ],
           ),
         );
@@ -184,16 +169,16 @@ class OfferFormImages extends ConsumerWidget {
       final picker = ImagePicker();
       final image = await picker.pickImage(
         source: source,
-        maxWidth: EcoPlatesDesignTokens.layout.imageMaxWidth,
-        maxHeight: EcoPlatesDesignTokens.layout.imageMaxHeight,
-        imageQuality: EcoPlatesDesignTokens.layout.imageQuality,
+        maxWidth: 1920.0,
+        maxHeight: 1080.0,
+        imageQuality: 85,
       );
 
       if (image != null) {
         // TODO: Upload l'image vers le serveur et obtenir l'URL
         // Pour l'instant, on simule avec l'URI locale
         // Remplacer l'image existante par la nouvelle
-        ref.read<OfferFormNotifier>(offerFormProvider.notifier).updateImages([
+        ref.read(offerFormProvider.notifier).updateImages([
           image.path,
         ]);
       }
@@ -212,70 +197,51 @@ class OfferFormImages extends ConsumerWidget {
     final theme = Theme.of(context);
     final formState = ref.watch(offerFormProvider);
 
-    // Design tokens responsives
-    final borderRadius = EcoPlatesDesignTokens.radius.fieldRadius(context);
-    final badgePadding = EcoPlatesDesignTokens.spacing
-        .contentPadding(context)
-        .copyWith(
-          left: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-          right: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-        );
-    final badgeTextSize = EcoPlatesDesignTokens.typography.hint(context);
-    final closeIconSize = EcoPlatesDesignTokens.size.indicator(context);
-    final logoSize =
-        EcoPlatesDesignTokens.size.icon(context) *
-        EcoPlatesDesignTokens.size.largeIconMultiplier;
+    // Valeurs en dur
+    const borderRadius = 12.0;
+    const badgeTextSize = 12.0;
+    const closeIconSize = 20.0;
+    const logoSize = 40.0;
 
-    return Stack(
-      children: [
-        // Conteneur principal avec bordure
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.subtle,
-              ),
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius - 1),
-            child: AspectRatio(
-              aspectRatio: EcoPlatesDesignTokens.layout.imageAspectRatio,
+    return Card(
+      elevation: 2.0,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Stack(
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
               child: Stack(
                 children: [
-                  // Image principale (gestion des fichiers locaux)
+                  // Image principale
                   Positioned.fill(child: _buildImageWidget(context, imageUrl)),
 
-                  // Bordure interne subtile (comme dans OfferCardImage)
+                  // Bordure interne subtile
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(borderRadius),
                         border: Border.all(
-                          color: Colors.white.withValues(
-                            alpha: EcoPlatesDesignTokens.opacity.pressed,
-                          ),
-                          width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+                          color: Colors.white.withOpacity(0.2),
+                          width: 1.0,
                         ),
                       ),
                     ),
                   ),
 
-                  // Badge quantité (simulé)
+                  // Badge quantité (si applicable)
                   if (formState.quantity > 0)
                     Positioned(
-                      top: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                      left: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                      top: 8.0,
+                      left: 8.0,
                       child: Container(
-                        padding: badgePadding,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(
-                            alpha: EcoPlatesDesignTokens.opacity.textSecondary,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            EcoPlatesDesignTokens.radius.sm,
-                          ),
+                          color: Colors.black.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(16.0),
                         ),
                         child: Text(
                           '${formState.quantity}',
@@ -291,18 +257,19 @@ class OfferFormImages extends ConsumerWidget {
                   // Badge réduction (si applicable)
                   if (formState.originalPrice > formState.discountedPrice)
                     Positioned(
-                      top: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                      right: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                      top: 8.0,
+                      right: 8.0,
                       child: Container(
-                        padding: badgePadding,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.error,
-                          borderRadius: BorderRadius.circular(
-                            EcoPlatesDesignTokens.radius.sm,
-                          ),
+                          borderRadius: BorderRadius.circular(16.0),
                         ),
                         child: Text(
-                          '-${formState.discountPercentage.toStringAsFixed(0)}%',
+                          '-${((formState.originalPrice - formState.discountedPrice) / formState.originalPrice * 100).round()}%',
                           style: TextStyle(
                             color: theme.colorScheme.onError,
                             fontSize: badgeTextSize,
@@ -312,98 +279,89 @@ class OfferFormImages extends ConsumerWidget {
                       ),
                     ),
 
-                  // Logo du commerçant en bas à gauche (comme dans OfferCardImage)
+                  // Logo du commerçant en bas à gauche
                   Positioned(
-                    bottom: EcoPlatesDesignTokens.spacing.dialogGap(context),
-                    left: EcoPlatesDesignTokens.spacing.dialogGap(context),
+                    bottom: 8.0,
+                    left: 8.0,
                     child: _buildMerchantLogo(context, theme, logoSize),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
 
-        // Bouton de suppression
-        Positioned(
-          top: EcoPlatesDesignTokens.spacing.microGap(context),
-          right: EcoPlatesDesignTokens.spacing.microGap(context),
-          child: InkWell(
-            onTap: () => _removeImage(ref, index),
-            child: Container(
-              padding: EdgeInsets.all(
-                EcoPlatesDesignTokens.spacing.microGap(context),
-              ),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.error.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.veryOpaque,
+            // Bouton de suppression
+            Positioned(
+              top: 8.0,
+              right: 8.0,
+              child: InkWell(
+                onTap: () => _removeImage(ref, index),
+                child: Container(
+                  padding: EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.error.withOpacity(0.9),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 4.0,
+                        offset: Offset(0, 2.0),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.close,
+                    color: theme.colorScheme.onError,
+                    size: closeIconSize,
+                  ),
                 ),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.pressed,
+              ),
+            ),
+
+            // Badge "Aperçu" pour indiquer que c'est un aperçu
+            Positioned(
+              bottom: 8.0,
+              right: 8.0,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 4.0,
+                ),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(16.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 2.0,
+                      offset: Offset(0, 1.0),
                     ),
-                    blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
-                    offset: EcoPlatesDesignTokens.elevation.elevatedOffset,
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.close,
-                size: closeIconSize,
-                color: theme.colorScheme.onError,
-              ),
-            ),
-          ),
-        ),
-
-        // Badge "Aperçu" pour indiquer que c'est un aperçu
-        Positioned(
-          top: EcoPlatesDesignTokens.spacing.microGap(context),
-          left: EcoPlatesDesignTokens.spacing.microGap(context),
-          child: Container(
-            padding: badgePadding,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-              ),
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.sm,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-                  ),
-                  blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-                  offset: EcoPlatesDesignTokens.elevation.standardOffset,
+                  ],
                 ),
-              ],
-            ),
-            child: Text(
-              'Aperçu',
-              style: TextStyle(
-                fontSize: badgeTextSize,
-                color: theme.colorScheme.onPrimary,
-                fontWeight: FontWeight.bold,
+                child: Text(
+                  'Aperçu',
+                  style: TextStyle(
+                    color: theme.colorScheme.onPrimary,
+                    fontSize: 10.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   void _removeImage(WidgetRef ref, int index) {
     // Supprimer toutes les images (puisqu'il n'y en a qu'une)
-    ref.read<OfferFormNotifier>(offerFormProvider.notifier).updateImages([]);
+    ref.read(offerFormProvider.notifier).updateImages([]);
   }
 
   Widget _buildImageWidget(BuildContext context, String imageUrl) {
     final theme = Theme.of(context);
 
-    // Vérifier si c'est un chemin de fichier local (commence par / ou contient file://)
+    // Vérifier si c'est un chemin de fichier local
     final isLocalFile =
         imageUrl.startsWith('/') ||
         imageUrl.startsWith('file://') ||
@@ -423,18 +381,18 @@ class OfferFormImages extends ConsumerWidget {
             child: Icon(
               Icons.image_not_supported,
               color: theme.colorScheme.onSurfaceVariant,
-              size: EcoPlatesDesignTokens.layout.errorStateIconSize,
+              size: 48.0,
             ),
           );
         }
-      } on Exception {
-        // En cas d'erreur, afficher un placeholder
+      } catch (e) {
+        // Erreur lors du chargement du fichier local
         return ColoredBox(
           color: theme.colorScheme.surfaceContainerHighest,
           child: Icon(
-            Icons.image_not_supported,
+            Icons.broken_image,
             color: theme.colorScheme.onSurfaceVariant,
-            size: EcoPlatesDesignTokens.layout.errorIconSize,
+            size: 48.0,
           ),
         );
       }
@@ -450,7 +408,7 @@ class OfferFormImages extends ConsumerWidget {
     ThemeData theme,
     double logoSize,
   ) {
-    final iconSize = EcoPlatesDesignTokens.size.icon(context);
+    const iconSize = 20.0;
 
     return Container(
       width: logoSize,
@@ -460,25 +418,16 @@ class OfferFormImages extends ConsumerWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-            ),
-            blurRadius: EcoPlatesDesignTokens.elevation.largeBlur,
-            offset: EcoPlatesDesignTokens.elevation.elevatedOffset,
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 4.0,
+            offset: Offset(0, 2.0),
           ),
         ],
       ),
-      child: ClipOval(
-        child: ColoredBox(
-          color: theme.colorScheme.primary.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-          ),
-          child: Icon(
-            Icons.store,
-            color: theme.colorScheme.primary,
-            size: iconSize,
-          ),
-        ),
+      child: Icon(
+        Icons.store,
+        color: theme.colorScheme.primary,
+        size: iconSize,
       ),
     );
   }

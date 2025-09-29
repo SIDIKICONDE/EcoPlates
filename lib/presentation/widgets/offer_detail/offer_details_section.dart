@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/utils/offer_formatters.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -14,28 +13,26 @@ class OfferDetailsSection extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.disabled,
-          ),
-          width: EcoPlatesDesignTokens.layout.cardBorderWidth,
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          width: 1.0,
         ),
       ),
-      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Infos pratiques',
-            style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-              fontWeight: EcoPlatesDesignTokens.typography.bold,
+            style: const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          const SizedBox(height: 16.0),
 
           // Horaire de récupération
           _buildCompactInfo(
@@ -44,6 +41,16 @@ class OfferDetailsSection extends StatelessWidget {
             label: 'À récupérer',
             value: OfferFormatters.formatPickupTime(offer),
             iconColor: theme.colorScheme.primary,
+          ),
+          const SizedBox(height: 12.0),
+
+          // Quantité disponible
+          _buildCompactInfo(
+            context: context,
+            icon: Icons.inventory_2,
+            label: 'Quantité disponible',
+            value: '${offer.quantity} portions',
+            iconColor: theme.colorScheme.secondary,
           ),
         ],
       ),
@@ -62,9 +69,9 @@ class OfferDetailsSection extends StatelessWidget {
         Icon(
           icon,
           color: iconColor,
-          size: EcoPlatesDesignTokens.size.indicator(context),
+          size: 20.0,
         ),
-        SizedBox(width: context.scaleXS_SM_MD_LG),
+        const SizedBox(width: 12.0),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,17 +79,19 @@ class OfferDetailsSection extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                  color: Theme.of(context).colorScheme.onSurface.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                  ),
+                  fontSize: 14.0,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.7),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
+              const SizedBox(height: 2.0),
               Text(
                 value,
-                style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.text(context),
-                  fontWeight: EcoPlatesDesignTokens.typography.semiBold,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

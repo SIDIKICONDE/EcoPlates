@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/context_responsive_extensions.dart';
-import '../../../core/responsive/design_tokens.dart';
-
 /// Bouton réutilisable avec design responsif pour EcoPlates
 class ResponsiveButton extends StatelessWidget {
   const ResponsiveButton({
@@ -53,36 +50,33 @@ class ResponsiveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final isVerySmallScreen =
-        screenHeight < DesignConstants.verySmallScreenThreshold;
+    final isVerySmallScreen = screenHeight < 480.0;
     final orientation = MediaQuery.of(context).orientation;
     final isLandscape = orientation == Orientation.landscape;
 
     // Utilisation des tokens de design pour la hauteur
-    final baseButtonHeight = EcoPlatesDesignTokens.size.buttonHeight(context);
+    const baseButtonHeight = 48.0;
     final buttonHeight = isLandscape
-        ? baseButtonHeight - DesignConstants.four
+        ? baseButtonHeight - 4.0
         : baseButtonHeight;
 
-    final borderRadius = EcoPlatesDesignTokens.radius.buttonRadius(context);
+    const borderRadius = 12.0;
 
     // Définition de la largeur
     double? buttonWidth;
     if (customWidth != null) {
       buttonWidth = customWidth;
     } else if (isFullWidth) {
-      buttonWidth =
-          screenWidth * EcoPlatesDesignTokens.layout.buttonWidthFactor(context);
+      buttonWidth = screenWidth * 0.9;
     }
 
     // Contrainte de largeur max automatique sur grand écran si non précisé
-    final adaptiveMaxWidth =
-        maxWidth ?? EcoPlatesDesignTokens.layout.buttonMaxWidth(context);
+    final adaptiveMaxWidth = maxWidth ?? 400.0;
 
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: adaptiveMaxWidth,
-        minHeight: EcoPlatesDesignTokens.size.minTouchTarget,
+        minHeight: 48.0,
       ),
       child: SizedBox(
         width: buttonWidth,
@@ -106,20 +100,20 @@ class ResponsiveButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
-          elevation: EcoPlatesDesignTokens.elevation.button(context),
+          elevation: 2.0,
           shadowColor: Colors.black26,
-          padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         ).copyWith(
           overlayColor: WidgetStateProperty.resolveWith<Color?>(
             (Set<WidgetState> states) {
               if (states.contains(WidgetState.hovered)) {
                 return Theme.of(context).primaryColor.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.hover,
+                  alpha: 0.08,
                 );
               }
               if (states.contains(WidgetState.pressed)) {
                 return Theme.of(context).primaryColor.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.pressed,
+                  alpha: 0.12,
                 );
               }
               return null;
@@ -130,27 +124,27 @@ class ResponsiveButton extends StatelessWidget {
       case ButtonVariant.secondary:
         return ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
-          foregroundColor: EcoPlatesDesignTokens.colors.textPrimary,
+          foregroundColor: Colors.white,
           side: BorderSide(
-            color: EcoPlatesDesignTokens.colors.textPrimary,
-            width: EcoPlatesDesignTokens.layout.buttonBorderWidth(context),
+            color: Colors.white,
+            width: 1.5,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
-          elevation: DesignConstants.zero,
-          padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+          elevation: 0.0,
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         ).copyWith(
           overlayColor: WidgetStateProperty.resolveWith<Color?>(
             (Set<WidgetState> states) {
               if (states.contains(WidgetState.hovered)) {
-                return EcoPlatesDesignTokens.colors.hoverEffect.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.hover,
+                return Colors.white.withValues(
+                  alpha: 0.08,
                 );
               }
               if (states.contains(WidgetState.pressed)) {
-                return EcoPlatesDesignTokens.colors.pressedEffect.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.pressed,
+                return Colors.white.withValues(
+                  alpha: 0.12,
                 );
               }
               return null;
@@ -164,24 +158,24 @@ class ResponsiveButton extends StatelessWidget {
           foregroundColor: Theme.of(context).primaryColor,
           side: BorderSide(
             color: Theme.of(context).primaryColor,
-            width: EcoPlatesDesignTokens.layout.buttonBorderWidth(context),
+            width: 1.5,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
-          elevation: DesignConstants.zero,
-          padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+          elevation: 0.0,
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         ).copyWith(
           overlayColor: WidgetStateProperty.resolveWith<Color?>(
             (Set<WidgetState> states) {
               if (states.contains(WidgetState.hovered)) {
                 return Theme.of(context).primaryColor.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.hover,
+                  alpha: 0.08,
                 );
               }
               if (states.contains(WidgetState.pressed)) {
                 return Theme.of(context).primaryColor.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.pressed,
+                  alpha: 0.12,
                 );
               }
               return null;
@@ -193,18 +187,19 @@ class ResponsiveButton extends StatelessWidget {
 
   /// Construit le contenu du bouton (texte + icône optionnelle)
   Widget _buildButtonContent(BuildContext context, bool isVerySmallScreen) {
+    final screenWidth = MediaQuery.of(context).size.width;
     final textStyle = TextStyle(
-      fontSize: EcoPlatesDesignTokens.typography.button(context),
-      fontWeight: EcoPlatesDesignTokens.typography.buttonWeight,
-      letterSpacing: EcoPlatesDesignTokens.layout.buttonLetterSpacing,
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.0,
     );
 
     if (isLoading) {
       return SizedBox(
-        width: EcoPlatesDesignTokens.layout.loadingIndicatorSize,
-        height: EcoPlatesDesignTokens.layout.loadingIndicatorSize,
+        width: 20.0,
+        height: 20.0,
         child: CircularProgressIndicator(
-          strokeWidth: EcoPlatesDesignTokens.layout.loadingIndicatorStrokeWidth,
+          strokeWidth: 2.0,
           valueColor: AlwaysStoppedAnimation<Color>(
             _getProgressColor(context),
           ),
@@ -213,7 +208,7 @@ class ResponsiveButton extends StatelessWidget {
     }
 
     // Si pas d'icône ou pas sur desktop, juste le texte
-    if (icon == null || !context.isDesktopDevice) {
+    if (icon == null || screenWidth < 1024.0) {
       return Text(text, style: textStyle);
     }
 
@@ -224,10 +219,10 @@ class ResponsiveButton extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: EcoPlatesDesignTokens.size.icon(context),
+          size: 20.0,
           color: _getIconColor(context),
         ),
-        SizedBox(width: EcoPlatesDesignTokens.layout.buttonIconTextSpacing),
+        SizedBox(width: 8.0),
         Text(text, style: textStyle),
       ],
     );
@@ -240,7 +235,7 @@ class ResponsiveButton extends StatelessWidget {
       case ButtonVariant.outline:
         return Theme.of(context).primaryColor;
       case ButtonVariant.secondary:
-        return EcoPlatesDesignTokens.colors.textPrimary;
+        return Colors.white;
     }
   }
 
@@ -251,7 +246,7 @@ class ResponsiveButton extends StatelessWidget {
       case ButtonVariant.outline:
         return Theme.of(context).primaryColor;
       case ButtonVariant.secondary:
-        return EcoPlatesDesignTokens.colors.textPrimary;
+        return Colors.white;
     }
   }
 }

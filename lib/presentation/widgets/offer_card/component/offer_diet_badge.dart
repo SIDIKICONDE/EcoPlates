@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
-
 /// Badge affichant les informations diététiques (vegan, végétarien, halal)
 class OfferDietBadge extends StatelessWidget {
   const OfferDietBadge({required this.label, required this.color, super.key});
@@ -12,24 +10,22 @@ class OfferDietBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: context.scaleXS_SM_MD_LG,
-        vertical: context.scaleXXS_XS_SM_MD,
+        horizontal: 8.0,
+        vertical: 4.0,
       ),
       decoration: BoxDecoration(
-        color: color.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
+        color: color.withOpacity(0.1),
         border: Border.all(
-          color: color.withValues(alpha: EcoPlatesDesignTokens.opacity.subtle),
+          color: color.withOpacity(0.2),
         ),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: EcoPlatesDesignTokens.typography.hint(context),
+          fontSize: 12.0,
+          fontWeight: FontWeight.w500,
           color: color,
-          fontWeight: EcoPlatesDesignTokens.typography.semiBold,
         ),
       ),
     );

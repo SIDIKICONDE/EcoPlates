@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/responsive.dart';
-import '../../../core/themes/tokens/spacing_tokens.dart';
 import 'empty_favorites_widget.dart';
 import 'favorite_dish_tile.dart';
 import 'favorite_place_card.dart';
@@ -23,28 +21,18 @@ class ConsumerFavoritesSection extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: EcoSpacing.md,
-          tablet: EcoSpacing.lg,
-          desktop: EcoSpacing.xl,
-        ),
+        16.0,
       ),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(
-          context.responsiveValue(
-            mobile: EcoPlatesDesignTokens.radius.md,
-            tablet: EcoPlatesDesignTokens.radius.lg,
-            desktop: EcoPlatesDesignTokens.radius.xl,
-          ),
-        ),
+        borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
             color: colors.shadow.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.verySubtle,
+              alpha: 0.08,
             ),
-            blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            blurRadius: 8.0,
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -57,20 +45,10 @@ class ConsumerFavoritesSection extends StatelessWidget {
               Icon(
                 Icons.favorite,
                 color: colors.error,
-                size: context.responsiveValue(
-                  mobile: context.scaleIconStandard,
-                  tablet:
-                      context.scaleIconStandard * 1.2, // 20% larger on tablet
-                  desktop:
-                      context.scaleIconStandard * 1.4, // 40% larger on desktop
-                ),
+                size: 24.0,
               ),
               SizedBox(
-                width: context.responsiveValue(
-                  mobile: EcoSpacing.sm,
-                  tablet: EcoSpacing.md,
-                  desktop: EcoSpacing.lg,
-                ),
+                width: 12.0,
               ),
               Text(
                 'Mes Favoris',
@@ -82,11 +60,7 @@ class ConsumerFavoritesSection extends StatelessWidget {
           ),
 
           SizedBox(
-            height: context.responsiveValue(
-              mobile: EcoSpacing.lg,
-              tablet: EcoSpacing.xl,
-              desktop: EcoSpacing.xxl,
-            ),
+            height: 24.0,
           ),
 
           // Restaurants favoris
@@ -98,27 +72,15 @@ class ConsumerFavoritesSection extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: context.responsiveValue(
-                mobile: EcoSpacing.md,
-                tablet: EcoSpacing.lg,
-                desktop: EcoSpacing.xl,
-              ),
+              height: 16.0,
             ),
             SizedBox(
-              height: context.responsiveValue(
-                mobile: DesignConstants.hundred.toDouble(),
-                tablet: DesignConstants.hundred + DesignConstants.twenty,
-                desktop: DesignConstants.hundred + DesignConstants.forty,
-              ),
+              height: 100.0,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: favoritePlaces.length,
                 separatorBuilder: (context, index) => SizedBox(
-                  width: context.responsiveValue(
-                    mobile: EcoSpacing.sm,
-                    tablet: EcoSpacing.md,
-                    desktop: EcoSpacing.lg,
-                  ),
+                  width: 12.0,
                 ),
                 itemBuilder: (context, index) {
                   final place = favoritePlaces[index];
@@ -126,13 +88,7 @@ class ConsumerFavoritesSection extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(
-              height: context.responsiveValue(
-                mobile: EcoSpacing.lg,
-                tablet: EcoSpacing.xl,
-                desktop: EcoSpacing.xxl,
-              ),
-            ),
+            SizedBox(height: 24.0),
           ],
 
           // Plats favoris
@@ -144,24 +100,14 @@ class ConsumerFavoritesSection extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: context.responsiveValue(
-                mobile: EcoSpacing.md,
-                tablet: EcoSpacing.lg,
-                desktop: EcoSpacing.xl,
-              ),
+              height: 16.0,
             ),
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: favoriteDishes.length > DesignConstants.three.toInt()
-                  ? DesignConstants.three.toInt()
-                  : favoriteDishes.length,
+              itemCount: favoriteDishes.length > 3 ? 3 : favoriteDishes.length,
               separatorBuilder: (context, index) => SizedBox(
-                height: context.responsiveValue(
-                  mobile: EcoSpacing.sm,
-                  tablet: EcoSpacing.md,
-                  desktop: EcoSpacing.lg,
-                ),
+                height: 12.0,
               ),
               itemBuilder: (context, index) {
                 final dish = favoriteDishes[index];
@@ -180,11 +126,7 @@ class ConsumerFavoritesSection extends StatelessWidget {
           // Bouton voir plus
           if (favoritePlaces.isNotEmpty || favoriteDishes.isNotEmpty) ...[
             SizedBox(
-              height: context.responsiveValue(
-                mobile: EcoSpacing.md,
-                tablet: EcoSpacing.lg,
-                desktop: EcoSpacing.xl,
-              ),
+              height: 16.0,
             ),
             SizedBox(
               width: double.infinity,

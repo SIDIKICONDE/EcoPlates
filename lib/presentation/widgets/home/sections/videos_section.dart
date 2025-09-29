@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/video_preview.dart';
 import '../../../providers/videos_provider.dart';
 import '../../../screens/all_videos_page.dart';
@@ -24,10 +23,10 @@ class VideosSection extends ConsumerWidget {
         // En-tête de section
         Padding(
           padding: EdgeInsets.fromLTRB(
-            context.scaleMD_LG_XL_XXL,
-            context.scaleXS_SM_MD_LG,
-            context.scaleMD_LG_XL_XXL,
-            context.scaleMD_LG_XL_XXL,
+            20.0,
+            8.0,
+            20.0,
+            20.0,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -38,35 +37,38 @@ class VideosSection extends ConsumerWidget {
                   Text(
                     'Vidéos & Astuces',
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.titleSize(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(
                         context,
-                      ),
-                      fontWeight: EcoPlatesDesignTokens.typography.bold,
+                      ).colorScheme.onSurface.withOpacity(0.9),
                     ),
                   ),
-                  Text(
-                    'Recettes et conseils anti-gaspi',
-                    style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                      color: Theme.of(context).colorScheme.onSurface.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
+                  TextButton.icon(
+                    onPressed: () {
+                      unawaited(
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (context) => const AllVideosPage(),
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.arrow_forward,
+                      size: 16.0,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    label: Text(
+                      'Voir tout',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 ],
-              ),
-              TextButton(
-                onPressed: () {
-                  unawaited(
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const AllVideosPage(),
-                      ),
-                    ),
-                  );
-                },
-                child: const Text('Voir tout'),
               ),
             ],
           ),
@@ -74,8 +76,7 @@ class VideosSection extends ConsumerWidget {
 
         // Liste horizontale de vidéos avec cartes verticales compactes
         SizedBox(
-          height:
-              EcoPlatesDesignTokens.layout.merchantCardHeight(context) * 0.8,
+          height: 240.0,
           child: videosAsync.when(
             data: (videos) {
               if (videos.isEmpty) {
@@ -85,24 +86,19 @@ class VideosSection extends ConsumerWidget {
                     children: [
                       Icon(
                         Icons.play_circle_outline,
-                        size: EcoPlatesDesignTokens.size.modalIcon(context),
-                        color: Theme.of(context).colorScheme.onSurface
-                            .withValues(
-                              alpha: EcoPlatesDesignTokens.opacity.subtle,
-                            ),
+                        size: 48.0,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.6),
                       ),
-                      SizedBox(height: context.scaleXS_SM_MD_LG),
+                      SizedBox(height: 8.0),
                       Text(
                         'Aucune vidéo disponible',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface
-                              .withValues(
-                                alpha:
-                                    EcoPlatesDesignTokens.opacity.almostOpaque,
-                              ),
-                          fontSize: EcoPlatesDesignTokens.typography.text(
+                          color: Theme.of(
                             context,
-                          ),
+                          ).colorScheme.onSurface.withOpacity(0.8),
+                          fontSize: 14.0,
                         ),
                       ),
                     ],
@@ -134,7 +130,7 @@ class VideosSection extends ConsumerWidget {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.scaleMD_LG_XL_XXL,
+                  horizontal: 20.0,
                 ),
                 physics: const BouncingScrollPhysics(),
                 itemCount: videoPreviews.length,
@@ -142,26 +138,14 @@ class VideosSection extends ConsumerWidget {
                   final video = videoPreviews[index];
                   return Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: context.scaleXXS_XS_SM_MD,
+                      horizontal: 8.0,
                     ),
                     child: SizedBox(
-                      width:
-                          EcoPlatesDesignTokens.layout.merchantCardHeight(
-                            context,
-                          ) *
-                          0.6,
+                      width: 160.0,
                       child: VideoCard(
                         video: video,
-                        width:
-                            EcoPlatesDesignTokens.layout.merchantCardHeight(
-                              context,
-                            ) *
-                            0.6,
-                        height:
-                            EcoPlatesDesignTokens.layout.merchantCardHeight(
-                              context,
-                            ) *
-                            0.7,
+                        width: 160.0,
+                        height: 120.0,
                         onTap: () {
                           _showVideoModal(context, video);
                         },
@@ -178,20 +162,20 @@ class VideosSection extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.error_outline,
-                    size: EcoPlatesDesignTokens.size.modalIcon(context),
-                    color: EcoPlatesDesignTokens.colors.snackbarError
-                        .withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                        ),
+                    size: 48.0,
+                    color: Theme.of(context).colorScheme.error,
                   ),
-                  SizedBox(height: context.scaleXS_SM_MD_LG),
+                  SizedBox(height: 16.0),
                   Text(
                     'Erreur de chargement',
                     style: TextStyle(
-                      color: EcoPlatesDesignTokens.colors.snackbarError,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.8),
+                      fontSize: 14.0,
                     ),
                   ),
-                  SizedBox(height: context.scaleXS_SM_MD_LG),
+                  SizedBox(height: 16.0),
                   TextButton.icon(
                     onPressed: () {
                       ref.invalidate(videosProvider);
@@ -205,7 +189,7 @@ class VideosSection extends ConsumerWidget {
           ),
         ),
 
-        SizedBox(height: context.scaleMD_LG_XL_XXL),
+        SizedBox(height: 20.0),
       ],
     );
   }

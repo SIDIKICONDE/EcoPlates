@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../providers/browse_view_provider.dart';
 import '../sort_section.dart';
 
@@ -16,38 +15,26 @@ class BrowseViewSegment extends ConsumerWidget {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: context.scaleMD_LG_XL_XXL,
-          ),
-          padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+          margin: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.all(4.0),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
-            ),
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.xl,
-            ),
+            color: Colors.white.withOpacity(0.9),
             border: Border.all(
-              color: Colors.grey[300]!.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.disabled,
-              ),
-              width: DesignConstants.zeroPointFive,
+              color: Colors.grey[300]!.withOpacity(0.5),
+              width: 1.0,
             ),
+            borderRadius: BorderRadius.circular(12.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.verySubtle,
-                ),
-                blurRadius: EcoPlatesDesignTokens.elevation.mediumBlur,
-                offset: EcoPlatesDesignTokens.elevation.standardOffset,
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8.0,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: BrowseViewMode.values.asMap().entries.map((entry) {
-              final index = entry.key;
-              final mode = entry.value;
+            children: BrowseViewMode.values.map((mode) {
+              final index = BrowseViewMode.values.indexOf(mode);
               final isSelected = currentMode == mode;
               final isFirst = index == 0;
               final isLast = index == BrowseViewMode.values.length - 1;
@@ -60,42 +47,32 @@ class BrowseViewSegment extends ConsumerWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
-                    height: EcoPlatesDesignTokens.size.buttonHeight(context),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.scaleXXS_XS_SM_MD,
-                    ),
+                    height: 44.0,
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? Theme.of(context).primaryColor
                           : Colors.transparent,
                       borderRadius: BorderRadius.only(
                         topLeft: isFirst
-                            ? Radius.circular(EcoPlatesDesignTokens.radius.lg)
+                            ? const Radius.circular(8.0)
                             : Radius.zero,
                         bottomLeft: isFirst
-                            ? Radius.circular(EcoPlatesDesignTokens.radius.lg)
+                            ? const Radius.circular(8.0)
                             : Radius.zero,
                         topRight: isLast
-                            ? Radius.circular(EcoPlatesDesignTokens.radius.lg)
+                            ? const Radius.circular(8.0)
                             : Radius.zero,
                         bottomRight: isLast
-                            ? Radius.circular(EcoPlatesDesignTokens.radius.lg)
+                            ? const Radius.circular(8.0)
                             : Radius.zero,
                       ),
                       gradient: isSelected
                           ? null
                           : LinearGradient(
                               colors: [
-                                Colors.white.withValues(
-                                  alpha: EcoPlatesDesignTokens
-                                      .opacity
-                                      .gradientPrimary,
-                                ),
-                                Colors.white.withValues(
-                                  alpha: EcoPlatesDesignTokens
-                                      .opacity
-                                      .veryTransparent,
-                                ),
+                                Colors.white.withOpacity(0.8),
+                                Colors.white.withOpacity(0.4),
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -112,14 +89,10 @@ class BrowseViewSegment extends ConsumerWidget {
                               ? Colors.white
                               : Theme.of(
                                   context,
-                                ).colorScheme.onSurface.withValues(
-                                  alpha: EcoPlatesDesignTokens
-                                      .opacity
-                                      .almostOpaque,
-                                ),
-                          size: context.scaleIconStandard,
+                                ).colorScheme.onSurface.withOpacity(0.7),
+                          size: 20.0,
                         ),
-                        SizedBox(width: context.scaleXXS_XS_SM_MD),
+                        const SizedBox(width: 8.0),
                         Text(
                           mode.label,
                           style: TextStyle(
@@ -127,17 +100,12 @@ class BrowseViewSegment extends ConsumerWidget {
                                 ? Colors.white
                                 : Theme.of(
                                     context,
-                                  ).colorScheme.onSurface.withValues(
-                                    alpha: EcoPlatesDesignTokens
-                                        .opacity
-                                        .gradientPrimary,
-                                  ),
+                                  ).colorScheme.onSurface.withOpacity(0.8),
                             fontWeight: isSelected
-                                ? EcoPlatesDesignTokens.typography.semiBold
-                                : EcoPlatesDesignTokens.typography.medium,
-                            fontSize: EcoPlatesDesignTokens.typography
-                                .modalTitle(context),
-                            letterSpacing: DesignConstants.zeroPointFive / 2.5,
+                                ? FontWeight.w600
+                                : FontWeight.w500,
+                            fontSize: 14.0,
+                            letterSpacing: 0.2,
                           ),
                         ),
                       ],

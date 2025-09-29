@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/responsive/context_responsive_extensions.dart';
-import '../../core/responsive/design_tokens.dart';
-import '../../core/responsive/responsive_grid.dart';
 import '../../core/services/image_cache_service.dart';
 import '../../core/widgets/eco_cached_image.dart';
 import '../../domain/entities/video_preview.dart';
 import '../providers/videos_provider.dart';
+import '../widgets/common/empty_state.dart';
 import '../widgets/video_card/video_card.dart';
 import '../widgets/video_player/floating_video_modal.dart';
 
@@ -45,45 +43,43 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
               );
             },
           ),
-          SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
+          SizedBox(width: 8.0),
         ],
       ),
       body: Column(
         children: [
           // Filtres
           Container(
-            height: EcoPlatesDesignTokens.size.buttonHeight(context),
+            height: 48.0,
             padding: EdgeInsets.symmetric(
-              horizontal: EcoPlatesDesignTokens.spacing
-                  .contentPadding(context)
-                  .horizontal,
-              vertical: EcoPlatesDesignTokens.spacing.microGap(context),
+              horizontal: 16.0,
+              vertical: 8.0,
             ),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
                 _buildFilterChip('Toutes', 'all'),
                 SizedBox(
-                  width: EcoPlatesDesignTokens.spacing.microGap(context),
+                  width: 8.0,
                 ),
                 _buildFilterChip('Récentes', 'recent'),
                 SizedBox(
-                  width: EcoPlatesDesignTokens.spacing.microGap(context),
+                  width: 8.0,
                 ),
                 _buildFilterChip('Populaires', 'popular'),
                 SizedBox(
-                  width: EcoPlatesDesignTokens.spacing.microGap(context),
+                  width: 8.0,
                 ),
                 _buildFilterChip('Anti-gaspi', 'anti-waste'),
                 SizedBox(
-                  width: EcoPlatesDesignTokens.spacing.microGap(context),
+                  width: 8.0,
                 ),
                 _buildFilterChip('Recettes', 'recipes'),
               ],
             ),
           ),
 
-          Divider(height: EcoPlatesDesignTokens.dividerHeight),
+          Divider(height: 1.0),
 
           // Liste des vidéos
           Expanded(
@@ -93,30 +89,9 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                 final videos = _filterVideos(allVideos);
 
                 if (videos.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.video_library_outlined,
-                          size: EcoPlatesDesignTokens.layout.emptyStateIconSize,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                        SizedBox(
-                          height: EcoPlatesDesignTokens.spacing.interfaceGap(
-                            context,
-                          ),
-                        ),
-                        Text(
-                          'Aucune vidéo trouvée',
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
+                  return const EmptyState(
+                    icon: Icons.video_library_outlined,
+                    title: 'Aucune vidéo trouvée',
                   );
                 }
 
@@ -126,20 +101,25 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                     ref.invalidate(videosProvider);
                   },
                   child: SingleChildScrollView(
-                    padding: EcoPlatesDesignTokens.spacing.contentPadding(
-                      context,
-                    ),
-                    child: ResponsiveGrid(
-                      config: ResponsiveGridConfig(
-                        tablet: 2,
-                        desktop: 3,
-                        desktopLarge: 4,
-                        spacing: EcoPlatesDesignTokens.spacing.interfaceGap(
-                          context,
-                        ),
-                        aspectRatio: _getGridAspectRatio(context),
+                    padding: EdgeInsets.all(16.0),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: MediaQuery.of(context).size.width > 1200
+                            ? 4
+                            : MediaQuery.of(context).size.width > 800
+                            ? 3
+                            : MediaQuery.of(context).size.width > 600
+                            ? 2
+                            : 1,
+                        mainAxisSpacing: 16.0,
+                        crossAxisSpacing: 16.0,
+                        childAspectRatio: _getGridAspectRatio(context),
                       ),
-                      children: videos.map((videoData) {
+                      itemCount: videos.length,
+                      itemBuilder: (context, index) {
+                        final videoData = videos[index];
                         final video = VideoPreview(
                           id: videoData.id,
                           title: videoData.title,
@@ -161,7 +141,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                             unawaited(showFloatingVideoModal(context, video));
                           },
                         );
-                      }).toList(),
+                      },
                     ),
                   ),
                 );
@@ -173,22 +153,20 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                   children: [
                     Icon(
                       Icons.error_outline,
-                      size: EcoPlatesDesignTokens.layout.errorViewIconSize,
-                      color: EcoPlatesDesignTokens.errorColorGeneral(context),
+                      size: 48.0,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                     SizedBox(
-                      height: EcoPlatesDesignTokens.spacing.interfaceGap(
-                        context,
-                      ),
+                      height: 16.0,
                     ),
                     Text(
                       'Erreur de chargement',
                       style: theme.textTheme.headlineSmall?.copyWith(
-                        color: EcoPlatesDesignTokens.errorColorGeneral(context),
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
                     SizedBox(
-                      height: EcoPlatesDesignTokens.spacing.microGap(context),
+                      height: 8.0,
                     ),
                     TextButton.icon(
                       onPressed: () {
@@ -218,7 +196,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
         });
       },
       selectedColor: Theme.of(context).primaryColor.withValues(
-        alpha: EcoPlatesDesignTokens.opacity.pressed,
+        alpha: 0.2,
       ),
     );
   }
@@ -230,7 +208,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
     switch (_selectedFilter) {
       case 'recent':
         final recentThreshold = DateTime.now().subtract(
-          Duration(days: EcoPlatesDesignTokens.video.recentDaysThreshold),
+          const Duration(days: 7),
         );
         filtered = filtered
             .where((v) => v.publishedAt.isAfter(recentThreshold))
@@ -238,7 +216,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
       case 'popular':
         filtered = filtered
             .where(
-              (v) => v.views > EcoPlatesDesignTokens.video.popularThreshold,
+              (v) => v.views > 1000,
             )
             .toList();
       case 'anti-waste':
@@ -276,12 +254,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
 
   /// Détermine le ratio d'aspect de la grille selon le type d'appareil
   double _getGridAspectRatio(BuildContext context) {
-    return context.responsiveValue<double>(
-      mobile: EcoPlatesDesignTokens.video.mobileGridAspectRatio,
-      tablet: EcoPlatesDesignTokens.video.tabletGridAspectRatio,
-      desktop: EcoPlatesDesignTokens.video.desktopGridAspectRatio,
-      desktopLarge: EcoPlatesDesignTokens.video.desktopLargeGridAspectRatio,
-    );
+    return 16.0 / 9.0; // Ratio standard 16:9
   }
 }
 
@@ -344,11 +317,11 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
               children: [
                 Icon(
                   Icons.search_off,
-                  size: EcoPlatesDesignTokens.layout.emptyStateIconSize,
+                  size: 80.0,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
                 SizedBox(
-                  height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                  height: 16.0,
                 ),
                 Text(
                   'Aucune vidéo trouvée pour "$query"',
@@ -383,20 +356,17 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
 
             return ListTile(
               contentPadding: EdgeInsets.symmetric(
-                horizontal: EcoPlatesDesignTokens.spacing
-                    .contentPadding(context)
-                    .horizontal,
-                vertical: EcoPlatesDesignTokens.spacing.microGap(context),
+                horizontal: 16.0,
+                vertical: 8.0,
               ),
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(
-                  EcoPlatesDesignTokens.radius.sm,
+                  8.0,
                 ),
                 child: SizedBox(
-                  width: EcoPlatesDesignTokens.size.icon(context) * 3,
+                  width: 18.0 * 3,
                   child: AspectRatio(
-                    aspectRatio:
-                        EcoPlatesDesignTokens.video.thumbnailAspectRatio,
+                    aspectRatio: 16.0 / 9.0,
                     child: EcoCachedImage(
                       imageUrl: video.thumbnailUrl,
                       size: ImageSize.small,
@@ -415,7 +385,7 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
               ),
               title: Text(
                 video.title,
-                maxLines: EcoPlatesDesignTokens.video.titleMaxLines,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.titleMedium,
               ),

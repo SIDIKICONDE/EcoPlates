@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/responsive/responsive.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/offer_form_provider.dart';
 
@@ -16,14 +15,10 @@ class OfferFormActions extends ConsumerWidget {
     final theme = Theme.of(context);
     final formState = ref.watch(offerFormProvider);
 
-    // Utilisation des tokens de design
-    final sectionSpacing = EcoPlatesDesignTokens.spacing.sectionSpacing(
-      context,
-    );
-    final statusIndicatorSize = EcoPlatesDesignTokens.size.indicator(context);
-    final maxFieldWidth = EcoPlatesDesignTokens.layout.formFieldMaxWidth(
-      context,
-    );
+    // Utilisation des valeurs en dur
+    const sectionSpacing = 16.0;
+    const statusIndicatorSize = 12.0;
+    const maxFieldWidth = 600.0;
 
     return Container(
       constraints: BoxConstraints(
@@ -38,32 +33,18 @@ class OfferFormActions extends ConsumerWidget {
             child: InputDecorator(
               decoration: InputDecoration(
                 labelText: "Statut de l'offre",
-                labelStyle: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.label(context),
-                ),
-                prefixIcon: Icon(
-                  Icons.toggle_on,
-                  size: EcoPlatesDesignTokens.size.icon(context),
-                ),
+                labelStyle: TextStyle(fontSize: 16.0),
+                prefixIcon: Icon(Icons.toggle_on, size: 24.0),
                 border: const OutlineInputBorder(),
-                suffixIcon: Icon(
-                  Icons.arrow_drop_down,
-                  size: EcoPlatesDesignTokens.size.icon(context),
-                ),
-                contentPadding: EcoPlatesDesignTokens.spacing.contentPadding(
-                  context,
-                ),
+                suffixIcon: Icon(Icons.arrow_drop_down, size: 24.0),
+                contentPadding: EdgeInsets.all(16.0),
               ),
               child: Row(
                 children: [
                   Container(
                     width: statusIndicatorSize,
                     height: statusIndicatorSize,
-                    margin: EdgeInsets.only(
-                      right: EcoPlatesDesignTokens.spacing.interfaceGap(
-                        context,
-                      ),
-                    ),
+                    margin: EdgeInsets.only(right: 8.0),
                     decoration: BoxDecoration(
                       color: _getStatusColor(context, formState.status),
                       shape: BoxShape.circle,
@@ -72,7 +53,7 @@ class OfferFormActions extends ConsumerWidget {
                   Text(
                     _getStatusLabel(formState.status),
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.text(context),
+                      fontSize: 16.0,
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
@@ -89,38 +70,21 @@ class OfferFormActions extends ConsumerWidget {
                 ? formState.preparationTime.toString()
                 : '',
             keyboardType: TextInputType.number,
-            style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
-            ),
+            style: TextStyle(fontSize: 16.0),
             decoration: InputDecoration(
               labelText: 'Temps de préparation (minutes)',
-              labelStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.label(context),
-              ),
+              labelStyle: TextStyle(fontSize: 16.0),
               hintText: 'Ex: 30',
-              hintStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.hint(context),
-              ),
-              prefixIcon: Icon(
-                Icons.timer,
-                size: EcoPlatesDesignTokens.size.icon(context),
-              ),
+              hintStyle: TextStyle(fontSize: 14.0),
+              prefixIcon: Icon(Icons.timer, size: 24.0),
               border: const OutlineInputBorder(),
               helperText: 'Temps nécessaire pour préparer la commande',
-              helperStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.modalSubtitle(
-                  context,
-                ),
-              ),
-              contentPadding: EcoPlatesDesignTokens.spacing.contentPadding(
-                context,
-              ),
+              helperStyle: TextStyle(fontSize: 12.0),
+              contentPadding: EdgeInsets.all(16.0),
             ),
             onChanged: (value) {
               final time = int.tryParse(value) ?? 30;
-              ref
-                  .read<OfferFormNotifier>(offerFormProvider.notifier)
-                  .updatePreparationTime(time);
+              ref.read(offerFormProvider.notifier).updatePreparationTime(time);
             },
           ),
 
@@ -132,38 +96,21 @@ class OfferFormActions extends ConsumerWidget {
                 ? formState.co2Saved.toString()
                 : '',
             keyboardType: TextInputType.number,
-            style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
-            ),
+            style: TextStyle(fontSize: 16.0),
             decoration: InputDecoration(
               labelText: 'Économie CO2 (grammes)',
-              labelStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.label(context),
-              ),
+              labelStyle: TextStyle(fontSize: 16.0),
               hintText: 'Ex: 500',
-              hintStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.hint(context),
-              ),
-              prefixIcon: Icon(
-                Icons.eco,
-                size: EcoPlatesDesignTokens.size.icon(context),
-              ),
+              hintStyle: TextStyle(fontSize: 14.0),
+              prefixIcon: Icon(Icons.eco, size: 24.0),
               border: const OutlineInputBorder(),
               helperText: 'Quantité de CO2 économisée par commande',
-              helperStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.modalSubtitle(
-                  context,
-                ),
-              ),
-              contentPadding: EcoPlatesDesignTokens.spacing.contentPadding(
-                context,
-              ),
+              helperStyle: TextStyle(fontSize: 12.0),
+              contentPadding: EdgeInsets.all(16.0),
             ),
             onChanged: (value) {
               final co2 = int.tryParse(value) ?? 500;
-              ref
-                  .read<OfferFormNotifier>(offerFormProvider.notifier)
-                  .updateCo2Saved(co2);
+              ref.read(offerFormProvider.notifier).updateCo2Saved(co2);
             },
           ),
 
@@ -172,33 +119,18 @@ class OfferFormActions extends ConsumerWidget {
           // Tags
           TextFormField(
             initialValue: formState.tags.join(', '),
-            style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
-            ),
+            style: TextStyle(fontSize: 16.0),
             decoration: InputDecoration(
               labelText: 'Tags (séparés par des virgules)',
-              labelStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.label(context),
-              ),
+              labelStyle: TextStyle(fontSize: 16.0),
               hintText: 'Ex: frais, local, bio',
-              hintStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.hint(context),
-              ),
-              prefixIcon: Icon(
-                Icons.tag,
-                size: EcoPlatesDesignTokens.size.icon(context),
-              ),
+              hintStyle: TextStyle(fontSize: 14.0),
+              prefixIcon: Icon(Icons.tag, size: 24.0),
               border: const OutlineInputBorder(),
               helperText:
                   'Mots-clés pour aider les clients à trouver votre offre',
-              helperStyle: TextStyle(
-                fontSize: EcoPlatesDesignTokens.typography.modalSubtitle(
-                  context,
-                ),
-              ),
-              contentPadding: EcoPlatesDesignTokens.spacing.contentPadding(
-                context,
-              ),
+              helperStyle: TextStyle(fontSize: 12.0),
+              contentPadding: EdgeInsets.all(16.0),
             ),
             onChanged: (value) {
               final tags = value
@@ -206,9 +138,7 @@ class OfferFormActions extends ConsumerWidget {
                   .map((tag) => tag.trim())
                   .where((tag) => tag.isNotEmpty)
                   .toList();
-              ref
-                  .read<OfferFormNotifier>(offerFormProvider.notifier)
-                  .updateTags(tags);
+              ref.read(offerFormProvider.notifier).updateTags(tags);
             },
           ),
         ],
@@ -221,26 +151,21 @@ class OfferFormActions extends ConsumerWidget {
     WidgetRef ref,
     OfferStatus currentStatus,
   ) {
-    // Utilisation des tokens de design pour la modal
-    final indicatorSize = EcoPlatesDesignTokens.size.indicator(context);
-    final iconSize = EcoPlatesDesignTokens.size.modalIcon(context);
-    final titleFontSize = EcoPlatesDesignTokens.typography.modalTitle(context);
-    final subtitleFontSize = EcoPlatesDesignTokens.typography.modalSubtitle(
-      context,
-    );
+    // Utilisation de valeurs en dur pour la modal
+    const indicatorSize = 12.0;
+    const titleFontSize = 16.0;
+    const subtitleFontSize = 14.0;
 
     final contentPadding = EdgeInsets.symmetric(
-      horizontal: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-      vertical: EcoPlatesDesignTokens.spacing.smallGap(context),
+      horizontal: 16.0,
+      vertical: 12.0,
     );
 
     unawaited(
       showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
-        constraints: BoxConstraints(
-          maxWidth: EcoPlatesDesignTokens.layout.modalMaxWidth(context),
-        ),
+        constraints: BoxConstraints(maxWidth: 600.0),
         builder: (context) {
           return SafeArea(
             child: Column(
@@ -261,27 +186,26 @@ class OfferFormActions extends ConsumerWidget {
                     _getStatusLabel(status),
                     style: TextStyle(
                       fontSize: titleFontSize,
-                      fontWeight: EcoPlatesDesignTokens.typography.medium,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   ),
                   subtitle: Text(
                     _getStatusDescription(status),
                     style: TextStyle(
                       fontSize: subtitleFontSize,
-                      height: EcoPlatesDesignTokens.layout.textLineHeight,
+                      height: 1.3,
                     ),
                   ),
                   trailing: isSelected
                       ? Icon(
                           Icons.check,
-                          size: iconSize,
                           color: Theme.of(context).colorScheme.primary,
                         )
                       : null,
                   onTap: () {
-                    ref
-                        .read<OfferFormNotifier>(offerFormProvider.notifier)
-                        .updateStatus(status);
+                    ref.read(offerFormProvider.notifier).updateStatus(status);
                     Navigator.of(context).pop();
                   },
                 );

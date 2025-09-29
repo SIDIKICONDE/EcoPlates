@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../providers/analytics_provider.dart';
 
@@ -28,22 +27,18 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.all(
-              AnalyticsAppBarTokens.titlePadding(context),
-            ),
+            padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(
-                AnalyticsAppBarTokens.borderRadius(context),
-              ),
+              borderRadius: BorderRadius.circular(8.0),
             ),
             child: Icon(
               Icons.insights,
-              size: EcoPlatesDesignTokens.size.icon(context),
+              size: 16.0,
               color: theme.colorScheme.primary,
             ),
           ),
-          SizedBox(width: EcoPlatesDesignTokens.spacing.smallGap(context)),
+          SizedBox(width: 16.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -51,9 +46,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
               Text(
                 'Business Insights',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: EcoPlatesDesignTokens.typography.bold,
-                  letterSpacing: EcoPlatesDesignTokens.typography
-                      .titleLetterSpacing(context),
+                  fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
@@ -61,7 +54,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 'Analytics Dashboard',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: AnalyticsAppBarTokens.fontSizeTiny(context),
+                  fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -73,26 +66,24 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
         // Bouton de rafraîchissement amélioré
         Container(
           margin: EdgeInsets.symmetric(
-            horizontal: AnalyticsAppBarTokens.horizontalMargin(context),
+            horizontal: 4.0,
           ),
           decoration: BoxDecoration(
             color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(
-              AnalyticsAppBarTokens.borderRadius(context),
-            ),
+            borderRadius: BorderRadius.circular(8.0),
           ),
           child: IconButton(
             icon: const Icon(Icons.refresh),
-            iconSize: AnalyticsAppBarTokens.iconSize(context),
+            iconSize: 20.0,
             tooltip: 'Actualiser les données',
             onPressed: () => ref.refreshAnalytics(),
             style: IconButton.styleFrom(
               padding: EdgeInsets.all(
-                AnalyticsAppBarTokens.paddingAll(context),
+                8.0,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
-                  AnalyticsAppBarTokens.borderRadius(context),
+                  8.0,
                 ),
               ),
             ),
@@ -102,20 +93,18 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
         // Menu d'actions amélioré
         Container(
           margin: EdgeInsets.symmetric(
-            horizontal: AnalyticsAppBarTokens.horizontalMargin(context),
+            horizontal: 4.0,
           ),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface.withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(
-              AnalyticsAppBarTokens.borderRadius(context),
-            ),
+            borderRadius: BorderRadius.circular(8.0),
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.3),
             ),
           ),
           child: PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert),
-            iconSize: AnalyticsAppBarTokens.iconSize(context),
+            iconSize: 20.0,
             tooltip: 'Actions',
             onSelected: (value) => _handleMenuAction(context, ref, value),
             itemBuilder: (context) => [
@@ -124,20 +113,18 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.picture_as_pdf,
-                    size: AnalyticsAppBarTokens.menuIconSize(context),
-                    color: Color(AnalyticsAppBarTokens.pdfIconColor),
+                    size: 20.0,
+                    color: const Color(0xFFDC2626),
                   ),
                   title: Text(
                     'Exporter PDF',
                     style: TextStyle(
-                      fontSize: AnalyticsAppBarTokens.fontSizeMedium(context),
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: AnalyticsAppBarTokens.contentHorizontalPadding(
-                      context,
-                    ),
+                    horizontal: 16.0,
                   ),
                   dense: true,
                 ),
@@ -147,20 +134,18 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.table_chart,
-                    size: AnalyticsAppBarTokens.menuIconSize(context),
-                    color: Color(AnalyticsAppBarTokens.excelIconColor),
+                    size: 20.0,
+                    color: const Color(0xFF16A34A),
                   ),
                   title: Text(
                     'Exporter Excel',
                     style: TextStyle(
-                      fontSize: AnalyticsAppBarTokens.fontSizeMedium(context),
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: AnalyticsAppBarTokens.contentHorizontalPadding(
-                      context,
-                    ),
+                    horizontal: 16.0,
                   ),
                   dense: true,
                 ),
@@ -171,20 +156,18 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.settings,
-                    size: AnalyticsAppBarTokens.menuIconSize(context),
-                    color: Color(AnalyticsAppBarTokens.settingsIconColor),
+                    size: 20.0,
+                    color: const Color(0xFF6B7280),
                   ),
                   title: Text(
                     'Paramètres',
                     style: TextStyle(
-                      fontSize: AnalyticsAppBarTokens.fontSizeMedium(context),
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: AnalyticsAppBarTokens.contentHorizontalPadding(
-                      context,
-                    ),
+                    horizontal: 16.0,
                   ),
                   dense: true,
                 ),
@@ -194,20 +177,18 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.help_outline,
-                    size: AnalyticsAppBarTokens.menuIconSize(context),
-                    color: Color(AnalyticsAppBarTokens.helpIconColor),
+                    size: 20.0,
+                    color: const Color(0xFF2563EB),
                   ),
                   title: Text(
                     'Aide',
                     style: TextStyle(
-                      fontSize: AnalyticsAppBarTokens.fontSizeMedium(context),
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: AnalyticsAppBarTokens.contentHorizontalPadding(
-                      context,
-                    ),
+                    horizontal: 16.0,
                   ),
                   dense: true,
                 ),
@@ -215,14 +196,14 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
             ],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
-                AnalyticsAppBarTokens.popupBorderRadius(context),
+                8.0,
               ),
             ),
-            elevation: AnalyticsAppBarTokens.elevation(context),
+            elevation: 4.0,
           ),
         ),
 
-        SizedBox(width: AnalyticsAppBarTokens.paddingAll(context)),
+        SizedBox(width: 8.0),
       ],
     );
   }
@@ -272,7 +253,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Export $format en cours...'),
-        duration: AnalyticsAppBarTokens.exportSimulationDuration,
+        duration: const Duration(seconds: 2),
         action: SnackBarAction(
           label: 'Annuler',
           onPressed: () {
@@ -283,13 +264,13 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
     );
 
     // Simuler l'export
-    Future.delayed(AnalyticsAppBarTokens.exportSimulationDuration, () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Rapport $format exporté avec succès !'),
             backgroundColor: Colors.green,
-            duration: AnalyticsAppBarTokens.snackBarDuration,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -305,16 +286,16 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: const [
               Text('• Période par défaut: Cette semaine'),
               Text('• Devise: Euro (€)'),
               Text('• Format de date: jj/mm/aaaa'),
               Text('• Fuseaux horaire: Europe/Paris'),
-              SizedBox(height: AnalyticsAppBarTokens.spacingLarge(context)),
+              SizedBox(height: 16.0),
               Text(
                 'Ces paramètres peuvent être modifiés dans les réglages généraux.',
                 style: TextStyle(
-                  fontSize: AnalyticsAppBarTokens.fontSizeSmall(context),
+                  fontSize: 13.0,
                   color: Colors.grey,
                 ),
               ),
@@ -348,35 +329,35 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
+              children: const [
+                Text(
                   '📊 KPIs principaux',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: AnalyticsAppBarTokens.spacingMedium(context)),
-                const Text("• CA: Chiffre d'affaires total"),
-                const Text('• Commandes: Nombre de ventes'),
-                const Text('• Panier moyen: CA ÷ Commandes'),
-                const Text('• Taux conversion: % visiteurs → acheteurs'),
-                SizedBox(height: AnalyticsAppBarTokens.spacingLarge(context)),
-                const Text(
+                SizedBox(height: 12.0),
+                Text("• CA: Chiffre d'affaires total"),
+                Text('• Commandes: Nombre de ventes'),
+                Text('• Panier moyen: CA ÷ Commandes'),
+                Text('• Taux conversion: % visiteurs → acheteurs'),
+                SizedBox(height: 16.0),
+                Text(
                   '📈 Graphiques',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: AnalyticsAppBarTokens.spacingMedium(context)),
-                const Text('• Évolution des revenus dans le temps'),
-                const Text('• Répartition des ventes par produit'),
-                const Text('• Analyse par catégories'),
-                SizedBox(height: AnalyticsAppBarTokens.spacingLarge(context)),
-                const Text(
+                SizedBox(height: 12.0),
+                Text('• Évolution des revenus dans le temps'),
+                Text('• Répartition des ventes par produit'),
+                Text('• Analyse par catégories'),
+                SizedBox(height: 16.0),
+                Text(
                   '🔄 Périodes',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: AnalyticsAppBarTokens.spacingSmall(context)),
-                const Text('• 24h: Données horaires'),
-                const Text('• 7j: Données journalières'),
-                const Text('• 30j: Données hebdomadaires'),
-                const Text('• 1an: Données mensuelles'),
+                SizedBox(height: 8.0),
+                Text('• 24h: Données horaires'),
+                Text('• 7j: Données journalières'),
+                Text('• 30j: Données hebdomadaires'),
+                Text('• 1an: Données mensuelles'),
               ],
             ),
           ),
@@ -398,12 +379,13 @@ class _MerchantLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const merchantLogoUrl = AnalyticsAppBarTokens.merchantLogoUrl;
+    const merchantLogoUrl =
+        'https://via.placeholder.com/100x100/4CAF50/FFFFFF?text=Logo';
 
     return Container(
-      margin: EdgeInsets.all(AnalyticsAppBarTokens.paddingAll(context)),
+      margin: EdgeInsets.all(8.0),
       child: CircleAvatar(
-        radius: AnalyticsAppBarTokens.avatarRadius(context),
+        radius: 16.0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
         onBackgroundImageError: (_, error) {
@@ -411,7 +393,7 @@ class _MerchantLogo extends StatelessWidget {
         },
         child: Icon(
           Icons.analytics,
-          size: AnalyticsAppBarTokens.iconSize(context),
+          size: 20.0,
           color: Colors.grey,
         ),
       ),

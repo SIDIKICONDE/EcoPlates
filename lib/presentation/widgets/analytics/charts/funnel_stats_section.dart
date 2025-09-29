@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Section des statistiques clés du tunnel de conversion
@@ -17,18 +16,12 @@ class FunnelStatsSection extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(ConversionFunnelConstants.statsPadding),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(
-          alpha: ConversionFunnelConstants.surfaceContainerAlpha,
-        ),
-        borderRadius: BorderRadius.circular(
-          ConversionFunnelConstants.statsBorderRadius,
-        ),
+        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: ConversionFunnelConstants.surfaceContainerBorderAlpha,
-          ),
+          color: theme.colorScheme.outline.withOpacity(0.2),
         ),
       ),
       child: Row(
@@ -74,13 +67,13 @@ class FunnelStatsSection extends StatelessWidget {
         Icon(
           icon,
           color: color,
-          size: ConversionFunnelConstants.statItemIconSize,
+          size: 24.0,
         ),
-        const SizedBox(height: ConversionFunnelConstants.statItemSpacing),
+        const SizedBox(height: 8.0),
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: ConversionFunnelConstants.valueWeight,
+            fontWeight: FontWeight.bold,
             color: color,
           ),
         ),
@@ -88,7 +81,7 @@ class FunnelStatsSection extends StatelessWidget {
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
-            fontSize: ConversionFunnelConstants.bodySmallFontSize,
+            fontSize: 12.0,
           ),
         ),
       ],
@@ -97,11 +90,9 @@ class FunnelStatsSection extends StatelessWidget {
 
   Widget _buildStatDivider(ThemeData theme) {
     return Container(
-      width: ConversionFunnelConstants.statDividerWidth,
-      height: ConversionFunnelConstants.statDividerHeight,
-      color: theme.colorScheme.outline.withValues(
-        alpha: ConversionFunnelConstants.outlineAlpha,
-      ),
+      width: 1.0,
+      height: 40.0,
+      color: theme.colorScheme.outline.withOpacity(0.3),
     );
   }
 }

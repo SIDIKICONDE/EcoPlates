@@ -1,7 +1,4 @@
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-
-import '../../../../core/responsive/responsive.dart';
 
 /// Widget amélioré pour les sections du formulaire avec icône et titre
 class FormSection extends StatelessWidget {
@@ -34,87 +31,61 @@ class FormSection extends StatelessWidget {
     return GestureDetector(
       onTap: onSectionTap,
       child: Container(
-        margin: EdgeInsets.only(
-          bottom: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-        ),
+        margin: EdgeInsets.only(bottom: 16.0),
         decoration: BoxDecoration(
           color: isCurrent
-              ? colorScheme.primaryContainer.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.hover,
-                )
+              ? colorScheme.primaryContainer.withOpacity(0.1)
               : colorScheme.surface,
-          borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xl),
+          borderRadius: BorderRadius.circular(12.0),
           border: Border.all(
             color: isCurrent
-                ? colorScheme.primary.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
-                  )
-                : colorScheme.outline.withValues(
-                    alpha: EcoPlatesDesignTokens.opacity.subtle,
-                  ),
-            width: EcoPlatesDesignTokens.layout.buttonBorderWidth(context),
+                ? colorScheme.primary.withOpacity(0.3)
+                : colorScheme.outline.withOpacity(0.2),
+            width: isCurrent ? 2.0 : 1.0,
           ),
           boxShadow: [
-            BoxShadow(
-              color: isCurrent
-                  ? colorScheme.primary.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.hover,
-                    )
-                  : colorScheme.shadow.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-                    ),
-              blurRadius: isCurrent
-                  ? EcoPlatesDesignTokens.elevation.modal
-                  : EcoPlatesDesignTokens.elevation.card,
-              offset: EcoPlatesDesignTokens.elevation.standardOffset,
-            ),
+            if (isCurrent)
+              BoxShadow(
+                color: colorScheme.primary.withOpacity(0.1),
+                blurRadius: 8.0,
+                offset: Offset(0, 2.0),
+              ),
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header de la section
+            // En-tête de la section
             Container(
-              padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+              padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: isCurrent
-                    ? colorScheme.primary.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.hover,
-                      )
-                    : colorScheme.surfaceContainerHighest.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.semiTransparent,
-                      ),
+                    ? colorScheme.primary.withOpacity(0.05)
+                    : Colors.transparent,
                 borderRadius: BorderRadius.only(
-                  topLeft: ui.Radius.circular(EcoPlatesDesignTokens.radius.xl),
-                  topRight: ui.Radius.circular(EcoPlatesDesignTokens.radius.xl),
+                  topLeft: Radius.circular(12.0),
+                  topRight: Radius.circular(12.0),
                 ),
               ),
               child: Row(
                 children: [
                   // Icône avec statut
                   Container(
-                    padding: EdgeInsets.all(
-                      EcoPlatesDesignTokens.spacing.smallGap(context),
-                    ),
+                    padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
                       color: isCompleted
-                          ? colorScheme.primary.withValues(
-                              alpha: EcoPlatesDesignTokens.opacity.hover,
-                            )
-                          : colorScheme.surfaceContainerHighest,
-                      shape: BoxShape.circle,
+                          ? colorScheme.primary.withOpacity(0.1)
+                          : colorScheme.surfaceVariant.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Icon(
-                      icon,
+                      isCompleted ? Icons.check : icon,
                       color: isCompleted
                           ? colorScheme.primary
                           : colorScheme.onSurfaceVariant,
-                      size: EcoPlatesDesignTokens.size.icon(context),
+                      size: 20.0,
                     ),
                   ),
-                  SizedBox(
-                    width: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-                  ),
+                  SizedBox(width: 12.0),
                   // Titre et sous-titre
                   Expanded(
                     child: Column(
@@ -125,42 +96,33 @@ class FormSection extends StatelessWidget {
                             Text(
                               title,
                               style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight:
-                                    EcoPlatesDesignTokens.typography.semiBold,
-                                fontSize: EcoPlatesDesignTokens.typography
-                                    .titleSize(context),
+                                fontWeight: FontWeight.w600,
                                 color: colorScheme.onSurface,
                               ),
                             ),
                             if (isRequired) ...[
-                              SizedBox(
-                                width: EcoPlatesDesignTokens.spacing.microGap(
-                                  context,
-                                ),
-                              ),
+                              SizedBox(width: 4.0),
                               Text(
                                 '*',
                                 style: TextStyle(
                                   color: colorScheme.error,
-                                  fontSize: EcoPlatesDesignTokens.typography
-                                      .text(context),
-                                  fontWeight:
-                                      EcoPlatesDesignTokens.typography.bold,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
                           ],
                         ),
-                        if (subtitle != null)
+                        if (subtitle != null) ...[
+                          SizedBox(height: 4.0),
                           Text(
                             subtitle!,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              fontSize: EcoPlatesDesignTokens.typography.hint(
-                                context,
-                              ),
+                              fontSize: 12.0,
                               color: colorScheme.onSurfaceVariant,
                             ),
                           ),
+                        ],
                       ],
                     ),
                   ),
@@ -169,14 +131,14 @@ class FormSection extends StatelessWidget {
                     Icon(
                       Icons.check_circle,
                       color: colorScheme.primary,
-                      size: EcoPlatesDesignTokens.size.icon(context),
+                      size: 24.0,
                     ),
                 ],
               ),
             ),
             // Contenu de la section
             Padding(
-              padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+              padding: EdgeInsets.all(16.0),
               child: child,
             ),
           ],

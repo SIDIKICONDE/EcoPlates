@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/responsive/responsive.dart';
 import '../../../providers/offer_form_provider.dart';
 
 /// Widget adaptatif pour la sélection d'heure selon la plateforme
@@ -67,19 +66,19 @@ class _PlatformTimePickerState extends State<PlatformTimePicker> {
         return StatefulBuilder(
           builder: (context, setState) {
             return Container(
-              height: EcoPlatesDesignTokens.size.buttonHeight(context),
+              height: 260.0,
               color: CupertinoColors.systemBackground,
               child: Column(
                 children: [
                   // Header avec boutons
                   Container(
-                    height: EcoPlatesDesignTokens.size.buttonHeight(context),
+                    height: 50.0,
                     decoration: BoxDecoration(
                       color: CupertinoColors.secondarySystemBackground,
                       border: Border(
                         bottom: BorderSide(
                           color: CupertinoColors.separator,
-                          width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+                          width: 1.0,
                         ),
                       ),
                     ),
@@ -87,34 +86,18 @@ class _PlatformTimePickerState extends State<PlatformTimePicker> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CupertinoButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: EcoPlatesDesignTokens.spacing.dialogGap(
-                              context,
-                            ),
-                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
                             'Annuler',
-                            style: TextStyle(
-                              fontSize: EcoPlatesDesignTokens.typography.button(
-                                context,
-                              ),
-                            ),
+                            style: TextStyle(fontSize: 16.0),
                           ),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                         CupertinoButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: EcoPlatesDesignTokens.spacing.dialogGap(
-                              context,
-                            ),
-                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
                             'Valider',
-                            style: TextStyle(
-                              fontSize: EcoPlatesDesignTokens.typography.button(
-                                context,
-                              ),
-                            ),
+                            style: TextStyle(fontSize: 16.0),
                           ),
                           onPressed: () {
                             final picked = TimeOfDay(
@@ -166,19 +149,10 @@ class _PlatformTimePickerState extends State<PlatformTimePicker> {
               timePickerTheme: TimePickerThemeData(
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 hourMinuteShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.sm,
-                  ),
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
                 dayPeriodShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.sm,
-                  ),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.fieldRadius(context),
-                  ),
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
                 hourMinuteColor: Theme.of(
                   context,
@@ -194,16 +168,15 @@ class _PlatformTimePickerState extends State<PlatformTimePicker> {
                 ).colorScheme.onPrimaryContainer,
                 helpTextStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 16.0,
                 ),
                 hourMinuteTextStyle: TextStyle(
-                  fontSize:
-                      EcoPlatesDesignTokens.typography.titleSize(context) * 0.5,
+                  fontSize: 24.0,
                   fontWeight: FontWeight.w300,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 dayPeriodTextStyle: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.text(context),
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
@@ -257,14 +230,11 @@ class OfferFormScheduleFields extends ConsumerWidget {
     final theme = Theme.of(context);
     final formState = ref.watch(offerFormProvider);
 
-    // Design tokens responsives
-    final fieldSpacing = EcoPlatesDesignTokens.spacing.dialogGap(context);
-    final smallSpacing = EcoPlatesDesignTokens.spacing.microGap(context);
-    final fieldRadius = EcoPlatesDesignTokens.radius.fieldRadius(context);
-    final contentPadding = EcoPlatesDesignTokens.spacing.contentPadding(
-      context,
-    );
-    final textSize = EcoPlatesDesignTokens.typography.text(context);
+    // Valeurs en dur
+    const fieldSpacing = 16.0;
+    const smallSpacing = 8.0;
+    const fieldRadius = 12.0;
+    const textSize = 16.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,7 +261,7 @@ class OfferFormScheduleFields extends ConsumerWidget {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(fieldRadius),
               ),
-              contentPadding: contentPadding,
+              contentPadding: EdgeInsets.all(16.0),
             ),
             child: Text(
               formState.pickupStartTime != null
@@ -333,7 +303,7 @@ class OfferFormScheduleFields extends ConsumerWidget {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(fieldRadius),
               ),
-              contentPadding: contentPadding,
+              contentPadding: EdgeInsets.all(16.0),
             ),
             child: Text(
               formState.pickupEndTime != null
@@ -354,35 +324,25 @@ class OfferFormScheduleFields extends ConsumerWidget {
             formState.pickupEndTime != null) ...[
           SizedBox(height: smallSpacing),
           Container(
-            padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+            padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(
               color:
                   _isValidTimeRange(
                     formState.pickupStartTime!,
                     formState.pickupEndTime!,
                   )
-                  ? theme.colorScheme.primaryContainer.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.subtle,
-                    )
-                  : theme.colorScheme.errorContainer.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.subtle,
-                    ),
-              borderRadius: BorderRadius.circular(
-                EcoPlatesDesignTokens.radius.fieldRadius(context),
-              ),
+                  ? theme.colorScheme.primaryContainer.withOpacity(0.3)
+                  : theme.colorScheme.errorContainer.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(8.0),
               border: Border.all(
                 color:
                     _isValidTimeRange(
                       formState.pickupStartTime!,
                       formState.pickupEndTime!,
                     )
-                    ? theme.colorScheme.primary.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.subtle,
-                      )
-                    : theme.colorScheme.error.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.subtle,
-                      ),
-                width: EcoPlatesDesignTokens.layout.subtleBorderWidth,
+                    ? theme.colorScheme.primary.withOpacity(0.5)
+                    : theme.colorScheme.error.withOpacity(0.5),
+                width: 1.0,
               ),
             ),
             child: Row(
@@ -401,7 +361,7 @@ class OfferFormScheduleFields extends ConsumerWidget {
                       )
                       ? theme.colorScheme.primary
                       : theme.colorScheme.error,
-                  size: EcoPlatesDesignTokens.size.icon(context),
+                  size: 20.0,
                 ),
                 SizedBox(width: smallSpacing),
                 Expanded(
@@ -411,7 +371,7 @@ class OfferFormScheduleFields extends ConsumerWidget {
                       formState.pickupEndTime!,
                     ),
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                      fontSize: 14.0,
                       color:
                           _isValidTimeRange(
                             formState.pickupStartTime!,
@@ -430,14 +390,10 @@ class OfferFormScheduleFields extends ConsumerWidget {
         // Informations sur les horaires
         SizedBox(height: smallSpacing),
         Container(
-          padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
+          padding: EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.subtle,
-            ),
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.fieldRadius(context),
-            ),
+            color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(8.0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -447,7 +403,7 @@ class OfferFormScheduleFields extends ConsumerWidget {
                   Icon(
                     Icons.info_outline,
                     color: theme.colorScheme.onSurfaceVariant,
-                    size: EcoPlatesDesignTokens.size.icon(context),
+                    size: 20.0,
                   ),
                   SizedBox(width: smallSpacing),
                   Text(
@@ -455,7 +411,7 @@ class OfferFormScheduleFields extends ConsumerWidget {
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurfaceVariant,
-                      fontSize: EcoPlatesDesignTokens.typography.text(context),
+                      fontSize: 14.0,
                     ),
                   ),
                 ],
@@ -467,9 +423,9 @@ class OfferFormScheduleFields extends ConsumerWidget {
                 "• Prévoyez au moins 1 heure d'écart minimum\n"
                 '• Pensez aux heures de pointe pour maximiser les collectes',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.hint(context),
+                  fontSize: 12.0,
                   color: theme.colorScheme.onSurfaceVariant,
-                  height: EcoPlatesDesignTokens.layout.textLineHeight,
+                  height: 1.4,
                 ),
               ),
             ],

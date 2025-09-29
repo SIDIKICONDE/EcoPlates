@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/router/routes/route_constants.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/store_offers_provider.dart';
@@ -37,7 +36,7 @@ class _OfferActionsSheet extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+            padding: EdgeInsets.all(16.0),
             child: Row(
               children: [
                 Expanded(
@@ -50,7 +49,7 @@ class _OfferActionsSheet extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+                      SizedBox(height: 4.0),
                       Text(
                         'Stock: ${offer.quantity} • Prix: ${offer.discountedPrice.toStringAsFixed(2)}€',
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -129,18 +128,11 @@ class _PromotionDialog {
         context: context,
         builder: (context) => Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.lg,
-            ),
+            borderRadius: BorderRadius.circular(16.0),
           ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.9,
-            ),
-            child: OfferPromotionManager(
-              offer: offer,
-              onPromotionUpdated: () => ref.invalidate(storeOffersProvider),
-            ),
+          child: OfferPromotionManager(
+            offer: offer,
+            onPromotionUpdated: () => ref.invalidate(storeOffersProvider),
           ),
         ),
       ),

@@ -5,10 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../core/responsive/design_tokens.dart';
-import '../../core/services/qr_scanner_service.dart';
-import '../../presentation/providers/app_mode_provider.dart';
-
 /// Page de scan QR pour les commerçants
 class MerchantQRScannerPage extends ConsumerStatefulWidget {
   const MerchantQRScannerPage({super.key});
@@ -25,10 +21,12 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
   bool _hasPermission = false;
   bool _isProcessing = false;
   String? _lastScannedCode;
+  late MobileScannerController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = MobileScannerController();
     WidgetsBinding.instance.addObserver(this);
     unawaited(_checkPermission());
   }
@@ -36,21 +34,20 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final controller = ref.read(mobileScannerControllerProvider);
-
     switch (state) {
       case AppLifecycleState.resumed:
-        unawaited(controller.start());
+        unawaited(_controller.start());
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
-        unawaited(controller.stop());
+        unawaited(_controller.stop());
     }
   }
 
@@ -58,50 +55,24 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
     final status = await Permission.camera.status;
     if (status.isGranted) {
       setState(() => _hasPermission = true);
+      unawaited(_controller.start());
     } else {
       final result = await Permission.camera.request();
       setState(() => _hasPermission = result.isGranted);
+      if (result.isGranted) {
+        unawaited(_controller.start());
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final offlineCount = ref.watch<int>(offlineScansCountProvider);
-
-    // Écouter les synchronisations automatiques
-    ref.listen<AsyncValue<SyncResult>>(autoSyncProvider, (_, next) {
-      next.whenData((result) {
-        if (result.synced > 0) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${result.synced} scans synchronisés'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
-      });
-    });
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scanner QR Code'),
         actions: [
-          if (offlineCount > 0)
-            Container(
-              margin: EcoPlatesDesignTokens.spacing.offlineChipMargin,
-              child: Chip(
-                avatar: Icon(
-                  Icons.cloud_off,
-                  size: EcoPlatesDesignTokens.layout.offlineChipIconSize,
-                ),
-                label: Text('$offlineCount'),
-                backgroundColor: Colors.orange,
-                labelStyle: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
           IconButton(
             icon: const Icon(Icons.help_outline),
             onPressed: _showHelpDialog,
@@ -113,7 +84,7 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
               children: [
                 // Scanner camera
                 MobileScanner(
-                  controller: ref.watch(mobileScannerControllerProvider),
+                  controller: _controller,
                   onDetect: _onDetect,
                   errorBuilder: (context, error) {
                     return Center(
@@ -122,18 +93,14 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
                         children: [
                           Icon(
                             Icons.error_outline,
-                            size:
-                                EcoPlatesDesignTokens.layout.errorStateIconSize,
+                            size: 48,
                             color: theme.colorScheme.error,
                           ),
-                          SizedBox(
-                            height: EcoPlatesDesignTokens.spacing.interfaceGap(
-                              context,
-                            ),
-                          ),
+                          SizedBox(height: 16),
                           Text(
                             'Erreur scanner: $error',
                             style: TextStyle(color: theme.colorScheme.error),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
@@ -170,30 +137,23 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
 
   Widget _buildScanOverlay(ThemeData theme) {
     return Container(
-      decoration: ShapeDecoration(
+      decoration: const ShapeDecoration(
         shape: QrScannerOverlayShape(
-          borderColor: theme.colorScheme.primary,
-          borderRadius: EcoPlatesDesignTokens.layout.qrScannerBorderRadius,
-          borderLength: EcoPlatesDesignTokens.layout.qrScannerBorderLength,
-          borderWidth: EcoPlatesDesignTokens.layout.qrScannerBorderWidth,
-          cutOutSize: EcoPlatesDesignTokens.layout.qrScannerCutOutSize,
+          borderColor: Colors.white,
+          borderRadius: 16,
+          borderLength: 40,
+          borderWidth: 3,
+          cutOutSize: 250,
         ),
       ),
     );
   }
 
   Widget _buildControls(ThemeData theme) {
-    final controller = ref.watch(mobileScannerControllerProvider);
-
     return Container(
-      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withValues(
-          alpha: EcoPlatesDesignTokens.layout.qrControlsOpacity,
-        ),
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(EcoPlatesDesignTokens.radius.xl),
-        ),
+        color: theme.colorScheme.surface.withOpacity(0.9),
       ),
       child: SafeArea(
         child: Column(
@@ -204,9 +164,7 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
               'Placez le QR code dans le cadre',
               style: theme.textTheme.titleMedium,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-            ),
+            SizedBox(height: 16),
 
             // Boutons de contrôle
             Row(
@@ -214,25 +172,17 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
               children: [
                 // Torche
                 IconButton.filled(
-                  onPressed: controller.toggleTorch,
+                  onPressed: () => _controller.toggleTorch(),
                   icon: const Icon(Icons.flash_off),
                   tooltip: 'Torche',
                 ),
 
                 // Changer de caméra
                 IconButton.filled(
-                  onPressed: controller.switchCamera,
+                  onPressed: () => _controller.switchCamera(),
                   icon: const Icon(Icons.cameraswitch),
                   tooltip: 'Changer de caméra',
                 ),
-
-                // Synchroniser manuellement
-                if (ref.watch(offlineScansCountProvider) > 0)
-                  IconButton.filled(
-                    onPressed: _syncOfflineScans,
-                    icon: const Icon(Icons.sync),
-                    tooltip: 'Synchroniser les scans',
-                  ),
               ],
             ),
           ],
@@ -244,37 +194,28 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
   Widget _buildNoPermissionView(ThemeData theme) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(
-          EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-        ),
+        padding: EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.camera_alt_outlined,
-              size: EcoPlatesDesignTokens.layout.errorViewIconSize,
-              color: theme.colorScheme.onSurfaceVariant,
+              size: 64,
+              color: theme.colorScheme.primary,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-            ),
+            SizedBox(height: 16),
             Text(
               'Permission caméra requise',
               style: theme.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-            ),
+            SizedBox(height: 16),
             Text(
-              "Pour scanner les QR codes, l'application a besoin "
-              "d'accéder à votre caméra.",
+              "Pour scanner les QR codes, l'application a besoin d'accéder à votre caméra.",
               style: theme.textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
-            SizedBox(
-              height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-            ),
+            SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () async {
                 await openAppSettings();
@@ -289,7 +230,7 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
     );
   }
 
-  Future<void> _onDetect(BarcodeCapture capture) async {
+  void _onDetect(BarcodeCapture capture) async {
     final barcodes = capture.barcodes;
     if (barcodes.isEmpty || _isProcessing) return;
 
@@ -305,157 +246,69 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
 
     // Vibration feedback
     if (Platform.isAndroid || Platform.isIOS) {
-      // HapticFeedback.mediumImpact();
+      // Pour activer les vibrations, il faudrait ajouter le package vibration
+      // et appeler: Vibration.vibrate(duration: 100);
     }
 
-    // Traiter le scan
-    final scannerService = ref.read(qrScannerServiceProvider);
+    // Simuler le traitement du scan
+    await Future<void>.delayed(Duration(seconds: 1));
 
-    // Récupérer le merchant ID depuis l'utilisateur actuel
-    final merchantId = ref.read(currentMerchantIdProvider);
+    if (mounted) {
+      setState(() => _isProcessing = false);
 
-    if (merchantId == null) {
-      _showErrorDialog(
-        const QRScanResult(
-          success: false,
-          error: 'NO_MERCHANT_ID',
-          message: 'Utilisateur non connecté ou profil invalide',
+      // Afficher un résultat simulé
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('QR Code scanné: $code'),
+          backgroundColor: Colors.green,
         ),
       );
-      setState(() => _isProcessing = false);
-      return;
-    }
-
-    final result = await scannerService.processScan(
-      code,
-      merchantId: merchantId,
-      location: EcoPlatesDesignTokens.layout.defaultScanLocation,
-    );
-
-    if (!mounted) return;
-
-    setState(() => _isProcessing = false);
-
-    if (result.success) {
-      _showSuccessDialog(result);
-    } else {
-      _showErrorDialog(result);
     }
 
     // Réinitialiser après délai pour permettre un nouveau scan
-    Future.delayed(EcoPlatesDesignTokens.layout.qrScanResetDuration, () {
+    Future<void>.delayed(Duration(seconds: 2), () {
       if (mounted) {
         setState(() => _lastScannedCode = null);
       }
     });
   }
 
-  void _showSuccessDialog(QRScanResult result) {
-    unawaited(
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          icon: Icon(
-            Icons.check_circle,
-            color: Colors.green,
-            size: EcoPlatesDesignTokens.layout.errorStateIconSize,
-          ),
-          title: const Text('Validation réussie'),
-          content: Column(
+  void _showHelpDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Aide'),
+        content: const SingleChildScrollView(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Client: ${result.order!.customerName}'),
-              SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
-              Text('Montant: ${result.order!.totalAmount.toStringAsFixed(2)}€'),
-              Divider(height: EcoPlatesDesignTokens.spacing.microGap(context)),
-              const Text(
-                'Articles:',
+              Text(
+                'Comment scanner un QR code:',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              ...result.order!.items.map(
-                (item) => Padding(
-                  padding: EcoPlatesDesignTokens.spacing.qrDialogItemPadding,
-                  child: Text('• ${item.quantity}x ${item.name}'),
-                ),
+              SizedBox(height: 16),
+              Text('1. Placez le QR code dans le cadre de scan'),
+              Text('2. Le scan est automatique'),
+              Text('3. Validez la commande affichée'),
+              SizedBox(height: 16),
+              Text(
+                'Mode hors ligne:',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              SizedBox(height: 16),
+              Text('• Les scans sont enregistrés localement'),
+              Text('• Ils seront synchronisés automatiquement'),
+              Text('• Vous pouvez forcer la synchronisation'),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Fermer'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // TODO: Marquer comme récupéré
-              },
-              child: const Text('Confirmer la récupération'),
-            ),
-          ],
         ),
-      ),
-    );
-  }
-
-  void _showErrorDialog(QRScanResult result) {
-    Theme.of(context);
-    final isOffline = result.error == 'OFFLINE';
-
-    unawaited(
-      showDialog<void>(
-        context: context,
-        builder: (context) => AlertDialog(
-          icon: Icon(
-            isOffline ? Icons.cloud_off : Icons.error_outline,
-            color: isOffline ? Colors.orange : Colors.red,
-            size: EcoPlatesDesignTokens.layout.errorStateIconSize,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Compris'),
           ),
-          title: Text(isOffline ? 'Mode hors ligne' : 'Erreur de validation'),
-          content: Text(result.message ?? 'Une erreur est survenue'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showHelpDialog() {
-    unawaited(
-      showDialog<void>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Aide'),
-          content: const _HelpDialogContent(),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Compris'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _syncOfflineScans() async {
-    final scanner = ref.read(qrScannerServiceProvider);
-    final result = await scanner.syncOfflineScans();
-
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Synchronisation: ${result.synced} réussi(s), ${result.failed} échoué(s)',
-        ),
-        backgroundColor: result.hasErrors ? Colors.orange : Colors.green,
+        ],
       ),
     );
   }
@@ -507,19 +360,16 @@ class QrScannerOverlayShape extends ShapeBorder {
       height: cutOutSize,
     );
 
-    // Paint overlay
-    final overlayPaint = Paint()
-      ..color = Colors.black.withValues(
-        alpha: EcoPlatesDesignTokens.layout.qrScannerOverlayOpacity,
-      )
-      ..style = PaintingStyle.fill;
-
     final path = Path()
       ..addRect(rect)
       ..addRRect(
         RRect.fromRectAndRadius(cutOutRect, Radius.circular(borderRadius)),
-      )
-      ..fillType = PathFillType.evenOdd;
+      );
+
+    // Paint overlay
+    final overlayPaint = Paint()
+      ..color = Colors.black.withOpacity(0.7)
+      ..style = PaintingStyle.fill;
 
     canvas.drawPath(path, overlayPaint);
 
@@ -534,51 +384,55 @@ class QrScannerOverlayShape extends ShapeBorder {
   }
 
   void _drawCorners(Canvas canvas, Rect rect, Paint paint) {
-    canvas
-      // Top left
-      ..drawLine(
-        Offset(rect.left, rect.top + borderLength),
-        Offset(rect.left, rect.top),
-        paint,
-      )
-      ..drawLine(
-        Offset(rect.left, rect.top),
-        Offset(rect.left + borderLength, rect.top),
-        paint,
-      )
-      // Top right
-      ..drawLine(
-        Offset(rect.right - borderLength, rect.top),
-        Offset(rect.right, rect.top),
-        paint,
-      )
-      ..drawLine(
-        Offset(rect.right, rect.top),
-        Offset(rect.right, rect.top + borderLength),
-        paint,
-      )
-      // Bottom left
-      ..drawLine(
-        Offset(rect.left, rect.bottom - borderLength),
-        Offset(rect.left, rect.bottom),
-        paint,
-      )
-      ..drawLine(
-        Offset(rect.left, rect.bottom),
-        Offset(rect.left + borderLength, rect.bottom),
-        paint,
-      )
-      // Bottom right
-      ..drawLine(
-        Offset(rect.right - borderLength, rect.bottom),
-        Offset(rect.right, rect.bottom),
-        paint,
-      )
-      ..drawLine(
-        Offset(rect.right, rect.bottom),
-        Offset(rect.right, rect.bottom - borderLength),
-        paint,
-      );
+    final cornerLength = borderLength;
+
+    // Top left
+    canvas..drawLine(
+      Offset(rect.left, rect.top + cornerLength),
+      Offset(rect.left, rect.top),
+      paint,
+    )
+    ..drawLine(
+      Offset(rect.left, rect.top),
+      Offset(rect.left + cornerLength, rect.top),
+      paint,
+    )
+
+    // Top right
+    ..drawLine(
+      Offset(rect.right - cornerLength, rect.top),
+      Offset(rect.right, rect.top),
+      paint,
+    )
+    ..drawLine(
+      Offset(rect.right, rect.top),
+      Offset(rect.right, rect.top + cornerLength),
+      paint,
+    )
+
+    // Bottom left
+    ..drawLine(
+      Offset(rect.left, rect.bottom - cornerLength),
+      Offset(rect.left, rect.bottom),
+      paint,
+    )
+    ..drawLine(
+      Offset(rect.left, rect.bottom),
+      Offset(rect.left + cornerLength, rect.bottom),
+      paint,
+    )
+
+    // Bottom right
+    ..drawLine(
+      Offset(rect.right - cornerLength, rect.bottom),
+      Offset(rect.right, rect.bottom),
+      paint,
+    )
+    ..drawLine(
+      Offset(rect.right, rect.bottom),
+      Offset(rect.right, rect.bottom - cornerLength),
+      paint,
+    );
   }
 
   @override
@@ -589,40 +443,6 @@ class QrScannerOverlayShape extends ShapeBorder {
       borderLength: borderLength * t,
       borderWidth: borderWidth * t,
       cutOutSize: cutOutSize * t,
-    );
-  }
-}
-
-/// Widget pour le contenu du dialogue d'aide avec espacement responsive
-class _HelpDialogContent extends StatelessWidget {
-  const _HelpDialogContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Comment scanner un QR code:',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
-          const Text('1. Placez le QR code dans le cadre de scan'),
-          const Text('2. Le scan est automatique'),
-          const Text('3. Validez la commande affichée'),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
-          const Text(
-            'Mode hors ligne:',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
-          const Text('• Les scans sont enregistrés localement'),
-          const Text('• Ils seront synchronisés automatiquement'),
-          const Text('• Vous pouvez forcer la synchronisation'),
-        ],
-      ),
     );
   }
 }

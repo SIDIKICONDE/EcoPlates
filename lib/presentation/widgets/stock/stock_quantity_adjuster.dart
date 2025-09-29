@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -112,10 +111,9 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
       decoration: BoxDecoration(
         border: Border.all(
           color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+            alpha: 16.0,
           ),
         ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -125,59 +123,50 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             onPressed: canDecrease && !_isAdjusting
                 ? () => _adjustQuantity(-widget.step)
                 : null,
-            icon: const Icon(Icons.remove),
+            icon: (widget.showLoading && _isAdjusting)
+                ? const SizedBox(
+                    width: 16.0,
+                    height: 16.0,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                    ),
+                  )
+                : const Icon(Icons.remove),
             tooltip: 'Diminuer la quantité',
             style: IconButton.styleFrom(
               foregroundColor: canDecrease
                   ? theme.colorScheme.primary
                   : theme.colorScheme.onSurface.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.subtle,
+                      alpha: 16.0,
                     ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+              ),
             ),
           ),
 
-          // Affichage de la quantité
-          Container(
-            constraints: BoxConstraints(
-              minWidth: EcoPlatesDesignTokens.size.minTouchTarget * 1.5,
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: context.scaleXXS_XS_SM_MD,
-            ),
-            child: (widget.showLoading && _isAdjusting)
-                ? SizedBox(
-                    width: EcoPlatesDesignTokens.size.icon(context),
-                    height: EcoPlatesDesignTokens.size.icon(context),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      color: theme.colorScheme.primary,
-                    ),
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        widget.item.quantity.toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: EcoPlatesDesignTokens.typography.titleSize(
-                            context,
-                          ),
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                      Text(
-                        widget.item.unit,
-                        style: TextStyle(
-                          fontSize: EcoPlatesDesignTokens.typography.hint(
-                            context,
-                          ),
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+          // Affichage de la quantité et unité
+          if (!widget.showLoading || !_isAdjusting)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.item.quantity.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
                   ),
-          ),
+                ),
+                Text(
+                  widget.item.unit,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
 
           // Bouton augmenter
           IconButton(
@@ -190,8 +179,11 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
               foregroundColor: canIncrease
                   ? theme.colorScheme.primary
                   : theme.colorScheme.onSurface.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.subtle,
+                      alpha: 16.0,
                     ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+              ),
             ),
           ),
         ],
@@ -215,56 +207,48 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             onTap: canDecrease && !_isAdjusting
                 ? () => _adjustQuantity(-widget.step)
                 : null,
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.xl,
-            ),
+            borderRadius: BorderRadius.circular(16.0),
             child: Container(
-              width: EcoPlatesDesignTokens.size.minTouchTarget,
-              height: EcoPlatesDesignTokens.size.minTouchTarget,
               decoration: BoxDecoration(
                 color: canDecrease
-                    ? theme.colorScheme.secondaryContainer.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.pressed,
-                      )
+                    ? theme.colorScheme.secondaryContainer
                     : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.remove,
-                size: EcoPlatesDesignTokens.size.icon(context),
+                size: 16.0,
                 color: canDecrease
                     ? theme.colorScheme.onSecondaryContainer
                     : theme.colorScheme.onSurface.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.subtle,
+                        alpha: 16.0,
                       ),
               ),
             ),
           ),
         ),
 
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
-
         // Quantité compacte
         if (widget.showLoading && _isAdjusting)
-          SizedBox(
-            width: EcoPlatesDesignTokens.size.icon(context),
-            height: EcoPlatesDesignTokens.size.icon(context),
+          const SizedBox(
+            width: 16.0,
+            height: 16.0,
             child: CircularProgressIndicator(
               strokeWidth: 3,
-              color: theme.colorScheme.primary,
             ),
           )
         else
-          Text(
-            widget.item.formattedQuantity,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
-              color: theme.colorScheme.onSurface,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              widget.item.formattedQuantity,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16.0,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
           ),
-
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
 
         // Bouton augmenter compact
         Material(
@@ -273,27 +257,21 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             onTap: canIncrease && !_isAdjusting
                 ? () => _adjustQuantity(widget.step)
                 : null,
-            borderRadius: BorderRadius.circular(
-              EcoPlatesDesignTokens.radius.xl,
-            ),
+            borderRadius: BorderRadius.circular(16.0),
             child: Container(
-              width: EcoPlatesDesignTokens.size.minTouchTarget,
-              height: EcoPlatesDesignTokens.size.minTouchTarget,
               decoration: BoxDecoration(
                 color: canIncrease
-                    ? theme.colorScheme.secondaryContainer.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.pressed,
-                      )
+                    ? theme.colorScheme.secondaryContainer
                     : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.add,
-                size: EcoPlatesDesignTokens.size.icon(context),
+                size: 16.0,
                 color: canIncrease
                     ? theme.colorScheme.onSecondaryContainer
                     : theme.colorScheme.onSurface.withValues(
-                        alpha: EcoPlatesDesignTokens.opacity.subtle,
+                        alpha: 16.0,
                       ),
               ),
             ),

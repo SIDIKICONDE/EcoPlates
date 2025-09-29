@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/services/image_cache_service.dart';
 import '../../../core/services/video_pool_manager.dart';
 import '../../../core/utils/animation_manager.dart';
@@ -135,11 +134,9 @@ class _VideoCardState extends State<VideoCard>
                 // Ombre nette sans flou
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: isDark
-                          ? VideoCardConstants.shadowDarkOpacity
-                          : VideoCardConstants.shadowLightOpacity,
-                    ),
+                    color: isDark
+                        ? Colors.black.withOpacity(0.3)
+                        : Colors.black.withOpacity(0.15),
                     offset: const Offset(0, 2),
                   ),
                 ],
@@ -236,7 +233,7 @@ class _VideoCardState extends State<VideoCard>
                     child: Icon(
                       Icons.broken_image,
                       color: isDark ? Colors.white30 : Colors.black26,
-                      size: EcoPlatesDesignTokens.size.icon(context) * 3,
+                      size: 16.0 * 3,
                     ),
                   ),
                 ),
@@ -244,24 +241,20 @@ class _VideoCardState extends State<VideoCard>
               // Icône play overlay sur le thumbnail (taille adaptée)
               Center(
                 child: Container(
-                  width: (widget.height ?? _defaultHeight) <= 150
-                      ? EcoPlatesDesignTokens.size.minTouchTarget / 2
-                      : EcoPlatesDesignTokens.size.minTouchTarget,
+                  width: (widget.height ?? _defaultHeight) <= 150 ? 40.0 : 60.0,
                   height: (widget.height ?? _defaultHeight) <= 150
-                      ? EcoPlatesDesignTokens.size.minTouchTarget / 2
-                      : EcoPlatesDesignTokens.size.minTouchTarget,
+                      ? 40.0
+                      : 60.0,
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                    ),
+                    color: Colors.black.withOpacity(0.7),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.play_arrow,
                     color: Colors.white,
                     size: (widget.height ?? _defaultHeight) <= 150
-                        ? EcoPlatesDesignTokens.size.icon(context)
-                        : EcoPlatesDesignTokens.size.icon(context) * 2,
+                        ? 20.0
+                        : 30.0,
                   ),
                 ),
               ),
@@ -290,7 +283,7 @@ class _VideoCardState extends State<VideoCard>
                 : Icon(
                     Icons.play_circle_outline,
                     color: isDark ? Colors.white30 : Colors.black26,
-                    size: EcoPlatesDesignTokens.size.icon(context) * 3,
+                    size: 16.0 * 3,
                   ),
           ),
         );
@@ -335,17 +328,15 @@ class _VideoCardState extends State<VideoCard>
         bottom: VideoCardConstants.contentPadding,
         child: Text(
           widget.video.merchantName,
-          style: theme.textTheme.bodyMedium?.copyWith(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
-            fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
+            fontSize: 16.0,
             shadows: [
               Shadow(
-                offset: EcoPlatesDesignTokens.elevation.standardOffset,
-                blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-                color: Colors.black.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-                ),
+                blurRadius: 4.0,
+                color: Colors.black.withOpacity(0.5),
+                offset: Offset(0.0, 1.0),
               ),
             ],
           ),
@@ -366,20 +357,21 @@ class _VideoCardState extends State<VideoCard>
         children: [
           Text(
             widget.video.title,
-            style: theme.textTheme.titleSmall?.copyWith(
+            style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
-              height: VideoCardConstants.titleLineHeight,
+              fontSize: 14.0,
+              height: 1.2,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: VideoCardConstants.textIconSpacing),
+          SizedBox(height: 4.0),
           Text(
             widget.video.merchantName,
-            style: theme.textTheme.bodySmall?.copyWith(
+            style: TextStyle(
               color: Colors.white70,
-              fontSize: VideoCardConstants.merchantNameFontSize,
+              fontSize: 12.0,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

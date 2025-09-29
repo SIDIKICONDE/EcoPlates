@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/responsive.dart';
-
 /// Indicateur de progression du formulaire
 class FormProgressIndicator extends StatelessWidget {
   const FormProgressIndicator({
@@ -19,24 +17,19 @@ class FormProgressIndicator extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      padding: EcoPlatesDesignTokens.spacing.contentPadding(context),
-      margin: EdgeInsets.only(
-        bottom: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-      ),
+      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(bottom: 16.0),
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.hover,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.lg),
+        color: colorScheme.primaryContainer.withOpacity(0.1),
         border: Border.all(
-          color: colorScheme.primary.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.subtle,
-          ),
+          color: colorScheme.primary.withOpacity(0.2),
+          width: 1.0,
         ),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         children: [
-          // Barre de progression
+          // Barre de progression et pourcentage
           Row(
             children: [
               Expanded(
@@ -46,22 +39,20 @@ class FormProgressIndicator extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation<Color>(
                     colorScheme.primary,
                   ),
+                  minHeight: 8.0,
                 ),
               ),
-              SizedBox(
-                width: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              const SizedBox(width: 12.0),
               Text(
                 '${(progress * 100).round()}%',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  fontWeight: EcoPlatesDesignTokens.typography.semiBold,
-                  fontSize: EcoPlatesDesignTokens.typography.text(context),
+                  fontWeight: FontWeight.w600,
                   color: colorScheme.primary,
                 ),
               ),
             ],
           ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.smallGap(context)),
+          const SizedBox(height: 16.0),
           // Étapes
           Row(
             children: steps.asMap().entries.map((entry) {
@@ -72,42 +63,45 @@ class FormProgressIndicator extends StatelessWidget {
 
               return Expanded(
                 child: Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: EcoPlatesDesignTokens.spacing.microGap(context),
-                  ),
+                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Column(
                     children: [
                       Container(
-                        width: EcoPlatesDesignTokens.size.indicator(context),
-                        height: EcoPlatesDesignTokens.size.indicator(context),
+                        width: 24.0,
+                        height: 24.0,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isCompleted
                               ? colorScheme.primary
                               : isCurrent
-                              ? colorScheme.primary.withValues(
-                                  alpha: EcoPlatesDesignTokens
-                                      .opacity
-                                      .semiTransparent,
-                                )
+                              ? colorScheme.primary.withOpacity(0.5)
                               : colorScheme.surfaceContainerHighest,
                         ),
+                        child: isCompleted
+                            ? Icon(
+                                Icons.check,
+                                size: 16.0,
+                                color: colorScheme.onPrimary,
+                              )
+                            : isCurrent
+                            ? Icon(
+                                Icons.radio_button_unchecked,
+                                size: 16.0,
+                                color: colorScheme.primary,
+                              )
+                            : null,
                       ),
-                      SizedBox(
-                        height: EcoPlatesDesignTokens.spacing.microGap(context),
-                      ),
+                      const SizedBox(height: 8.0),
                       Text(
                         step,
                         style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: EcoPlatesDesignTokens.typography.hint(
-                            context,
-                          ),
+                          fontSize: 12.0,
                           color: isCompleted || isCurrent
                               ? colorScheme.primary
                               : colorScheme.onSurfaceVariant,
                           fontWeight: isCurrent
-                              ? EcoPlatesDesignTokens.typography.semiBold
-                              : EcoPlatesDesignTokens.typography.regular,
+                              ? FontWeight.w600
+                              : FontWeight.w400,
                         ),
                         textAlign: TextAlign.center,
                       ),

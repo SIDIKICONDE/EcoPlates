@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
@@ -110,7 +109,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildStatusLabel(context, theme, isActive),
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
+        SizedBox(width: 8.0),
         _buildSwitchOnly(context, theme, isActive),
       ],
     );
@@ -126,7 +125,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
       children: [
         _buildSwitchOnly(context, theme, isActive, compact: true),
         if (widget.showLabel) ...[
-          SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+          SizedBox(height: 4.0),
           _buildStatusLabel(context, theme, isActive, compact: true),
         ],
       ],
@@ -142,12 +141,8 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
     if (_isToggling) {
       if (widget.showLoading) {
         return SizedBox(
-          width: compact
-              ? EcoPlatesDesignTokens.size.icon(context)
-              : EcoPlatesDesignTokens.size.icon(context) * 1.25,
-          height: compact
-              ? EcoPlatesDesignTokens.size.icon(context)
-              : EcoPlatesDesignTokens.size.icon(context) * 1.25,
+          width: compact ? 16.0 : 16.0 * 1.25,
+          height: compact ? 16.0 : 16.0 * 1.25,
           child: CircularProgressIndicator(
             strokeWidth: 3,
             color: theme.colorScheme.primary,
@@ -193,12 +188,8 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
     bool compact = false,
   }) {
     final labelPadding = EdgeInsets.symmetric(
-      horizontal: compact
-          ? context.scaleXXS_XS_SM_MD
-          : context.scaleXS_SM_MD_LG,
-      vertical: compact
-          ? context.scaleXXS_XS_SM_MD / 4
-          : context.scaleXXS_XS_SM_MD / 2,
+      horizontal: compact ? 8.0 : 12.0,
+      vertical: compact ? 2.0 : 4.0,
     );
 
     final labelContainer = Container(
@@ -206,54 +197,25 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
       decoration: BoxDecoration(
         color: isActive
             ? theme.colorScheme.primaryContainer.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.subtle,
+                alpha: 16.0,
               )
-            : theme.colorScheme.surfaceContainerHighest.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.pressed,
+            : theme.colorScheme.outline.withValues(
+                alpha: 16.0,
               ),
         borderRadius: BorderRadius.circular(
-          compact
-              ? EcoPlatesDesignTokens.radius.sm
-              : EcoPlatesDesignTokens.radius.md,
-        ),
-        border: Border.all(
-          color: isActive
-              ? theme.colorScheme.primary.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.subtle,
-                )
-              : theme.colorScheme.outline.withValues(
-                  alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
-                ),
+          compact ? 16.0 : 20.0,
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: compact
-                ? EcoPlatesDesignTokens.layout.statusDotSize / 2
-                : EcoPlatesDesignTokens.layout.statusDotSize,
-            height: compact
-                ? EcoPlatesDesignTokens.layout.statusDotSize / 2
-                : EcoPlatesDesignTokens.layout.statusDotSize,
-            decoration: BoxDecoration(
-              color: isActive
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurfaceVariant,
-              shape: BoxShape.circle,
-            ),
-          ),
           SizedBox(
-            width: compact
-                ? context.scaleXXS_XS_SM_MD / 2
-                : context.scaleXXS_XS_SM_MD,
+            width: compact ? 4.0 : 8.0,
           ),
           Text(
             widget.item.status.label,
             style: TextStyle(
-              fontSize: compact
-                  ? EcoPlatesDesignTokens.typography.hint(context)
-                  : EcoPlatesDesignTokens.typography.text(context),
+              fontSize: compact ? 16.0 : 16.0,
               fontWeight: FontWeight.w500,
               color: isActive
                   ? theme.colorScheme.onPrimaryContainer

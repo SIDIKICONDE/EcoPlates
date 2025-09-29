@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/responsive/design_tokens.dart';
 import '../providers/brand_provider.dart';
 import '../widgets/brand_card.dart';
 
@@ -21,14 +20,14 @@ class AllBrandsScreen extends ConsumerWidget {
       body: brandsAsync.when(
         data: (brands) => ListView.builder(
           padding: EdgeInsets.all(
-            EcoPlatesDesignTokens.spacing.dialogGap(context),
+            16.0,
           ),
           itemCount: brands.length,
           itemBuilder: (context, index) {
             final brand = brands[index];
             return Padding(
               padding: EdgeInsets.only(
-                bottom: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                bottom: 16.0,
               ),
               child: BrandCard(
                 brand: brand,
@@ -56,17 +55,17 @@ class AllBrandsScreen extends ConsumerWidget {
             children: [
               Icon(
                 Icons.error_outline,
-                size: EcoPlatesDesignTokens.layout.errorStateIconSize,
+                size: 16.0,
                 color: Theme.of(context).colorScheme.error,
               ),
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
+                height: 16.0,
               ),
               Text(
                 'Erreur lors du chargement',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
+              SizedBox(height: 16.0),
               Text(
                 error.toString(),
                 style: TextStyle(
@@ -75,7 +74,7 @@ class AllBrandsScreen extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
+                height: 16.0,
               ),
               ElevatedButton.icon(
                 onPressed: () {

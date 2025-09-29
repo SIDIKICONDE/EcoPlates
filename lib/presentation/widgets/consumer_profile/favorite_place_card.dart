@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/responsive.dart';
 import 'favorites_models.dart';
 
 /// Carte affichant un lieu favori
 class FavoritePlaceCard extends StatelessWidget {
   const FavoritePlaceCard({
-    required this.place, super.key,
+    required this.place,
+    super.key,
   });
 
   final FavoritePlace place;
@@ -18,27 +18,11 @@ class FavoritePlaceCard extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Container(
-      width: context.responsiveValue(
-        mobile: 140,
-        tablet: 160,
-        desktop: 180,
-      ),
-      padding: EdgeInsets.all(
-        context.responsiveValue(
-          mobile: 10,
-          tablet: 12,
-          desktop: 14,
-        ),
-      ),
+      width: 140.0,
+      padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: colors.primaryContainer.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(
-          context.responsiveValue(
-            mobile: 10,
-            tablet: 12,
-            desktop: 14,
-          ),
-        ),
+        borderRadius: BorderRadius.circular(10.0),
         border: Border.all(
           color: colors.primaryContainer,
         ),
@@ -51,31 +35,17 @@ class FavoritePlaceCard extends StatelessWidget {
               Icon(
                 Icons.store,
                 color: colors.primary,
-                size: context.responsiveValue(
-                  mobile: 16,
-                  tablet: 20,
-                  desktop: 24,
-                ),
+                size: 16.0,
               ),
               const Spacer(),
               Icon(
                 Icons.favorite,
                 color: colors.error,
-                size: context.responsiveValue(
-                  mobile: 14,
-                  tablet: 16,
-                  desktop: 18,
-                ),
+                size: 14.0,
               ),
             ],
           ),
-          SizedBox(
-            height: context.responsiveValue(
-              mobile: 6,
-              tablet: 8,
-              desktop: 10,
-            ),
-          ),
+          const SizedBox(height: 6.0),
           Text(
             place.name,
             style: textTheme.bodyLarge?.copyWith(
@@ -84,13 +54,7 @@ class FavoritePlaceCard extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(
-            height: context.responsiveValue(
-              mobile: 3,
-              tablet: 4,
-              desktop: 5,
-            ),
-          ),
+          const SizedBox(height: 3.0),
           Text(
             place.address,
             style: textTheme.bodySmall?.copyWith(
@@ -104,20 +68,10 @@ class FavoritePlaceCard extends StatelessWidget {
             children: [
               Icon(
                 Icons.star,
-                color: Colors.amber,
-                size: context.responsiveValue(
-                  mobile: 12,
-                  tablet: 14,
-                  desktop: 16,
-                ),
+                color: const Color(0xFFFFC107),
+                size: 12.0,
               ),
-              SizedBox(
-                width: context.responsiveValue(
-                  mobile: 2,
-                  tablet: 2,
-                  desktop: 3,
-                ),
-              ),
+              const SizedBox(width: 2.0),
               Text(
                 place.rating.toString(),
                 style: textTheme.labelSmall,

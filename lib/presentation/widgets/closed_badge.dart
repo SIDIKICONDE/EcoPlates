@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/responsive/design_tokens.dart';
-
 /// Badge pour indiquer qu'une boutique est fermée
 class ClosedBadge extends StatelessWidget {
   const ClosedBadge({super.key, this.reopenTime, this.size = BadgeSize.medium});
@@ -13,19 +11,13 @@ class ClosedBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: size == BadgeSize.small
-            ? context.scaleXXS_XS_SM_MD
-            : context.scaleXS_SM_MD_LG,
-        vertical: size == BadgeSize.small
-            ? context.scaleXXS_XS_SM_MD / 2
-            : context.scaleXXS_XS_SM_MD,
+        horizontal: size == BadgeSize.small ? 8.0 : 12.0,
+        vertical: size == BadgeSize.small ? 4.0 : 8.0,
       ),
       decoration: BoxDecoration(
         color: Colors.red.shade600,
         borderRadius: BorderRadius.circular(
-          size == BadgeSize.small
-              ? EcoPlatesDesignTokens.radius.sm
-              : EcoPlatesDesignTokens.radius.md,
+          size == BadgeSize.small ? 4.0 : 8.0,
         ),
         border: Border.all(
           color: Colors.white,
@@ -34,10 +26,10 @@ class ClosedBadge extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.pressed,
+              alpha: 0.16,
             ),
-            blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            blurRadius: 2.0,
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -46,18 +38,14 @@ class ClosedBadge extends StatelessWidget {
         children: [
           Icon(
             Icons.access_time_filled,
-            size: size == BadgeSize.small
-                ? EcoPlatesDesignTokens.size.icon(context) / 1.2
-                : EcoPlatesDesignTokens.size.icon(context),
+            size: size == BadgeSize.small ? 20.0 : 24.0,
             color: Colors.white,
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
+          SizedBox(width: 4.0),
           Text(
             reopenTime != null ? 'FERMÉ' : 'FERMÉ',
             style: TextStyle(
-              fontSize: size == BadgeSize.small
-                  ? EcoPlatesDesignTokens.typography.hint(context) - 1
-                  : EcoPlatesDesignTokens.typography.hint(context) + 1,
+              fontSize: size == BadgeSize.small ? 10.0 : 12.0,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -83,19 +71,13 @@ class ClosedBadgeWithTime extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: size == BadgeSize.small
-            ? context.scaleXXS_XS_SM_MD
-            : context.scaleXS_SM_MD_LG,
-        vertical: size == BadgeSize.small
-            ? context.scaleXXS_XS_SM_MD / 2
-            : context.scaleXXS_XS_SM_MD,
+        horizontal: size == BadgeSize.small ? 8.0 : 12.0,
+        vertical: size == BadgeSize.small ? 4.0 : 8.0,
       ),
       decoration: BoxDecoration(
         color: Colors.orange.shade600,
         borderRadius: BorderRadius.circular(
-          size == BadgeSize.small
-              ? EcoPlatesDesignTokens.radius.sm
-              : EcoPlatesDesignTokens.radius.md,
+          size == BadgeSize.small ? 4.0 : 8.0,
         ),
         border: Border.all(
           color: Colors.white,
@@ -104,10 +86,10 @@ class ClosedBadgeWithTime extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(
-              alpha: EcoPlatesDesignTokens.opacity.pressed,
+              alpha: 0.16,
             ),
-            blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-            offset: EcoPlatesDesignTokens.elevation.standardOffset,
+            blurRadius: 2.0,
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -116,18 +98,14 @@ class ClosedBadgeWithTime extends StatelessWidget {
         children: [
           Icon(
             Icons.schedule,
-            size: size == BadgeSize.small
-                ? EcoPlatesDesignTokens.size.icon(context) / 1.2
-                : EcoPlatesDesignTokens.size.icon(context),
+            size: size == BadgeSize.small ? 20.0 : 24.0,
             color: Colors.white,
           ),
-          SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
+          SizedBox(width: 4.0),
           Text(
             'Réouvre $reopenTime',
             style: TextStyle(
-              fontSize: size == BadgeSize.small
-                  ? EcoPlatesDesignTokens.typography.hint(context) - 1
-                  : EcoPlatesDesignTokens.typography.hint(context) + 1,
+              fontSize: size == BadgeSize.small ? 10.0 : 12.0,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),

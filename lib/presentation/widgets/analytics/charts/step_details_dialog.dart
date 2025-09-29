@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
+// import '../../../../core/responsive/design_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Dialogue pour afficher les détails d'une étape du tunnel de conversion
@@ -38,7 +38,7 @@ class StepDetailsDialog extends StatelessWidget {
             _getStepIcon(step.label),
             color: Color(step.color),
           ),
-          const SizedBox(width: ConversionFunnelConstants.dropIndicatorSpacing),
+          const SizedBox(width: 8.0),
           Text(step.label),
         ],
       ),
@@ -49,17 +49,17 @@ class StepDetailsDialog extends StatelessWidget {
           _buildDetailRow(
             'Nombre',
             NumberFormat.decimalPattern(
-              ConversionFunnelConstants.stepDetailsNumberFormatLocale,
+              'fr',
             ).format(step.count),
           ),
           _buildDetailRow(
             'Pourcentage',
-            '${step.percentage.toStringAsFixed(ConversionFunnelConstants.stepDetailsDecimalPrecision)}%',
+            '${step.percentage.toStringAsFixed(1)}%',
           ),
           if (dropRate > 0)
             _buildDetailRow(
               "Taux d'abandon",
-              '${dropRate.toStringAsFixed(ConversionFunnelConstants.stepDetailsDecimalPrecision)}%',
+              '${dropRate.toStringAsFixed(1)}%',
               isError: true,
             ),
         ],
@@ -76,7 +76,7 @@ class StepDetailsDialog extends StatelessWidget {
   Widget _buildDetailRow(String label, String value, {bool isError = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        vertical: ConversionFunnelConstants.dropIndicatorPadding,
+        vertical: 4.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,14 +84,14 @@ class StepDetailsDialog extends StatelessWidget {
           Text(
             label,
             style: const TextStyle(
-              fontWeight: ConversionFunnelConstants.labelWeight,
+              fontWeight: FontWeight.normal,
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              fontWeight: ConversionFunnelConstants.valueWeight,
-              color: isError ? ConversionFunnelConstants.error : null,
+              fontWeight: FontWeight.bold,
+              color: isError ? Colors.red : null,
             ),
           ),
         ],

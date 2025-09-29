@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive.dart';
 import '../../providers/sales_provider.dart';
 import 'components/index.dart';
 
@@ -20,37 +19,28 @@ class SalesListView extends ConsumerWidget {
           return SliverToBoxAdapter(
             child: Center(
               child: Padding(
-                padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
                     Icon(
                       Icons.receipt_long_outlined,
-                      size: context.applyPattern([
-                        48.0, // mobile
-                        56.0, // tablet
-                        64.0, // desktop
-                        72.0, // desktop large
-                      ]),
+                      size: 48.0,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-                    SizedBox(height: context.scaleMD_LG_XL_XXL),
+                    const SizedBox(height: 10.0),
                     Text(
                       'Aucune vente trouvée',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: EcoPlatesDesignTokens.typography.modalTitle(
-                          context,
-                        ),
+                        fontSize: 18.0,
                       ),
                     ),
-                    SizedBox(height: context.scaleSM_MD_LG_XL),
+                    const SizedBox(height: 10.0),
                     Text(
                       'Modifiez vos filtres pour voir plus de résultats',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                          context,
-                        ),
+                        fontSize: 14.0,
                       ),
                     ),
                   ],
@@ -64,7 +54,7 @@ class SalesListView extends ConsumerWidget {
           delegate: SliverChildBuilderDelegate((context, index) {
             final sale = sales[index];
             return Padding(
-              padding: EdgeInsets.only(bottom: context.scaleXS_SM_MD_LG),
+              padding: const EdgeInsets.only(bottom: 10.0),
               child: SaleCard(sale: sale),
             );
           }, childCount: sales.length),
@@ -73,9 +63,9 @@ class SalesListView extends ConsumerWidget {
       loading: () => SliverToBoxAdapter(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
+            padding: const EdgeInsets.all(10.0),
             child: CircularProgressIndicator(
-              strokeWidth: DesignConstants.two,
+              strokeWidth: 2.0,
             ),
           ),
         ),
@@ -83,52 +73,41 @@ class SalesListView extends ConsumerWidget {
       error: (error, _) => SliverToBoxAdapter(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(context.scaleLG_XL_XXL_XXXL),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
                 Icon(
                   Icons.error_outline,
-                  size: context.applyPattern([
-                    36.0, // mobile
-                    42.0, // tablet
-                    48.0, // desktop
-                    54.0, // desktop large
-                  ]),
+                  size: 36.0,
                   color: Colors.red,
                 ),
-                SizedBox(height: context.scaleMD_LG_XL_XXL),
+                const SizedBox(height: 10.0),
                 Text(
                   'Erreur de chargement',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Colors.red,
-                    fontSize: EcoPlatesDesignTokens.typography.modalTitle(
-                      context,
-                    ),
+                    fontSize: 16.0,
                   ),
                 ),
-                SizedBox(height: context.scaleSM_MD_LG_XL),
+                const SizedBox(height: 10.0),
                 Text(
                   error.toString(),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                      context,
-                    ),
+                    fontSize: 16.0,
                   ),
                 ),
-                SizedBox(height: context.scaleMD_LG_XL_XXL),
+                const SizedBox(height: 10.0),
                 TextButton.icon(
                   onPressed: () =>
                       unawaited(ref.read(salesProvider.notifier).refresh()),
                   icon: Icon(
                     Icons.refresh,
-                    size: context.scaleIconStandard,
+                    size: 20.0,
                   ),
                   label: Text(
                     'Réessayer',
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.modalContent(
-                        context,
-                      ),
+                      fontSize: 14.0,
                     ),
                   ),
                 ),

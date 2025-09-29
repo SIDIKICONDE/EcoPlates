@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
 import '../../../../core/router/routes/route_constants.dart';
 import '../../../providers/brand_provider.dart';
 import '../../brand_card.dart';
@@ -24,10 +23,10 @@ class BrandSection extends ConsumerWidget {
         // En-tête de section
         Padding(
           padding: EdgeInsets.fromLTRB(
-            context.scaleMD_LG_XL_XXL,
+            16.0,
             0,
-            context.scaleMD_LG_XL_XXL,
-            context.scaleXXS_XS_SM_MD,
+            16.0,
+            8.0,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,16 +34,24 @@ class BrandSection extends ConsumerWidget {
               Text(
                 'Grandes Enseignes',
                 style: TextStyle(
-                  fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-                  fontWeight: EcoPlatesDesignTokens.typography.bold,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-              TextButton(
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   // Navigation vers toutes les marques
                   unawaited(context.pushNamed(RouteConstants.allBrandsName));
                 },
-                child: const Text('Voir tout'),
+                child: Text(
+                  'Voir tout',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ],
           ),
@@ -52,13 +59,12 @@ class BrandSection extends ConsumerWidget {
 
         // Slider horizontal de cartes
         SizedBox(
-          height:
-              EcoPlatesDesignTokens.layout.merchantCardHeight(context) * 0.5,
+          height: 120.0,
           child: brandsAsync.when(
             data: (brands) => ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(
-                horizontal: context.scaleMD_LG_XL_XXL,
+                horizontal: 16.0,
               ),
               physics: const BouncingScrollPhysics(),
               itemCount: brands.length,
@@ -66,7 +72,7 @@ class BrandSection extends ConsumerWidget {
                 final brand = brands[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: context.scaleXXS_XS_SM_MD,
+                    horizontal: 8.0,
                   ),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.85,
@@ -93,15 +99,12 @@ class BrandSection extends ConsumerWidget {
               child: Text(
                 'Erreur: $error',
                 style: TextStyle(
-                  color: EcoPlatesDesignTokens.colors.snackbarError,
+                  color: Colors.red,
+                  fontSize: 14.0,
                 ),
               ),
             ),
           ),
-        ),
-
-        SizedBox(
-          height: context.scaleMD_LG_XL_XXL,
         ),
       ],
     );

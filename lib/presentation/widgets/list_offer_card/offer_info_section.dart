@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive/design_tokens.dart';
-
 /// Widget pour afficher les informations détaillées d'une offre
 class OfferInfoSection extends StatelessWidget {
   const OfferInfoSection({
@@ -31,40 +29,34 @@ class OfferInfoSection extends StatelessWidget {
           // Nom du restaurant
           Text(
             merchantName,
-            style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.titleSize(context),
-              fontWeight: EcoPlatesDesignTokens.typography.semiBold,
-              color: EcoPlatesDesignTokens.colors.textPrimary,
-              shadows: [
-                Shadow(
-                  blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
-                ),
-              ],
-            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
           ),
-          SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+          SizedBox(height: 4.0),
 
           // Titre de l'offre
           Text(
             title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: EcoPlatesDesignTokens.typography.text(context),
-              color: EcoPlatesDesignTokens.colors.textPrimary.withValues(
-                alpha: EcoPlatesDesignTokens.opacity.almostOpaque,
-              ),
+              fontSize: 14.0,
+              color: Colors.white.withOpacity(0.9),
               shadows: [
                 Shadow(
-                  blurRadius: EcoPlatesDesignTokens.elevation.smallBlur,
+                  blurRadius: 4.0,
+                  color: Colors.black.withOpacity(0.5),
+                  offset: Offset(0.0, 1.0),
                 ),
               ],
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
-
-          SizedBox(height: context.scaleXXS_XS_SM_MD),
+          SizedBox(height: 8.0),
 
           // Stats Row
           Row(
@@ -72,76 +64,46 @@ class OfferInfoSection extends StatelessWidget {
               // Prix
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.scaleXS_SM_MD_LG,
-                  vertical: context.scaleXXS_XS_SM_MD / 2,
+                  horizontal: 8.0,
+                  vertical: 4.0,
                 ),
                 decoration: BoxDecoration(
-                  color: isFree
-                      ? EcoPlatesDesignTokens.colors.snackbarSuccess
-                      : EcoPlatesDesignTokens.colors.textPrimary.withValues(
-                          alpha: EcoPlatesDesignTokens.opacity.subtle,
-                        ),
-                  borderRadius: BorderRadius.circular(
-                    EcoPlatesDesignTokens.radius.sm,
-                  ),
-                  border: Border.all(
-                    color: EcoPlatesDesignTokens.colors.textPrimary.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.subtle,
-                    ),
-                    width: EcoPlatesDesignTokens.layout.cardBorderWidth / 2,
-                  ),
+                  color: isFree ? Colors.green : Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Text(
-                  priceText,
+                  isFree ? 'GRATUIT' : priceText,
                   style: TextStyle(
-                    fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                    fontWeight: EcoPlatesDesignTokens.typography.bold,
-                    color: EcoPlatesDesignTokens.colors.textPrimary,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: isFree ? Colors.white : Colors.white,
                   ),
                 ),
               ),
-
-              SizedBox(width: context.scaleXS_SM_MD_LG),
+              SizedBox(width: 8.0),
 
               // Distance
-              if (distance != null)
+              if (distance != null) ...[
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: context.scaleXXS_XS_SM_MD,
-                    vertical: context.scaleXXS_XS_SM_MD / 4,
+                    horizontal: 6.0,
+                    vertical: 2.0,
                   ),
                   decoration: BoxDecoration(
-                    color: EcoPlatesDesignTokens.colors.textPrimary.withValues(
-                      alpha: EcoPlatesDesignTokens.opacity.subtle,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                      EcoPlatesDesignTokens.radius.sm,
-                    ),
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        size: EcoPlatesDesignTokens.size.indicator(context) / 2,
-                        color: EcoPlatesDesignTokens.colors.textPrimary,
-                      ),
-                      SizedBox(width: context.scaleXXS_XS_SM_MD / 2),
-                      Text(
-                        '${distance!.toStringAsFixed(1)} km',
-                        style: TextStyle(
-                          fontSize: EcoPlatesDesignTokens.typography.hint(
-                            context,
-                          ),
-                          fontWeight: EcoPlatesDesignTokens.typography.medium,
-                          color: EcoPlatesDesignTokens.colors.textPrimary,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    '${distance!.toStringAsFixed(1)} km',
+                    style: TextStyle(
+                      fontSize: 10.0,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-
-              const Spacer(),
+                SizedBox(width: 8.0),
+              ],
 
               // Horaire
               Row(
@@ -149,27 +111,27 @@ class OfferInfoSection extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.access_time,
-                    size: EcoPlatesDesignTokens.size.indicator(context),
-                    color: EcoPlatesDesignTokens.colors.textPrimary,
+                    size: 12.0,
+                    color: Colors.white.withOpacity(0.8),
                   ),
-                  SizedBox(width: context.scaleXXS_XS_SM_MD),
+                  SizedBox(width: 2.0),
                   Text(
                     pickupTime,
                     style: TextStyle(
-                      fontSize: EcoPlatesDesignTokens.typography.hint(context),
-                      color: EcoPlatesDesignTokens.colors.textPrimary,
+                      fontSize: 10.0,
+                      color: Colors.white.withOpacity(0.8),
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(width: context.scaleXS_SM_MD_LG),
+              Spacer(),
 
               // Arrow
               Icon(
                 Icons.arrow_forward_ios,
-                size: EcoPlatesDesignTokens.size.indicator(context),
-                color: EcoPlatesDesignTokens.colors.textPrimary,
+                size: 14.0,
+                color: Colors.white.withOpacity(0.7),
               ),
             ],
           ),

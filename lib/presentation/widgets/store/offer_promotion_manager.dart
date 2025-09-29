@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/design_tokens.dart';
 import '../../../core/services/promotion_service.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -43,19 +42,20 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final hasPromotion = widget.offer.discountPercentage > 0;
 
     return Container(
-      padding: EdgeInsets.all(context.scaleMD_LG_XL_XXL),
+      padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: EcoPlatesDesignTokens.opacity.veryTransparent,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8.0,
+            offset: Offset(0.0, 4.0),
           ),
-        ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,25 +64,25 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
             children: [
               Icon(
                 hasPromotion ? Icons.local_offer : Icons.local_offer_outlined,
-                color: hasPromotion
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurfaceVariant,
+                color: hasPromotion ? Colors.blue : Colors.grey.shade600,
               ),
-              SizedBox(width: context.scaleXXS_XS_SM_MD),
+              SizedBox(width: 8.0),
               Text(
                 hasPromotion ? 'Promotion active' : 'Ajouter une promotion',
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: TextStyle(
+                  fontSize: 18.0,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
             ],
           ),
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           // Prix actuel
-          _buildPriceInfo(context, theme),
+          _buildPriceInfo(context),
 
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           // Champ de réduction
           TextFormField(
@@ -96,9 +96,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
               suffixText: '%',
               border: const OutlineInputBorder(),
               filled: true,
-              fillColor: theme.colorScheme.surfaceContainerHighest.withValues(
-                alpha: 0.3,
-              ),
+              fillColor: Colors.grey.shade100,
             ),
             keyboardType: TextInputType.number,
             enabled: !_isLoading,
@@ -107,10 +105,9 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
           const SizedBox(height: 16),
 
           // Aperçu du prix réduit
-          if (_discountController.text.isNotEmpty)
-            _buildPricePreview(context, theme),
+          if (_discountController.text.isNotEmpty) _buildPricePreview(context),
 
-          SizedBox(height: context.scaleMD_LG_XL_XXL),
+          SizedBox(height: 16.0),
 
           // Boutons d'action
           Row(
@@ -122,19 +119,19 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                     icon: const Icon(Icons.clear),
                     label: const Text('Supprimer'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: theme.colorScheme.error,
+                      foregroundColor: Colors.red,
                     ),
                   ),
                 ),
-                SizedBox(width: context.scaleXXS_XS_SM_MD),
+                SizedBox(width: 8.0),
               ],
               Expanded(
                 child: FilledButton.icon(
                   onPressed: _isLoading ? null : _applyPromotion,
                   icon: _isLoading
                       ? SizedBox(
-                          width: EcoPlatesDesignTokens.size.icon(context),
-                          height: EcoPlatesDesignTokens.size.icon(context),
+                          width: 16.0,
+                          height: 16.0,
                           child: CircularProgressIndicator(
                             strokeWidth: 3,
                           ),
@@ -150,59 +147,63 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     );
   }
 
-  Widget _buildPriceInfo(BuildContext context, ThemeData theme) {
+  Widget _buildPriceInfo(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+      padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.subtle,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.offer.title,
-            style: theme.textTheme.bodyMedium?.copyWith(
+            style: TextStyle(
+              fontSize: 14.0,
               fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-          SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+          SizedBox(height: 4.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Prix actuel',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.grey.shade600,
                 ),
               ),
               Text(
                 '${widget.offer.discountedPrice.toStringAsFixed(2)}€',
-                style: theme.textTheme.bodyMedium?.copyWith(
+                style: TextStyle(
+                  fontSize: 14.0,
                   fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
+                  color: Colors.blue,
                 ),
               ),
             ],
           ),
           if (widget.offer.originalPrice != widget.offer.discountedPrice) ...[
-            SizedBox(height: context.scaleXXS_XS_SM_MD / 2),
+            SizedBox(height: 4.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Prix original',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey.shade600,
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
                 Text(
                   '${widget.offer.originalPrice.toStringAsFixed(2)}€',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey.shade600,
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
@@ -214,30 +215,31 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     );
   }
 
-  Widget _buildPricePreview(BuildContext context, ThemeData theme) {
+  Widget _buildPricePreview(BuildContext context) {
     final discountText = _discountController.text;
     if (discountText.isEmpty) return const SizedBox.shrink();
 
     final discount = double.tryParse(discountText);
     if (discount == null || discount <= 0 || discount > 90) {
       return Container(
-        padding: EdgeInsets.all(context.scaleXXS_XS_SM_MD),
+        padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: theme.colorScheme.errorContainer,
-          borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.xs),
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(8.0),
         ),
         child: Row(
           children: [
             Icon(
-              Icons.warning,
-              size: EcoPlatesDesignTokens.size.icon(context),
-              color: theme.colorScheme.onErrorContainer,
+              Icons.error_outline,
+              color: Colors.red,
+              size: 16.0,
             ),
-            SizedBox(width: context.scaleXXS_XS_SM_MD),
+            SizedBox(width: 8.0),
             Text(
               'Pourcentage invalide (1-90%)',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onErrorContainer,
+              style: TextStyle(
+                fontSize: 12.0,
+                color: Colors.red.shade700,
               ),
             ),
           ],
@@ -249,38 +251,39 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     final savings = widget.offer.originalPrice - newPrice;
 
     return Container(
-      padding: EdgeInsets.all(context.scaleXS_SM_MD_LG),
+      padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.secondaryContainer.withValues(
-          alpha: EcoPlatesDesignTokens.opacity.subtle,
-        ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.sm),
+        color: Colors.green.shade50,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Aperçu avec ${discount.toStringAsFixed(0)}% de réduction',
-            style: theme.textTheme.bodySmall?.copyWith(
+            style: TextStyle(
+              fontSize: 12.0,
               fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSecondaryContainer,
+              color: Colors.green.shade800,
             ),
           ),
-          SizedBox(height: context.scaleXXS_XS_SM_MD),
+          SizedBox(height: 8.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Nouveau prix',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSecondaryContainer,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: Colors.green.shade700,
                 ),
               ),
               Text(
                 '${newPrice.toStringAsFixed(2)}€',
-                style: theme.textTheme.bodyMedium?.copyWith(
+                style: TextStyle(
+                  fontSize: 14.0,
                   fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.secondary,
+                  color: Colors.green,
                 ),
               ),
             ],
@@ -290,15 +293,17 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
             children: [
               Text(
                 'Économie',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSecondaryContainer,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.green.shade700,
                 ),
               ),
               Text(
                 '${savings.toStringAsFixed(2)}€',
-                style: theme.textTheme.bodySmall?.copyWith(
+                style: TextStyle(
+                  fontSize: 12.0,
                   fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.secondary,
+                  color: Colors.green,
                 ),
               ),
             ],

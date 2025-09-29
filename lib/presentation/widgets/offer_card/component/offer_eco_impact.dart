@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/design_tokens.dart';
-
 /// Widget affichant l'impact écologique de l'offre
 class OfferEcoImpact extends StatelessWidget {
   // en grammes
@@ -15,16 +13,16 @@ class OfferEcoImpact extends StatelessWidget {
       children: [
         Icon(
           Icons.eco,
-          size: EcoPlatesDesignTokens.size.indicator(context),
-          color: EcoPlatesDesignTokens.colors.snackbarSuccess,
+          size: 14.0,
+          color: Colors.green,
         ),
-        SizedBox(width: context.scaleXXS_XS_SM_MD),
+        SizedBox(width: 4.0),
         Text(
           '${(co2Saved / 1000).toStringAsFixed(1)} kg CO₂ économisés',
           style: TextStyle(
-            fontSize: EcoPlatesDesignTokens.typography.hint(context),
-            color: EcoPlatesDesignTokens.colors.snackbarSuccess,
-            fontWeight: EcoPlatesDesignTokens.typography.medium,
+            fontSize: 12.0,
+            color: Colors.green,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],

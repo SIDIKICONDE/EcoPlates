@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/responsive/design_tokens.dart';
 import '../../core/services/promotion_service.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/store_offers_provider.dart';
@@ -24,7 +23,7 @@ class PromotionsManagementPage extends ConsumerWidget {
         title: Row(
           children: [
             Icon(Icons.local_offer, color: theme.colorScheme.primary),
-            SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
+            const SizedBox(width: 12.0),
             const Text('Gestion des promotions'),
           ],
         ),
@@ -68,36 +67,26 @@ class PromotionsManagementPage extends ConsumerWidget {
               .toList();
 
           return SingleChildScrollView(
-            padding: EdgeInsets.all(
-              EcoPlatesDesignTokens.spacing.dialogGap(context),
-            ),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Statistiques rapides
                 _buildPromotionStatsCard(context, promotionStats),
-                SizedBox(
-                  height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-                ),
+                const SizedBox(height: 24.0),
 
                 // Promotions actives
                 if (offersWithPromotions.isNotEmpty) ...[
                   Text(
                     'Promotions actives (${offersWithPromotions.length})',
                     style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: EcoPlatesDesignTokens.typography.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(
-                    height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-                  ),
+                  const SizedBox(height: 16.0),
                   ...offersWithPromotions.map(
                     (offer) => Padding(
-                      padding: EdgeInsets.only(
-                        bottom: EcoPlatesDesignTokens.spacing.interfaceGap(
-                          context,
-                        ),
-                      ),
+                      padding: const EdgeInsets.only(bottom: 16.0),
                       child: OfferPromotionManager(
                         offer: offer,
                         onPromotionUpdated: () =>
@@ -105,42 +94,29 @@ class PromotionsManagementPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: EcoPlatesDesignTokens.spacing.sectionSpacing(
-                      context,
-                    ),
-                  ),
+                  const SizedBox(height: 24.0),
                 ],
 
                 // Offres sans promotion
                 Text(
                   'Ajouter une promotion (${offersWithoutPromotions.length})',
                   style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: EcoPlatesDesignTokens.typography.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(
-                  height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-                ),
+                const SizedBox(height: 16.0),
                 if (offersWithoutPromotions.isEmpty)
                   Center(
                     child: Padding(
-                      padding: EdgeInsets.all(
-                        EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-                      ),
+                      padding: const EdgeInsets.all(32.0),
                       child: Column(
                         children: [
                           Icon(
                             Icons.local_offer_outlined,
-                            size:
-                                EcoPlatesDesignTokens.layout.errorStateIconSize,
-                            color: theme.colorScheme.onSurfaceVariant,
+                            size: 64.0,
+                            color: theme.colorScheme.primary.withOpacity(0.5),
                           ),
-                          SizedBox(
-                            height: EcoPlatesDesignTokens.spacing.interfaceGap(
-                              context,
-                            ),
-                          ),
+                          const SizedBox(height: 16.0),
                           Text(
                             'Toutes vos offres ont une promotion !',
                             style: theme.textTheme.bodyLarge?.copyWith(
@@ -157,11 +133,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                       .take(3)
                       .map(
                         (offer) => Padding(
-                          padding: EdgeInsets.only(
-                            bottom: EcoPlatesDesignTokens.spacing.interfaceGap(
-                              context,
-                            ),
-                          ),
+                          padding: const EdgeInsets.only(bottom: 16.0),
                           child: OfferPromotionManager(
                             offer: offer,
                             onPromotionUpdated: () =>
@@ -180,17 +152,15 @@ class PromotionsManagementPage extends ConsumerWidget {
             children: [
               Icon(
                 Icons.error,
-                size: EcoPlatesDesignTokens.layout.errorStateIconSize,
+                size: 48.0,
                 color: theme.colorScheme.error,
               ),
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              const SizedBox(height: 16.0),
               Text(
                 'Erreur lors du chargement des offres',
                 style: theme.textTheme.bodyLarge,
               ),
-              SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
+              const SizedBox(height: 8.0),
               Text(
                 error.toString(),
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -198,9 +168,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
-                height: EcoPlatesDesignTokens.spacing.interfaceGap(context),
-              ),
+              const SizedBox(height: 24.0),
               FilledButton(
                 onPressed: () => ref.invalidate(storeOffersProvider),
                 child: const Text('Réessayer'),
@@ -222,22 +190,22 @@ class PromotionsManagementPage extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(EcoPlatesDesignTokens.spacing.dialogGap(context)),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
             theme.colorScheme.primaryContainer,
-            theme.colorScheme.primaryContainer.withValues(alpha: 0.8),
+            theme.colorScheme.primaryContainer.withOpacity(0.8),
           ],
         ),
-        borderRadius: BorderRadius.circular(EcoPlatesDesignTokens.radius.md),
+        borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.08),
-            blurRadius: EcoPlatesDesignTokens.elevation.largeBlur,
-            offset: EcoPlatesDesignTokens.elevation.elevatedOffset,
+            color: theme.colorScheme.primary.withOpacity(0.1),
+            blurRadius: 8.0,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -249,18 +217,19 @@ class PromotionsManagementPage extends ConsumerWidget {
               Icon(
                 Icons.analytics,
                 color: theme.colorScheme.onPrimaryContainer,
+                size: 24.0,
               ),
-              SizedBox(width: EcoPlatesDesignTokens.spacing.microGap(context)),
+              const SizedBox(width: 12.0),
               Text(
                 'Statistiques des promotions',
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: theme.colorScheme.onPrimaryContainer,
-                  fontWeight: EcoPlatesDesignTokens.typography.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-          SizedBox(height: EcoPlatesDesignTokens.spacing.interfaceGap(context)),
+          const SizedBox(height: 20.0),
           Row(
             children: [
               Expanded(
@@ -293,9 +262,7 @@ class PromotionsManagementPage extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(
-            height: EcoPlatesDesignTokens.spacing.sectionSpacing(context),
-          ),
+          const SizedBox(height: 16.0),
           Row(
             children: [
               Expanded(
@@ -344,28 +311,26 @@ class PromotionsManagementPage extends ConsumerWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(
-            EcoPlatesDesignTokens.spacing.microGap(context),
-          ),
+          padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
+            color: color.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, size: 16, color: color),
+          child: Icon(icon, size: 20.0, color: color),
         ),
-        SizedBox(height: EcoPlatesDesignTokens.spacing.microGap(context)),
+        const SizedBox(height: 8.0),
         Text(
           value,
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: EcoPlatesDesignTokens.typography.bold,
-            color: theme.colorScheme.onPrimaryContainer,
+            fontWeight: FontWeight.w600,
           ),
           textAlign: TextAlign.center,
         ),
+        const SizedBox(height: 4.0),
         Text(
           label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
           ),
           textAlign: TextAlign.center,
         ),

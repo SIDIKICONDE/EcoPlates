@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../core/services/image_cache_service.dart';
 import '../../../../core/widgets/eco_cached_image.dart';
 import '../../../../domain/entities/food_offer.dart';
@@ -41,8 +42,8 @@ class OfferCardImage extends StatelessWidget {
             borderRadius:
                 borderRadius ??
                 BorderRadius.circular(
-                  8.0,
-                ), // Utilise le borderRadius personnalisé ou la valeur par défaut
+                  3.0,
+                ), // Coins moins arrondis à 3 pixels
             child: AbsorbPointer(
               // absorbing: true est la valeur par défaut
               child: SizedBox(
@@ -57,8 +58,8 @@ class OfferCardImage extends StatelessWidget {
                         borderRadius:
                             borderRadius ??
                             BorderRadius.circular(
-                              6.0,
-                            ), // Utilise le borderRadius personnalisé ou la valeur par défaut
+                              3.0,
+                            ), // Cohérent avec l'image principale
                       )
                     : _OfferPlaceholderImage(height: imageHeight),
               ),
@@ -70,10 +71,11 @@ class OfferCardImage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(
-                  6.0,
-                ), // Valeur réduite pour cohérence
+                  3.0,
+                ), // Cohérent avec l'image principale
                 border: Border.all(
                   color: Colors.white.withValues(alpha: 0.1),
+                  width: 6.0,
                 ),
               ),
             ),
@@ -82,18 +84,22 @@ class OfferCardImage extends StatelessWidget {
           // Logo du marchand en overlay
           if (offer.merchantLogo != null && offer.merchantLogo!.isNotEmpty)
             Positioned(
-              top: compact ? 8.0 : 12.0,
-              left: compact ? 8.0 : 12.0,
+              bottom: compact
+                  ? ResponsiveUtils.getVerticalSpacing(context) / 4
+                  : ResponsiveUtils.getVerticalSpacing(context) / 2,
+              left: compact
+                  ? ResponsiveUtils.getHorizontalSpacing(context) / 4
+                  : ResponsiveUtils.getHorizontalSpacing(context) / 2,
               child: Container(
-                width: compact ? 32.0 : 40.0,
-                height: compact ? 32.0 : 40.0,
+                width: compact
+                    ? ResponsiveUtils.getIconSize(context, baseSize: 32.0)
+                    : ResponsiveUtils.getIconSize(context, baseSize: 40.0),
+                height: compact
+                    ? ResponsiveUtils.getIconSize(context, baseSize: 32.0)
+                    : ResponsiveUtils.getIconSize(context, baseSize: 40.0),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.9),
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2.0,
-                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.2),
@@ -106,11 +112,13 @@ class OfferCardImage extends StatelessWidget {
                   borderRadius:
                       borderRadius ??
                       BorderRadius.circular(
-                        6.0,
-                      ), // Utilise le borderRadius personnalisé ou la valeur par défaut
+                        3.0,
+                      ), // Cohérent avec l'image principale
                   child: EcoCachedImage(
                     imageUrl: offer.merchantLogo!,
                     size: compact ? ImageSize.small : ImageSize.medium,
+                    fit: BoxFit
+                        .cover, // Les logos remplissent complètement le cercle
                   ),
                 ),
               ),
@@ -118,18 +126,22 @@ class OfferCardImage extends StatelessWidget {
           else
             // Logo de fallback avec initiale
             Positioned(
-              top: compact ? 8.0 : 12.0,
-              left: compact ? 8.0 : 12.0,
+              bottom: compact
+                  ? ResponsiveUtils.getVerticalSpacing(context) / 4
+                  : ResponsiveUtils.getVerticalSpacing(context) / 2,
+              left: compact
+                  ? ResponsiveUtils.getHorizontalSpacing(context) / 4
+                  : ResponsiveUtils.getHorizontalSpacing(context) / 2,
               child: Container(
-                width: compact ? 32.0 : 40.0,
-                height: compact ? 32.0 : 40.0,
+                width: compact
+                    ? ResponsiveUtils.getIconSize(context, baseSize: 32.0)
+                    : ResponsiveUtils.getIconSize(context, baseSize: 40.0),
+                height: compact
+                    ? ResponsiveUtils.getIconSize(context, baseSize: 32.0)
+                    : ResponsiveUtils.getIconSize(context, baseSize: 40.0),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.9),
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2.0,
-                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.2),

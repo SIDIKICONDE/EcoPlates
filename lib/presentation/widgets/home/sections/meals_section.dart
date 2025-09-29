@@ -20,27 +20,27 @@ class MealsSection extends ConsumerWidget {
     // Hauteur de l'image (depuis OfferCardImage)
     final imageHeight = ResponsiveUtils.responsiveValue(
       context,
-      mobile: 120.0,  // Mode compact
+      mobile: 120.0, // Mode compact
       tablet: 120.0,
       tabletLarge: 140.0,
       desktop: 160.0,
       desktopLarge: 180.0,
     );
-    
+
     // Hauteur estimée du contenu en mode compact
     // (titre + description + pickup info + séparateur + prix + espacements)
     final contentHeight = ResponsiveUtils.responsiveValue(
       context,
-      mobile: 110.0,  // Contenu compact avec séparateur
+      mobile: 110.0, // Contenu compact avec séparateur
       tablet: 110.0,
       tabletLarge: 120.0,
       desktop: 130.0,
       desktopLarge: 140.0,
     );
-    
+
     // Paddings (top image: 2, top content: 4, bottom content: 2)
     const totalPadding = 8.0;
-    
+
     return imageHeight + contentHeight + totalPadding;
   }
 
@@ -148,7 +148,7 @@ class MealsSection extends ConsumerWidget {
     // Utiliser la configuration responsive
     final cardWidth = ResponsiveCardConfig.getSliderCardWidth(context);
     final cardSpacing = ResponsiveCardConfig.getCardSpacing(context);
-    
+
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       padding: ResponsiveCardConfig.getSliderPadding(context),
@@ -163,6 +163,7 @@ class MealsSection extends ConsumerWidget {
             child: OfferCard(
               offer: meal,
               compact: true,
+              isHomeSection: true,
               distance: 0.5 + (index * 0.1),
               onTap: () {
                 _showMealDetailModal(context, meal);

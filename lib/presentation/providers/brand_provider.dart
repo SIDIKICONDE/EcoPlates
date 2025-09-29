@@ -5,13 +5,16 @@ import '../../domain/entities/brand.dart';
 final brandsProvider = FutureProvider<List<Brand>>((ref) async {
   // TODO: Implémenter le service des marques
   // Pour l'instant, retourner des données de test
-  await Future<void>.delayed(const Duration(milliseconds: 500)); // Simuler un appel réseau
-  
+  await Future<void>.delayed(
+    const Duration(milliseconds: 500),
+  ); // Simuler un appel réseau
+
   return [
     const Brand(
       id: '1',
       name: 'Carrefour',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2020/09/Carrefour-Logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2020/09/Carrefour-Logo.png',
       category: 'Supermarché',
       totalStores: 1200,
       activeOffers: 45,
@@ -23,7 +26,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '2',
       name: "McDonald's",
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
       category: 'Restaurant',
       totalStores: 1400,
       activeOffers: 52,
@@ -36,7 +40,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '3',
       name: 'Starbucks',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
       category: 'Café',
       totalStores: 450,
       activeOffers: 38,
@@ -59,7 +64,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '5',
       name: 'Monoprix',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2020/09/Monoprix-Logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2020/09/Monoprix-Logo.png',
       category: 'Supermarché',
       totalStores: 800,
       activeOffers: 32,
@@ -70,7 +76,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '6',
       name: 'Picard',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
       category: 'Surgelés',
       totalStores: 1000,
       activeOffers: 28,
@@ -82,7 +89,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '7',
       name: 'Burger King',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2017/03/Burger-King-logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2017/03/Burger-King-logo.png',
       category: 'Restaurant',
       totalStores: 450,
       activeOffers: 35,
@@ -94,7 +102,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '8',
       name: 'Subway',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2017/03/Subway-logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2017/03/Subway-logo.png',
       category: 'Restaurant',
       totalStores: 850,
       activeOffers: 40,
@@ -107,7 +116,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '9',
       name: 'Franprix',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2020/09/Franprix-Logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2020/09/Franprix-Logo.png',
       category: 'Supermarché',
       totalStores: 600,
       activeOffers: 28,
@@ -130,7 +140,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '11',
       name: 'Auchan',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2020/09/Auchan-Logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2020/09/Auchan-Logo.png',
       category: 'Supermarché',
       totalStores: 1800,
       activeOffers: 55,
@@ -141,7 +152,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '12',
       name: 'Leclerc',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2020/09/E-Leclerc-Logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2020/09/E-Leclerc-Logo.png',
       category: 'Supermarché',
       totalStores: 750,
       activeOffers: 48,
@@ -152,7 +164,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '13',
       name: 'Intermarché',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2020/09/Intermarche-Logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2020/09/Intermarche-Logo.png',
       category: 'Supermarché',
       totalStores: 2000,
       activeOffers: 42,
@@ -163,7 +176,8 @@ final brandsProvider = FutureProvider<List<Brand>>((ref) async {
     const Brand(
       id: '14',
       name: 'Casino',
-      logoUrl: 'https://1000logos.net/wp-content/uploads/2020/09/Casino-Logo.png',
+      logoUrl:
+          'https://1000logos.net/wp-content/uploads/2020/09/Casino-Logo.png',
       category: 'Supermarché',
       totalStores: 12000,
       activeOffers: 38,

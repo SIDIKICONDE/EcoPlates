@@ -215,6 +215,23 @@ class WelcomeScreen extends ConsumerWidget {
               size: EcoButtonSizeHelper.getAdaptiveSize(context),
             ),
           ),
+
+          const VerticalGap(multiplier: 1),
+
+          // Bouton test menu tablette
+          FractionallySizedBox(
+            widthFactor: 0.8,
+            child: EcoButton(
+              text: 'Test Menu Tablette',
+              onPressed: () {
+                context.go('/tablet');
+              },
+              icon: Icons.tablet,
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              size: EcoButtonSizeHelper.getAdaptiveSize(context),
+            ),
+          ),
         ],
       ),
     );

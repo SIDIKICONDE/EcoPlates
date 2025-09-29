@@ -54,27 +54,27 @@ class _NearbySectionState extends ConsumerState<NearbySection>
     // Hauteur de l'image (depuis OfferCardImage)
     final imageHeight = ResponsiveUtils.responsiveValue(
       context,
-      mobile: 120.0,  // Mode compact
+      mobile: 120.0, // Mode compact
       tablet: 120.0,
       tabletLarge: 140.0,
       desktop: 160.0,
       desktopLarge: 180.0,
     );
-    
+
     // Hauteur estimée du contenu en mode compact
     // (titre + description + pickup info + séparateur + prix + espacements)
     final contentHeight = ResponsiveUtils.responsiveValue(
       context,
-      mobile: 110.0,  // Contenu compact avec séparateur
+      mobile: 110.0, // Contenu compact avec séparateur
       tablet: 110.0,
       tabletLarge: 120.0,
       desktop: 130.0,
       desktopLarge: 140.0,
     );
-    
+
     // Paddings (top image: 2, top content: 4, bottom content: 2)
     const totalPadding = 8.0;
-    
+
     return imageHeight + contentHeight + totalPadding;
   }
 
@@ -206,6 +206,7 @@ class _NearbySectionState extends ConsumerState<NearbySection>
             child: OfferCard(
               offer: offer,
               compact: true,
+              isHomeSection: true,
               distance: distance,
               // showDistance: true est la valeur par défaut
               onTap: () {

@@ -42,8 +42,9 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
 
   void _onScroll() {
     if (_scrollController.hasClients) {
-      final itemWidth = ResponsiveCardConfig.getSliderCardWidth(context) + 
-                       ResponsiveCardConfig.getCardSpacing(context);
+      final itemWidth =
+          ResponsiveCardConfig.getSliderCardWidth(context) +
+          ResponsiveCardConfig.getCardSpacing(context);
       final scrollOffset = _scrollController.offset;
       final visibleIndexValue = (scrollOffset / itemWidth).round();
       visibleIndex = visibleIndexValue;
@@ -54,27 +55,27 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
     // Hauteur de l'image (depuis OfferCardImage)
     final imageHeight = ResponsiveUtils.responsiveValue(
       context,
-      mobile: 120.0,  // Mode compact
+      mobile: 120.0, // Mode compact
       tablet: 120.0,
       tabletLarge: 140.0,
       desktop: 160.0,
       desktopLarge: 180.0,
     );
-    
+
     // Hauteur estimée du contenu en mode compact
     // (titre + description + pickup info + séparateur + prix + espacements)
     final contentHeight = ResponsiveUtils.responsiveValue(
       context,
-      mobile: 110.0,  // Contenu compact avec séparateur
+      mobile: 110.0, // Contenu compact avec séparateur
       tablet: 110.0,
       tabletLarge: 120.0,
       desktop: 130.0,
       desktopLarge: 140.0,
     );
-    
+
     // Paddings (top image: 2, top content: 6, bottom content: 4)
     const totalPadding = 12.0;
-    
+
     return imageHeight + contentHeight + totalPadding;
   }
 
@@ -148,9 +149,11 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
                   .map((o) => o.images.first)
                   .toList();
               startAutoPreload(imageUrls: imageUrls, ref: ref);
-              
+
               // Utiliser la configuration responsive pour la largeur des cartes
-              final cardWidth = ResponsiveCardConfig.getSliderCardWidth(context);
+              final cardWidth = ResponsiveCardConfig.getSliderCardWidth(
+                context,
+              );
               final cardSpacing = ResponsiveCardConfig.getCardSpacing(context);
 
               return ListView.builder(
@@ -168,10 +171,11 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
                     curve: Curves.easeOutCubic,
                     padding: EdgeInsets.symmetric(horizontal: cardSpacing / 2),
                     child: SizedBox(
-                      width: cardWidth,  // Utiliser la valeur responsive
+                      width: cardWidth, // Utiliser la valeur responsive
                       child: OfferCard(
                         offer: offer,
                         compact: true,
+                        isHomeSection: true,
                         distance: 50.0 + (index * 10.0),
                         onTap: () => _showOfferDetailModal(context, offer),
                       ),

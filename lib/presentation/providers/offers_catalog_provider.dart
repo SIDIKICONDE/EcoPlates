@@ -134,7 +134,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '1',
         merchantId: 'merchant1',
         merchantName: 'Le Petit Bistrot',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
         title: 'Salade César',
         description: 'Salade fraîche avec poulet grillé et parmesan',
         originalPrice: 12.50,
@@ -167,7 +168,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '2',
         merchantId: 'merchant2',
         merchantName: 'Pizza Palace',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
         title: 'Pizza Margherita',
         description: 'Pizza traditionnelle avec tomates et mozzarella',
         originalPrice: 14.90,
@@ -300,7 +302,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '6',
         merchantId: 'merchant6',
         merchantName: 'Burger House',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/Burger-King-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/Burger-King-logo.png',
         title: 'Panier Surprise Fruits & Légumes',
         description:
             'Assortiment frais de fruits et légumes de saison à prix réduit',
@@ -335,7 +338,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '7',
         merchantId: 'merchant7',
         merchantName: 'Café Artisan',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
         title: 'Panier Pâtisserie & Desserts',
         description: 'Sélection de pâtisseries artisanales et desserts maison',
         originalPrice: 25.00,
@@ -369,7 +373,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '8',
         merchantId: 'merchant4',
         merchantName: 'Subway',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/Subway-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/Subway-logo.png',
         title: 'Panier Sandwichs & Salades',
         description: 'Assortiment de sandwichs frais et salades préparées',
         originalPrice: 22.50,
@@ -403,7 +408,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '9',
         merchantId: 'merchant5',
         merchantName: 'Monoprix',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2020/09/Monoprix-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2020/09/Monoprix-Logo.png',
         title: 'Panier Épicerie Fine',
         description: 'Sélection de produits d\'épicerie fine et spécialités',
         originalPrice: 35.00,
@@ -437,7 +443,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '10',
         merchantId: 'merchant6',
         merchantName: 'Starbucks',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
         title: 'Panier Petit-déjeuner',
         description: 'Assortiment pour un petit-déjeuner complet et équilibré',
         originalPrice: 16.50,
@@ -472,7 +479,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '11',
         merchantId: 'merchant7',
         merchantName: 'Pizza Hut',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
         title: 'Pizza Pepperoni',
         description: 'Pizza classique avec pepperoni et fromage fondu',
         originalPrice: 16.90,
@@ -506,7 +514,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '12',
         merchantId: 'merchant8',
         merchantName: 'McDonald\'s',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
         title: 'Menu Big Mac',
         description: 'Burger légendaire avec frites et boisson',
         originalPrice: 12.50,
@@ -540,7 +549,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '13',
         merchantId: 'merchant9',
         merchantName: 'KFC',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/KFC-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/KFC-Logo.png',
         title: 'Bucket Poulet',
         description: 'Seau de 8 pièces de poulet frit avec sauces',
         originalPrice: 24.90,
@@ -574,7 +584,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '14',
         merchantId: 'merchant10',
         merchantName: 'Franprix',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2020/09/Franprix-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2020/09/Franprix-Logo.png',
         title: 'Panier Produits Laitiers',
         description: 'Fromages, yaourts et produits laitiers frais',
         originalPrice: 20.00,
@@ -608,7 +619,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '15',
         merchantId: 'merchant11',
         merchantName: 'Auchan',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2020/09/Auchan-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2020/09/Auchan-Logo.png',
         title: 'Panier Viandes & Poissons',
         description: 'Sélection de viandes et poissons frais de qualité',
         originalPrice: 42.00,
@@ -643,7 +655,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '16',
         merchantId: 'merchant12',
         merchantName: 'L\'As du Fallafel',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/Subway-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/Subway-logo.png',
         title: 'Assiette Fallafel Complet',
         description: 'Fallafels croustillants avec taboulé, houmous et pita',
         originalPrice: 13.50,
@@ -678,7 +691,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '17',
         merchantId: 'merchant13',
         merchantName: 'Chez Gladines',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2021/04/Paul-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2021/04/Paul-logo.png',
         title: 'Couscous Royal',
         description: 'Couscous traditionnel avec agneau, merguez et légumes',
         originalPrice: 18.90,
@@ -712,7 +726,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '18',
         merchantId: 'merchant14',
         merchantName: 'Sushi Shop',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/KFC-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/KFC-Logo.png',
         title: 'Plateau Sushi Mixte',
         description: 'Assortiment de sushis frais et makis variés',
         originalPrice: 26.50,
@@ -746,7 +761,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '19',
         merchantId: 'merchant15',
         merchantName: 'Ladurée',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2021/04/Paul-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2021/04/Paul-logo.png',
         title: 'Panier Gourmandises',
         description: 'Sélection de macarons et chocolats artisanaux',
         originalPrice: 35.00,
@@ -780,7 +796,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '20',
         merchantId: 'merchant16',
         merchantName: 'Le Grenier de Notre-Dame',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2020/09/Carrefour-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2020/09/Carrefour-Logo.png',
         title: 'Panier Cuisine du Monde',
         description: 'Épices et ingrédients pour cuisiner des plats exotiques',
         originalPrice: 28.50,
@@ -815,7 +832,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '21',
         merchantId: 'merchant17',
         merchantName: 'Gelateria dei Gracchi',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
         title: 'Glaces Artisanales',
         description: 'Sélection de glaces et sorbets faits maison',
         originalPrice: 8.50,
@@ -849,7 +867,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '22',
         merchantId: 'merchant18',
         merchantName: 'Tien Hiang',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
         title: 'Riz Cantonnais aux Crevettes',
         description: 'Riz sauté aux crevettes, légumes et œufs',
         originalPrice: 12.90,
@@ -883,7 +902,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '23',
         merchantId: 'merchant19',
         merchantName: 'Bio c\'Bon',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
         title: 'Panier Bio & Naturel',
         description: 'Produits biologiques et naturels de qualité supérieure',
         originalPrice: 32.00,
@@ -917,7 +937,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '24',
         merchantId: 'merchant20',
         merchantName: 'Caffe Greco',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/Stabucks-Logo.png',
         title: 'Tiramisu Traditionnel',
         description: 'Dessert italien classique au mascarpone et café',
         originalPrice: 7.50,
@@ -951,7 +972,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '25',
         merchantId: 'merchant21',
         merchantName: 'Le Grenier de Notre-Dame',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2020/09/Carrefour-Logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2020/09/Carrefour-Logo.png',
         title: 'Panier Sans Gluten',
         description: 'Produits adaptés aux régimes sans gluten',
         originalPrice: 29.90,
@@ -986,7 +1008,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '26',
         merchantId: 'merchant22',
         merchantName: 'Quick',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2017/03/Burger-King-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2017/03/Burger-King-logo.png',
         title: 'Menu Royal Cheese URGENT',
         description:
             'Burger emblématique avec frites et boisson - À récupérer rapidement !',
@@ -1021,7 +1044,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '27',
         merchantId: 'merchant23',
         merchantName: 'Casa Pepe',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2021/04/Paul-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2021/04/Paul-logo.png',
         title: 'Paella aux Fruits de Mer URGENTE',
         description: 'Paella espagnole traditionnelle avec fruits de mer frais',
         originalPrice: 22.50,
@@ -1055,7 +1079,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '28',
         merchantId: 'merchant24',
         merchantName: 'Chez Luigi',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
         title: 'Lasagnes Bolognaise URGENTES',
         description: 'Lasagnes traditionnelles à la bolognaise maison',
         originalPrice: 15.90,
@@ -1089,7 +1114,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '29',
         merchantId: 'merchant25',
         merchantName: 'Green Deli',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
         title: 'Panier Végétarien URGENT',
         description: 'Panier complet végétarien avec légumes bio et tofu',
         originalPrice: 19.90,
@@ -1125,7 +1151,8 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         id: '30',
         merchantId: 'merchant26',
         merchantName: 'Bakery Corner',
-        merchantLogo: 'https://1000logos.net/wp-content/uploads/2021/04/Paul-logo.png',
+        merchantLogo:
+            'https://1000logos.net/wp-content/uploads/2021/04/Paul-logo.png',
         title: 'Croissants et Pains au Chocolat URGENTS',
         description: 'Viennoiseries fraîches du matin à récupérer rapidement',
         originalPrice: 8.50,

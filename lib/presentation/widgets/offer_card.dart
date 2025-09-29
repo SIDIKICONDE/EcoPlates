@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/food_offer.dart';
 import 'offer_card/component/offer_card_content.dart';
 import 'offer_card/component/offer_card_image.dart';
+import 'offer_card/offer_card_configs.dart';
 
 /// Widget de carte pour afficher une offre anti-gaspillage
 /// Utilisable dans toutes les listes et grilles de l'application
@@ -17,6 +18,8 @@ class OfferCard extends StatefulWidget {
     this.distance,
     this.compact = false,
     this.imageBorderRadius,
+    this.isHomeSection =
+        false, // Indique si c'est utilisé dans une section d'accueil
   });
   final FoodOffer offer;
   final VoidCallback? onTap;
@@ -24,6 +27,7 @@ class OfferCard extends StatefulWidget {
   final double? distance; // en km
   final bool compact;
   final BorderRadius? imageBorderRadius;
+  final bool isHomeSection;
 
   @override
   State<OfferCard> createState() => _OfferCardState();
@@ -106,7 +110,15 @@ class _OfferCardState extends State<OfferCard>
                       child: OfferCardImage(
                         offer: widget.offer,
                         compact: widget.compact,
-                        borderRadius: widget.imageBorderRadius,
+                        borderRadius:
+                            widget.imageBorderRadius ??
+                            (widget.isHomeSection
+                                ? OfferCardConfigs
+                                      .homeSections
+                                      .imageBorderRadius
+                                : OfferCardConfigs
+                                      .defaultConfig
+                                      .imageBorderRadius),
                       ),
                     ),
 

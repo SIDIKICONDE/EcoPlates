@@ -229,6 +229,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                       child: OfferCard(
                         offer: offer,
                         compact: true,
+                        isHomeSection: true,
                         distance: 0.5 + (index * 0.2),
                         onTap: () {
                           _showOfferDetailModal(context, offer);

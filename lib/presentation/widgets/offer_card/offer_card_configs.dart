@@ -24,10 +24,23 @@ class OfferCardConfigs {
         ),
       );
 
+  /// Configuration pour les sections d'accueil (urgent, nearby, recommended, meals)
+  static final homeSections = OfferCardPageConfig(
+    aspectRatio: null, // Utilise la fonction responsive
+    imageBorderRadius: BorderRadius.circular(
+      8.0,
+    ), // Coins complètement arrondis pour les sections
+  );
+
   /// Configuration par défaut pour toutes les autres pages
   static const defaultConfig = OfferCardPageConfig(
     aspectRatio: null, // Utilise la fonction responsive
-    imageBorderRadius: null, // Utilise l'arrondi complet par défaut
+    imageBorderRadius: BorderRadius.only(
+      topLeft: Radius.circular(8.0),
+      topRight: Radius.circular(8.0),
+      bottomLeft: Radius.zero,
+      bottomRight: Radius.zero,
+    ), // Coins du bas non arrondis pour les autres pages
   );
 }
 

@@ -1,0 +1,64 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  # Default environment for CI
+  DEFAULT_ENV: dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Create environment file
+        run: |
+          cp .env.example environments/.env.dev
+          # For CI, use a test API key (non-functional but valid format)
+          # In production, you would use: echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY_DEV }}" >> environments/.env.dev
+          echo "GOOGLE_MAPS_API_KEY=AIzaSyDummyKeyForCITesting123456789" >> environments/.env.dev
+
+      - name: Create Android local.properties
+        run: |
+          echo "flutter.sdk=${FLUTTER_ROOT}" > android/local.properties
+          echo "googleMapsApiKey=AIzaSyDummyKeyForCITesting123456789" >> android/local.properties
+
+      - name: Create iOS Secrets.xcconfig
+        run: |
+          mkdir -p ios/Config
+          echo "GOOGLE_MAPS_API_KEY=AIzaSyDummyKeyForCITesting123456789" > ios/Config/Secrets.xcconfig
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze project source
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Build Android APK (test)
+        run: flutter build apk --debug
+
+      - name: Verify no secrets in artifacts
+        run: |
+          echo "Scanning artifacts for exposed secrets..."
+          if grep -r "AIzaSyCt57yjJiwlrr81dQQusoPVwmKFTWWhR_k" build/ 2>/dev/null; then
+            echo "❌ CRITICAL: Hardcoded API key found in build artifacts!"
+            exit 1
+          fi
+          echo "✅ No hardcoded secrets found in artifacts"

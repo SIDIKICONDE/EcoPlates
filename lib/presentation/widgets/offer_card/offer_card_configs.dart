@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
+
 /// Configurations centralisées pour les cartes d'offres
 /// Permet d'appliquer des styles cohérents selon les pages
 class OfferCardConfigs {
   /// Configuration pour les pages d'offres urgentes (all_urgent_offers_screen)
-  static const urgentPage = OfferCardPageConfig(
-    aspectRatio: 1.8,
-    imageBorderRadius: BorderRadius.only(
-      topLeft: Radius.circular(8.0),
-      topRight: Radius.circular(8.0),
-    ),
-  );
+  static OfferCardPageConfig urgentPage(BuildContext context) =>
+      OfferCardPageConfig(
+        aspectRatio: ResponsiveUtils.responsiveValue(
+          context,
+          mobile: 1.8, // Plus équilibré sur mobile pour le contenu texte
+          tablet: 1.0, // Carré sur tablette
+          tabletLarge: 1.1, // Légèrement large sur tablette large
+          desktop: 1.3, // Plus large sur desktop pour utiliser l'espace
+          desktopLarge: 1.4, // Encore plus large sur grand écran
+        ),
+        imageBorderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+          bottomLeft: Radius.zero,
+          bottomRight: Radius.zero,
+        ),
+      );
 
   /// Configuration par défaut pour toutes les autres pages
   static const defaultConfig = OfferCardPageConfig(
-    
+    aspectRatio: null, // Utilise la fonction responsive
+    imageBorderRadius: null, // Utilise l'arrondi complet par défaut
   );
 }
 

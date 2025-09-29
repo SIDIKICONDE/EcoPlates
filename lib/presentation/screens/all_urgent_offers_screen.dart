@@ -97,9 +97,15 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                   vertical: context.verticalSpacing,
                 ),
                 child: ResponsiveGrid(
+                  mobileColumns: 1,
+                  tabletColumns: 3, // 3 colonnes sur tablette standard
+                  desktopColumns: 4, // 4 colonnes sur desktop standard
+                  desktopLargeColumns: 5, // 5 colonnes sur desktop large
                   spacing: context.horizontalSpacing,
                   runSpacing: context.verticalSpacing,
-                  childAspectRatio: OfferCardConfigs.urgentPage.aspectRatio,
+                  childAspectRatio: OfferCardConfigs.urgentPage(
+                    context,
+                  ).aspectRatio,
                   children: offers.map((offer) {
                     final index = offers.indexOf(offer);
 
@@ -108,8 +114,9 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                       distance: 0.5 + (index * 0.3),
                       compact:
                           true, // Aligne avec les sections d'accueil (cartes compactes)
-                      imageBorderRadius:
-                          OfferCardConfigs.urgentPage.imageBorderRadius,
+                      imageBorderRadius: OfferCardConfigs.urgentPage(
+                        context,
+                      ).imageBorderRadius,
                       onTap: () => UrgentOfferDetailModal.show(
                         context,
                         offer,

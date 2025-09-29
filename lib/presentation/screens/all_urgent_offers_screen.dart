@@ -6,6 +6,7 @@ import '../../core/responsive/responsive_utils.dart';
 import '../providers/offers_catalog_provider.dart';
 import '../providers/urgent_offers_provider.dart';
 import '../widgets/offer_card.dart';
+import '../widgets/offer_card/offer_card_configs.dart';
 import '../widgets/urgent_offer_detail_modal.dart';
 import '../widgets/urgent_offers_animation_manager.dart';
 import '../widgets/urgent_offers_bottom_sheets.dart';
@@ -98,8 +99,7 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                 child: ResponsiveGrid(
                   spacing: context.horizontalSpacing,
                   runSpacing: context.verticalSpacing,
-                  childAspectRatio:
-                      1.8, // Ratio plus équilibré pour cette page (largeur/hauteur = 1.3)
+                  childAspectRatio: OfferCardConfigs.urgentPage.aspectRatio,
                   children: offers.map((offer) {
                     final index = offers.indexOf(offer);
 
@@ -108,12 +108,8 @@ class _AllUrgentOffersScreenState extends ConsumerState<AllUrgentOffersScreen>
                       distance: 0.5 + (index * 0.3),
                       compact:
                           true, // Aligne avec les sections d'accueil (cartes compactes)
-                      imageBorderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(8.0),
-                        topRight: Radius.circular(8.0),
-                        bottomLeft: Radius.zero,
-                        bottomRight: Radius.zero,
-                      ), // Pas d'arrondi en bas
+                      imageBorderRadius:
+                          OfferCardConfigs.urgentPage.imageBorderRadius,
                       onTap: () => UrgentOfferDetailModal.show(
                         context,
                         offer,

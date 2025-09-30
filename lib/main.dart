@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 //
 
+import 'core/config/supabase_config.dart';
 import 'core/constants/env_config.dart';
 import 'core/providers/cache_config_provider.dart';
 import 'core/router/app_router.dart';
@@ -18,6 +20,17 @@ void main() async {
 
   // Charger la configuration de l'environnement
   await EnvConfig.load();
+
+  // Initialiser Supabase
+  if (SupabaseConfig.isConfigured) {
+    await Supabase.initialize(
+      url: SupabaseConfig.url,
+      anonKey: SupabaseConfig.anonKey,
+      debug: EnvConfig.enableDebugLogs,
+    );
+  } else {
+    debugPrint('⚠️ Supabase non configuré - Mode offline');
+  }
 
   // Initialiser le cache d'images
   await CacheConfig.initialize();

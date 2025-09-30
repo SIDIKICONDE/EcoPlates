@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:dartz/dartz.dart';
@@ -172,6 +173,12 @@ class SupabaseFoodOfferRepository implements FoodOfferRepository {
           .update({'views_count': offer.viewCount + 1})
           .eq('id', offerId);
 
+      // Ajouter l'action en attente pour la synchronisation offline
+      await _addPendingAction('view_offer', {
+        'offerId': offerId,
+        'currentViews': offer.viewCount,
+      });
+
       return Right(offer);
     } catch (e) {
       debugPrint('Erreur getOfferById: $e');
@@ -284,6 +291,13 @@ class SupabaseFoodOfferRepository implements FoodOfferRepository {
           })
           .eq('id', offerId);
 
+      // Ajouter l'action en attente pour la synchronisation offline
+      await _addPendingAction('reserve_offer', {
+        'offerId': offerId,
+        'userId': userId,
+        'quantity': quantity,
+      });
+
       return const Right(null);
     } catch (e) {
       debugPrint('Erreur reserveOffer: $e');
@@ -339,6 +353,11 @@ class SupabaseFoodOfferRepository implements FoodOfferRepository {
             ),
           })
           .eq('id', offerId);
+
+      // Ajouter l'action en attente pour la synchronisation offline
+      await _addPendingAction('cancel_reservation', {
+        'reservationId': reservationId,
+      });
 
       return const Right(null);
     } catch (e) {
@@ -438,7 +457,16 @@ class SupabaseFoodOfferRepository implements FoodOfferRepository {
     try {
       final prefs = await SharedPreferences.getInstance();
       final offersJson = offers.map((offer) => offer.toJson()).toList();
-      await prefs.setString('cached_offers', offersJson.toString());
+      final jsonString = json.encode(offersJson);
+
+      // Sauvegarder les offres avec un timestamp
+      await prefs.setString('cached_offers', jsonString);
+      await prefs.setInt(
+        'cached_offers_timestamp',
+        DateTime.now().millisecondsSinceEpoch,
+      );
+
+      debugPrint('✅ ${offers.length} offres mises en cache');
       return const Right(null);
     } catch (e) {
       debugPrint('Erreur cacheOffers: $e');
@@ -451,16 +479,44 @@ class SupabaseFoodOfferRepository implements FoodOfferRepository {
     try {
       final prefs = await SharedPreferences.getInstance();
       final cachedData = prefs.getString('cached_offers');
+      final cachedTimestamp = prefs.getInt('cached_offers_timestamp');
 
       if (cachedData == null || cachedData.isEmpty) {
+        debugPrint('❌ Aucune offre en cache');
         return const Right([]);
       }
 
-      // Parse le JSON string
-      // Note: Une meilleure approche serait d'utiliser json.encode/decode
-      return const Right([]);
+      // Vérifier si le cache n'est pas trop ancien (24h)
+      if (cachedTimestamp != null) {
+        final cacheAge =
+            DateTime.now().millisecondsSinceEpoch - cachedTimestamp;
+        const maxCacheAge = 24 * 60 * 60 * 1000; // 24 heures en ms
+
+        if (cacheAge > maxCacheAge) {
+          debugPrint('⏰ Cache expiré, suppression');
+          await prefs.remove('cached_offers');
+          await prefs.remove('cached_offers_timestamp');
+          return const Right([]);
+        }
+      }
+
+      // Parser le JSON
+      final List<dynamic> jsonList = json.decode(cachedData) as List<dynamic>;
+      final offers = jsonList
+          .map((json) => _mapToFoodOffer(json as Map<String, dynamic>))
+          .toList();
+
+      debugPrint('✅ ${offers.length} offres récupérées du cache');
+      return Right(offers);
     } catch (e) {
       debugPrint('Erreur getCachedOffers: $e');
+      // En cas d'erreur de parsing, nettoyer le cache corrompu
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('cached_offers');
+        await prefs.remove('cached_offers_timestamp');
+      } catch (_) {}
+
       return Left(
         CacheFailure('Erreur lors de la récupération des offres en cache'),
       );
@@ -470,9 +526,41 @@ class SupabaseFoodOfferRepository implements FoodOfferRepository {
   @override
   Future<Either<Failure, void>> syncOfflineData() async {
     try {
-      // Implémentation basique de synchronisation
-      // Récupérer les données locales et les synchroniser avec Supabase
-      // Pour l'instant, retourner succès
+      debugPrint('🔄 Début de la synchronisation offline');
+
+      // Récupérer les actions en attente de synchronisation
+      final prefs = await SharedPreferences.getInstance();
+      final pendingActions = prefs.getStringList('pending_sync_actions') ?? [];
+
+      if (pendingActions.isEmpty) {
+        debugPrint('✅ Aucune action en attente de synchronisation');
+        return const Right(null);
+      }
+
+      final List<String> failedActions = [];
+
+      for (final actionJson in pendingActions) {
+        try {
+          final action = json.decode(actionJson) as Map<String, dynamic>;
+          final success = await _processPendingAction(action);
+
+          if (!success) {
+            failedActions.add(actionJson);
+          }
+        } catch (e) {
+          debugPrint('❌ Erreur traitement action: $e');
+          failedActions.add(actionJson);
+        }
+      }
+
+      // Sauvegarder seulement les actions qui ont échoué
+      await prefs.setStringList('pending_sync_actions', failedActions);
+
+      final syncedCount = pendingActions.length - failedActions.length;
+      debugPrint(
+        '✅ Synchronisation terminée: $syncedCount/${pendingActions.length} actions synchronisées',
+      );
+
       return const Right(null);
     } catch (e) {
       debugPrint('Erreur syncOfflineData: $e');
@@ -600,5 +688,65 @@ class SupabaseFoodOfferRepository implements FoodOfferRepository {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final random = timestamp.remainder(10000);
     return 'RES-${timestamp.remainder(1000000)}-$random';
+  }
+
+  /// Traiter une action en attente de synchronisation
+  Future<bool> _processPendingAction(Map<String, dynamic> action) async {
+    try {
+      final actionType = action['type'] as String;
+      final data = action['data'] as Map<String, dynamic>;
+
+      switch (actionType) {
+        case 'reserve_offer':
+          final result = await reserveOffer(
+            offerId: data['offerId'] as String,
+            userId: data['userId'] as String,
+            quantity: data['quantity'] as int,
+          );
+          return result.isRight();
+
+        case 'cancel_reservation':
+          final result = await cancelReservation(
+            data['reservationId'] as String,
+          );
+          return result.isRight();
+
+        case 'view_offer':
+          // Incrémenter le compteur de vues
+          await _supabase
+              .from(SupabaseConfig.foodOffersTable)
+              .update({'views_count': (data['currentViews'] as int) + 1})
+              .eq('id', data['offerId'] as String);
+          return true;
+
+        default:
+          debugPrint('⚠️ Type d\'action inconnue: $actionType');
+          return false;
+      }
+    } catch (e) {
+      debugPrint('❌ Erreur traitement action: $e');
+      return false;
+    }
+  }
+
+  /// Ajouter une action en attente de synchronisation
+  Future<void> _addPendingAction(String type, Map<String, dynamic> data) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final pendingActions = prefs.getStringList('pending_sync_actions') ?? [];
+
+      final action = {
+        'type': type,
+        'data': data,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+      };
+
+      pendingActions.add(json.encode(action));
+      await prefs.setStringList('pending_sync_actions', pendingActions);
+
+      debugPrint('📝 Action ajoutée en attente: $type');
+    } catch (e) {
+      debugPrint('Erreur ajout action en attente: $e');
+    }
   }
 }

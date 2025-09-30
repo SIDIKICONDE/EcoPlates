@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Widget représentant une carte de statistique écologique
 class EcoStatCard extends StatelessWidget {
   const EcoStatCard({
@@ -22,13 +24,12 @@ class EcoStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Container(
       padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: colors.surface.withValues(
+        color: DeepColorTokens.surfaceElevated.withValues(
           alpha: 0.8,
         ),
         borderRadius: BorderRadius.circular(8.0),
@@ -73,15 +74,13 @@ class EcoStatCard extends StatelessWidget {
                   text: value,
                   style: textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: colors.onSurface,
+                    color: DeepColorTokens.neutral900,
                   ),
                 ),
                 TextSpan(
                   text: ' $unit',
                   style: textTheme.bodySmall?.copyWith(
-                    color: colors.onSurface.withValues(
-                      alpha: 0.9,
-                    ),
+                    color: DeepColorTokens.neutral700,
                   ),
                 ),
               ],
@@ -102,9 +101,7 @@ class EcoStatCard extends StatelessWidget {
           Text(
             subtitle,
             style: textTheme.labelSmall?.copyWith(
-              color: colors.onSurface.withValues(
-                alpha: 0.9,
-              ),
+              color: DeepColorTokens.neutral700,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

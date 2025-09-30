@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/services/promotion_service.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/store_offers_provider.dart';
 
 /// Dialog pour appliquer une promotion globale à toutes les offres
@@ -36,7 +37,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
     return AlertDialog(
       title: Row(
         children: const [
-          Icon(Icons.local_offer, color: Colors.blue),
+          Icon(Icons.local_offer, color: DeepColorTokens.primary),
           SizedBox(width: 8.0),
           Text('Promotion globale'),
         ],
@@ -52,7 +53,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                 'Appliquer une réduction sur toutes vos offres actives',
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: Colors.grey.shade600,
+                  color: DeepColorTokens.neutral600,
                 ),
               ),
               SizedBox(height: 16.0),
@@ -135,7 +136,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
               Container(
                 padding: EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
+                  color: DeepColorTokens.primaryContainer,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Column(
@@ -146,7 +147,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: DeepColorTokens.neutral1000,
                       ),
                     ),
                     SizedBox(height: 8.0),
@@ -219,7 +220,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
           '${date.day}/${date.month}/${date.year}',
           style: TextStyle(
             fontSize: 14.0,
-            color: Colors.black87,
+            color: DeepColorTokens.neutral800,
           ),
         ),
       ),
@@ -236,7 +237,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
             label,
             style: TextStyle(
               fontSize: 12.0,
-              color: Colors.grey.shade600,
+              color: DeepColorTokens.neutral600,
             ),
           ),
           Text(
@@ -244,7 +245,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
             style: TextStyle(
               fontSize: 12.0,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: DeepColorTokens.neutral800,
             ),
           ),
         ],
@@ -275,7 +276,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(validation.errors.first),
-          backgroundColor: Colors.red,
+          backgroundColor: DeepColorTokens.error,
         ),
       );
       return;
@@ -299,7 +300,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Promotion globale appliquée avec succès !'),
-            backgroundColor: Colors.green,
+            backgroundColor: DeepColorTokens.success,
           ),
         );
       }
@@ -308,7 +309,7 @@ class _GlobalPromotionDialogState extends ConsumerState<GlobalPromotionDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Erreur lors de l'application de la promotion: $e"),
-            backgroundColor: Colors.red,
+            backgroundColor: DeepColorTokens.error,
           ),
         );
       }

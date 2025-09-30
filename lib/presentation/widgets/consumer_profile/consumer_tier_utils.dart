@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/user.dart';
 
 /// Utilitaires pour la gestion des niveaux (tiers) des consommateurs
@@ -34,22 +35,19 @@ class ConsumerTierUtils {
 
   /// Retourne la couleur associée à un niveau
   static Color getTierColor(ConsumerTier tier, {Brightness? brightness}) {
-    // Adapter les couleurs selon le thème (clair/sombre)
-    final isDark = brightness == Brightness.dark;
-
     switch (tier) {
       case ConsumerTier.bronze:
-        // Marron bronze - plus visible en thème sombre
-        return isDark ? const Color(0xFFD4AF37) : const Color(0xFFCD7F32);
+        // Bronze - couleur d'accent profonde
+        return DeepColorTokens.warning;
       case ConsumerTier.silver:
-        // Gris argent - plus contrasté en thème sombre
-        return isDark ? const Color(0xFFE0E0E0) : const Color(0xFFC0C0C0);
+        // Argent - gris neutre profond
+        return DeepColorTokens.neutral400;
       case ConsumerTier.gold:
-        // Jaune or - plus brillant en thème sombre
-        return isDark ? const Color(0xFFFFD700) : const Color(0xFFFFD700);
+        // Or - couleur d'accent premium
+        return DeepColorTokens.accent;
       case ConsumerTier.platinum:
-        // Blanc platine - plus contrasté en thème sombre
-        return isDark ? const Color(0xFFF5F5F5) : const Color(0xFFE5E4E2);
+        // Platine - couleur premium royale
+        return DeepColorTokens.premium;
     }
   }
 

@@ -1,6 +1,6 @@
-
-
 import 'package:flutter/material.dart';
+
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 
 /// Widget affichant une ligne de séparation élégante pour les cartes d'offre
 /// Utilise un design moderne avec gradient et effets visuels raffinés
@@ -34,12 +34,12 @@ class OfferCardSeparator extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.transparent,
+                    const Color(0x00000000),
                     if (isDark)
-                      Colors.white.withValues(alpha: 0.1)
+                      DeepColorTokens.neutral0.withValues(alpha: 0.1)
                     else
-                      Colors.black.withValues(alpha: 0.1),
-                    Colors.transparent,
+                      DeepColorTokens.neutral1000.withValues(alpha: 0.1),
+                    const Color(0x00000000),
                   ],
                 ),
               ),
@@ -51,30 +51,26 @@ class OfferCardSeparator extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.transparent,
-                  if (isDark) Colors.white.withValues(alpha: 0.4) else Colors.grey.shade400,
-                  if (isDark) Colors.white.withValues(alpha: 0.6) else Colors.grey.shade300,
-                  if (isDark) Colors.white.withValues(alpha: 0.4) else Colors.grey.shade400,
-                  Colors.transparent,
-                  if (isDark) Colors.white.withValues(alpha: 0.6) else Colors.grey.shade300,
-                  if (isDark) Colors.white.withValues(alpha: 0.4) else Colors.grey.shade400,
-                  Colors.transparent,
+                  const Color(0x00000000), // Transparent
                   isDark
-                      ? Colors.white.withValues(alpha: 0.6)
-                      : Colors.grey.shade300,
+                      ? DeepColorTokens.success.withValues(alpha: 0.12)
+                      : DeepColorTokens.success.withValues(alpha: 0.06),
                   isDark
-                      ? Colors.white.withValues(alpha: 0.4)
-                      : Colors.grey.shade400,
-                  Colors.transparent,
+                      ? DeepColorTokens.neutral500.withValues(alpha: 0.8)
+                      : DeepColorTokens.neutral300.withValues(alpha: 0.7),
+                  isDark
+                      ? DeepColorTokens.success.withValues(alpha: 0.12)
+                      : DeepColorTokens.success.withValues(alpha: 0.06),
+                  const Color(0x00000000), // Transparent
                 ],
-                stops: const [0.0, 0.2, 0.5, 0.8, 1.0],
+                stops: const [0.0, 0.3, 0.5, 0.7, 1.0],
               ),
               borderRadius: BorderRadius.circular(0.75),
               boxShadow: [
                 BoxShadow(
                   color: isDark
-                      ? Colors.white.withValues(alpha: 0.1)
-                      : Colors.grey.shade400.withValues(alpha: 0.3),
+                      ? DeepColorTokens.neutral0.withValues(alpha: 0.1)
+                      : DeepColorTokens.neutral400.withValues(alpha: 0.3),
                   blurRadius: 2,
                   spreadRadius: 0.5,
                   offset: const Offset(0, 0.5),
@@ -93,10 +89,10 @@ class OfferCardSeparator extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [
-                      Colors.transparent,
+                      const Color(0x00000000),
                       isDark
-                          ? Colors.white.withValues(alpha: 0.3)
-                          : Colors.grey.shade400,
+                          ? DeepColorTokens.neutral0.withValues(alpha: 0.3)
+                          : DeepColorTokens.neutral400,
                     ],
                   ),
                 ),
@@ -111,10 +107,10 @@ class OfferCardSeparator extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [
-                      Colors.transparent,
+                      const Color(0x00000000),
                       isDark
-                          ? Colors.white.withValues(alpha: 0.3)
-                          : Colors.grey.shade400,
+                          ? DeepColorTokens.neutral0.withValues(alpha: 0.3)
+                          : DeepColorTokens.neutral400,
                     ],
                   ),
                 ),

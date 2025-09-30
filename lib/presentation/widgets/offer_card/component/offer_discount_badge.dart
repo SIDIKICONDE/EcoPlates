@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Badge affichant la réduction sur l'offre
 class OfferDiscountBadge extends StatelessWidget {
   const OfferDiscountBadge({
@@ -18,11 +20,11 @@ class OfferDiscountBadge extends StatelessWidget {
         vertical: 4.0,
       ),
       decoration: BoxDecoration(
-        color: isFree ? Colors.green : Colors.red,
+        color: isFree ? DeepColorTokens.success : DeepColorTokens.urgent,
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: const [
           BoxShadow(
-            color: Colors.black26,
+            color: Color.fromRGBO(0, 0, 0, 0.26),
             blurRadius: 2.0,
             offset: Offset(0, 1),
           ),
@@ -34,13 +36,13 @@ class OfferDiscountBadge extends StatelessWidget {
           Icon(
             isFree ? Icons.card_giftcard : Icons.discount,
             size: 13.0,
-            color: Colors.white,
+            color: DeepColorTokens.neutral0,
           ),
           const SizedBox(width: 4.0),
           Text(
             discountBadge,
             style: TextStyle(
-              color: Colors.white,
+              color: DeepColorTokens.neutral0,
               fontSize: 12.0,
               fontWeight: FontWeight.w600,
             ),

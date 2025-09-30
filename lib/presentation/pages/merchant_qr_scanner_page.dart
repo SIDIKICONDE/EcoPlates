@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Page de scan QR pour les commerçants
 class MerchantQRScannerPage extends ConsumerStatefulWidget {
   const MerchantQRScannerPage({super.key});
@@ -94,12 +96,12 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
                           Icon(
                             Icons.error_outline,
                             size: 48,
-                            color: theme.colorScheme.error,
+                            color: DeepColorTokens.error,
                           ),
                           SizedBox(height: 16),
                           Text(
                             'Erreur scanner: $error',
-                            style: TextStyle(color: theme.colorScheme.error),
+                            style: TextStyle(color: DeepColorTokens.error),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -197,7 +199,7 @@ class _MerchantQRScannerPageState extends ConsumerState<MerchantQRScannerPage>
             Icon(
               Icons.camera_alt_outlined,
               size: 64,
-              color: theme.colorScheme.primary,
+              color: DeepColorTokens.primary,
             ),
             SizedBox(height: 16),
             Text(
@@ -383,52 +385,50 @@ class QrScannerOverlayShape extends ShapeBorder {
     final cornerLength = borderLength;
 
     // Top left
-    canvas..drawLine(
-      Offset(rect.left, rect.top + cornerLength),
-      Offset(rect.left, rect.top),
-      paint,
-    )
-    ..drawLine(
-      Offset(rect.left, rect.top),
-      Offset(rect.left + cornerLength, rect.top),
-      paint,
-    )
-
-    // Top right
-    ..drawLine(
-      Offset(rect.right - cornerLength, rect.top),
-      Offset(rect.right, rect.top),
-      paint,
-    )
-    ..drawLine(
-      Offset(rect.right, rect.top),
-      Offset(rect.right, rect.top + cornerLength),
-      paint,
-    )
-
-    // Bottom left
-    ..drawLine(
-      Offset(rect.left, rect.bottom - cornerLength),
-      Offset(rect.left, rect.bottom),
-      paint,
-    )
-    ..drawLine(
-      Offset(rect.left, rect.bottom),
-      Offset(rect.left + cornerLength, rect.bottom),
-      paint,
-    )
-
-    // Bottom right
-    ..drawLine(
-      Offset(rect.right - cornerLength, rect.bottom),
-      Offset(rect.right, rect.bottom),
-      paint,
-    )
-    ..drawLine(
-      Offset(rect.right, rect.bottom),
-      Offset(rect.right, rect.bottom - cornerLength),
-      paint,
-    );
+    canvas
+      ..drawLine(
+        Offset(rect.left, rect.top + cornerLength),
+        Offset(rect.left, rect.top),
+        paint,
+      )
+      ..drawLine(
+        Offset(rect.left, rect.top),
+        Offset(rect.left + cornerLength, rect.top),
+        paint,
+      )
+      // Top right
+      ..drawLine(
+        Offset(rect.right - cornerLength, rect.top),
+        Offset(rect.right, rect.top),
+        paint,
+      )
+      ..drawLine(
+        Offset(rect.right, rect.top),
+        Offset(rect.right, rect.top + cornerLength),
+        paint,
+      )
+      // Bottom left
+      ..drawLine(
+        Offset(rect.left, rect.bottom - cornerLength),
+        Offset(rect.left, rect.bottom),
+        paint,
+      )
+      ..drawLine(
+        Offset(rect.left, rect.bottom),
+        Offset(rect.left + cornerLength, rect.bottom),
+        paint,
+      )
+      // Bottom right
+      ..drawLine(
+        Offset(rect.right - cornerLength, rect.bottom),
+        Offset(rect.right, rect.bottom),
+        paint,
+      )
+      ..drawLine(
+        Offset(rect.right, rect.bottom),
+        Offset(rect.right, rect.bottom - cornerLength),
+        paint,
+      );
   }
 
   @override

@@ -58,8 +58,8 @@ class StoreStatsCard extends ConsumerWidget {
                 Text(
                   "Aujourd'hui",
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 
-                      0.7,
+                    color: theme.colorScheme.onPrimaryContainer.withValues(
+                      alpha: 0.7,
                     ),
                   ),
                 ),
@@ -137,7 +137,9 @@ class StoreStatsCard extends ConsumerWidget {
               Text(
                 'Réduction moy. : ${stats.averageDiscount.toStringAsFixed(0)}%',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                  color: theme.colorScheme.onPrimaryContainer.withValues(
+                    alpha: 0.7,
+                  ),
                 ),
               ),
             ],

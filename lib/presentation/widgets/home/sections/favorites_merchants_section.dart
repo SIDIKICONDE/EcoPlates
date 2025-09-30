@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../core/router/routes/route_constants.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../providers/merchants_provider.dart';
 import '../../favorite_merchant_card.dart';
+import 'responsive_card_config.dart';
 
 /// Section affichant un slider des commerçants favoris de l'utilisateur
 class FavoritesMerchantsSection extends ConsumerWidget {
@@ -20,10 +23,10 @@ class FavoritesMerchantsSection extends ConsumerWidget {
         // En-tête de section
         Padding(
           padding: EdgeInsets.fromLTRB(
-            16.0,
-            12.0,
-            16.0,
-            16.0,
+            ResponsiveCardConfig.getSliderPadding(context).left,
+            ResponsiveUtils.getVerticalSpacing(context) * 0.6,
+            ResponsiveCardConfig.getSliderPadding(context).right,
+            ResponsiveUtils.getVerticalSpacing(context),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -31,9 +34,11 @@ class FavoritesMerchantsSection extends ConsumerWidget {
               Text(
                 'Vos favoris',
                 style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  fontSize: ResponsiveCardConfig.getSectionTitleFontSize(
+                    context,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: DeepColorTokens.neutral900.withValues(alpha: 0.9),
                 ),
               ),
               TextButton(
@@ -44,8 +49,11 @@ class FavoritesMerchantsSection extends ConsumerWidget {
                 child: Text(
                   'Voir tout',
                   style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.blue,
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      14.0,
+                    ),
+                    color: DeepColorTokens.primary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -55,29 +63,37 @@ class FavoritesMerchantsSection extends ConsumerWidget {
         ),
 
         SizedBox(
-          height: favorites.isEmpty ? 80.0 : 152.0,
+          height: favorites.isEmpty
+              ? ResponsiveUtils.getVerticalSpacing(context) * 5
+              : 152.0,
           child: favorites.isEmpty
               ? Center(
                   child: Text(
                     'Aucun favori pour l’instant',
                     style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14.0,
+                      color: DeepColorTokens.neutral600.withValues(alpha: 0.6),
+                      fontSize: ResponsiveUtils.getResponsiveFontSize(
+                        context,
+                        14.0,
+                      ),
                     ),
                     textAlign: TextAlign.center,
                   ),
                 )
               : ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: ResponsiveCardConfig.getSliderPadding(context),
                   physics: const BouncingScrollPhysics(),
                   itemCount: favorites.length,
                   itemBuilder: (context, index) {
                     final merchant = favorites[index];
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(
+                        horizontal:
+                            ResponsiveCardConfig.getCardSpacing(context) / 2,
+                      ),
                       child: SizedBox(
-                        width: 140.0,
+                        width: ResponsiveCardConfig.getSliderCardWidth(context),
                         child: FavoriteMerchantCard(
                           merchant: merchant,
                           onTap: () {
@@ -90,7 +106,7 @@ class FavoritesMerchantsSection extends ConsumerWidget {
                 ),
         ),
 
-        SizedBox(height: 16.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
       ],
     );
   }

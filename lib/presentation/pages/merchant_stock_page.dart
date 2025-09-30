@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-  
+
 import '../../core/widgets/adaptive_widgets.dart';
 import '../../domain/entities/stock_item.dart';
 import '../widgets/stock/merchant_stock_app_bar.dart';

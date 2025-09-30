@@ -82,26 +82,34 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
   @override
   Widget build(BuildContext context) {
     final recommendedOffers = ref.watch(recommendedOffersProvider);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // En-tête de section avec style amélioré
         Container(
-          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 16.0),
+          padding: EdgeInsets.fromLTRB(
+            ResponsiveCardConfig.getSliderPadding(context).left,
+            ResponsiveUtils.getVerticalSpacing(context) * 0.4,
+            ResponsiveCardConfig.getSliderPadding(context).right,
+            ResponsiveUtils.getVerticalSpacing(context),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Recommandé pour vous',
-                style: const TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+                style: TextStyle(
+                  fontSize: ResponsiveCardConfig.getSectionTitleFontSize(
+                    context,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.9),
                 ),
               ),
-              TextButton.icon(
+              TextButton(
                 onPressed: () {
                   unawaited(
                     Navigator.of(context).push(
@@ -112,16 +120,14 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
                     ),
                   );
                 },
-                icon: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 16.0,
-                  color: colorScheme.primary,
-                ),
-                label: Text(
+                child: Text(
                   'Voir tout',
                   style: TextStyle(
-                    fontSize: 14.0,
-                    color: colorScheme.primary,
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      14.0,
+                    ),
+                    color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -187,7 +193,7 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
           ),
         ),
 
-        const SizedBox(height: 24.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 1.5),
       ],
     );
   }
@@ -197,40 +203,39 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
   // _buildErrorState supprimé: provider devenu synchrone
 
   Widget _buildEmptyState(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(
+              ResponsiveUtils.getVerticalSpacing(context),
+            ),
             decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
+              color: Theme.of(context).colorScheme.primaryContainer,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.restaurant_menu_rounded,
-              size: 48.0,
-              color: colorScheme.onPrimaryContainer,
+              size: ResponsiveUtils.getIconSize(context, baseSize: 48.0),
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           ),
-          const SizedBox(height: 16.0),
+          SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
           Text(
             'Aucune recommandation',
             style: TextStyle(
-              fontSize: 18.0,
-              color: colorScheme.onSurface,
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context, 18.0),
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8.0),
+          SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 0.4),
           Text(
             'Revenez plus tard pour découvrir de nouvelles offres',
             style: TextStyle(
-              fontSize: 14.0,
-              color: colorScheme.onSurfaceVariant,
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context, 14.0),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),
@@ -252,21 +257,19 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
   }
 
   Widget _buildOfferDetailModal(BuildContext context, FoodOffer offer) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final mediaQuery = MediaQuery.of(context);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: mediaQuery.size.height * 0.9,
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(
           top: Radius.circular(16.0),
         ),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withValues(alpha: 0.1),
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
             blurRadius: 16.0,
             offset: const Offset(0, -4),
           ),
@@ -280,33 +283,44 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
             width: 40.0,
             height: 4.0,
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              color: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2.0),
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(
+              ResponsiveUtils.getVerticalSpacing(context),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
                     "Détails de l'offre",
-                    style: const TextStyle(
-                      fontSize: 18.0,
+                    style: TextStyle(
+                      fontSize: ResponsiveUtils.getResponsiveFontSize(
+                        context,
+                        18.0,
+                      ),
                       fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
                   style: IconButton.styleFrom(
-                    backgroundColor: colorScheme.surface,
-                    padding: const EdgeInsets.all(8.0),
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    padding: EdgeInsets.all(
+                      ResponsiveUtils.getVerticalSpacing(context) * 0.5,
+                    ),
                   ),
                   icon: Icon(
                     Icons.close,
-                    color: colorScheme.onSurface,
+                    size: ResponsiveUtils.getIconSize(context),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -316,7 +330,9 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
           // Contenu scrollable avec animations
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveUtils.getVerticalSpacing(context),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -325,35 +341,43 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
                     delay: 0,
                     child: OfferInfoSection(offer: offer),
                   ),
-                  const SizedBox(height: 24.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+                  ),
 
                   // Détails pratiques
                   _AnimatedSection(
                     delay: 100,
                     child: OfferDetailsSection(offer: offer),
                   ),
-                  const SizedBox(height: 24.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+                  ),
 
                   // Adresse
                   _AnimatedSection(
                     delay: 200,
                     child: OfferAddressSection(offer: offer),
                   ),
-                  const SizedBox(height: 24.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+                  ),
 
                   // Badges allergènes
                   _AnimatedSection(
                     delay: 300,
                     child: OfferBadgesSection(offer: offer),
                   ),
-                  const SizedBox(height: 24.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+                  ),
 
                   // Métadonnées
                   _AnimatedSection(
                     delay: 400,
                     child: OfferMetadataSection(offer: offer),
                   ),
-                  const SizedBox(height: 16.0),
+                  SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
                 ],
               ),
             ),
@@ -382,7 +406,9 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                backgroundColor: colorScheme.error,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.error,
                                 content: Text(
                                   'Réservation impossible: $e',
                                 ),
@@ -403,29 +429,33 @@ class _RecommendedSectionState extends ConsumerState<RecommendedSection>
   }
 
   void _showReservationConfirmation(BuildContext context, FoodOffer offer) {
-    final colorScheme = Theme.of(context).colorScheme;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.check_circle_rounded, color: colorScheme.onPrimary),
+            Icon(
+              Icons.check_circle_rounded,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
             const SizedBox(width: 12.0),
             Expanded(
               child: Text(
                 'Réservation pour "${offer.title}" confirmée !',
-                style: TextStyle(color: colorScheme.onPrimary),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
             ),
           ],
         ),
-        backgroundColor: colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
         action: SnackBarAction(
           label: 'Voir',
-          textColor: colorScheme.onPrimary,
+          textColor: Theme.of(context).colorScheme.onPrimary,
           onPressed: () {
             // Navigation vers les réservations
           },

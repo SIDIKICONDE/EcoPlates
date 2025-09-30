@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
@@ -68,7 +69,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(StockErrorMessages.getErrorMessage(error)),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: DeepColorTokens.error,
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 3),
           ),
@@ -86,47 +87,44 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isActive = widget.item.status == StockItemStatus.active;
 
     if (widget.compactMode) {
-      return _buildCompactToggle(context, theme, isActive);
+      return _buildCompactToggle(context, isActive);
     } else {
-      return _buildStandardToggle(context, theme, isActive);
+      return _buildStandardToggle(context, isActive);
     }
   }
 
   Widget _buildStandardToggle(
     BuildContext context,
-    ThemeData theme,
     bool isActive,
   ) {
     if (!widget.showLabel) {
-      return _buildSwitchOnly(context, theme, isActive);
+      return _buildSwitchOnly(context, isActive);
     }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildStatusLabel(context, theme, isActive),
+        _buildStatusLabel(context, isActive),
         SizedBox(width: 8.0),
-        _buildSwitchOnly(context, theme, isActive),
+        _buildSwitchOnly(context, isActive),
       ],
     );
   }
 
   Widget _buildCompactToggle(
     BuildContext context,
-    ThemeData theme,
     bool isActive,
   ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildSwitchOnly(context, theme, isActive, compact: true),
+        _buildSwitchOnly(context, isActive, compact: true),
         if (widget.showLabel) ...[
           SizedBox(height: 4.0),
-          _buildStatusLabel(context, theme, isActive, compact: true),
+          _buildStatusLabel(context, isActive, compact: true),
         ],
       ],
     );
@@ -134,7 +132,6 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
 
   Widget _buildSwitchOnly(
     BuildContext context,
-    ThemeData theme,
     bool isActive, {
     bool compact = false,
   }) {
@@ -145,7 +142,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
           height: compact ? 16.0 : 16.0 * 1.25,
           child: CircularProgressIndicator(
             strokeWidth: 3,
-            color: theme.colorScheme.primary,
+            color: DeepColorTokens.primary,
           ),
         );
       } else {
@@ -155,7 +152,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
           child: AdaptiveSwitch(
             value: isActive,
             onChanged: null,
-            activeColor: theme.colorScheme.primary,
+            activeColor: DeepColorTokens.primary,
           ),
         );
       }
@@ -166,7 +163,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
       child: AdaptiveSwitch(
         value: isActive,
         onChanged: _isToggling ? null : (_) => _toggleStatus(),
-        activeColor: theme.colorScheme.primary,
+        activeColor: DeepColorTokens.primary,
       ),
     );
 
@@ -183,7 +180,6 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
 
   Widget _buildStatusLabel(
     BuildContext context,
-    ThemeData theme,
     bool isActive, {
     bool compact = false,
   }) {
@@ -196,11 +192,11 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
       padding: labelPadding,
       decoration: BoxDecoration(
         color: isActive
-            ? theme.colorScheme.primaryContainer.withValues(
-                alpha: 16.0,
+            ? DeepColorTokens.primaryContainer.withValues(
+                alpha: 0.1,
               )
-            : theme.colorScheme.outline.withValues(
-                alpha: 16.0,
+            : DeepColorTokens.neutral300.withValues(
+                alpha: 0.2,
               ),
         borderRadius: BorderRadius.circular(
           compact ? 16.0 : 20.0,
@@ -218,8 +214,8 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
               fontSize: compact ? 16.0 : 16.0,
               fontWeight: FontWeight.w500,
               color: isActive
-                  ? theme.colorScheme.onPrimaryContainer
-                  : theme.colorScheme.onSurfaceVariant,
+                  ? DeepColorTokens.neutral0
+                  : DeepColorTokens.neutral600,
             ),
           ),
         ],

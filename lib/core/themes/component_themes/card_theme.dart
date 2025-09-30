@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../tokens/color_tokens.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../tokens/elevation_tokens.dart';
 import '../tokens/radius_tokens.dart';
 import '../tokens/spacing_tokens.dart';
@@ -13,9 +13,9 @@ class EcoCardTheme {
   static CardThemeData cardTheme({required bool isDark}) {
     return CardThemeData(
       // Couleurs
-      color: isDark ? EcoColorTokens.neutral800 : EcoColorTokens.neutral0,
-      shadowColor: Colors.black26,
-      surfaceTintColor: Colors.transparent,
+      color: isDark ? DeepColorTokens.neutral800 : DeepColorTokens.neutral0,
+      shadowColor: DeepColorTokens.shadowMedium,
+      surfaceTintColor: const Color(0x00000000),
 
       // Élévation
       elevation: EcoElevation.cardElevation,
@@ -42,9 +42,9 @@ class EcoCardTheme {
     bool isDark = false,
   }) {
     return Card(
-      color: isDark ? EcoColorTokens.neutral800 : EcoColorTokens.neutral0,
+      color: isDark ? DeepColorTokens.neutral800 : DeepColorTokens.neutral0,
       elevation: EcoElevation.cardElevation,
-      shadowColor: Colors.black12,
+      shadowColor: DeepColorTokens.shadowLight,
       shape: const RoundedRectangleBorder(
         borderRadius: EcoRadius.cardRadius,
       ),
@@ -72,12 +72,12 @@ class EcoCardTheme {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: isDark ? EcoColorTokens.neutral800 : EcoColorTokens.neutral0,
+          color: isDark ? DeepColorTokens.neutral800 : DeepColorTokens.neutral0,
           borderRadius: EcoRadius.cardRadius,
           boxShadow: EcoElevation.cardShadow,
         ),
         child: Material(
-          color: Colors.transparent,
+          color: const Color(0x00000000),
           child: InkWell(
             onTap: onTap,
             borderRadius: EcoRadius.cardRadius,
@@ -104,7 +104,7 @@ class EcoCardTheme {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? EcoColorTokens.neutral800 : EcoColorTokens.neutral0,
+        color: isDark ? DeepColorTokens.neutral800 : DeepColorTokens.neutral0,
         borderRadius: EcoRadius.cardRadius,
         border: Border.all(
           color: borderColor,
@@ -113,7 +113,7 @@ class EcoCardTheme {
         boxShadow: EcoElevation.cardShadow,
       ),
       child: Material(
-        color: Colors.transparent,
+        color: const Color(0x00000000),
         child: InkWell(
           onTap: onTap,
           borderRadius: EcoRadius.cardRadius,
@@ -139,7 +139,7 @@ class EcoCardTheme {
         boxShadow: EcoElevation.cardShadow,
       ),
       child: Material(
-        color: Colors.transparent,
+        color: const Color(0x00000000),
         child: InkWell(
           onTap: onTap,
           borderRadius: EcoRadius.cardRadius,
@@ -161,12 +161,12 @@ class EcoCardTheme {
     bool isDark = false,
   }) {
     Color? borderColor;
-    if (isUrgent) borderColor = EcoColorTokens.urgent;
-    if (isFavorite) borderColor = EcoColorTokens.error;
+    if (isUrgent) borderColor = DeepColorTokens.urgent;
+    if (isFavorite) borderColor = DeepColorTokens.error;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? EcoColorTokens.neutral800 : EcoColorTokens.neutral0,
+        color: isDark ? DeepColorTokens.neutral800 : DeepColorTokens.neutral0,
         borderRadius: EcoRadius.cardRadius,
         border: borderColor != null
             ? Border.all(color: borderColor, width: 2)
@@ -176,7 +176,7 @@ class EcoCardTheme {
             : EcoElevation.cardShadow,
       ),
       child: Material(
-        color: Colors.transparent,
+        color: const Color(0x00000000),
         child: InkWell(
           onTap: onTap,
           borderRadius: EcoRadius.cardRadius,
@@ -193,7 +193,7 @@ class EcoCardTheme {
     bool isDark = false,
   }) {
     return Card(
-      color: isDark ? EcoColorTokens.neutral800 : EcoColorTokens.neutral0,
+      color: isDark ? DeepColorTokens.neutral800 : DeepColorTokens.neutral0,
       elevation: EcoElevation.level1,
       margin: EcoSpacing.marginSM,
       shape: const RoundedRectangleBorder(
@@ -218,12 +218,12 @@ class EcoCardTheme {
   }) {
     return Container(
       decoration: const BoxDecoration(
-        gradient: EcoColorTokens.primaryGradient,
+        gradient: DeepColorTokens.primaryGradient,
         borderRadius: EcoRadius.cardLargeRadius,
         boxShadow: EcoElevation.floatingShadow,
       ),
       child: Material(
-        color: Colors.transparent,
+        color: const Color(0x00000000),
         child: InkWell(
           onTap: onTap,
           borderRadius: EcoRadius.cardLargeRadius,
@@ -244,7 +244,7 @@ class EcoCardTheme {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? EcoColorTokens.neutral800 : EcoColorTokens.neutral0,
+        color: isDark ? DeepColorTokens.neutral800 : DeepColorTokens.neutral0,
         borderRadius: EcoRadius.cardRadius,
         boxShadow: EcoElevation.cardShadow,
         border: accentColor != null
@@ -270,21 +270,21 @@ class EcoCardTheme {
     return Container(
       decoration: BoxDecoration(
         color: isDark
-            ? EcoColorTokens.neutral700
-            : EcoColorTokens.primaryContainer,
+            ? DeepColorTokens.neutral700
+            : DeepColorTokens.primaryContainer,
         borderRadius: EcoRadius.cardRadius,
         boxShadow: EcoElevation.cardShadow,
         border: Border.all(
-          color: EcoColorTokens.primary.withValues(alpha: 0.3),
+          color: DeepColorTokens.primary.withValues(alpha: 0.3),
         ),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: const Color(0x00000000),
         child: InkWell(
           onTap: onTap,
           borderRadius: EcoRadius.cardRadius,
-          splashColor: EcoColorTokens.primary.withValues(alpha: 0.1),
-          highlightColor: EcoColorTokens.primary.withValues(alpha: 0.05),
+          splashColor: DeepColorTokens.primary.withValues(alpha: 0.1),
+          highlightColor: DeepColorTokens.primary.withValues(alpha: 0.05),
           child: Padding(
             padding: EcoSpacing.cardPadding,
             child: child,
@@ -323,7 +323,7 @@ class EcoCardTheme {
       decoration: decoration,
       margin: margin,
       child: Material(
-        color: Colors.transparent,
+        color: const Color(0x00000000),
         child: InkWell(
           onTap: onTap,
           borderRadius: borderRadius ?? EcoRadius.cardRadius,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/services/image_cache_service.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../core/widgets/eco_cached_image.dart';
 import '../../domain/entities/video_preview.dart';
 import '../providers/videos_provider.dart';
@@ -154,7 +155,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                     Icon(
                       Icons.error_outline,
                       size: 48.0,
-                      color: Theme.of(context).colorScheme.error,
+                      color: DeepColorTokens.error,
                     ),
                     SizedBox(
                       height: 16.0,
@@ -162,7 +163,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
                     Text(
                       'Erreur de chargement',
                       style: theme.textTheme.headlineSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
+                        color: DeepColorTokens.error,
                       ),
                     ),
                     SizedBox(
@@ -195,7 +196,7 @@ class _AllVideosPageState extends ConsumerState<AllVideosPage> {
           _selectedFilter = selected ? value : 'all';
         });
       },
-      selectedColor: Theme.of(context).primaryColor.withValues(
+      selectedColor: DeepColorTokens.primary.withValues(
         alpha: 0.2,
       ),
     );
@@ -318,7 +319,7 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
                 Icon(
                   Icons.search_off,
                   size: 80.0,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
                 ),
                 SizedBox(
                   height: 16.0,
@@ -326,7 +327,7 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
                 Text(
                   'Aucune vidéo trouvée pour "$query"',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -371,12 +372,12 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
                       imageUrl: video.thumbnailUrl,
                       size: ImageSize.small,
                       errorWidget: ColoredBox(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.surfaceContainerHighest,
+                        color: DeepColorTokens.surfaceContainer,
                         child: Icon(
                           Icons.broken_image,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          color: DeepColorTokens.neutral0.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
                     ),
@@ -392,7 +393,7 @@ class _VideoSearchDelegate extends SearchDelegate<VideoData?> {
               subtitle: Text(
                 '${video.merchantName} • ${video.viewCount} vues',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
                 ),
               ),
               onTap: () {

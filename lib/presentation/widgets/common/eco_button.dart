@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Bouton unifié et responsive pour EcoPlates
 /// 
 /// Ce widget remplace TOUS les autres systèmes de boutons
@@ -139,9 +141,9 @@ class EcoButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: effectiveBackgroundColor,
             foregroundColor: effectiveForegroundColor,
-            disabledBackgroundColor: isDark 
-                ? Colors.grey[800] 
-                : Colors.grey[300],
+            disabledBackgroundColor: isDark
+                ? DeepColorTokens.neutral600
+                : DeepColorTokens.neutral300,
             elevation: elevation ?? 2.0,
             shadowColor: Colors.black.withValues(alpha: 0.2),
             padding: effectivePadding,
@@ -234,9 +236,9 @@ class EcoButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: effectiveBackgroundColor,
             foregroundColor: effectiveForegroundColor,
-            disabledBackgroundColor: isDark 
-                ? Colors.grey[800] 
-                : Colors.grey[300],
+            disabledBackgroundColor: isDark
+                ? DeepColorTokens.neutral600
+                : DeepColorTokens.neutral300,
             elevation: elevation ?? 2.0,
             shadowColor: Colors.black.withValues(alpha: 0.2),
             padding: EdgeInsets.symmetric(
@@ -359,51 +361,51 @@ class EcoButton extends StatelessWidget {
     switch (variant) {
       case EcoButtonVariant.primary:
         return _ButtonColors(
-          backgroundColor: theme.primaryColor,
-          foregroundColor: Colors.white,
-          borderColor: theme.primaryColor,
+          backgroundColor: DeepColorTokens.primary,
+          foregroundColor: DeepColorTokens.neutral0,
+          borderColor: DeepColorTokens.primary,
         );
 
       case EcoButtonVariant.secondary:
         return _ButtonColors(
-          backgroundColor: theme.colorScheme.secondary,
-          foregroundColor: Colors.white,
-          borderColor: theme.colorScheme.secondary,
+          backgroundColor: DeepColorTokens.secondary,
+          foregroundColor: DeepColorTokens.neutral0,
+          borderColor: DeepColorTokens.secondary,
         );
 
       case EcoButtonVariant.outline:
         return _ButtonColors(
           backgroundColor: Colors.transparent,
-          foregroundColor: isDark ? Colors.white : theme.primaryColor,
-          borderColor: isDark ? Colors.white : theme.primaryColor,
+          foregroundColor: isDark ? DeepColorTokens.neutral0 : DeepColorTokens.primary,
+          borderColor: isDark ? DeepColorTokens.neutral0 : DeepColorTokens.primary,
         );
 
       case EcoButtonVariant.ghost:
         return _ButtonColors(
           backgroundColor: Colors.transparent,
-          foregroundColor: isDark ? Colors.white70 : Colors.black87,
-          borderColor: isDark ? Colors.white24 : Colors.black12,
+          foregroundColor: isDark ? DeepColorTokens.neutral200 : DeepColorTokens.neutral700,
+          borderColor: isDark ? DeepColorTokens.neutral600 : DeepColorTokens.neutral300,
         );
 
       case EcoButtonVariant.text:
         return _ButtonColors(
           backgroundColor: Colors.transparent,
-          foregroundColor: theme.primaryColor,
+          foregroundColor: DeepColorTokens.primary,
           borderColor: Colors.transparent,
         );
 
       case EcoButtonVariant.urgent:
         return _ButtonColors(
-          backgroundColor: theme.colorScheme.error,
-          foregroundColor: Colors.white,
-          borderColor: theme.colorScheme.error,
+          backgroundColor: DeepColorTokens.error,
+          foregroundColor: DeepColorTokens.neutral0,
+          borderColor: DeepColorTokens.error,
         );
 
       case EcoButtonVariant.pill:
         return _ButtonColors(
-          backgroundColor: theme.primaryColor,
-          foregroundColor: Colors.white,
-          borderColor: theme.primaryColor,
+          backgroundColor: DeepColorTokens.primary,
+          foregroundColor: DeepColorTokens.neutral0,
+          borderColor: DeepColorTokens.primary,
         );
     }
   }

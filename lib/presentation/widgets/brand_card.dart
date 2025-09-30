@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/responsive/responsive_utils.dart';
 import '../../core/services/image_cache_service.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../core/widgets/eco_cached_image.dart';
 import '../../domain/entities/brand.dart';
 import 'brand_card/brand_background_image_service.dart';
@@ -99,7 +100,7 @@ class _BrandCardState extends State<BrandCard>
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(
+                        color: DeepColorTokens.shadowDeep.withValues(
                           alpha: _isHovered ? 0.3 : 0.15,
                         ),
                         blurRadius: _isHovered ? 20 : 10,
@@ -144,7 +145,7 @@ class _BrandCardState extends State<BrandCard>
                                       : const Color(0xFFE5E5E5),
                                   child: const Icon(
                                     Icons.error_outline,
-                                    color: Colors.red,
+                                    color: DeepColorTokens.error,
                                   ),
                                 ),
                               ),
@@ -157,7 +158,7 @@ class _BrandCardState extends State<BrandCard>
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                  Colors.transparent,
+                                  const Color(0x00000000),
                                   Colors.black.withValues(alpha: 0.3),
                                   Colors.black.withValues(alpha: 0.6),
                                   Colors.black.withValues(alpha: 0.8),
@@ -171,7 +172,9 @@ class _BrandCardState extends State<BrandCard>
                             BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
                               child: Container(
-                                color: Colors.black.withValues(alpha: 0.1),
+                                color: DeepColorTokens.shadowDeep.withValues(
+                                  alpha: 0.1,
+                                ),
                               ),
                             ),
                           // Contenu principal
@@ -202,10 +205,11 @@ class _BrandCardState extends State<BrandCard>
                                                   context,
                                                 ),
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            shadows: const [
+                                            color: DeepColorTokens.neutral0,
+                                            shadows: [
                                               BoxShadow(
-                                                color: Colors.black45,
+                                                color: DeepColorTokens
+                                                    .shadowMedium,
                                                 blurRadius: 4,
                                                 offset: Offset(0, 2),
                                               ),
@@ -237,13 +241,15 @@ class _BrandCardState extends State<BrandCard>
                                                         context,
                                                       ),
                                                   fontWeight: FontWeight.w500,
-                                                  color: Colors.white
+                                                  color: DeepColorTokens
+                                                      .neutral0
                                                       .withValues(
                                                         alpha: 0.8,
                                                       ),
-                                                  shadows: const [
+                                                  shadows: [
                                                     BoxShadow(
-                                                      color: Colors.black45,
+                                                      color: DeepColorTokens
+                                                          .shadowMedium,
                                                       blurRadius: 4,
                                                       offset: Offset(0, 2),
                                                     ),
@@ -311,9 +317,10 @@ class _BrandCardState extends State<BrandCard>
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.2,
-                                          ),
+                                          color: DeepColorTokens.shadowDeep
+                                              .withValues(
+                                                alpha: 0.2,
+                                              ),
                                           blurRadius: _isHovered ? 12 : 8,
                                           offset: const Offset(0, 2),
                                         ),

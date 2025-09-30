@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 
 /// Section des allergènes avec slider moderne
@@ -21,18 +22,16 @@ class OfferBadgesSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                color: DeepColorTokens.surfaceElevated,
                 borderRadius: BorderRadius.circular(8.0),
                 border: Border.all(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.1),
+                  color: DeepColorTokens.neutral300,
                 ),
               ),
               child: Icon(
                 Icons.warning_amber_rounded,
                 size: 16.0,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                color: DeepColorTokens.neutral600,
               ),
             ),
             const SizedBox(width: 12.0),
@@ -41,7 +40,7 @@ class OfferBadgesSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onSurface,
+                color: DeepColorTokens.neutral900,
               ),
             ),
           ],
@@ -63,12 +62,10 @@ class OfferBadgesSection extends StatelessWidget {
                   vertical: 8.0,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                  color: DeepColorTokens.surface,
                   borderRadius: BorderRadius.circular(16.0),
                   border: Border.all(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outline.withValues(alpha: 0.2),
+                    color: DeepColorTokens.neutral300,
                   ),
                 ),
                 child: Text(
@@ -76,9 +73,7 @@ class OfferBadgesSection extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w500,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.8),
+                    color: DeepColorTokens.neutral700,
                   ),
                 ),
               );

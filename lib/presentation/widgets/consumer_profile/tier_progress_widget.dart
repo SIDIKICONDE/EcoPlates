@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/user.dart';
 import 'consumer_tier_utils.dart';
 
@@ -17,7 +18,6 @@ class TierProgressWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     final nextTier = ConsumerTierUtils.getNextTier(currentTier);
@@ -46,7 +46,7 @@ class TierProgressWidget extends StatelessWidget {
         const SizedBox(height: 12.0),
         LinearProgressIndicator(
           value: progress.clamp(0.0, 1.0),
-          backgroundColor: colors.surface.withValues(alpha: 0.5),
+          backgroundColor: DeepColorTokens.surface.withValues(alpha: 0.5),
           valueColor: AlwaysStoppedAnimation<Color>(
             ConsumerTierUtils.getTierColor(
               nextTier ?? currentTier,
@@ -60,7 +60,7 @@ class TierProgressWidget extends StatelessWidget {
           Text(
             'Encore ${nextTierThreshold - currentScore} points pour débloquer le niveau ${ConsumerTierUtils.getTierLabel(nextTier)}',
             style: textTheme.bodySmall?.copyWith(
-              color: colors.onSurface.withValues(alpha: 0.6),
+              color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
             ),
           ),
       ],

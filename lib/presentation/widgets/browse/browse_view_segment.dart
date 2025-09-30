@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/browse_view_provider.dart';
 import '../sort_section.dart';
 
@@ -18,14 +19,14 @@ class BrowseViewSegment extends ConsumerWidget {
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           padding: const EdgeInsets.all(4.0),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.9),
+            color: DeepColorTokens.neutral0.withValues(alpha: 0.9),
             border: Border.all(
-              color: Colors.grey[300]!.withValues(alpha: 0.5),
+              color: DeepColorTokens.neutral300.withValues(alpha: 0.5),
             ),
             borderRadius: BorderRadius.circular(12.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: DeepColorTokens.shadowLight,
                 blurRadius: 8.0,
                 offset: const Offset(0, 2),
               ),
@@ -51,7 +52,7 @@ class BrowseViewSegment extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? Theme.of(context).primaryColor
-                          : Colors.transparent,
+                          : const Color(0x00000000),
                       borderRadius: BorderRadius.only(
                         topLeft: isFirst
                             ? const Radius.circular(8.0)
@@ -70,8 +71,8 @@ class BrowseViewSegment extends ConsumerWidget {
                           ? null
                           : LinearGradient(
                               colors: [
-                                Colors.white.withValues(alpha: 0.8),
-                                Colors.white.withValues(alpha: 0.4),
+                                DeepColorTokens.neutral0.withValues(alpha: 0.8),
+                                DeepColorTokens.neutral0.withValues(alpha: 0.4),
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -85,7 +86,7 @@ class BrowseViewSegment extends ConsumerWidget {
                               ? Icons.view_list_rounded
                               : Icons.map_rounded,
                           color: isSelected
-                              ? Colors.white
+                              ? DeepColorTokens.neutral0
                               : Theme.of(
                                   context,
                                 ).colorScheme.onSurface.withValues(alpha: 0.7),
@@ -96,10 +97,12 @@ class BrowseViewSegment extends ConsumerWidget {
                           mode.label,
                           style: TextStyle(
                             color: isSelected
-                                ? Colors.white
+                                ? DeepColorTokens.neutral0
                                 : Theme.of(
                                     context,
-                                  ).colorScheme.onSurface.withValues(alpha: 0.8),
+                                  ).colorScheme.onSurface.withValues(
+                                    alpha: 0.8,
+                                  ),
                             fontWeight: isSelected
                                 ? FontWeight.w600
                                 : FontWeight.w500,

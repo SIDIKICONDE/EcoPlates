@@ -8,8 +8,7 @@ import '../providers/offer_reservation_provider.dart';
 /// Indicateur de stock faible pour les offres urgentes
 class LowStockIndicator extends StatelessWidget {
   const LowStockIndicator({
-    super.key,
-    required this.offer,
+    required this.offer, super.key,
   });
 
   final FoodOffer offer;
@@ -62,8 +61,7 @@ class LowStockIndicator extends StatelessWidget {
 /// Bouton flottant d'ajout rapide au panier pour les offres urgentes
 class QuickAddToCartButton extends ConsumerWidget {
   const QuickAddToCartButton({
-    super.key,
-    required this.offer,
+    required this.offer, super.key,
   });
 
   final FoodOffer offer;

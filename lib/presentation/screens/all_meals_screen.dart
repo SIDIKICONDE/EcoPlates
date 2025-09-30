@@ -1,104 +1,141 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/responsive_layout.dart';
 import '../../core/responsive/responsive_utils.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../domain/entities/food_offer.dart';
-import '../providers/meals_provider.dart';
-import '../widgets/common/empty_state.dart';
-import '../widgets/common/offer_detail_modal.dart';
+import '../providers/offers_catalog_provider.dart';
+import '../providers/urgent_offers_provider.dart';
+import '../widgets/logo/index.dart';
 import '../widgets/offer_card.dart';
+import '../widgets/offer_card/offer_card_configs.dart';
+import '../widgets/urgent_offer_detail_modal.dart';
+import '../widgets/urgent_offers_animation_manager.dart';
+import '../widgets/urgent_offers_bottom_sheets.dart';
+import '../widgets/urgent_offers_empty_state.dart';
 
 /// Page affichant tous les repas complets disponibles
-class AllMealsScreen extends ConsumerWidget {
+class AllMealsScreen extends ConsumerStatefulWidget {
   const AllMealsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final meals = ref.watch(mealsProvider);
+  ConsumerState<AllMealsScreen> createState() => _AllMealsScreenState();
+}
+
+class _AllMealsScreenState extends ConsumerState<AllMealsScreen>
+    with SingleTickerProviderStateMixin {
+  UrgentOffersAnimationManager? _animationManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationManager = UrgentOffersAnimationManager()
+      ..initializeAnimations(this);
+  }
+
+  @override
+  void dispose() {
+    _animationManager?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final meals = ref.watch(urgentOffersProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Tous les repas complets',
-          style: TextStyle(
-            fontSize: ResponsiveUtils.getResponsiveFontSize(context, 20.0),
-            fontWeight: FontWeight.w600,
-          ),
+        title: Row(
+          children: [
+            LogoMeal(
+              animationManager: _animationManager,
+            ),
+            SizedBox(width: context.horizontalSpacing / 2),
+            Text(
+              'Tous les repas complets',
+              style: TextStyle(
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context, 20.0),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
-        centerTitle: true,
-        elevation: 0,
+        centerTitle: false,
         toolbarHeight: context.appBarHeight,
+        backgroundColor: DeepColorTokens.primary.withValues(alpha: 0.1),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.sort,
+              size: ResponsiveUtils.getIconSize(context),
+            ),
+            onPressed: () => UrgentOffersSortBottomSheet.show(context),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.filter_list,
+              size: ResponsiveUtils.getIconSize(context),
+            ),
+            onPressed: () => UrgentOffersFilterBottomSheet.show(context),
+          ),
+        ],
       ),
       body: meals.isEmpty
-          ? const EmptyState(
-              icon: Icons.restaurant_outlined,
-              title: 'Aucun repas disponible',
-              subtitle: 'Revenez plus tard pour découvrir de nouveaux repas',
-            )
-          : _buildListView(context, meals),
+          ? const UrgentOffersEmptyState()
+          : RefreshIndicator(
+              onRefresh: () async {
+                await ref.read(offersRefreshProvider.notifier).refreshIfStale();
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.horizontalSpacing,
+                  vertical: context.verticalSpacing,
+                ),
+                child: _buildGridView(context, meals),
+              ),
+            ),
     );
   }
 
-  Widget _buildListView(BuildContext context, List<FoodOffer> meals) {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.horizontalSpacing,
-        vertical: context.verticalSpacing,
-      ),
-      itemCount: meals.length,
-      itemBuilder: (context, index) {
-        final meal = meals[index];
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: context.verticalSpacing,
-          ),
-          child: OfferCard(
-            offer: meal,
-            distance: 0.8 + (index * 0.3), // Distance simulée
-            onTap: () async {
-              await _showMealDetailModal(context, meal);
-            },
+  Widget _buildGridView(BuildContext context, List<FoodOffer> meals) {
+    final screenSize = MediaQuery.of(context).size;
+
+    // Détection spécifique pour la taille 768x1024px (tablette portrait)
+    final is768x1024 =
+        screenSize.width >= 768 &&
+        screenSize.width < 769 &&
+        screenSize.height >= 1024 &&
+        screenSize.height < 1025;
+
+    return ResponsiveGrid(
+      tabletColumns: is768x1024 ? 2 : 3, // 2 colonnes pour 768x1024px, sinon 3
+      desktopColumns: 4, // 4 colonnes sur desktop standard
+      desktopLargeColumns: 5, // 5 colonnes sur desktop large
+      spacing: 2.0, // Gap minimal horizontal fixe
+      runSpacing: 2.0, // Gap minimal vertical fixe
+      childAspectRatio: OfferCardConfigs.urgentPage(
+        context,
+      ).aspectRatio,
+      children: meals.map((meal) {
+        final index = meals.indexOf(meal);
+
+        return OfferCard(
+          offer: meal,
+          distance: 0.5 + (index * 0.3),
+          compact:
+              true, // Aligne avec les sections d'accueil (cartes compactes)
+          imageBorderRadius: OfferCardConfigs.urgentPage(
+            context,
+          ).imageBorderRadius,
+          onTap: () => UrgentOfferDetailModal.show(
+            context,
+            meal,
+            _animationManager!.animationController,
+            _animationManager!.pulseAnimation,
           ),
         );
-      },
+      }).toList(),
     );
-  }
-
-  Future<void> _showMealDetailModal(
-    BuildContext context,
-    FoodOffer meal,
-  ) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => OfferDetailModal(
-        offer: meal,
-        title: meal.title,
-        subtitle: 'À récupérer : ${_formatPickupTime(meal)}',
-        height: 0.7,
-        showMealComposition: true,
-        onReserve: () {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green,
-              content: Text('✅ "${meal.title}" réservé avec succès !'),
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  // Widget modal centralisé via OfferDetailModal
-
-  String _formatPickupTime(FoodOffer meal) {
-    final start =
-        '${meal.pickupStartTime.hour.toString().padLeft(2, '0')}:${meal.pickupStartTime.minute.toString().padLeft(2, '0')}';
-    final end =
-        '${meal.pickupEndTime.hour.toString().padLeft(2, '0')}:${meal.pickupEndTime.minute.toString().padLeft(2, '0')}';
-    return '$start - $end';
   }
 }

@@ -61,7 +61,6 @@ class _OffersGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     final columns = ResponsiveUtils.getResponsiveColumns(
       context,
-      mobileColumns: 1,
       tabletColumns: 2,
       desktopColumns: 3,
       desktopLargeColumns: 4,

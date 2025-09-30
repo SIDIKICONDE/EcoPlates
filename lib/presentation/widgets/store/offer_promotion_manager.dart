@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/services/promotion_service.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 
 /// Widget pour gérer les promotions d'une offre individuelle
@@ -47,11 +48,11 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     return Container(
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 8.0,
             offset: Offset(0.0, 4.0),
           ),
@@ -64,7 +65,9 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
             children: [
               Icon(
                 hasPromotion ? Icons.local_offer : Icons.local_offer_outlined,
-                color: hasPromotion ? Colors.blue : Colors.grey.shade600,
+                color: hasPromotion
+                    ? DeepColorTokens.primary
+                    : DeepColorTokens.neutral600,
               ),
               SizedBox(width: 8.0),
               Text(
@@ -72,7 +75,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: DeepColorTokens.neutral1000,
                 ),
               ),
             ],
@@ -96,7 +99,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
               suffixText: '%',
               border: const OutlineInputBorder(),
               filled: true,
-              fillColor: Colors.grey.shade100,
+              fillColor: DeepColorTokens.neutral100,
             ),
             keyboardType: TextInputType.number,
             enabled: !_isLoading,
@@ -119,7 +122,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                     icon: const Icon(Icons.clear),
                     label: const Text('Supprimer'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
+                      foregroundColor: DeepColorTokens.error,
                     ),
                   ),
                 ),
@@ -151,7 +154,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     return Container(
       padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: DeepColorTokens.primaryContainer,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
@@ -162,7 +165,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
             style: TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: DeepColorTokens.neutral1000,
             ),
           ),
           SizedBox(height: 4.0),
@@ -173,7 +176,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                 'Prix actuel',
                 style: TextStyle(
                   fontSize: 12.0,
-                  color: Colors.grey.shade600,
+                  color: DeepColorTokens.neutral600,
                 ),
               ),
               Text(
@@ -181,7 +184,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: DeepColorTokens.primary,
                 ),
               ),
             ],
@@ -195,7 +198,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                   'Prix original',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Colors.grey.shade600,
+                    color: DeepColorTokens.neutral600,
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
@@ -203,7 +206,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                   '${widget.offer.originalPrice.toStringAsFixed(2)}€',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Colors.grey.shade600,
+                    color: DeepColorTokens.neutral600,
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
@@ -224,14 +227,14 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
       return Container(
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: Colors.red.shade50,
+          color: DeepColorTokens.errorContainer,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Row(
-          children: [
+          children: const [
             Icon(
               Icons.error_outline,
-              color: Colors.red,
+              color: DeepColorTokens.error,
               size: 16.0,
             ),
             SizedBox(width: 8.0),
@@ -239,7 +242,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
               'Pourcentage invalide (1-90%)',
               style: TextStyle(
                 fontSize: 12.0,
-                color: Colors.red.shade700,
+                color: DeepColorTokens.error,
               ),
             ),
           ],
@@ -253,7 +256,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
     return Container(
       padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: Colors.green.shade50,
+        color: DeepColorTokens.successContainer,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
@@ -264,7 +267,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
             style: TextStyle(
               fontSize: 12.0,
               fontWeight: FontWeight.bold,
-              color: Colors.green.shade800,
+              color: DeepColorTokens.success,
             ),
           ),
           SizedBox(height: 8.0),
@@ -275,7 +278,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                 'Nouveau prix',
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: Colors.green.shade700,
+                  color: DeepColorTokens.success,
                 ),
               ),
               Text(
@@ -283,7 +286,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: DeepColorTokens.success,
                 ),
               ),
             ],
@@ -295,7 +298,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                 'Économie',
                 style: TextStyle(
                   fontSize: 12.0,
-                  color: Colors.green.shade700,
+                  color: DeepColorTokens.success,
                 ),
               ),
               Text(
@@ -303,7 +306,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
                 style: TextStyle(
                   fontSize: 12.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: DeepColorTokens.success,
                 ),
               ),
             ],
@@ -319,7 +322,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Veuillez entrer un pourcentage de réduction'),
-          backgroundColor: Colors.orange,
+          backgroundColor: DeepColorTokens.warning,
         ),
       );
       return;
@@ -330,7 +333,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Le pourcentage doit être entre 1 et 90'),
-          backgroundColor: Colors.red,
+          backgroundColor: DeepColorTokens.error,
         ),
       );
       return;
@@ -356,7 +359,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
             content: Text(
               'Promotion de ${discount.toStringAsFixed(0)}% appliquée !',
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: DeepColorTokens.success,
           ),
         );
       }
@@ -365,7 +368,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Erreur lors de l'application de la promotion: $e"),
-            backgroundColor: Colors.red,
+            backgroundColor: DeepColorTokens.error,
           ),
         );
       }
@@ -389,7 +392,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Promotion supprimée'),
-            backgroundColor: Colors.green,
+            backgroundColor: DeepColorTokens.success,
           ),
         );
       }
@@ -398,7 +401,7 @@ class _OfferPromotionManagerState extends ConsumerState<OfferPromotionManager> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Erreur lors de la suppression: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: DeepColorTokens.error,
           ),
         );
       }

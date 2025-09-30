@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/responsive_utils.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 
 /// Widget pour afficher les informations de prix
 class PriceInfo extends StatelessWidget {
@@ -16,6 +18,25 @@ class PriceInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final originalPriceFontSize = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 10.0,
+      tablet: 11.0,
+      desktop: 12.0,
+    );
+    final discountedPriceFontSize = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 12.0,
+      tablet: 14.0,
+      desktop: 16.0,
+    );
+    final minPriceFontSize = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 12.0,
+      tablet: 14.0,
+      desktop: 16.0,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -25,25 +46,26 @@ class PriceInfo extends StatelessWidget {
           Text(
             '${originalPrice!.toStringAsFixed(2)}€',
             style: TextStyle(
-              color: Colors.grey,
+              color: DeepColorTokens.neutral600,
               decoration: TextDecoration.lineThrough,
-              fontSize: 12.0,
+              fontSize: originalPriceFontSize,
             ),
           ),
           Text(
             '${discountedPrice!.toStringAsFixed(2)}€',
             style: TextStyle(
-              color: Colors.red,
+              color: DeepColorTokens.error,
               fontWeight: FontWeight.bold,
-              fontSize: 14.0,
+              fontSize: discountedPriceFontSize,
             ),
           ),
         ] else if (minPrice != null) ...[
           Text(
             'Dès ${minPrice!.toStringAsFixed(2)}€',
             style: TextStyle(
-              color: Colors.black87,
-              fontSize: 14.0,
+              color: DeepColorTokens.neutral800,
+              fontSize: minPriceFontSize,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

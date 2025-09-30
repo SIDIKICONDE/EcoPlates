@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Badge affichant le rating de l'enseigne avec étoiles
 class OfferRatingBadge extends StatelessWidget {
   const OfferRatingBadge({required this.rating, super.key});
@@ -14,9 +16,9 @@ class OfferRatingBadge extends StatelessWidget {
         vertical: 2.0,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: DeepColorTokens.neutral0,
         borderRadius: BorderRadius.circular(6.0),
-        border: Border.all(color: Colors.green, width: 1.0),
+        border: Border.all(color: DeepColorTokens.success),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -24,13 +26,13 @@ class OfferRatingBadge extends StatelessWidget {
           Icon(
             Icons.star,
             size: 12.0,
-            color: Colors.green,
+            color: DeepColorTokens.success,
           ),
           const SizedBox(width: 2.0),
           Text(
             rating.toStringAsFixed(1),
             style: TextStyle(
-              color: Colors.green,
+              color: DeepColorTokens.success,
               fontSize: 11.0,
               fontWeight: FontWeight.w600,
             ),

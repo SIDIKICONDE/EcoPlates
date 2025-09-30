@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/utils/offer_formatters.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -15,10 +16,10 @@ class OfferDetailsSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        color: DeepColorTokens.surfaceContainer,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          color: DeepColorTokens.neutral0.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -79,9 +80,7 @@ class OfferDetailsSection extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
                 ),
               ),

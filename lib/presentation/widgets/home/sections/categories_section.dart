@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod/src/providers/provider.dart';
 
 import '../../../../core/constants/categories.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/offers_catalog_provider.dart';
 
@@ -26,7 +28,7 @@ class SelectedCategoryNotifier extends Notifier<FoodCategory?> {
 
 /// Provider pour vérifier si une catégorie est sélectionnée
 /// Peut être utilisé par d'autres sections pour filtrer les offres
-final isCategorySelectedProvider =
+final ProviderFamily<bool, FoodCategory?> isCategorySelectedProvider =
     Provider.family<bool, FoodCategory?>(
       (ref, category) {
         final selected = ref.watch(selectedCategoryProvider);
@@ -49,7 +51,8 @@ final homeCategoryAvailabilityProvider = Provider<Map<FoodCategory, int>>((
 });
 
 /// Provider pour filtrer une liste d'offres selon la catégorie sélectionnée
-final filterOffersByCategoryProvider =
+final ProviderFamily<List<FoodOffer>, List<FoodOffer>>
+filterOffersByCategoryProvider =
     Provider.family<List<FoodOffer>, List<FoodOffer>>((ref, offers) {
       final selectedCategory = ref.watch(selectedCategoryProvider);
       if (selectedCategory == null) return offers; // Tous
@@ -77,11 +80,11 @@ class CategoriesSection extends ConsumerWidget {
             top: 2.0,
           ),
           child: SizedBox(
-            height: 48.0,
+            height: 36.0,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(
-                horizontal: 10.0,
+                horizontal: 8.0,
               ),
               physics: const BouncingScrollPhysics(),
               itemCount: categories.length,
@@ -96,7 +99,7 @@ class CategoriesSection extends ConsumerWidget {
 
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 2.0,
+                    horizontal: 1.5,
                   ),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -116,52 +119,18 @@ class CategoriesSection extends ConsumerWidget {
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           padding: EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                            vertical: 2.0,
+                            horizontal: 6.0,
+                            vertical: 0.5,
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? Theme.of(context).colorScheme.primary
+                                ? DeepColorTokens.neutral0
                                 : (isEnabled
-                                      ? Theme.of(
-                                          context,
-                                        ).colorScheme.surfaceContainerHighest
-                                      : Theme.of(
-                                          context,
-                                        ).colorScheme.surfaceContainerLow),
+                                      ? DeepColorTokens.neutral100
+                                      : DeepColorTokens.neutral200),
                             borderRadius: BorderRadius.circular(
-                              20.0,
+                              6.0,
                             ),
-                            border: Border.all(
-                              color: isSelected
-                                  ? Theme.of(context).colorScheme.primary
-                                  : (isEnabled
-                                        ? Theme.of(
-                                            context,
-                                          ).colorScheme.outline.withValues(
-                                            alpha: 0.3,
-                                          )
-                                        : Theme.of(
-                                            context,
-                                          ).colorScheme.outline.withValues(
-                                            alpha: 0.5,
-                                          )),
-                              width: 0.5,
-                            ),
-                            boxShadow: isSelected
-                                ? [
-                                    BoxShadow(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary
-                                          .withValues(
-                                            alpha: 0.3,
-                                          ),
-                                      blurRadius: 4.0,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ]
-                                : null,
                           ),
                           child: Center(
                             child: Row(
@@ -170,17 +139,12 @@ class CategoriesSection extends ConsumerWidget {
                                 if (category != null) ...[
                                   Icon(
                                     Categories.iconOf(category),
-                                    size: 16.0,
+                                    size: 14.0,
                                     color: isSelected
-                                        ? Colors.white
+                                        ? DeepColorTokens.primary
                                         : (isEnabled
                                               ? Categories.colorOf(category)
-                                              : Theme.of(context)
-                                                    .colorScheme
-                                                    .onSurface
-                                                    .withValues(
-                                                      alpha: 0.5,
-                                                    )),
+                                              : DeepColorTokens.neutral500),
                                   ),
                                   SizedBox(width: 2.0),
                                 ],
@@ -188,21 +152,14 @@ class CategoriesSection extends ConsumerWidget {
                                   label,
                                   style: TextStyle(
                                     color: isSelected
-                                        ? Colors.white
+                                        ? DeepColorTokens.primary
                                         : (isEnabled
-                                              ? Theme.of(
-                                                  context,
-                                                ).colorScheme.onSurface
-                                              : Theme.of(context)
-                                                    .colorScheme
-                                                    .onSurface
-                                                    .withValues(
-                                                      alpha: 0.5,
-                                                    )),
+                                              ? DeepColorTokens.neutral900
+                                              : DeepColorTokens.neutral500),
                                     fontWeight: isSelected
                                         ? FontWeight.w600
                                         : FontWeight.w500,
-                                    fontSize: 16.0,
+                                    fontSize: 14.0,
                                   ),
                                 ),
                               ],

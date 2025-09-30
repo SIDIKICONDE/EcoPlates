@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:intl/intl.dart';
 
+import '../themes/tokens/deep_color_tokens.dart';
+
 /// Helper pour l'accessibilité et les standards WCAG
 class AccessibilityHelper {
   /// Calcule le ratio de contraste entre deux couleurs
@@ -67,9 +69,17 @@ class AccessibilityHelper {
 
     // Si on ne peut pas atteindre le ratio, utiliser noir ou blanc
     if (iterations >= maxIterations) {
-      final blackRatio = calculateContrastRatio(Colors.black, background);
-      final whiteRatio = calculateContrastRatio(Colors.white, background);
-      return whiteRatio > blackRatio ? Colors.white : Colors.black;
+      final blackRatio = calculateContrastRatio(
+        DeepColorTokens.neutral1000,
+        background,
+      );
+      final whiteRatio = calculateContrastRatio(
+        DeepColorTokens.neutral0,
+        background,
+      );
+      return whiteRatio > blackRatio
+          ? DeepColorTokens.neutral0
+          : DeepColorTokens.neutral1000;
     }
 
     return adjustedColor;
@@ -90,8 +100,8 @@ class AccessibilityHelper {
   /// Retourne une couleur de texte optimale pour un fond donné
   static Color getOptimalTextColor(
     Color background, {
-    Color lightOption = Colors.white,
-    Color darkOption = Colors.black87,
+    Color lightOption = DeepColorTokens.neutral0,
+    Color darkOption = DeepColorTokens.neutral900,
   }) {
     final lightRatio = calculateContrastRatio(lightOption, background);
     final darkRatio = calculateContrastRatio(darkOption, background);
@@ -237,15 +247,15 @@ class AccessibleColors {
   AccessibleColors._();
 
   // Rouge accessible sur fond sombre
-  static const Color dangerRed = Color(0xFFEE4444);
+  static Color get dangerRed => DeepColorTokens.error;
   // Vert accessible
-  static const Color successGreen = Color(0xFF22BB33);
+  static Color get successGreen => DeepColorTokens.success;
   // Orange accessible
-  static const Color warningOrange = Color(0xFFF0AD4E);
+  static Color get warningOrange => DeepColorTokens.warning;
   // Bleu accessible
-  static const Color infoBlue = Color(0xFF5BC0DE);
+  static Color get infoBlue => DeepColorTokens.primary;
   // Ambre accessible pour les étoiles
-  static const Color ratingAmber = Color(0xFFFFB700);
+  static Color get ratingAmber => DeepColorTokens.accent;
 }
 
 /// Tailles de police recommandées pour l'accessibilité

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Dialogue d'aide pour expliquer les options vidéo
 class VideoHelpDialog extends StatelessWidget {
   const VideoHelpDialog({super.key});
@@ -16,14 +18,12 @@ class VideoHelpDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return AlertDialog(
-      title: Row(
+      title: const Row(
         children: [
-          Icon(Icons.help_outline, color: theme.colorScheme.primary),
+          Icon(Icons.help_outline, color: DeepColorTokens.primary),
           SizedBox(width: 12.0),
-          const Text('Options de lecture vidéo'),
+          Text('Options de lecture vidéo'),
         ],
       ),
       content: SingleChildScrollView(
@@ -61,23 +61,23 @@ class VideoHelpDialog extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(12.0),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: 0.1,
+                color: DeepColorTokens.primaryContainer.withValues(
+                  alpha: 0.15,
                 ),
                 border: Border.all(
-                  color: theme.colorScheme.primary.withValues(
-                    alpha: 0.1,
+                  color: DeepColorTokens.primary.withValues(
+                    alpha: 0.2,
                   ),
                 ),
               ),
               child: Row(
-                children: [
+                children: const [
                   Expanded(
                     child: Text(
                       'Astuce : Utilisez le mode mini pour garder la vidéo visible tout en naviguant !',
                       style: TextStyle(
                         fontSize: 16.0,
-                        color: theme.colorScheme.onPrimaryContainer,
+                        color: DeepColorTokens.neutral0,
                       ),
                     ),
                   ),
@@ -110,13 +110,15 @@ class VideoHelpDialog extends StatelessWidget {
           padding: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             color: available
-                ? Colors.green.withValues(alpha: 0.1)
-                : Colors.grey.withValues(alpha: 0.1),
+                ? DeepColorTokens.success.withValues(alpha: 0.2)
+                : DeepColorTokens.neutral600.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
             icon,
-            color: available ? Colors.green : Colors.grey,
+            color: available
+                ? DeepColorTokens.success
+                : DeepColorTokens.neutral600,
             size: 16.0 * 1.2,
           ),
         ),
@@ -142,7 +144,7 @@ class VideoHelpDialog extends StatelessWidget {
                         vertical: 4.0,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green,
+                        color: DeepColorTokens.success,
                         borderRadius: BorderRadius.circular(14.0),
                       ),
                     ),
@@ -152,7 +154,7 @@ class VideoHelpDialog extends StatelessWidget {
               Text(
                 description,
                 style: TextStyle(
-                  color: Colors.grey[600],
+                  color: DeepColorTokens.neutral600,
                   fontSize: 16.0,
                 ),
               ),

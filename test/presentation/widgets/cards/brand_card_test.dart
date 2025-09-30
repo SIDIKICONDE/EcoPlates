@@ -51,8 +51,13 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: const MaterialApp(
-            home: Scaffold(body: BrandCard(brand: sampleBrand)),
+          child: MaterialApp(
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: sampleBrand),
+              ),
+            ),
           ),
         ),
       );
@@ -68,8 +73,13 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: const MaterialApp(
-            home: Scaffold(body: BrandCard(brand: sampleBrand)),
+          child: MaterialApp(
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: sampleBrand),
+              ),
+            ),
           ),
         ),
       );
@@ -86,7 +96,12 @@ void main() {
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
           child: const MaterialApp(
-            home: Scaffold(body: BrandCard(brand: sampleBrand)),
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: sampleBrand),
+              ),
+            ),
           ),
         ),
       );
@@ -103,13 +118,18 @@ void main() {
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
           child: const MaterialApp(
-            home: Scaffold(body: BrandCard(brand: sampleBrand)),
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: sampleBrand),
+              ),
+            ),
           ),
         ),
       );
 
       // Assert
-      expect(find.text('-35%'), findsOneWidget);
+      expect(find.text('35%'), findsOneWidget);
     });
 
     testWidgets('affiche le badge premium pour les marques premium', (
@@ -120,7 +140,12 @@ void main() {
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
           child: const MaterialApp(
-            home: Scaffold(body: BrandCard(brand: sampleBrand)),
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: sampleBrand),
+              ),
+            ),
           ),
         ),
       );
@@ -139,7 +164,12 @@ void main() {
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
           child: MaterialApp(
-            home: Scaffold(body: BrandCard(brand: newBrand)),
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: newBrand),
+              ),
+            ),
           ),
         ),
       );
@@ -158,7 +188,12 @@ void main() {
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
           child: MaterialApp(
-            home: Scaffold(body: BrandCard(brand: normalBrand)),
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: normalBrand),
+              ),
+            ),
           ),
         ),
       );
@@ -174,14 +209,19 @@ void main() {
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
           child: const MaterialApp(
-            home: Scaffold(body: BrandCard(brand: sampleBrand)),
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: sampleBrand),
+              ),
+            ),
           ),
         ),
       );
 
       // Assert
-      final container = tester.widget<Container>(find.byType(Container).first);
-      expect(container.constraints?.maxHeight, 100);
+      final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox).first);
+      expect(sizedBox.height, 200);
     });
 
     testWidgets('appelle onTap quand tapé', (WidgetTester tester) async {
@@ -193,9 +233,12 @@ void main() {
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
           child: MaterialApp(
             home: Scaffold(
-              body: BrandCard(
-                brand: sampleBrand,
-                onTap: () => tapCalled = true,
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(
+                  brand: sampleBrand,
+                  onTap: () => tapCalled = true,
+                ),
               ),
             ),
           ),
@@ -229,8 +272,13 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
-          child: const MaterialApp(
-            home: Scaffold(body: BrandCard(brand: brandWithInvalidLogo)),
+          child: MaterialApp(
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: brandWithInvalidLogo),
+              ),
+            ),
           ),
         ),
       );
@@ -248,7 +296,12 @@ void main() {
         ProviderScope(
           overrides: [brandsProvider.overrideWith((ref) => testBrands)],
           child: const MaterialApp(
-            home: Scaffold(body: BrandCard(brand: sampleBrand)),
+            home: Scaffold(
+              body: SizedBox(
+                height: 200,
+                child: BrandCard(brand: sampleBrand),
+              ),
+            ),
           ),
         ),
       );

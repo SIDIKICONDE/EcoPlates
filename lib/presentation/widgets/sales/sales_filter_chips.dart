@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/sale.dart';
 import '../../providers/sales_provider.dart';
 
@@ -14,7 +16,6 @@ class SalesFilterChips extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filters = ref.watch(salesFilterProvider);
-    final theme = Theme.of(context);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -28,18 +29,22 @@ class SalesFilterChips extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(filters.period.label),
-                  const SizedBox(width: 6.0),
+                  SizedBox(width: context.horizontalSpacing / 3),
                   Icon(
                     Icons.arrow_drop_down,
-                    size: 20.0,
+                    size: ResponsiveUtils.getIconSize(context, baseSize: 20),
                   ),
                 ],
               ),
-              backgroundColor: theme.colorScheme.primaryContainer,
+              backgroundColor: DeepColorTokens.primaryContainer.withValues(
+                alpha: 0.3,
+              ),
               labelStyle: TextStyle(
-                color: theme.colorScheme.onPrimaryContainer,
+                color: DeepColorTokens.primaryDark,
                 fontWeight: FontWeight.w500,
               ),
+              surfaceTintColor: Colors.transparent,
+              side: BorderSide.none,
             ),
             itemBuilder: (context) => SalesPeriodFilter.values.map((period) {
               return PopupMenuItem(
@@ -49,16 +54,24 @@ class SalesFilterChips extends ConsumerWidget {
                     if (filters.period == period)
                       Icon(
                         Icons.check,
-                        size: 20.0,
-                        color: theme.colorScheme.primary,
+                        size: ResponsiveUtils.getIconSize(
+                          context,
+                          baseSize: 20,
+                        ),
+                        color: DeepColorTokens.primary,
                       )
                     else
-                      const SizedBox(width: 20.0),
-                    const SizedBox(width: 12.0),
+                      SizedBox(
+                        width: ResponsiveUtils.getIconSize(
+                          context,
+                          baseSize: 20,
+                        ),
+                      ),
+                    SizedBox(width: context.horizontalSpacing / 2),
                     Text(
                       period.label,
-                      style: const TextStyle(
-                        fontSize: 16.0,
+                      style: TextStyle(
+                        fontSize: FontSizes.bodyMedium.getSize(context),
                       ),
                     ),
                   ],
@@ -70,7 +83,7 @@ class SalesFilterChips extends ConsumerWidget {
             },
           ),
 
-          const SizedBox(width: 12.0),
+          SizedBox(width: context.horizontalSpacing / 2),
 
           // Filtre par statut
           PopupMenuButton<Object>(
@@ -80,10 +93,10 @@ class SalesFilterChips extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(filters.status?.label ?? 'Tous les statuts'),
-                  const SizedBox(width: 6.0),
+                  SizedBox(width: context.horizontalSpacing / 3),
                   Icon(
                     Icons.arrow_drop_down,
-                    size: 20.0,
+                    size: ResponsiveUtils.getIconSize(context, baseSize: 20),
                   ),
                 ],
               ),
@@ -93,7 +106,7 @@ class SalesFilterChips extends ConsumerWidget {
                         filters.status!.colorHex.replaceAll('#', '0xFF'),
                       ),
                     ).withValues(alpha: 0.2)
-                  : theme.colorScheme.surfaceContainerHighest,
+                  : DeepColorTokens.neutral100,
               labelStyle: TextStyle(
                 color: filters.status != null
                     ? Color(
@@ -101,9 +114,11 @@ class SalesFilterChips extends ConsumerWidget {
                           filters.status!.colorHex.replaceAll('#', '0xFF'),
                         ),
                       )
-                    : theme.colorScheme.onSurfaceVariant,
+                    : DeepColorTokens.neutral700,
                 fontWeight: FontWeight.w500,
               ),
+              surfaceTintColor: Colors.transparent,
+              side: BorderSide.none,
             ),
             itemBuilder: (context) {
               final items = <PopupMenuEntry<Object>>[
@@ -123,8 +138,14 @@ class SalesFilterChips extends ConsumerWidget {
                     child: Row(
                       children: [
                         Container(
-                          width: 8.0,
-                          height: 8.0,
+                          width: ResponsiveUtils.getIconSize(
+                            context,
+                            baseSize: 8,
+                          ),
+                          height: ResponsiveUtils.getIconSize(
+                            context,
+                            baseSize: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: Color(
                               int.parse(
@@ -134,11 +155,11 @@ class SalesFilterChips extends ConsumerWidget {
                             shape: BoxShape.circle,
                           ),
                         ),
-                        const SizedBox(width: 12.0),
+                        SizedBox(width: context.horizontalSpacing / 2),
                         Text(
                           status.label,
-                          style: const TextStyle(
-                            fontSize: 16.0,
+                          style: TextStyle(
+                            fontSize: FontSizes.bodyMedium.getSize(context),
                           ),
                         ),
                       ],
@@ -158,26 +179,29 @@ class SalesFilterChips extends ConsumerWidget {
             },
           ),
 
-          const SizedBox(width: 12.0),
+          SizedBox(width: context.horizontalSpacing / 2),
 
           // Recherche
           SizedBox(
-            width: 200.0,
-            height: 40.0,
+            width: ResponsiveUtils.getResponsiveImageSize(
+              context,
+              baseSize: Size(200, 200),
+            ).width,
+            height: context.buttonHeight,
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Rechercher...',
-                hintStyle: const TextStyle(
-                  fontSize: 16.0,
+                hintStyle: TextStyle(
+                  fontSize: FontSizes.bodyMedium.getSize(context),
                 ),
                 prefixIcon: Icon(
                   Icons.search,
-                  size: 20.0,
+                  size: ResponsiveUtils.getIconSize(context, baseSize: 20),
                 ),
                 filled: true,
-                fillColor: theme.colorScheme.surfaceContainerHighest,
+                fillColor: DeepColorTokens.neutral100,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16.0),
+                  borderRadius: BorderRadius.circular(context.borderRadius),
                 ),
               ),
               onChanged: (value) {

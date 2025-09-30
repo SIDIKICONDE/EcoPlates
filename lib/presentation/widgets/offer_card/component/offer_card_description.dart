@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Widget spécialisé pour afficher la description de l'offre
 /// Gère le tronquage intelligent selon le mode compact
 class OfferCardDescription extends StatelessWidget {
@@ -28,7 +30,7 @@ class OfferCardDescription extends StatelessWidget {
         fontSize: compact
             ? 12.0
             : 14.0, // Tailles augmentées pour meilleure lisibilité
-        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+        color: DeepColorTokens.neutral800.withValues(alpha: 0.8),
       ),
       maxLines: compact ? 1 : 2,
       overflow: TextOverflow.ellipsis,

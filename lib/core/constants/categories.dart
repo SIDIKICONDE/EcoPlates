@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/food_offer.dart';
+import '../themes/tokens/deep_color_tokens.dart';
 
 /// Métadonnées centralisées pour les catégories d'offres
 class CategoryInfo {
@@ -132,25 +133,25 @@ class Categories {
   static Color colorOf(FoodCategory category) {
     switch (category) {
       case FoodCategory.petitDejeuner:
-        return Colors.orange;
+        return DeepColorTokens.warning; // Orange brûlé profond
       case FoodCategory.dejeuner:
-        return Colors.blue;
+        return DeepColorTokens.primary; // Bleu profond confiant
       case FoodCategory.diner:
-        return Colors.purple;
+        return DeepColorTokens.secondary; // Violet profond
       case FoodCategory.snack:
-        return Colors.pink;
+        return DeepColorTokens.accent; // Or antique
       case FoodCategory.dessert:
-        return Colors.brown;
+        return DeepColorTokens.neutral700; // Gris foncé profond
       case FoodCategory.boisson:
-        return Colors.cyan;
+        return DeepColorTokens.tertiary; // Teal profond moderne
       case FoodCategory.boulangerie:
-        return Colors.amber;
+        return DeepColorTokens.accentLight; // Or clair
       case FoodCategory.fruitLegume:
-        return Colors.green;
+        return DeepColorTokens.success; // Vert forêt profond
       case FoodCategory.epicerie:
-        return Colors.teal;
+        return DeepColorTokens.tertiaryLight; // Teal moyen
       case FoodCategory.autre:
-        return Colors.grey;
+        return DeepColorTokens.neutral500; // Gris standard profond
     }
   }
 

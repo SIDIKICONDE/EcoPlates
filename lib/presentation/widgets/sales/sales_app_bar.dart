@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../providers/sales_provider.dart';
 
@@ -104,7 +105,7 @@ class _MerchantLogo extends StatelessWidget {
       margin: const EdgeInsets.all(10.0),
       child: CircleAvatar(
         radius: 24.0,
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: DeepColorTokens.surface,
         backgroundImage: const NetworkImage(merchantLogoUrl),
         onBackgroundImageError: (_, _) {
           // Fallback vers une icône si l'image ne charge pas
@@ -112,7 +113,7 @@ class _MerchantLogo extends StatelessWidget {
         child: Icon(
           Icons.store,
           size: 24.0,
-          color: Colors.grey,
+          color: DeepColorTokens.neutral500,
         ),
       ),
     );

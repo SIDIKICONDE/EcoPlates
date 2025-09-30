@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../core/services/geo_location_service.dart';
 import '../../../core/services/map_service.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/browse_search_provider.dart';
 
@@ -141,7 +142,7 @@ class _BrowseMapViewState extends ConsumerState<BrowseMapView> {
               return FloatingActionButton(
                 mini: _isMobileDevice(context),
                 onPressed: _centerOnUserLocation,
-                backgroundColor: Colors.white,
+                backgroundColor: DeepColorTokens.neutral0,
                 shape: const CircleBorder(),
                 child: Icon(
                   isLocationActive ? Icons.near_me : Icons.near_me_outlined,

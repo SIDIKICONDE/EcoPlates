@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/enums/sort_options.dart';
 import '../../core/responsive/responsive_utils.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/sort_provider.dart';
 
 /// Bottom sheet de tri pour les offres urgentes
@@ -37,7 +38,8 @@ class UrgentOffersSortBottomSheet extends ConsumerWidget {
         children: [
           Text(
             'Trier par',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            style: TextStyle(
+              color: DeepColorTokens.neutral800,
               fontWeight: FontWeight.bold,
               fontSize: FontSizes.bodyLarge.getSize(context),
             ),
@@ -51,7 +53,7 @@ class UrgentOffersSortBottomSheet extends ConsumerWidget {
             option: SortOption.urgency,
             currentSort: currentSort,
             subtitle: 'Offres qui expirent bientôt',
-            color: Colors.red.shade700,
+            color: DeepColorTokens.error,
           ),
           _buildSortOption(
             context: context,
@@ -59,7 +61,7 @@ class UrgentOffersSortBottomSheet extends ConsumerWidget {
             option: SortOption.distance,
             currentSort: currentSort,
             subtitle: 'Distance la plus courte',
-            color: Colors.blue.shade700,
+            color: DeepColorTokens.primary,
           ),
           _buildSortOption(
             context: context,
@@ -67,7 +69,7 @@ class UrgentOffersSortBottomSheet extends ConsumerWidget {
             option: SortOption.priceLow,
             currentSort: currentSort,
             subtitle: 'Meilleures affaires',
-            color: Colors.green.shade700,
+            color: DeepColorTokens.success,
           ),
           _buildSortOption(
             context: context,
@@ -75,7 +77,7 @@ class UrgentOffersSortBottomSheet extends ConsumerWidget {
             option: SortOption.relevance,
             currentSort: currentSort,
             subtitle: 'Derniers articles disponibles',
-            color: Colors.orange.shade700,
+            color: DeepColorTokens.warning,
           ),
         ],
       ),
@@ -165,7 +167,8 @@ class _UrgentOffersFilterBottomSheetState
               Expanded(
                 child: Text(
                   'Filtrer les offres urgentes',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  style: TextStyle(
+                    color: DeepColorTokens.neutral800,
                     fontWeight: FontWeight.bold,
                     fontSize: FontSizes.bodyLarge.getSize(context),
                   ),
@@ -185,8 +188,10 @@ class _UrgentOffersFilterBottomSheetState
           // Filtre par temps restant
           Text(
             'Temps restant',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            style: TextStyle(
+              color: DeepColorTokens.neutral700,
               fontSize: FontSizes.bodyMedium.getSize(context),
+              fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: context.verticalSpacing / 2),
@@ -194,9 +199,9 @@ class _UrgentOffersFilterBottomSheetState
             spacing: context.horizontalSpacing / 2,
             runSpacing: context.verticalSpacing / 2,
             children: [
-              _buildTimeFilterChip('< 30 min', 'urgent', Colors.red),
-              _buildTimeFilterChip('< 1h', 'hour', Colors.orange),
-              _buildTimeFilterChip('< 2h', 'two_hours', Colors.amber),
+              _buildTimeFilterChip('< 30 min', 'urgent', DeepColorTokens.error),
+              _buildTimeFilterChip('< 1h', 'hour', DeepColorTokens.warning),
+              _buildTimeFilterChip('< 2h', 'two_hours', DeepColorTokens.accent),
             ],
           ),
 
@@ -205,8 +210,10 @@ class _UrgentOffersFilterBottomSheetState
           // Filtre par quantité
           Text(
             'Quantité disponible',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            style: TextStyle(
+              color: DeepColorTokens.neutral700,
               fontSize: FontSizes.bodyMedium.getSize(context),
+              fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: context.verticalSpacing / 2),
@@ -259,7 +266,7 @@ class _UrgentOffersFilterBottomSheetState
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: DeepColorTokens.error,
                   ),
                   child: Text(
                     'Appliquer',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../offer_card.dart';
@@ -76,7 +77,7 @@ class StoreOfferGridCard extends ConsumerWidget {
                               vertical: 4.0,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.errorContainer,
+                              color: DeepColorTokens.errorContainer,
                               borderRadius: BorderRadius.circular(
                                 4.0,
                               ),
@@ -85,7 +86,7 @@ class StoreOfferGridCard extends ConsumerWidget {
                               'Inactif',
                               style: TextStyle(
                                 fontSize: 14.0,
-                                color: theme.colorScheme.onErrorContainer,
+                                color: DeepColorTokens.errorDark,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -97,7 +98,7 @@ class StoreOfferGridCard extends ConsumerWidget {
                               vertical: 4.0,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.error,
+                              color: DeepColorTokens.error,
                               borderRadius: BorderRadius.circular(
                                 4.0,
                               ),
@@ -106,7 +107,7 @@ class StoreOfferGridCard extends ConsumerWidget {
                               '-${offer.discountPercentage.toStringAsFixed(0)}%',
                               style: TextStyle(
                                 fontSize: 14.0,
-                                color: theme.colorScheme.onError,
+                                color: DeepColorTokens.neutral0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -136,7 +137,7 @@ class StoreOfferGridCard extends ConsumerWidget {
                       Text(
                         offer.description,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: DeepColorTokens.neutral600,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -148,14 +149,14 @@ class StoreOfferGridCard extends ConsumerWidget {
                           Icon(
                             Icons.access_time,
                             size: 16.0,
-                            color: theme.colorScheme.onSurfaceVariant,
+                            color: DeepColorTokens.neutral600,
                           ),
                           SizedBox(width: 4.0),
                           Expanded(
                             child: Text(
                               '${_formatTime(offer.pickupStartTime)} - ${_formatTime(offer.pickupEndTime)}',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
+                                color: DeepColorTokens.neutral600,
                               ),
                             ),
                           ),
@@ -174,14 +175,14 @@ class StoreOfferGridCard extends ConsumerWidget {
                                   '${offer.originalPrice.toStringAsFixed(2)}€',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     decoration: TextDecoration.lineThrough,
-                                    color: theme.colorScheme.onSurfaceVariant,
+                                    color: DeepColorTokens.neutral600,
                                   ),
                                 ),
                               Text(
                                 '${offer.discountedPrice.toStringAsFixed(2)}€',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.primary,
+                                  color: DeepColorTokens.primary,
                                 ),
                               ),
                             ],
@@ -194,10 +195,10 @@ class StoreOfferGridCard extends ConsumerWidget {
                             decoration: BoxDecoration(
                               color:
                                   offer.alertLevel == OfferAlertLevel.outOfStock
-                                  ? theme.colorScheme.errorContainer
+                                  ? DeepColorTokens.errorContainer
                                   : offer.alertLevel == OfferAlertLevel.low
-                                  ? theme.colorScheme.tertiaryContainer
-                                  : theme.colorScheme.primaryContainer,
+                                  ? DeepColorTokens.tertiaryContainer
+                                  : DeepColorTokens.primaryContainer,
                               borderRadius: BorderRadius.circular(
                                 4.0,
                               ),
@@ -211,10 +212,10 @@ class StoreOfferGridCard extends ConsumerWidget {
                                   color:
                                       offer.alertLevel ==
                                           OfferAlertLevel.outOfStock
-                                      ? theme.colorScheme.error
+                                      ? DeepColorTokens.error
                                       : offer.alertLevel == OfferAlertLevel.low
-                                      ? theme.colorScheme.tertiary
-                                      : theme.colorScheme.primary,
+                                      ? DeepColorTokens.tertiary
+                                      : DeepColorTokens.primary,
                                 ),
                                 SizedBox(width: 4.0),
                                 Text(
@@ -225,11 +226,11 @@ class StoreOfferGridCard extends ConsumerWidget {
                                     color:
                                         offer.alertLevel ==
                                             OfferAlertLevel.outOfStock
-                                        ? theme.colorScheme.onErrorContainer
+                                        ? DeepColorTokens.errorDark
                                         : offer.alertLevel ==
                                               OfferAlertLevel.low
-                                        ? theme.colorScheme.onTertiaryContainer
-                                        : theme.colorScheme.onPrimaryContainer,
+                                        ? DeepColorTokens.neutral800
+                                        : DeepColorTokens.neutral800,
                                   ),
                                 ),
                               ],

@@ -8,7 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import '../services/image_cache_service.dart';
 
 /// Widget d'image optimisé avec cache haute performance
-/// 
+///
 /// Features:
 /// - Cache multi-niveaux automatique
 /// - Placeholders animés
@@ -16,7 +16,6 @@ import '../services/image_cache_service.dart';
 /// - Optimisation de taille automatique
 /// - Support du mode hors-ligne
 class EcoCachedImage extends ConsumerStatefulWidget {
-
   const EcoCachedImage({
     required this.imageUrl,
     super.key,
@@ -104,27 +103,35 @@ class _EcoCachedImageState extends ConsumerState<EcoCachedImage>
       httpHeaders: const {
         'Accept': 'image/avif,image/webp,image/*;q=0.9',
         'Accept-Encoding': 'gzip, deflate',
+        'User-Agent': 'EcoPlates-Mobile-App/1.0',
       },
       fadeInDuration: widget.fadeInDuration,
       fadeOutDuration: const Duration(milliseconds: 150),
       cacheManager: widget.size == ImageSize.thumbnail
-          ? CacheManager(Config(
-              'ecoplates_image_cache_thumbnails',
-              stalePeriod: const Duration(days: 30),
-              maxNrOfCacheObjects: 2000,
-            ))
-          : CacheManager(Config(
-              'ecoplates_image_cache',
-              stalePeriod: const Duration(days: 30),
-              maxNrOfCacheObjects: 1000,
-            )),
+          ? CacheManager(
+              Config(
+                'ecoplates_image_cache_thumbnails',
+                stalePeriod: const Duration(days: 30),
+                maxNrOfCacheObjects: 2000,
+              ),
+            )
+          : CacheManager(
+              Config(
+                'ecoplates_image_cache',
+                stalePeriod: const Duration(days: 30),
+                maxNrOfCacheObjects: 1000,
+              ),
+            ),
       placeholder: widget.showLoading
           ? (context, url) =>
-              widget.placeholder ?? _buildDefaultPlaceholder(context)
+                widget.placeholder ?? _buildDefaultPlaceholder(context)
           : null,
       errorWidget: (context, url, error) =>
           widget.errorWidget ?? _buildDefaultErrorWidget(context, error),
       imageBuilder: (context, imageProvider) {
+        debugPrint(
+          '✅ EcoCachedImage Success: Loaded image from ${widget.imageUrl}',
+        );
         unawaited(_controller.forward());
         return FadeTransition(
           opacity: _animation,
@@ -195,7 +202,7 @@ class _EcoCachedImageState extends ConsumerState<EcoCachedImage>
   /// Calcule la taille optimale basée sur la taille demandée et le preset
   double? _getOptimalSize(double? requestedSize, ImageSize preset) {
     if (requestedSize != null) return requestedSize;
-    
+
     switch (preset) {
       case ImageSize.thumbnail:
         return 150;
@@ -232,6 +239,9 @@ class _EcoCachedImageState extends ConsumerState<EcoCachedImage>
 
   /// Widget d'erreur par défaut
   Widget _buildDefaultErrorWidget(BuildContext context, dynamic error) {
+    // Debug logging for image loading errors
+    debugPrint('🚨 EcoCachedImage Error: $error for URL: ${widget.imageUrl}');
+
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -256,7 +266,9 @@ class _EcoCachedImageState extends ConsumerState<EcoCachedImage>
               child: Text(
                 'Image non disponible',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
+                  ),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -277,7 +289,7 @@ class EcoCachedAvatar extends StatelessWidget {
     this.errorWidget,
     this.priority = Priority.normal,
   });
-  
+
   final String imageUrl;
   final double radius;
   final Widget? placeholder;
@@ -314,7 +326,7 @@ class EcoCachedBackgroundImage extends StatelessWidget {
     this.overlayColor,
     this.blendMode,
   });
-  
+
   final String imageUrl;
   final Widget child;
   final double? width;
@@ -371,12 +383,12 @@ mixin ImagePreloadMixin<T extends StatefulWidget> on State<T> {
     ImageSize size = ImageSize.small,
   }) async {
     final cacheService = ref.read(imageCacheServiceProvider);
-    
+
     // Déterminer les indices à précharger
     final currentIndex = _getCurrentVisibleIndex();
     final startIndex = (currentIndex - visibleRange).clamp(0, imageUrls.length);
     final endIndex = (currentIndex + visibleRange).clamp(0, imageUrls.length);
-    
+
     // Précharger uniquement les nouvelles images
     final urlsToPreload = <String>[];
     for (var i = startIndex; i < endIndex; i++) {
@@ -386,7 +398,7 @@ mixin ImagePreloadMixin<T extends StatefulWidget> on State<T> {
         _preloadedUrls.add(url);
       }
     }
-    
+
     if (urlsToPreload.isNotEmpty) {
       await cacheService.precacheImages(
         urlsToPreload,
@@ -398,7 +410,7 @@ mixin ImagePreloadMixin<T extends StatefulWidget> on State<T> {
 
   /// Override cette méthode pour retourner l'index visible actuel
   int _getCurrentVisibleIndex() => 0;
-  
+
   @override
   void dispose() {
     _preloadedUrls.clear();

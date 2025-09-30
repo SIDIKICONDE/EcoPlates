@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/all_offers_provider.dart';
 import '../providers/browse_search_provider.dart';
 import '../providers/browse_view_provider.dart';
@@ -66,16 +67,14 @@ class BrowsePage extends ConsumerWidget {
                       Icon(
                         Icons.error_outline,
                         size: 48,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.error.withValues(alpha: 0.7),
+                        color: DeepColorTokens.error.withValues(alpha: 0.7),
                       ),
                       Text(
                         'Erreur de chargement',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Theme.of(context).colorScheme.error,
+                          color: DeepColorTokens.error,
                         ),
                       ),
                       SizedBox(height: 16),
@@ -106,7 +105,7 @@ class BrowsePage extends ConsumerWidget {
         builder: (context) => Container(
           height: MediaQuery.of(context).size.height * 0.8,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: DeepColorTokens.surface,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(16),
             ),
@@ -119,7 +118,7 @@ class BrowsePage extends ConsumerWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant,
+                      color: DeepColorTokens.neutral0.withValues(alpha: 0.1),
                     ),
                   ),
                 ),
@@ -178,7 +177,7 @@ class BrowsePage extends ConsumerWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant,
+                      color: DeepColorTokens.neutral0.withValues(alpha: 0.1),
                     ),
                   ),
                 ),

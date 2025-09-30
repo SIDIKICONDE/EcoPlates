@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../pages/stock_item_form/page.dart';
 import 'stock_alert_badge.dart';
@@ -43,8 +44,6 @@ class StockListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Column(
       children: [
         Container(
@@ -57,24 +56,24 @@ class StockListItem extends StatelessWidget {
                 : (compactMode ? 4.0 : 8.0),
           ),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
+            color: DeepColorTokens.surface,
             borderRadius: BorderRadius.circular(
               dense ? (compactMode ? 8.0 : 12.0) : (compactMode ? 12.0 : 16.0),
             ),
             border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.1),
+              color: DeepColorTokens.neutral300.withValues(alpha: 0.3),
               width: 0.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                color: DeepColorTokens.shadowLight,
                 blurRadius: dense
                     ? (compactMode ? 2.0 : 4.0)
                     : (compactMode ? 4.0 : 8.0),
                 offset: const Offset(0, 1),
               ),
               BoxShadow(
-                color: theme.colorScheme.shadow.withValues(alpha: 0.01),
+                color: DeepColorTokens.shadowLight.withValues(alpha: 0.5),
                 blurRadius: dense
                     ? (compactMode ? 4.0 : 8.0)
                     : (compactMode ? 8.0 : 16.0),
@@ -103,7 +102,7 @@ class StockListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Informations principales de l'article
-                    Expanded(child: _buildItemInfo(context, theme)),
+                    Expanded(child: _buildItemInfo(context)),
 
                     SizedBox(
                       width: dense
@@ -112,7 +111,7 @@ class StockListItem extends StatelessWidget {
                     ),
 
                     // Contrôles (quantité et statut)
-                    _buildItemControls(context, theme),
+                    _buildItemControls(context),
                   ],
                 ),
               ),
@@ -123,7 +122,7 @@ class StockListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildItemInfo(BuildContext context, ThemeData theme) {
+  Widget _buildItemInfo(BuildContext context) {
     final fontSize = dense
         ? (compactMode ? 11.0 : 13.0)
         : (compactMode ? 13.0 : 18.0);
@@ -146,7 +145,7 @@ class StockListItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
+                  color: DeepColorTokens.neutral0,
                 ),
                 child: Text(
                   item.name,
@@ -190,8 +189,8 @@ class StockListItem extends StatelessWidget {
                 vertical: compactMode ? 2.0 / 4 : 2.0 / 2,
               ),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.3,
+                color: DeepColorTokens.neutral100.withValues(
+                  alpha: 0.6,
                 ),
                 borderRadius: BorderRadius.circular(
                   compactMode ? 4.0 : 8.0,
@@ -203,7 +202,7 @@ class StockListItem extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: smallFontSize,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral600,
                   fontFamily: 'monospace',
                   fontWeight: FontWeight.w500,
                 ),
@@ -215,15 +214,15 @@ class StockListItem extends StatelessWidget {
                 vertical: compactMode ? 2.0 / 2 : 2.0 / 4 * 3,
               ),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: 0.1,
+                color: DeepColorTokens.primaryContainer.withValues(
+                  alpha: 0.15,
                 ),
                 borderRadius: BorderRadius.circular(
                   compactMode ? 8.0 : 12.0,
                 ),
                 border: Border.all(
-                  color: theme.colorScheme.primary.withValues(
-                    alpha: 0.1,
+                  color: DeepColorTokens.primary.withValues(
+                    alpha: 0.2,
                   ),
                   width: 0.25,
                 ),
@@ -234,7 +233,7 @@ class StockListItem extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: smallFontSize,
-                  color: theme.colorScheme.primary,
+                  color: DeepColorTokens.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -257,7 +256,7 @@ class StockListItem extends StatelessWidget {
                 vertical: compactMode ? 2.0 / 2 : 2.0,
               ),
               decoration: BoxDecoration(
-                color: theme.colorScheme.secondaryContainer.withValues(
+                color: DeepColorTokens.secondaryContainer.withValues(
                   alpha: 0.3,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -272,7 +271,7 @@ class StockListItem extends StatelessWidget {
                     style: TextStyle(
                       fontSize: compactMode ? 11.0 : 13.0,
                       fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSecondaryContainer,
+                      color: DeepColorTokens.neutral0,
                     ),
                   ),
                   SizedBox(
@@ -282,7 +281,7 @@ class StockListItem extends StatelessWidget {
                     '/ ${item.unit}',
                     style: TextStyle(
                       fontSize: compactMode ? 11.0 - 2 : 11.0,
-                      color: theme.colorScheme.onSecondaryContainer.withValues(
+                      color: DeepColorTokens.neutral0.withValues(
                         alpha: 0.9,
                       ),
                     ),
@@ -297,8 +296,8 @@ class StockListItem extends StatelessWidget {
                 Icon(
                   Icons.update,
                   size: compactMode ? 6.0 : 18.0,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.9,
+                  color: DeepColorTokens.neutral600.withValues(
+                    alpha: 0.8,
                   ),
                 ),
                 SizedBox(
@@ -310,7 +309,7 @@ class StockListItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: smallFontSize,
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                    color: DeepColorTokens.neutral600.withValues(
                       alpha: 0.7,
                     ),
                   ),
@@ -333,8 +332,8 @@ class StockListItem extends StatelessWidget {
                 compactMode ? 2.0 : 3.0,
               ),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.1,
+                color: DeepColorTokens.neutral100.withValues(
+                  alpha: 0.3,
                 ),
                 borderRadius: BorderRadius.circular(
                   compactMode ? 8.0 : 12.0,
@@ -344,7 +343,7 @@ class StockListItem extends StatelessWidget {
                 item.description!,
                 style: TextStyle(
                   fontSize: compactMode ? 11.0 : 13.0,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral700,
                   fontStyle: FontStyle.italic,
                   height: 1.4,
                 ),
@@ -358,7 +357,7 @@ class StockListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildItemControls(BuildContext context, ThemeData theme) {
+  Widget _buildItemControls(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -374,7 +373,7 @@ class StockListItem extends StatelessWidget {
               size: dense
                   ? (compactMode ? 18.0 - 4 : 18.0 - 2)
                   : (compactMode ? 18.0 - 2 : 18.0),
-              color: theme.colorScheme.primary,
+              color: DeepColorTokens.primary,
             ),
             onPressed: () {
               // Navigation vers la page d'édition
@@ -396,10 +395,10 @@ class StockListItem extends StatelessWidget {
                   : (compactMode ? 48.0 / 4 * 3 : 48.0),
             ),
             style: IconButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary.withValues(
+              backgroundColor: DeepColorTokens.primary.withValues(
                 alpha: 0.1,
               ),
-              foregroundColor: theme.colorScheme.primary,
+              foregroundColor: DeepColorTokens.primary,
             ),
           ),
         ),

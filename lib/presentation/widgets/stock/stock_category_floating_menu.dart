@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/categories.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -34,7 +35,7 @@ class _StockCategoryFloatingMenuState
       slug: '',
       id: FoodCategory.autre,
       icon: Icons.grid_view_rounded,
-      color: Colors.blueGrey,
+      color: DeepColorTokens.neutral700,
     ),
     ...Categories.ordered.map(
       (c) => (
@@ -88,7 +89,7 @@ class _StockCategoryFloatingMenuState
         if (_isOpen)
           GestureDetector(
             onTap: _toggleMenu,
-            child: Container(color: Colors.black.withValues(alpha: 0.3)),
+            child: Container(color: DeepColorTokens.overlayMedium),
           ),
 
         // Menu des catégories
@@ -105,7 +106,7 @@ class _StockCategoryFloatingMenuState
                 borderRadius: BorderRadius.circular(16.0),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: DeepColorTokens.shadowLight,
                     blurRadius: 16.0,
                     offset: const Offset(0, 4),
                   ),

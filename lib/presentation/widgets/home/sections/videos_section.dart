@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/video_preview.dart';
 import '../../../providers/videos_provider.dart';
 import '../../../screens/all_videos_page.dart';
@@ -39,9 +40,7 @@ class VideosSection extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w600,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.9),
+                      color: DeepColorTokens.neutral900,
                     ),
                   ),
                   TextButton.icon(
@@ -58,12 +57,12 @@ class VideosSection extends ConsumerWidget {
                     icon: Icon(
                       Icons.arrow_forward,
                       size: 16.0,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: DeepColorTokens.primary,
                     ),
                     label: Text(
                       'Voir tout',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: DeepColorTokens.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -87,17 +86,13 @@ class VideosSection extends ConsumerWidget {
                       Icon(
                         Icons.play_circle_outline,
                         size: 48.0,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: DeepColorTokens.neutral500,
                       ),
                       SizedBox(height: 8.0),
                       Text(
                         'Aucune vidéo disponible',
                         style: TextStyle(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.8),
+                          color: DeepColorTokens.neutral700,
                           fontSize: 14.0,
                         ),
                       ),
@@ -163,15 +158,13 @@ class VideosSection extends ConsumerWidget {
                   Icon(
                     Icons.error_outline,
                     size: 48.0,
-                    color: Theme.of(context).colorScheme.error,
+                    color: DeepColorTokens.error,
                   ),
                   SizedBox(height: 16.0),
                   Text(
                     'Erreur de chargement',
                     style: TextStyle(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.8),
+                      color: DeepColorTokens.neutral700,
                       fontSize: 14.0,
                     ),
                   ),

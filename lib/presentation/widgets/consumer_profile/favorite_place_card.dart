@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import 'favorites_models.dart';
 
 /// Carte affichant un lieu favori
@@ -14,17 +15,16 @@ class FavoritePlaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Container(
       width: 140.0,
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: colors.primaryContainer.withValues(alpha: 0.3),
+        color: DeepColorTokens.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10.0),
         border: Border.all(
-          color: colors.primaryContainer,
+          color: DeepColorTokens.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -34,13 +34,13 @@ class FavoritePlaceCard extends StatelessWidget {
             children: [
               Icon(
                 Icons.store,
-                color: colors.primary,
+                color: DeepColorTokens.primary,
                 size: 16.0,
               ),
               const Spacer(),
               Icon(
                 Icons.favorite,
-                color: colors.error,
+                color: DeepColorTokens.error,
                 size: 14.0,
               ),
             ],
@@ -58,7 +58,7 @@ class FavoritePlaceCard extends StatelessWidget {
           Text(
             place.address,
             style: textTheme.bodySmall?.copyWith(
-              color: colors.onSurface.withValues(alpha: 0.6),
+              color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -80,7 +80,7 @@ class FavoritePlaceCard extends StatelessWidget {
               Text(
                 '${place.visitCount} visites',
                 style: textTheme.labelSmall?.copyWith(
-                  color: colors.primary,
+                  color: DeepColorTokens.primary,
                   fontWeight: FontWeight.w500,
                 ),
               ),

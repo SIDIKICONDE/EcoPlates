@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import 'empty_favorites_widget.dart';
 import 'favorite_dish_tile.dart';
 import 'favorite_place_card.dart';
@@ -12,7 +13,6 @@ class ConsumerFavoritesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     // TODO: Récupérer les favoris depuis un provider
@@ -24,13 +24,11 @@ class ConsumerFavoritesSection extends StatelessWidget {
         16.0,
       ),
       decoration: BoxDecoration(
-        color: colors.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: colors.shadow.withValues(
-              alpha: 0.08,
-            ),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 8.0,
             offset: Offset(0, 4),
           ),
@@ -44,7 +42,7 @@ class ConsumerFavoritesSection extends StatelessWidget {
             children: [
               Icon(
                 Icons.favorite,
-                color: colors.error,
+                color: DeepColorTokens.error,
                 size: 24.0,
               ),
               SizedBox(

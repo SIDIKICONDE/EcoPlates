@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/routes/route_constants.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/store_offers_provider.dart';
 import '../widgets/store/global_promotion_dialog.dart';
@@ -51,7 +52,7 @@ class MerchantStorePage extends ConsumerWidget {
         onPressed: () => _navigateToOfferForm(context),
         label: const Text('Nouvelle offre'),
         icon: const Icon(Icons.add),
-        backgroundColor: theme.colorScheme.primary,
+        backgroundColor: DeepColorTokens.primary,
       ),
     );
   }

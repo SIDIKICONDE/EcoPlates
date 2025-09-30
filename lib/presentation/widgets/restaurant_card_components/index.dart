@@ -9,4 +9,4 @@ export 'popularity_badge.dart';
 export 'price_info.dart';
 export 'rating_display.dart';
 export 'restaurant_tag.dart';
-export 'time_indicator.dart';
+

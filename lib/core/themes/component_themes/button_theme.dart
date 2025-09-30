@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../tokens/color_tokens.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 import '../tokens/elevation_tokens.dart';
 import '../tokens/radius_tokens.dart';
 import '../tokens/spacing_tokens.dart';
@@ -27,10 +28,10 @@ class EcoButtonTheme {
   }) {
     final baseColor =
         backgroundColor ??
-        (isDark ? EcoColorTokens.neutral800 : EcoColorTokens.primary);
+        (isDark ? DeepColorTokens.neutral800 : DeepColorTokens.primary);
     final onBaseColor =
         foregroundColor ??
-        (isDark ? EcoColorTokens.neutral50 : EcoColorTokens.neutral0);
+        (isDark ? DeepColorTokens.neutral50 : DeepColorTokens.neutral0);
 
     return ElevatedButtonThemeData(
       style:
@@ -39,15 +40,15 @@ class EcoButtonTheme {
             foregroundColor: onBaseColor,
             backgroundColor: baseColor,
             disabledForegroundColor: isDark
-                ? EcoColorTokens.neutral500
-                : EcoColorTokens.neutral500,
+                ? DeepColorTokens.neutral500
+                : DeepColorTokens.neutral500,
             disabledBackgroundColor: isDark
-                ? EcoColorTokens.neutral700
-                : EcoColorTokens.neutral300,
+                ? DeepColorTokens.neutral700
+                : DeepColorTokens.neutral300,
 
             // Élévation - valeur simple au lieu de WidgetStateProperty
             elevation: EcoElevation.buttonElevation,
-            shadowColor: Colors.black26,
+            shadowColor: DeepColorTokens.shadowMedium,
 
             // Forme et bordures RESPONSIVE
             shape: RoundedRectangleBorder(
@@ -106,23 +107,25 @@ class EcoButtonTheme {
   }) {
     final textColor =
         foregroundColor ??
-        (isDark ? EcoColorTokens.neutral100 : EcoColorTokens.primary);
+        (isDark ? DeepColorTokens.neutral100 : DeepColorTokens.primary);
 
     return OutlinedButtonThemeData(
       style:
           OutlinedButton.styleFrom(
             // Couleurs
             foregroundColor: textColor,
-            backgroundColor: Colors.transparent,
+            backgroundColor: const Color(0x00000000),
             disabledForegroundColor: isDark
-                ? EcoColorTokens.neutral600
-                : EcoColorTokens.neutral400,
+                ? DeepColorTokens.neutral600
+                : DeepColorTokens.neutral400,
 
             // Bordure
             side: BorderSide(
               color:
                   borderColor ??
-                  (isDark ? EcoColorTokens.neutral600 : EcoColorTokens.primary),
+                  (isDark
+                      ? DeepColorTokens.neutral600
+                      : DeepColorTokens.primary),
               width: 1.5,
             ),
 
@@ -161,8 +164,8 @@ class EcoButtonTheme {
               if (states.contains(WidgetState.disabled)) {
                 return BorderSide(
                   color: isDark
-                      ? EcoColorTokens.neutral700
-                      : EcoColorTokens.neutral300,
+                      ? DeepColorTokens.neutral700
+                      : DeepColorTokens.neutral300,
                   width: 1.5,
                 );
               }
@@ -171,8 +174,8 @@ class EcoButtonTheme {
                   color:
                       borderColor ??
                       (isDark
-                          ? EcoColorTokens.neutral600
-                          : EcoColorTokens.primary),
+                          ? DeepColorTokens.neutral600
+                          : DeepColorTokens.primary),
                   width: (borderWidth ?? 1.5) + 0.5,
                 );
               }
@@ -180,8 +183,8 @@ class EcoButtonTheme {
                 color:
                     borderColor ??
                     (isDark
-                        ? EcoColorTokens.neutral600
-                        : EcoColorTokens.primary),
+                        ? DeepColorTokens.neutral600
+                        : DeepColorTokens.primary),
                 width: borderWidth ?? 1.5,
               );
             }),
@@ -192,11 +195,11 @@ class EcoButtonTheme {
   // ===== ELEVATED BUTTON =====
   static ElevatedButtonThemeData elevatedButtonTheme({required bool isDark}) {
     final baseColor = isDark
-        ? EcoColorTokens.neutral800
-        : EcoColorTokens.primary;
+        ? DeepColorTokens.neutral800
+        : DeepColorTokens.primary;
     final onBaseColor = isDark
-        ? EcoColorTokens.neutral50
-        : EcoColorTokens.neutral0;
+        ? DeepColorTokens.neutral50
+        : DeepColorTokens.neutral0;
     return ElevatedButtonThemeData(
       style:
           ElevatedButton.styleFrom(
@@ -204,15 +207,15 @@ class EcoButtonTheme {
             foregroundColor: onBaseColor,
             backgroundColor: baseColor,
             disabledForegroundColor: isDark
-                ? EcoColorTokens.neutral500
-                : EcoColorTokens.neutral500,
+                ? DeepColorTokens.neutral500
+                : DeepColorTokens.neutral500,
             disabledBackgroundColor: isDark
-                ? EcoColorTokens.neutral700
-                : EcoColorTokens.neutral300,
+                ? DeepColorTokens.neutral700
+                : DeepColorTokens.neutral300,
 
             // Élévation - valeur simple au lieu de WidgetStateProperty
             elevation: EcoElevation.buttonElevation,
-            shadowColor: Colors.black26,
+            shadowColor: DeepColorTokens.shadowMedium,
 
             // Forme et bordures
             shape: const RoundedRectangleBorder(
@@ -258,21 +261,21 @@ class EcoButtonTheme {
   // ===== OUTLINED BUTTON =====
   static OutlinedButtonThemeData outlinedButtonTheme({required bool isDark}) {
     final borderColor = isDark
-        ? EcoColorTokens.neutral600
-        : EcoColorTokens.primary;
+        ? DeepColorTokens.neutral600
+        : DeepColorTokens.primary;
     final textColor = isDark
-        ? EcoColorTokens.neutral100
-        : EcoColorTokens.primary;
+        ? DeepColorTokens.neutral100
+        : DeepColorTokens.primary;
 
     return OutlinedButtonThemeData(
       style:
           OutlinedButton.styleFrom(
             // Couleurs
             foregroundColor: textColor,
-            backgroundColor: Colors.transparent,
+            backgroundColor: const Color(0x00000000),
             disabledForegroundColor: isDark
-                ? EcoColorTokens.neutral600
-                : EcoColorTokens.neutral400,
+                ? DeepColorTokens.neutral600
+                : DeepColorTokens.neutral400,
 
             // Bordure
             side: BorderSide(
@@ -310,8 +313,8 @@ class EcoButtonTheme {
               if (states.contains(WidgetState.disabled)) {
                 return BorderSide(
                   color: isDark
-                      ? EcoColorTokens.neutral700
-                      : EcoColorTokens.neutral300,
+                      ? DeepColorTokens.neutral700
+                      : DeepColorTokens.neutral300,
                   width: 1.5,
                 );
               }
@@ -333,8 +336,8 @@ class EcoButtonTheme {
   // ===== TEXT BUTTON =====
   static TextButtonThemeData textButtonTheme({required bool isDark}) {
     final textColor = isDark
-        ? EcoColorTokens.neutral100
-        : EcoColorTokens.primary;
+        ? DeepColorTokens.neutral100
+        : DeepColorTokens.primary;
 
     return TextButtonThemeData(
       style:
@@ -342,8 +345,8 @@ class EcoButtonTheme {
             // Couleurs
             foregroundColor: textColor,
             disabledForegroundColor: isDark
-                ? EcoColorTokens.neutral600
-                : EcoColorTokens.neutral400,
+                ? DeepColorTokens.neutral600
+                : DeepColorTokens.neutral400,
 
             // Forme
             shape: const RoundedRectangleBorder(
@@ -380,8 +383,8 @@ class EcoButtonTheme {
   // ===== ICON BUTTON =====
   static IconButtonThemeData iconButtonTheme({required bool isDark}) {
     final iconColor = isDark
-        ? EcoColorTokens.neutral200
-        : EcoColorTokens.neutral700;
+        ? DeepColorTokens.neutral200
+        : DeepColorTokens.neutral700;
 
     return IconButtonThemeData(
       style:
@@ -389,8 +392,8 @@ class EcoButtonTheme {
             // Couleurs
             foregroundColor: iconColor,
             disabledForegroundColor: isDark
-                ? EcoColorTokens.neutral600
-                : EcoColorTokens.neutral400,
+                ? DeepColorTokens.neutral600
+                : DeepColorTokens.neutral400,
 
             // Forme
             shape: const RoundedRectangleBorder(
@@ -420,8 +423,8 @@ class EcoButtonTheme {
   static FloatingActionButtonThemeData fabTheme({required bool isDark}) {
     return const FloatingActionButtonThemeData(
       // Couleurs
-      backgroundColor: EcoColorTokens.secondary,
-      foregroundColor: EcoColorTokens.neutral0,
+      backgroundColor: DeepColorTokens.secondary,
+      foregroundColor: DeepColorTokens.neutral0,
       disabledElevation: 0,
 
       // Élévation
@@ -457,8 +460,8 @@ class EcoButtonTheme {
 
   /// Bouton principal vert EcoPlates
   static ButtonStyle get primaryEcoStyle => ElevatedButton.styleFrom(
-    backgroundColor: EcoColorTokens.primary,
-    foregroundColor: EcoColorTokens.neutral0,
+    backgroundColor: DeepColorTokens.primary,
+    foregroundColor: DeepColorTokens.neutral0,
     padding: EcoSpacing.buttonPadding,
     shape: const RoundedRectangleBorder(borderRadius: EcoRadius.buttonRadius),
     textStyle: EcoTypography.labelLargeLight.copyWith(
@@ -468,8 +471,8 @@ class EcoButtonTheme {
 
   /// Bouton secondaire orange
   static ButtonStyle get secondaryEcoStyle => ElevatedButton.styleFrom(
-    backgroundColor: EcoColorTokens.secondary,
-    foregroundColor: EcoColorTokens.neutral0,
+    backgroundColor: DeepColorTokens.secondary,
+    foregroundColor: DeepColorTokens.neutral0,
     padding: EcoSpacing.buttonPadding,
     shape: const RoundedRectangleBorder(borderRadius: EcoRadius.buttonRadius),
     textStyle: EcoTypography.labelLargeLight,
@@ -477,8 +480,8 @@ class EcoButtonTheme {
 
   /// Bouton d'urgence rouge
   static ButtonStyle get urgentStyle => ElevatedButton.styleFrom(
-    backgroundColor: EcoColorTokens.urgent,
-    foregroundColor: EcoColorTokens.neutral0,
+    backgroundColor: DeepColorTokens.urgent,
+    foregroundColor: DeepColorTokens.neutral0,
     padding: EcoSpacing.buttonPadding,
     shape: const RoundedRectangleBorder(borderRadius: EcoRadius.buttonRadius),
     textStyle: EcoTypography.labelLargeLight.copyWith(
@@ -488,8 +491,8 @@ class EcoButtonTheme {
 
   /// Bouton pill (complètement arrondi)
   static ButtonStyle get pillStyle => ElevatedButton.styleFrom(
-    backgroundColor: EcoColorTokens.primary,
-    foregroundColor: EcoColorTokens.neutral0,
+    backgroundColor: DeepColorTokens.primary,
+    foregroundColor: DeepColorTokens.neutral0,
     padding: EcoSpacing.asymmetric(
       horizontal: EcoSpacing.xxl,
       vertical: EcoSpacing.sm,
@@ -503,8 +506,8 @@ class EcoButtonTheme {
   /// Bouton ghost (transparent avec bordure)
   static ButtonStyle get ghostStyle => OutlinedButton.styleFrom(
     backgroundColor: Colors.transparent,
-    foregroundColor: EcoColorTokens.primary,
-    side: const BorderSide(color: EcoColorTokens.primary, width: 1.5),
+    foregroundColor: DeepColorTokens.primary,
+    side: const BorderSide(color: DeepColorTokens.primary, width: 1.5),
     padding: EcoSpacing.buttonPadding,
     shape: const RoundedRectangleBorder(borderRadius: EcoRadius.buttonRadius),
     textStyle: EcoTypography.labelLargeLight,
@@ -573,32 +576,32 @@ class EcoButtonTheme {
   static ButtonStyle responsivePrimaryEcoStyle(BuildContext context) =>
       _createResponsiveElevatedButton(
         context: context,
-        backgroundColor: EcoColorTokens.primary,
-        foregroundColor: EcoColorTokens.neutral0,
+        backgroundColor: DeepColorTokens.primary,
+        foregroundColor: DeepColorTokens.neutral0,
       );
 
   /// Bouton secondaire responsive
   static ButtonStyle responsiveSecondaryEcoStyle(BuildContext context) =>
       _createResponsiveElevatedButton(
         context: context,
-        backgroundColor: EcoColorTokens.secondary,
-        foregroundColor: EcoColorTokens.neutral0,
+        backgroundColor: DeepColorTokens.secondary,
+        foregroundColor: DeepColorTokens.neutral0,
       );
 
   /// Bouton d'urgence responsive
   static ButtonStyle responsiveUrgentStyle(BuildContext context) =>
       _createResponsiveElevatedButton(
         context: context,
-        backgroundColor: EcoColorTokens.urgent,
-        foregroundColor: EcoColorTokens.neutral0,
+        backgroundColor: DeepColorTokens.urgent,
+        foregroundColor: DeepColorTokens.neutral0,
       );
 
   /// Bouton pill responsive (complètement arrondi)
   static ButtonStyle responsivePillStyle(BuildContext context) =>
       _createResponsiveElevatedButton(
         context: context,
-        backgroundColor: EcoColorTokens.primary,
-        foregroundColor: EcoColorTokens.neutral0,
+        backgroundColor: DeepColorTokens.primary,
+        foregroundColor: DeepColorTokens.neutral0,
         horizontalPadding: 24.0,
         verticalPadding: 8.0,
         borderRadius: 20.0,
@@ -608,7 +611,7 @@ class EcoButtonTheme {
   static ButtonStyle responsiveGhostStyle(BuildContext context) =>
       _createResponsiveOutlinedButton(
         context: context,
-        foregroundColor: EcoColorTokens.primary,
+        foregroundColor: DeepColorTokens.primary,
       );
 
   /// Bouton personnalisé responsive avec paramètres flexibles

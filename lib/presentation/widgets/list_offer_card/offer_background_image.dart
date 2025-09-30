@@ -44,7 +44,6 @@ class OfferBackgroundImage extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0),
               gradient: LinearGradient(
-                end: Alignment.centerRight,
                 colors: [
                   Colors.black.withValues(alpha: 0.7),
                   Colors.black.withValues(alpha: 0.3),

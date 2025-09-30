@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/image_cache_service.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -29,7 +30,7 @@ class OfferImageHeader extends StatelessWidget {
                 imageUrl: offer.images.first,
                 size: ImageSize.large,
                 placeholder: ColoredBox(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  color: DeepColorTokens.surfaceContainer,
                   child: const Center(child: CircularProgressIndicator()),
                 ),
                 errorWidget: _buildPlaceholderImage(context),
@@ -151,12 +152,12 @@ class OfferImageHeader extends StatelessWidget {
 
   Widget _buildPlaceholderImage(BuildContext context) {
     return ColoredBox(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      color: DeepColorTokens.surfaceContainer,
       child: Center(
         child: Icon(
           Icons.restaurant,
           size: 64.0,
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
         ),
       ),
     );

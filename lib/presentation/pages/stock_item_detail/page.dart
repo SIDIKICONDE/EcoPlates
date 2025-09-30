@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
@@ -89,15 +90,13 @@ class _HeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.1),
+          color: DeepColorTokens.neutral400.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -145,15 +144,13 @@ class _StatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.1),
+          color: DeepColorTokens.neutral400.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -167,14 +164,14 @@ class _StatsCard extends StatelessWidget {
                 label: 'Prix',
                 value: item.formattedPrice,
                 suffix: '/ ${item.unit}',
-                color: theme.colorScheme.primary,
+                color: DeepColorTokens.primary,
               ),
               _StatTile(
                 label: 'Quantité',
                 value: item.formattedQuantity,
                 color: item.isOutOfStock
-                    ? theme.colorScheme.error
-                    : theme.colorScheme.secondary,
+                    ? DeepColorTokens.error
+                    : DeepColorTokens.secondary,
               ),
             ],
           ),
@@ -185,14 +182,14 @@ class _StatsCard extends StatelessWidget {
               Icon(
                 Icons.update,
                 size: 16.0,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                color: DeepColorTokens.neutral600.withValues(alpha: 0.6),
               ),
               const SizedBox(width: 4.0),
               Text(
                 _formatLastUpdate(item.updatedAt),
                 style: TextStyle(
                   fontSize: 12.0,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                  color: DeepColorTokens.neutral600.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -228,15 +225,13 @@ class _AlertThresholdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+          color: DeepColorTokens.primary.withValues(alpha: 0.3),
           width: 2.0,
         ),
       ),
@@ -265,14 +260,13 @@ class _DescriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.1),
+          color: DeepColorTokens.neutral400.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -290,7 +284,7 @@ class _DescriptionCard extends StatelessWidget {
             text,
             style: TextStyle(
               fontSize: 14.0,
-              color: theme.colorScheme.onSurface,
+              color: DeepColorTokens.neutral800,
               height: 1.5,
             ),
           ),
@@ -306,14 +300,13 @@ class _ActionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.1),
+          color: DeepColorTokens.neutral400.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -358,18 +351,17 @@ class _SkuChip extends StatelessWidget {
   final String sku;
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
+        color: DeepColorTokens.neutral800,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text(
         sku,
         style: TextStyle(
           fontSize: 12.0,
-          color: theme.colorScheme.onSurfaceVariant,
+          color: DeepColorTokens.neutral600,
           fontFamily: 'monospace',
           fontWeight: FontWeight.w500,
         ),
@@ -383,18 +375,17 @@ class _CategoryChip extends StatelessWidget {
   final String category;
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer,
+        color: DeepColorTokens.primaryContainer,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text(
         category,
         style: TextStyle(
           fontSize: 12.0,
-          color: theme.colorScheme.primary,
+          color: DeepColorTokens.primary,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -408,12 +399,11 @@ class _StatusDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final color = status == StockItemStatus.active
-        ? theme.colorScheme.primary
+        ? DeepColorTokens.primary
         : status == StockItemStatus.inactive
-        ? theme.colorScheme.error
-        : theme.colorScheme.secondary;
+        ? DeepColorTokens.error
+        : DeepColorTokens.secondary;
 
     return Container(
       width: 12.0,
@@ -440,13 +430,10 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color:
-            color?.withValues(alpha: 0.1) ??
-            theme.colorScheme.surfaceContainerHighest,
+        color: color?.withValues(alpha: 0.1) ?? DeepColorTokens.neutral800,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
@@ -457,7 +444,7 @@ class _StatTile extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
-              color: color ?? theme.colorScheme.onSurface,
+              color: color ?? DeepColorTokens.neutral800,
             ),
           ),
           if (suffix != null) ...[
@@ -466,7 +453,7 @@ class _StatTile extends StatelessWidget {
               suffix!,
               style: TextStyle(
                 fontSize: 14.0,
-                color: color ?? theme.colorScheme.onSurfaceVariant,
+                color: color ?? DeepColorTokens.neutral600,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -476,7 +463,7 @@ class _StatTile extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12.0,
-              color: theme.colorScheme.onSurfaceVariant,
+              color: DeepColorTokens.neutral600,
               fontWeight: FontWeight.w400,
             ),
           ),

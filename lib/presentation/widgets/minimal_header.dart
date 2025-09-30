@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import 'common/location_header.dart';
 
 /// En-tête minimaliste, élégant et professionnel
@@ -36,9 +37,8 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final bg = backgroundColor ?? theme.colorScheme.surface;
-    final dividerColor = theme.dividerColor.withValues(
+    final bg = backgroundColor ?? DeepColorTokens.surface;
+    final dividerColor = DeepColorTokens.neutral400.withValues(
       alpha: 0.12,
     );
 
@@ -76,8 +76,10 @@ class MinimalHeader extends StatelessWidget implements PreferredSizeWidget {
                         title ?? '',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleMedium?.copyWith(
+                        style: TextStyle(
+                          color: DeepColorTokens.neutral800,
                           fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
                         ),
                       ),
               ),

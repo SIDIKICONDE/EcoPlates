@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../core/widgets/eco_cached_image.dart';
 import '../../domain/entities/merchant.dart';
 import '../providers/favorites_provider.dart';
@@ -19,8 +20,6 @@ class FavoriteMerchantCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final isFavorite = ref.watch(isMerchantFavoriteProvider(merchant.id));
 
     return InkWell(
@@ -34,17 +33,17 @@ class FavoriteMerchantCard extends ConsumerWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.white.withValues(alpha: 0.7),
-                  Colors.white.withValues(alpha: 0.4),
+                  DeepColorTokens.neutral0.withValues(alpha: 0.7),
+                  DeepColorTokens.neutral0.withValues(alpha: 0.4),
                 ],
               ),
               borderRadius: BorderRadius.circular(16.0),
               border: Border.all(
-                color: Colors.pink.withValues(alpha: 0.3),
+                color: DeepColorTokens.secondary.withValues(alpha: 0.3),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  color: DeepColorTokens.primary.withValues(alpha: 0.1),
                   blurRadius: 8.0,
                   offset: const Offset(0, 4),
                 ),
@@ -73,10 +72,10 @@ class FavoriteMerchantCard extends ConsumerWidget {
                       errorWidget: Container(
                         width: imageSide,
                         height: imageSide,
-                        color: Colors.grey[200],
+                        color: DeepColorTokens.neutral200,
                         child: Icon(
                           Icons.store,
-                          color: Colors.grey,
+                          color: DeepColorTokens.neutral500,
                           size: 24.0,
                         ),
                       ),
@@ -101,7 +100,7 @@ class FavoriteMerchantCard extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w700,
-                                    color: Colors.black87,
+                                    color: DeepColorTokens.neutral800,
                                   ),
                                 ),
                                 SizedBox(height: 4.0),
@@ -111,7 +110,7 @@ class FavoriteMerchantCard extends ConsumerWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    color: Colors.grey[700],
+                                    color: DeepColorTokens.neutral700,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -135,8 +134,8 @@ class FavoriteMerchantCard extends ConsumerWidget {
                                     ),
                                     duration: const Duration(seconds: 1),
                                     backgroundColor: isFavorite
-                                        ? Colors.grey[700]
-                                        : Colors.green[700],
+                                        ? DeepColorTokens.neutral700
+                                        : DeepColorTokens.success,
                                   ),
                                 );
                               }
@@ -150,8 +149,8 @@ class FavoriteMerchantCard extends ConsumerWidget {
                                 key: ValueKey(isFavorite),
                                 size: 16.0,
                                 color: isFavorite
-                                    ? Colors.red[500]
-                                    : Colors.grey[600],
+                                    ? DeepColorTokens.error
+                                    : DeepColorTokens.neutral600,
                               ),
                             ),
                             padding: EdgeInsets.zero,
@@ -173,7 +172,7 @@ class FavoriteMerchantCard extends ConsumerWidget {
                           _Chip(
                             icon: Icons.place_outlined,
                             text: merchant.distanceText,
-                            color: colorScheme.primary,
+                            color: DeepColorTokens.primary,
                           ),
                         ],
                       ),
@@ -187,14 +186,14 @@ class FavoriteMerchantCard extends ConsumerWidget {
                             _Chip(
                               icon: Icons.local_offer_outlined,
                               text: '${merchant.availableOffers} offres',
-                              color: Colors.green[600]!,
+                              color: DeepColorTokens.success,
                             ),
                             SizedBox(width: 12.0),
                             Text(
                               'Dès ${merchant.minPrice.toStringAsFixed(2)}€',
                               style: TextStyle(
                                 fontSize: 14.0,
-                                color: Colors.black87,
+                                color: DeepColorTokens.neutral800,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -205,7 +204,7 @@ class FavoriteMerchantCard extends ConsumerWidget {
                           "Pas d'offre",
                           style: TextStyle(
                             fontSize: 14.0,
-                            color: Colors.grey[600],
+                            color: DeepColorTokens.neutral600,
                           ),
                         ),
                     ],
@@ -248,29 +247,31 @@ class FavoriteMerchantCard extends ConsumerWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.pink[100]!.withValues(alpha: 0.8),
-                        Colors.pink[50]!.withValues(alpha: 0.6),
+                        DeepColorTokens.secondary.withValues(alpha: 0.8),
+                        DeepColorTokens.secondaryContainer.withValues(
+                          alpha: 0.6,
+                        ),
                       ],
                     ),
                     border: Border.all(
-                      color: Colors.pink[300]!.withValues(alpha: 0.6),
+                      color: DeepColorTokens.secondary.withValues(alpha: 0.6),
                     ),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: const [
                       Icon(
                         Icons.favorite,
                         size: 12.0,
-                        color: Colors.pink[700],
+                        color: DeepColorTokens.secondaryDark,
                       ),
                       SizedBox(width: 4.0),
                       Text(
                         'Favori',
                         style: TextStyle(
                           fontSize: 12.0,
-                          color: Colors.pink[700],
+                          color: DeepColorTokens.secondaryDark,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -297,7 +298,7 @@ class _StarRating extends StatelessWidget {
         Icon(
           Icons.star,
           size: 16.0,
-          color: Colors.amber[600],
+          color: DeepColorTokens.warning,
         ),
         SizedBox(width: 2.0),
         Text(

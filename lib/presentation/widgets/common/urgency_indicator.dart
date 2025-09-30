@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Widget d'indicateur d'urgence pour les offres avec peu de temps restant
 class UrgencyIndicator extends StatelessWidget {
   const UrgencyIndicator({
@@ -93,23 +95,23 @@ class UrgencyIndicator extends StatelessWidget {
     switch (level) {
       case UrgencyLevel.critical:
         return UrgencyColors(
-          background: theme.colorScheme.error,
-          foreground: theme.colorScheme.onError,
+          background: DeepColorTokens.urgent,
+          foreground: DeepColorTokens.neutral0,
         );
       case UrgencyLevel.high:
         return UrgencyColors(
-          background: theme.colorScheme.tertiary,
-          foreground: theme.colorScheme.onTertiary,
+          background: DeepColorTokens.warning,
+          foreground: DeepColorTokens.neutral900,
         );
       case UrgencyLevel.medium:
         return UrgencyColors(
-          background: theme.colorScheme.secondary,
-          foreground: theme.colorScheme.onSecondary,
+          background: DeepColorTokens.secondary,
+          foreground: DeepColorTokens.neutral0,
         );
       case UrgencyLevel.low:
         return UrgencyColors(
-          background: theme.colorScheme.primary,
-          foreground: theme.colorScheme.onPrimary,
+          background: DeepColorTokens.primary,
+          foreground: DeepColorTokens.neutral0,
         );
     }
   }

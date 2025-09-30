@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../tokens/color_tokens.dart';
+import '../tokens/deep_color_tokens.dart';
 import '../tokens/elevation_tokens.dart';
 import '../tokens/radius_tokens.dart';
 import '../tokens/spacing_tokens.dart';
@@ -16,13 +16,13 @@ class EcoNavigationTheme {
     return AppBarTheme(
       // Couleurs
       backgroundColor: isDark
-          ? EcoColorTokens.neutral900
-          : EcoColorTokens.neutral0,
+          ? DeepColorTokens.surface
+          : DeepColorTokens.neutral0,
       foregroundColor: isDark
-          ? EcoColorTokens.neutral100
-          : EcoColorTokens.neutral800,
+          ? DeepColorTokens.neutral0
+          : DeepColorTokens.neutral900,
       surfaceTintColor: Colors.transparent,
-      shadowColor: Colors.black12,
+      shadowColor: DeepColorTokens.shadowLight,
 
       // Élévation
       elevation: EcoElevation.appBarElevation,
@@ -30,7 +30,7 @@ class EcoNavigationTheme {
 
       // Style du titre
       titleTextStyle: EcoTypography.headlineSmallLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral100 : EcoColorTokens.neutral800,
+        color: isDark ? DeepColorTokens.neutral0 : DeepColorTokens.neutral900,
         fontWeight: EcoTypography.semiBold,
       ),
 
@@ -47,13 +47,13 @@ class EcoNavigationTheme {
 
       // Style des icônes
       iconTheme: IconThemeData(
-        color: isDark ? EcoColorTokens.neutral200 : EcoColorTokens.neutral700,
+        color: isDark ? DeepColorTokens.neutral200 : DeepColorTokens.neutral700,
         size: 24,
       ),
 
       // Style des actions
       actionsIconTheme: IconThemeData(
-        color: isDark ? EcoColorTokens.neutral200 : EcoColorTokens.neutral700,
+        color: isDark ? DeepColorTokens.neutral200 : DeepColorTokens.neutral700,
         size: 24,
       ),
 
@@ -77,20 +77,20 @@ class EcoNavigationTheme {
 
       // Couleurs
       backgroundColor: isDark
-          ? EcoColorTokens.neutral900
-          : EcoColorTokens.neutral0,
-      selectedItemColor: EcoColorTokens.primary,
+          ? DeepColorTokens.surface
+          : DeepColorTokens.neutral0,
+      selectedItemColor: DeepColorTokens.primary,
       unselectedItemColor: isDark
-          ? EcoColorTokens.neutral500
-          : EcoColorTokens.neutral400,
+          ? DeepColorTokens.neutral500
+          : DeepColorTokens.neutral400,
 
       // Styles de texte
       selectedLabelStyle: EcoTypography.labelSmallLight.copyWith(
-        color: EcoColorTokens.primary,
+        color: DeepColorTokens.primary,
         fontWeight: EcoTypography.semiBold,
       ),
       unselectedLabelStyle: EcoTypography.labelSmallLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral500 : EcoColorTokens.neutral400,
+        color: isDark ? DeepColorTokens.neutral500 : DeepColorTokens.neutral400,
       ),
 
       // Élévation
@@ -99,11 +99,11 @@ class EcoNavigationTheme {
       // Taille des icônes
       selectedIconTheme: const IconThemeData(
         size: 24,
-        color: EcoColorTokens.primary,
+        color: DeepColorTokens.primary,
       ),
       unselectedIconTheme: IconThemeData(
         size: 22,
-        color: isDark ? EcoColorTokens.neutral500 : EcoColorTokens.neutral400,
+        color: isDark ? DeepColorTokens.neutral500 : DeepColorTokens.neutral400,
       ),
 
       // Animation
@@ -116,22 +116,22 @@ class EcoNavigationTheme {
     return NavigationRailThemeData(
       // Couleurs
       backgroundColor: isDark
-          ? EcoColorTokens.neutral900
-          : EcoColorTokens.neutral50,
+          ? DeepColorTokens.surface
+          : DeepColorTokens.neutral50,
       selectedIconTheme: const IconThemeData(
         size: 24,
-        color: EcoColorTokens.primary,
+        color: DeepColorTokens.primary,
       ),
       unselectedIconTheme: IconThemeData(
         size: 22,
-        color: isDark ? EcoColorTokens.neutral500 : EcoColorTokens.neutral400,
+        color: isDark ? DeepColorTokens.neutral500 : DeepColorTokens.neutral400,
       ),
       selectedLabelTextStyle: EcoTypography.labelMediumLight.copyWith(
-        color: EcoColorTokens.primary,
+        color: DeepColorTokens.primary,
         fontWeight: EcoTypography.semiBold,
       ),
       unselectedLabelTextStyle: EcoTypography.labelMediumLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral500 : EcoColorTokens.neutral400,
+        color: isDark ? DeepColorTokens.neutral500 : DeepColorTokens.neutral400,
       ),
 
       // Élévation
@@ -148,10 +148,10 @@ class EcoNavigationTheme {
     return DrawerThemeData(
       // Couleurs
       backgroundColor: isDark
-          ? EcoColorTokens.neutral900
-          : EcoColorTokens.neutral0,
+          ? DeepColorTokens.surface
+          : DeepColorTokens.neutral0,
       surfaceTintColor: Colors.transparent,
-      shadowColor: Colors.black26,
+      shadowColor: DeepColorTokens.shadowMedium,
 
       // Élévation
       elevation: EcoElevation.drawerElevation,
@@ -173,22 +173,22 @@ class EcoNavigationTheme {
   static TabBarThemeData tabBarTheme({required bool isDark}) {
     return TabBarThemeData(
       // Couleurs
-      labelColor: EcoColorTokens.primary,
+      labelColor: DeepColorTokens.primary,
       unselectedLabelColor: isDark
-          ? EcoColorTokens.neutral400
-          : EcoColorTokens.neutral500,
-      indicatorColor: EcoColorTokens.primary,
+          ? DeepColorTokens.neutral400
+          : DeepColorTokens.neutral500,
+      indicatorColor: DeepColorTokens.primary,
       dividerColor: isDark
-          ? EcoColorTokens.neutral700
-          : EcoColorTokens.neutral200,
+          ? DeepColorTokens.neutral700
+          : DeepColorTokens.neutral200,
 
       // Styles de texte
       labelStyle: EcoTypography.labelLargeLight.copyWith(
-        color: EcoColorTokens.primary,
+        color: DeepColorTokens.primary,
         fontWeight: EcoTypography.semiBold,
       ),
       unselectedLabelStyle: EcoTypography.labelLargeLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral400 : EcoColorTokens.neutral500,
+        color: isDark ? DeepColorTokens.neutral400 : DeepColorTokens.neutral500,
       ),
 
       // Padding
@@ -219,8 +219,8 @@ class EcoNavigationTheme {
               title,
               style: EcoTypography.headlineSmallLight.copyWith(
                 color: isDark
-                    ? EcoColorTokens.neutral100
-                    : EcoColorTokens.neutral800,
+                    ? DeepColorTokens.neutral0
+                    : DeepColorTokens.neutral900,
                 fontWeight: EcoTypography.semiBold,
               ),
             )
@@ -230,11 +230,11 @@ class EcoNavigationTheme {
       bottom: bottom,
       automaticallyImplyLeading: automaticallyImplyLeading,
       backgroundColor: isDark
-          ? EcoColorTokens.neutral900
-          : EcoColorTokens.neutral0,
+          ? DeepColorTokens.surface
+          : DeepColorTokens.neutral0,
       foregroundColor: isDark
-          ? EcoColorTokens.neutral100
-          : EcoColorTokens.neutral800,
+          ? DeepColorTokens.neutral0
+          : DeepColorTokens.neutral900,
       elevation: EcoElevation.appBarElevation,
       centerTitle: true,
       systemOverlayStyle: isDark
@@ -252,7 +252,7 @@ class EcoNavigationTheme {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? EcoColorTokens.neutral900 : EcoColorTokens.neutral0,
+        color: isDark ? DeepColorTokens.surface : DeepColorTokens.neutral0,
         boxShadow: EcoElevation.navigationShadow,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(EcoRadius.xl),
@@ -270,13 +270,13 @@ class EcoNavigationTheme {
           items: items,
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.transparent,
-          selectedItemColor: EcoColorTokens.primary,
+          selectedItemColor: DeepColorTokens.primary,
           unselectedItemColor: isDark
-              ? EcoColorTokens.neutral500
-              : EcoColorTokens.neutral400,
+              ? DeepColorTokens.neutral500
+              : DeepColorTokens.neutral400,
           elevation: 0,
           selectedLabelStyle: EcoTypography.labelSmallLight.copyWith(
-            color: EcoColorTokens.primary,
+            color: DeepColorTokens.primary,
             fontWeight: EcoTypography.semiBold,
           ),
           unselectedLabelStyle: EcoTypography.labelSmallLight,
@@ -303,22 +303,22 @@ class EcoNavigationTheme {
       trailing: trailing,
       extended: extended,
       backgroundColor: isDark
-          ? EcoColorTokens.neutral900
-          : EcoColorTokens.neutral50,
+          ? DeepColorTokens.surface
+          : DeepColorTokens.neutral50,
       selectedIconTheme: const IconThemeData(
         size: 24,
-        color: EcoColorTokens.primary,
+        color: DeepColorTokens.primary,
       ),
       unselectedIconTheme: IconThemeData(
         size: 22,
-        color: isDark ? EcoColorTokens.neutral500 : EcoColorTokens.neutral400,
+        color: isDark ? DeepColorTokens.neutral500 : DeepColorTokens.neutral400,
       ),
       selectedLabelTextStyle: EcoTypography.labelMediumLight.copyWith(
-        color: EcoColorTokens.primary,
+        color: DeepColorTokens.primary,
         fontWeight: EcoTypography.semiBold,
       ),
       unselectedLabelTextStyle: EcoTypography.labelMediumLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral500 : EcoColorTokens.neutral400,
+        color: isDark ? DeepColorTokens.neutral500 : DeepColorTokens.neutral400,
       ),
       elevation: EcoElevation.level1,
       minWidth: 80,
@@ -334,8 +334,8 @@ class EcoNavigationTheme {
   }) {
     return Drawer(
       backgroundColor: isDark
-          ? EcoColorTokens.neutral900
-          : EcoColorTokens.neutral0,
+          ? DeepColorTokens.surface
+          : DeepColorTokens.neutral0,
       elevation: EcoElevation.drawerElevation,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -366,18 +366,18 @@ class EcoNavigationTheme {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? EcoColorTokens.neutral800 : EcoColorTokens.neutral50,
+        color: isDark ? DeepColorTokens.surface : DeepColorTokens.neutral50,
         borderRadius: EcoRadius.tabRadius,
       ),
       child: TabBar(
         tabs: tabs,
         controller: controller,
         isScrollable: isScrollable,
-        labelColor: EcoColorTokens.primary,
+        labelColor: DeepColorTokens.primary,
         unselectedLabelColor: isDark
-            ? EcoColorTokens.neutral400
-            : EcoColorTokens.neutral500,
-        indicatorColor: EcoColorTokens.primary,
+            ? DeepColorTokens.neutral400
+            : DeepColorTokens.neutral500,
+        indicatorColor: DeepColorTokens.primary,
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorPadding: EcoSpacing.paddingXS,
         labelStyle: EcoTypography.labelLargeLight.copyWith(

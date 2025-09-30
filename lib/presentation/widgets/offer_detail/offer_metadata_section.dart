@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/utils/offer_formatters.dart';
 import '../../../domain/entities/food_offer.dart';
 
@@ -23,7 +24,7 @@ class OfferMetadataSection extends StatelessWidget {
                   icon: Icons.category,
                   title: "Type d'offre",
                   content: OfferFormatters.formatOfferType(offer.type),
-                  color: Colors.blue,
+                  color: DeepColorTokens.primary,
                 ),
               ),
               SizedBox(width: 16.0),
@@ -33,7 +34,7 @@ class OfferMetadataSection extends StatelessWidget {
                   icon: Icons.restaurant_menu,
                   title: 'Catégorie',
                   content: OfferFormatters.formatFoodCategory(offer.category),
-                  color: Colors.green,
+                  color: DeepColorTokens.success,
                 ),
               ),
             ],
@@ -49,7 +50,7 @@ class OfferMetadataSection extends StatelessWidget {
                   icon: Icons.calendar_today,
                   title: 'Publié',
                   content: OfferFormatters.formatCreatedDate(offer.createdAt),
-                  color: Colors.purple,
+                  color: DeepColorTokens.secondary,
                 ),
               ),
               SizedBox(width: 16.0),

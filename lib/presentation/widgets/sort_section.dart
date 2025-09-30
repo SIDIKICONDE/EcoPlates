@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/sort_provider.dart';
 import '../widgets/sort_modal.dart';
 
@@ -22,7 +23,7 @@ class SortSection extends ConsumerWidget {
           Text(
             'Trier par : ',
             style: TextStyle(
-              color: Colors.grey[600],
+              color: DeepColorTokens.neutral600,
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
             ),
@@ -35,7 +36,7 @@ class SortSection extends ConsumerWidget {
                 Text(
                   currentSort.label,
                   style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                    color: DeepColorTokens.primary,
                     fontSize: 14.0,
                     fontWeight: FontWeight.w600,
                   ),
@@ -44,7 +45,7 @@ class SortSection extends ConsumerWidget {
                 Icon(
                   Icons.keyboard_arrow_down,
                   size: 20.0,
-                  color: Theme.of(context).primaryColor,
+                  color: DeepColorTokens.primary,
                 ),
               ],
             ),
@@ -65,7 +66,7 @@ class SortSection extends ConsumerWidget {
             maxHeight: MediaQuery.of(context).size.height * 0.6,
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: DeepColorTokens.surface,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(12.0),
             ),

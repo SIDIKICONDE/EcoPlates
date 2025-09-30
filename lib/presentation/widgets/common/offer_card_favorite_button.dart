@@ -87,14 +87,12 @@ class _OfferCardFavoriteButtonState extends State<OfferCardFavoriteButton>
                           key: const ValueKey<bool>(true),
                           size: ResponsiveUtils.getIconSize(
                             context,
-                            baseSize: 24.0,
                           ),
                           color: Colors.red,
                         )
                       : ShaderMask(
                           shaderCallback: (Rect bounds) {
                             return const RadialGradient(
-                              center: Alignment.center,
                               radius: 1.0,
                               colors: [
                                 Color(0xFFF1F8E9), // Vert ultra-clair (centre)
@@ -127,7 +125,6 @@ class _OfferCardFavoriteButtonState extends State<OfferCardFavoriteButton>
                             key: const ValueKey<bool>(false),
                             size: ResponsiveUtils.getIconSize(
                               context,
-                              baseSize: 24,
                             ),
                             color:
                                 Colors.white, // Couleur de base pour le shader

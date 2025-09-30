@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Widget affichant les informations de prix de l'offre
 class OfferPriceInfo extends StatelessWidget {
   const OfferPriceInfo({
@@ -24,9 +26,7 @@ class OfferPriceInfo extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.0,
               decoration: TextDecoration.lineThrough,
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: DeepColorTokens.neutral600.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(width: 4.0),
@@ -36,7 +36,7 @@ class OfferPriceInfo extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.bold,
-            color: isFree ? Colors.green : primaryColor,
+            color: isFree ? DeepColorTokens.success : primaryColor,
           ),
         ),
       ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Badge pour indiquer qu'une boutique est fermée
 class ClosedBadge extends StatelessWidget {
   const ClosedBadge({super.key, this.reopenTime, this.size = BadgeSize.medium});
@@ -15,19 +17,17 @@ class ClosedBadge extends StatelessWidget {
         vertical: size == BadgeSize.small ? 4.0 : 8.0,
       ),
       decoration: BoxDecoration(
-        color: Colors.red.shade600,
+        color: DeepColorTokens.error,
         borderRadius: BorderRadius.circular(
           size == BadgeSize.small ? 4.0 : 8.0,
         ),
         border: Border.all(
-          color: Colors.white,
+          color: DeepColorTokens.neutral0,
           width: size == BadgeSize.small ? 1 : 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(
-              alpha: 0.16,
-            ),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 2.0,
             offset: Offset(0, 1),
           ),
@@ -39,7 +39,7 @@ class ClosedBadge extends StatelessWidget {
           Icon(
             Icons.access_time_filled,
             size: size == BadgeSize.small ? 20.0 : 24.0,
-            color: Colors.white,
+            color: DeepColorTokens.neutral0,
           ),
           SizedBox(width: 4.0),
           Text(
@@ -47,7 +47,7 @@ class ClosedBadge extends StatelessWidget {
             style: TextStyle(
               fontSize: size == BadgeSize.small ? 10.0 : 12.0,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: DeepColorTokens.neutral0,
             ),
           ),
         ],
@@ -75,19 +75,17 @@ class ClosedBadgeWithTime extends StatelessWidget {
         vertical: size == BadgeSize.small ? 4.0 : 8.0,
       ),
       decoration: BoxDecoration(
-        color: Colors.orange.shade600,
+        color: DeepColorTokens.warning,
         borderRadius: BorderRadius.circular(
           size == BadgeSize.small ? 4.0 : 8.0,
         ),
         border: Border.all(
-          color: Colors.white,
+          color: DeepColorTokens.neutral0,
           width: size == BadgeSize.small ? 1 : 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(
-              alpha: 0.16,
-            ),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 2.0,
             offset: Offset(0, 1),
           ),
@@ -99,7 +97,7 @@ class ClosedBadgeWithTime extends StatelessWidget {
           Icon(
             Icons.schedule,
             size: size == BadgeSize.small ? 20.0 : 24.0,
-            color: Colors.white,
+            color: DeepColorTokens.neutral0,
           ),
           SizedBox(width: 4.0),
           Text(
@@ -107,7 +105,7 @@ class ClosedBadgeWithTime extends StatelessWidget {
             style: TextStyle(
               fontSize: size == BadgeSize.small ? 10.0 : 12.0,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: DeepColorTokens.neutral0,
             ),
           ),
         ],

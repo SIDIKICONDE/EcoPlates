@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/responsive/responsive_utils.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../pages/browse_page.dart';
 import '../../pages/consumer_profile_page.dart';
 import '../../screens/main_home_screen.dart';
@@ -12,7 +12,8 @@ class IntegratedTabletMenu extends ConsumerStatefulWidget {
   const IntegratedTabletMenu({super.key});
 
   @override
-  ConsumerState<IntegratedTabletMenu> createState() => _IntegratedTabletMenuState();
+  ConsumerState<IntegratedTabletMenu> createState() =>
+      _IntegratedTabletMenuState();
 }
 
 class _IntegratedTabletMenuState extends ConsumerState<IntegratedTabletMenu>
@@ -50,9 +51,10 @@ class _IntegratedTabletMenuState extends ConsumerState<IntegratedTabletMenu>
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     // Adapter la largeur de la sidebar selon la taille de l'écran
     final sidebarWidth = screenWidth > 1200 ? 280.0 : 240.0;
 
@@ -74,7 +76,8 @@ class _IntegratedTabletMenuState extends ConsumerState<IntegratedTabletMenu>
         Expanded(
           child: TabBarView(
             controller: _tabController,
-            physics: const NeverScrollableScrollPhysics(), // Désactiver le swipe
+            physics:
+                const NeverScrollableScrollPhysics(), // Désactiver le swipe
             children: _pages,
           ),
         ),
@@ -101,7 +104,16 @@ class _IntegratedTabletMenuState extends ConsumerState<IntegratedTabletMenu>
   Widget _buildSidebar(double width) {
     return Container(
       width: width,
-      color: Theme.of(context).colorScheme.surface,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: const [
+            DeepColorTokens.surface,
+            DeepColorTokens.surfaceContainer,
+          ],
+        ),
+      ),
       child: Column(
         children: [
           // Logo header
@@ -113,13 +125,13 @@ class _IntegratedTabletMenuState extends ConsumerState<IntegratedTabletMenu>
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
+                    gradient: DeepColorTokens.primaryGradient,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     Icons.eco,
                     size: 28,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: DeepColorTokens.neutral0,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -131,14 +143,14 @@ class _IntegratedTabletMenuState extends ConsumerState<IntegratedTabletMenu>
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color: DeepColorTokens.neutral0,
                       ),
                     ),
                     Text(
                       'Tablette',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -194,8 +206,17 @@ class _IntegratedTabletMenuState extends ConsumerState<IntegratedTabletMenu>
           // Settings section
           const Divider(height: 1),
           ListTile(
-            leading: const Icon(Icons.settings_outlined),
-            title: const Text('Paramètres'),
+            leading: Icon(
+              Icons.settings_outlined,
+              color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
+            ),
+            title: Text(
+              'Paramètres',
+              style: TextStyle(
+                color: DeepColorTokens.neutral0,
+                fontSize: 15,
+              ),
+            ),
             onTap: () {
               // Navigation vers paramètres
             },
@@ -209,10 +230,10 @@ class _IntegratedTabletMenuState extends ConsumerState<IntegratedTabletMenu>
   Widget _buildBottomNavigation() {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: DeepColorTokens.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: DeepColorTokens.neutral0.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -293,7 +314,7 @@ class _NavigationTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       child: Material(
         color: isSelected
-            ? Theme.of(context).colorScheme.primaryContainer
+            ? DeepColorTokens.primary.withValues(alpha: 0.1)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
@@ -310,8 +331,8 @@ class _NavigationTile extends StatelessWidget {
                       isSelected ? selectedIcon : icon,
                       size: 24,
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                          ? DeepColorTokens.primary
+                          : DeepColorTokens.neutral0.withValues(alpha: 0.7),
                     ),
                     if (badge != null)
                       Positioned(
@@ -319,8 +340,8 @@ class _NavigationTile extends StatelessWidget {
                         top: -8,
                         child: Container(
                           padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
+                          decoration: BoxDecoration(
+                            color: DeepColorTokens.urgent,
                             shape: BoxShape.circle,
                           ),
                           constraints: const BoxConstraints(
@@ -346,10 +367,12 @@ class _NavigationTile extends StatelessWidget {
                     label,
                     style: TextStyle(
                       fontSize: 15,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurface,
+                          ? DeepColorTokens.primary
+                          : DeepColorTokens.neutral0,
                     ),
                   ),
                 ),
@@ -358,7 +381,7 @@ class _NavigationTile extends StatelessWidget {
                     width: 4,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      gradient: DeepColorTokens.primaryGradient,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -407,8 +430,8 @@ class _BottomNavItem extends StatelessWidget {
                     isSelected ? selectedIcon : icon,
                     size: 26,
                     color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        ? DeepColorTokens.primary
+                        : DeepColorTokens.neutral0.withValues(alpha: 0.6),
                   ),
                   if (badge != null)
                     Positioned(
@@ -416,8 +439,8 @@ class _BottomNavItem extends StatelessWidget {
                       top: -8,
                       child: Container(
                         padding: const EdgeInsets.all(3),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
+                        decoration: BoxDecoration(
+                          color: DeepColorTokens.urgent,
                           shape: BoxShape.circle,
                         ),
                         constraints: const BoxConstraints(
@@ -444,8 +467,8 @@ class _BottomNavItem extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      ? DeepColorTokens.primary
+                      : DeepColorTokens.neutral0.withValues(alpha: 0.7),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -467,26 +490,46 @@ class _FavoritesPlaceholder extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mes Favoris'),
+        backgroundColor: DeepColorTokens.surface,
+        foregroundColor: DeepColorTokens.neutral0,
       ),
+      backgroundColor: DeepColorTokens.surfaceContainer,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.favorite_outline,
-              size: 80,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                gradient: DeepColorTokens.confidenceGradient,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.favorite_outline,
+                size: 60,
+                color: DeepColorTokens.neutral0,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             Text(
               'Vos offres favorites',
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: DeepColorTokens.neutral0,
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Retrouvez ici toutes vos offres sauvegardées',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                'Retrouvez ici toutes vos offres sauvegardées',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ],

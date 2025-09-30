@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/store_offers_provider.dart';
 
 /// Barre de recherche pour filtrer les offres de la boutique
@@ -31,7 +32,6 @@ class _StoreSearchBarState extends ConsumerState<StoreSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final searchQuery = ref.watch(
       storeFiltersProvider.select((filters) => filters.searchQuery),
     );
@@ -44,7 +44,7 @@ class _StoreSearchBarState extends ConsumerState<StoreSearchBar> {
     return Container(
       height: 56.0,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: TextField(
@@ -53,20 +53,20 @@ class _StoreSearchBarState extends ConsumerState<StoreSearchBar> {
         decoration: InputDecoration(
           hintText: 'Rechercher...',
           hintStyle: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant.withValues(
-              alpha: 16.0,
+            color: DeepColorTokens.neutral600.withValues(
+              alpha: 0.1,
             ),
           ),
           prefixIcon: Icon(
             Icons.search,
-            color: theme.colorScheme.onSurfaceVariant,
+            color: DeepColorTokens.neutral600,
             size: 16.0,
           ),
           suffixIcon: searchQuery.isNotEmpty
               ? IconButton(
                   icon: Icon(
                     Icons.clear,
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: DeepColorTokens.neutral600,
                     size: 16.0,
                   ),
                   onPressed: () {
@@ -92,7 +92,7 @@ class _StoreSearchBarState extends ConsumerState<StoreSearchBar> {
         },
         textInputAction: TextInputAction.search,
         style: TextStyle(
-          color: theme.colorScheme.onSurface,
+          color: DeepColorTokens.neutral0,
           fontSize: 16.0,
         ),
       ),

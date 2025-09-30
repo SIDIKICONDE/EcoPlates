@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Barre de recherche avancée pour filtrer les articles de stock
@@ -85,14 +86,12 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       height: 48.0,
       decoration: BoxDecoration(
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: 16.0,
+          color: DeepColorTokens.neutral400.withValues(
+            alpha: DeepColorTokens.opacity10,
           ),
         ),
         borderRadius: BorderRadius.circular(8.0),
@@ -104,14 +103,14 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
           hintText: widget.hintText,
           prefixIcon: Icon(
             Icons.search,
-            color: theme.colorScheme.onSurfaceVariant,
+            color: DeepColorTokens.neutral600,
             size: 20.0,
           ),
           suffixIcon: _controller.text.isNotEmpty
               ? IconButton(
                   icon: Icon(
                     Icons.clear,
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: DeepColorTokens.neutral600,
                     size: 20.0,
                   ),
                   onPressed: _clearSearch,
@@ -127,7 +126,7 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
           ),
         ),
         style: TextStyle(
-          color: theme.colorScheme.onSurface,
+          color: DeepColorTokens.neutral800,
           fontSize: 16.0,
           height: 1.2,
         ),

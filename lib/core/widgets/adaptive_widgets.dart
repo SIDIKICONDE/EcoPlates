@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../themes/tokens/deep_color_tokens.dart';
+
 /// Classe utilitaire pour déterminer la plateforme
 class PlatformUtils {
   static bool get isIOS => !kIsWeb && Platform.isIOS;
@@ -251,7 +253,7 @@ class AdaptiveDialog extends StatelessWidget {
             child: Text(
               action.text,
               style: action.isDestructive
-                  ? const TextStyle(color: Colors.red)
+                  ? TextStyle(color: DeepColorTokens.error)
                   : null,
             ),
           );
@@ -318,7 +320,7 @@ class AdaptiveTextField extends StatelessWidget {
         onChanged: onChanged,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: CupertinoColors.systemGrey6,
+          color: DeepColorTokens.neutral200,
           borderRadius: BorderRadius.circular(8),
         ),
       );

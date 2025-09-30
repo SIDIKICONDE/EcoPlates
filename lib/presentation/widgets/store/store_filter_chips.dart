@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/categories.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/store_offers_provider.dart';
 
 /// Chips de filtrage pour les offres de la boutique
@@ -33,8 +34,9 @@ class StoreFilterChips extends ConsumerWidget {
                   : Icons.circle_outlined,
               size: 16.0,
             ),
-            backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.1),
+            backgroundColor: DeepColorTokens.surfaceContainer.withValues(
+              alpha: 0.1,
+            ),
           ),
 
           // Filtre Actives
@@ -50,15 +52,15 @@ class StoreFilterChips extends ConsumerWidget {
                     vertical: 2.0,
                   ),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                    color: DeepColorTokens.neutral500.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Text(
                     ref.watch(activeOffersCountProvider).toString(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: DeepColorTokens.neutral800,
                     ),
                   ),
                 ),
@@ -76,8 +78,9 @@ class StoreFilterChips extends ConsumerWidget {
                   : Icons.circle_outlined,
               size: 16.0,
             ),
-            backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.1),
+            backgroundColor: DeepColorTokens.surfaceContainer.withValues(
+              alpha: 0.1,
+            ),
           ),
 
           // Filtre Inactives
@@ -93,15 +96,15 @@ class StoreFilterChips extends ConsumerWidget {
                     vertical: 2.0,
                   ),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                    color: DeepColorTokens.neutral500.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Text(
                     ref.watch(inactiveOffersCountProvider).toString(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: DeepColorTokens.neutral800,
                     ),
                   ),
                 ),
@@ -119,8 +122,9 @@ class StoreFilterChips extends ConsumerWidget {
                   : Icons.circle_outlined,
               size: 16.0,
             ),
-            backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.1),
+            backgroundColor: DeepColorTokens.surfaceContainer.withValues(
+              alpha: 0.1,
+            ),
           ),
 
           // Filtre promotions
@@ -137,7 +141,7 @@ class StoreFilterChips extends ConsumerWidget {
                       vertical: 2.0,
                     ),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.error,
+                      color: DeepColorTokens.error,
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Text(
@@ -145,7 +149,7 @@ class StoreFilterChips extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 12.0,
                         fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onError,
+                        color: DeepColorTokens.neutral0,
                       ),
                     ),
                   ),
@@ -160,8 +164,9 @@ class StoreFilterChips extends ConsumerWidget {
               Icons.local_offer,
               size: 16.0,
             ),
-            backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.1),
+            backgroundColor: DeepColorTokens.surfaceContainer.withValues(
+              alpha: 0.1,
+            ),
           ),
 
           // Divider
@@ -183,7 +188,7 @@ class StoreFilterChips extends ConsumerWidget {
                   Categories.iconOf(category),
                   size: 16.0,
                   color: isSelected
-                      ? theme.colorScheme.onSecondaryContainer
+                      ? DeepColorTokens.neutral800
                       : Categories.colorOf(category),
                 ),
                 selected: isSelected,
@@ -206,7 +211,7 @@ class StoreFilterChips extends ConsumerWidget {
             },
             tooltip: 'Réinitialiser les filtres',
             iconSize: 20.0,
-            color: theme.colorScheme.error,
+            color: DeepColorTokens.error,
           ),
         ],
       ),

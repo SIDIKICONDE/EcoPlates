@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/services/map_service.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/browse_search_provider.dart';
 
 /// Barre de recherche pour la page Parcourir
@@ -50,14 +51,14 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
             child: Container(
               height: 48.0,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.9),
+                color: DeepColorTokens.neutral0.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(12.0),
                 border: Border.all(
-                  color: Colors.grey.shade300,
+                  color: DeepColorTokens.neutral300,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: DeepColorTokens.shadowLight,
                     blurRadius: 4.0,
                     offset: Offset(0, 2.0),
                   ),
@@ -71,13 +72,13 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                 decoration: InputDecoration(
                   hintText: 'Rechercher...',
                   hintStyle: TextStyle(
-                    color: Colors.grey,
+                    color: DeepColorTokens.neutral500,
                     fontSize: 16.0,
                   ),
                   border: InputBorder.none,
                   prefixIcon: Icon(
                     Icons.search,
-                    color: Colors.grey,
+                    color: DeepColorTokens.neutral500,
                     size: 20.0,
                   ),
                   prefixIconConstraints: BoxConstraints(
@@ -100,7 +101,7 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
             height: 48.0,
             width: 48.0,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: DeepColorTokens.neutral0,
               borderRadius: BorderRadius.circular(12.0),
               boxShadow: [
                 BoxShadow(
@@ -111,7 +112,7 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
               ],
             ),
             child: Material(
-              color: Colors.transparent,
+              color: const Color(0x00000000),
               child: InkWell(
                 borderRadius: BorderRadius.circular(12.0),
                 onTap: () async {
@@ -154,7 +155,7 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
             height: 48.0,
             width: 48.0,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: DeepColorTokens.neutral0,
               borderRadius: BorderRadius.circular(12.0),
               boxShadow: [
                 BoxShadow(
@@ -165,7 +166,7 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
               ],
             ),
             child: Material(
-              color: Colors.transparent,
+              color: const Color(0x00000000),
               child: InkWell(
                 borderRadius: BorderRadius.circular(12.0),
                 onTap: () {
@@ -202,7 +203,7 @@ class _BrowseSearchBarState extends ConsumerState<BrowseSearchBar> {
                             child: Text(
                               '${filters.activeFiltersCount}',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: DeepColorTokens.neutral0,
                                 fontSize: 10.0,
                                 fontWeight: FontWeight.bold,
                               ),

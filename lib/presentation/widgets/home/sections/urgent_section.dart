@@ -89,54 +89,25 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
         // En-tête de section avec indicateur d'urgence
         Padding(
           padding: EdgeInsets.fromLTRB(
-            16.0,
-            12.0,
-            16.0,
-            16.0,
+            ResponsiveCardConfig.getSliderPadding(context).left,
+            ResponsiveUtils.getVerticalSpacing(context) * 0.6,
+            ResponsiveCardConfig.getSliderPadding(context).right,
+            ResponsiveUtils.getVerticalSpacing(context),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  // Icône animée d'urgence (avec repeat pour éviter les rebuilds)
-                  TweenAnimationBuilder<double>(
-                    tween: Tween(begin: 1.0, end: 1.2),
-                    duration: Duration(seconds: 1),
-                    builder: (context, scale, child) {
-                      return Transform.scale(
-                        scale: scale,
-                        child: child,
-                      );
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Icon(
-                        Icons.warning,
-                        color: Colors.white,
-                        size: 16.0,
-                      ),
-                    ),
+              Text(
+                "À sauver d'urgence !",
+                style: TextStyle(
+                  fontSize: ResponsiveCardConfig.getSectionTitleFontSize(
+                    context,
                   ),
-                  SizedBox(width: 12.0),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "À sauver d'urgence !",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.9),
+                ),
               ),
               TextButton(
                 onPressed: () {
@@ -152,9 +123,12 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                 child: Text(
                   'Voir tout',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w500,
-                    fontSize: 14.0,
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      14.0,
+                    ),
                   ),
                 ),
               ),
@@ -180,23 +154,39 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                     children: [
                       Icon(
                         Icons.check_circle_outline,
-                        size: 48.0,
-                        color: Colors.green,
+                        size: ResponsiveUtils.getIconSize(
+                          context,
+                          baseSize: 48.0,
+                        ),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                      SizedBox(height: 8.0),
+                      SizedBox(
+                        height:
+                            ResponsiveUtils.getVerticalSpacing(context) * 0.4,
+                      ),
                       Text(
                         'Aucune offre urgente',
                         style: TextStyle(
-                          color: Colors.grey.shade700,
-                          fontSize: 16.0,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.8),
+                          fontSize: ResponsiveUtils.getResponsiveFontSize(
+                            context,
+                            16.0,
+                          ),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
                         'Tout a été sauvé !',
                         style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 14.0,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.7),
+                          fontSize: ResponsiveUtils.getResponsiveFontSize(
+                            context,
+                            14.0,
+                          ),
                         ),
                       ),
                     ],
@@ -243,7 +233,7 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
           ),
         ),
 
-        SizedBox(height: 16.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
       ],
     );
   }
@@ -275,9 +265,15 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
         children: [
           // Header
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(
+              ResponsiveUtils.getVerticalSpacing(context),
+            ),
             decoration: BoxDecoration(
-              color: isVeryUrgent ? Colors.red.shade50 : Colors.grey.shade100,
+              color: isVeryUrgent
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.errorContainer.withValues(alpha: 0.3)
+                  : Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(16.0),
               ),
@@ -291,22 +287,38 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                     Text(
                       'Offre urgente',
                       style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: isVeryUrgent ? Colors.red : Colors.black,
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                          context,
+                          18.0,
+                        ),
+                        fontWeight: FontWeight.w600,
+                        color: isVeryUrgent
+                            ? Theme.of(context).colorScheme.error
+                            : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       offer.title,
                       style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.grey.shade600,
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                          context,
+                          14.0,
+                        ),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: Icon(
+                    Icons.close,
+                    size: ResponsiveUtils.getIconSize(context),
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -316,29 +328,41 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(
+                ResponsiveUtils.getVerticalSpacing(context),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Informations principales
                   OfferInfoSection(offer: offer),
-                  SizedBox(height: 20.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.25,
+                  ),
 
                   // Détails pratiques
                   OfferDetailsSection(offer: offer),
-                  SizedBox(height: 20.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.25,
+                  ),
 
                   // Adresse
                   OfferAddressSection(offer: offer),
-                  SizedBox(height: 20.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.25,
+                  ),
 
                   // Badges allergènes
                   OfferBadgesSection(offer: offer),
-                  SizedBox(height: 20.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.25,
+                  ),
 
                   // Métadonnées
                   OfferMetadataSection(offer: offer),
-                  SizedBox(height: 100.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 6.25,
+                  ),
                 ],
               ),
             ),
@@ -346,14 +370,22 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
 
           // Barre de réservation avec indication d'urgence
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(
+              ResponsiveUtils.getVerticalSpacing(context),
+            ),
             decoration: BoxDecoration(
-              color: isVeryUrgent ? Colors.red.shade50 : Colors.white,
+              color: isVeryUrgent
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.errorContainer.withValues(alpha: 0.3)
+                  : Theme.of(context).colorScheme.surface,
               border: Border(
                 top: BorderSide(
                   color: isVeryUrgent
-                      ? Colors.red.shade200
-                      : Colors.grey.shade300,
+                      ? Theme.of(context).colorScheme.errorContainer
+                      : Theme.of(
+                          context,
+                        ).colorScheme.outline.withValues(alpha: 0.3),
                 ),
               ),
             ),
@@ -365,16 +397,20 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       content: Text('✅ "${offer.title}" réservé avec succès !'),
                       duration: const Duration(seconds: 3),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isVeryUrgent ? Colors.red : Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  backgroundColor: isVeryUrgent
+                      ? Theme.of(context).colorScheme.error
+                      : Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveUtils.getVerticalSpacing(context),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
@@ -382,8 +418,11 @@ class _UrgentSectionState extends ConsumerState<UrgentSection>
                 child: Text(
                   isVeryUrgent ? 'RÉSERVER URGENT' : 'Réserver',
                   style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      16.0,
+                    ),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),

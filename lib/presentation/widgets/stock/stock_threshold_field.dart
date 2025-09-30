@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Champ de saisie pour configurer le seuil d'alerte de stock faible
 class StockThresholdField extends StatefulWidget {
   const StockThresholdField({
@@ -138,9 +140,9 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
                   Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      color: Colors.orange.withValues(alpha: 16.0),
+                      color: DeepColorTokens.warning.withValues(alpha: 16.0),
                       border: Border.all(
-                        color: Colors.orange,
+                        color: DeepColorTokens.warning,
                       ),
                     ),
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/consumer_profile_provider.dart';
 import '../widgets/consumer_profile/consumer_activity_section.dart';
 import '../widgets/consumer_profile/consumer_eco_stats.dart';
@@ -37,7 +38,7 @@ class ConsumerProfilePage extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.settings, color: colors.primary),
+            icon: Icon(Icons.settings, color: DeepColorTokens.primary),
             onPressed: () => _showSettings(context, ref),
           ),
         ],

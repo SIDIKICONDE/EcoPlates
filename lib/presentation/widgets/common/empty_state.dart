@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Widget d'état vide réutilisable pour harmoniser les écrans
 class EmptyState extends StatelessWidget {
   const EmptyState({
@@ -71,19 +73,19 @@ class EmptyState extends StatelessWidget {
                       decoration: BoxDecoration(
                         color:
                             circularBackgroundColor ??
-                            theme.colorScheme.primaryContainer,
+                            DeepColorTokens.primaryContainer,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         icon,
                         size: iconSize * 0.5,
-                        color: iconColor ?? theme.colorScheme.primary,
+                        color: iconColor ?? DeepColorTokens.primary,
                       ),
                     )
                   : Icon(
                       icon,
                       size: iconSize,
-                      color: iconColor ?? theme.colorScheme.onSurfaceVariant,
+                      color: iconColor ?? DeepColorTokens.neutral500,
                     ),
             if (icon != null) const SizedBox(height: 16.0),
             Text(
@@ -91,7 +93,7 @@ class EmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
+                color: DeepColorTokens.neutral900,
               ),
             ),
             if (subtitle != null) const SizedBox(height: 8.0),
@@ -100,7 +102,7 @@ class EmptyState extends StatelessWidget {
                 subtitle!,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral500,
                 ),
               ),
             if (primaryActionLabel != null || secondaryActionLabel != null)

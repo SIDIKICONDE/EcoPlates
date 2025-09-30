@@ -411,7 +411,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         merchantLogo:
             'https://1000logos.net/wp-content/uploads/2020/09/Monoprix-Logo.png',
         title: 'Panier Épicerie Fine',
-        description: 'Sélection de produits d\'épicerie fine et spécialités',
+        description: "Sélection de produits d'épicerie fine et spécialités",
         originalPrice: 35.00,
         discountedPrice: 22.00,
         images: const [
@@ -513,7 +513,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
       FoodOffer(
         id: '12',
         merchantId: 'merchant8',
-        merchantName: 'McDonald\'s',
+        merchantName: "McDonald's",
         merchantLogo:
             'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
         title: 'Menu Big Mac',
@@ -542,7 +542,6 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
         ),
         merchantAddress: '123 Champs-Élysées, 75008 Paris',
         tags: const ['Burger', 'Fast-food', 'Menu'],
-        co2Saved: 500,
       ),
 
       FoodOffer(
@@ -654,7 +653,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
       FoodOffer(
         id: '16',
         merchantId: 'merchant12',
-        merchantName: 'L\'As du Fallafel',
+        merchantName: "L'As du Fallafel",
         merchantLogo:
             'https://1000logos.net/wp-content/uploads/2017/03/Subway-logo.png',
         title: 'Assiette Fallafel Complet',
@@ -901,7 +900,7 @@ class OffersCatalogNotifier extends Notifier<List<FoodOffer>> {
       FoodOffer(
         id: '23',
         merchantId: 'merchant19',
-        merchantName: 'Bio c\'Bon',
+        merchantName: "Bio c'Bon",
         merchantLogo:
             'https://1000logos.net/wp-content/uploads/2021/04/Picard-logo.png',
         title: 'Panier Bio & Naturel',

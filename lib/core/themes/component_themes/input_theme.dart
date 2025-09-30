@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../tokens/color_tokens.dart';
+import '../tokens/deep_color_tokens.dart';
 import '../tokens/radius_tokens.dart';
 import '../tokens/spacing_tokens.dart';
 import '../tokens/typography_tokens.dart';
@@ -12,13 +12,13 @@ class EcoInputTheme {
   // ===== INPUT DECORATION THEME =====
   static InputDecorationTheme inputDecorationTheme({required bool isDark}) {
     final fillColor = isDark
-        ? EcoColorTokens.neutral800
-        : EcoColorTokens.neutral100;
+        ? DeepColorTokens.neutral800
+        : DeepColorTokens.neutral100;
     final borderColor = isDark
-        ? EcoColorTokens.neutral600
-        : EcoColorTokens.neutral300;
-    const focusColor = EcoColorTokens.primary;
-    const errorColor = EcoColorTokens.error;
+        ? DeepColorTokens.neutral600
+        : DeepColorTokens.neutral300;
+    const focusColor = DeepColorTokens.primary;
+    const errorColor = DeepColorTokens.error;
 
     return InputDecorationTheme(
       // Remplissage
@@ -27,10 +27,10 @@ class EcoInputTheme {
 
       // Style de texte
       labelStyle: EcoTypography.bodyMediumLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral300 : EcoColorTokens.neutral600,
+        color: isDark ? DeepColorTokens.neutral300 : DeepColorTokens.neutral600,
       ),
       hintStyle: EcoTypography.bodyMediumLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral500 : EcoColorTokens.neutral400,
+        color: isDark ? DeepColorTokens.neutral500 : DeepColorTokens.neutral400,
       ),
 
       // Padding intérieur
@@ -70,7 +70,9 @@ class EcoInputTheme {
       disabledBorder: OutlineInputBorder(
         borderRadius: EcoRadius.inputRadius,
         borderSide: BorderSide(
-          color: isDark ? EcoColorTokens.neutral700 : EcoColorTokens.neutral200,
+          color: isDark
+              ? DeepColorTokens.neutral700
+              : DeepColorTokens.neutral200,
         ),
       ),
 
@@ -81,12 +83,12 @@ class EcoInputTheme {
 
       // Style du texte d'aide
       helperStyle: EcoTypography.bodySmallLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral400 : EcoColorTokens.neutral500,
+        color: isDark ? DeepColorTokens.neutral400 : DeepColorTokens.neutral500,
       ),
 
       // Style du compteur de caractères
       counterStyle: EcoTypography.bodySmallLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral400 : EcoColorTokens.neutral500,
+        color: isDark ? DeepColorTokens.neutral400 : DeepColorTokens.neutral500,
       ),
 
       // Contraintes des icônes
@@ -101,11 +103,11 @@ class EcoInputTheme {
 
       // Couleur des icônes
       prefixIconColor: isDark
-          ? EcoColorTokens.neutral400
-          : EcoColorTokens.neutral500,
+          ? DeepColorTokens.neutral400
+          : DeepColorTokens.neutral500,
       suffixIconColor: isDark
-          ? EcoColorTokens.neutral400
-          : EcoColorTokens.neutral500,
+          ? DeepColorTokens.neutral400
+          : DeepColorTokens.neutral500,
     );
   }
 
@@ -121,11 +123,11 @@ class EcoInputTheme {
     bool isDark = false,
   }) {
     final fillColor = isDark
-        ? EcoColorTokens.neutral800
-        : EcoColorTokens.neutral100;
+        ? DeepColorTokens.neutral800
+        : DeepColorTokens.neutral100;
     final borderColor = isDark
-        ? EcoColorTokens.neutral600
-        : EcoColorTokens.neutral300;
+        ? DeepColorTokens.neutral600
+        : DeepColorTokens.neutral300;
 
     return InputDecoration(
       labelText: labelText,
@@ -145,7 +147,7 @@ class EcoInputTheme {
       ),
       focusedBorder: const OutlineInputBorder(
         borderRadius: EcoRadius.inputRadius,
-        borderSide: BorderSide(color: EcoColorTokens.primary),
+        borderSide: BorderSide(color: DeepColorTokens.primary),
       ),
       contentPadding: EcoSpacing.inputPadding,
     );
@@ -157,14 +159,14 @@ class EcoInputTheme {
     bool isDark = false,
   }) {
     final fillColor = isDark
-        ? EcoColorTokens.neutral800
-        : EcoColorTokens.neutral50;
+        ? DeepColorTokens.neutral800
+        : DeepColorTokens.neutral50;
 
     return InputDecoration(
       hintText: hintText,
       prefixIcon: Icon(
         Icons.search,
-        color: isDark ? EcoColorTokens.neutral400 : EcoColorTokens.neutral500,
+        color: isDark ? DeepColorTokens.neutral400 : DeepColorTokens.neutral500,
       ),
       filled: true,
       fillColor: fillColor,
@@ -178,7 +180,7 @@ class EcoInputTheme {
       ),
       focusedBorder: const OutlineInputBorder(
         borderRadius: EcoRadius.pillButtonRadius,
-        borderSide: BorderSide(color: EcoColorTokens.primary),
+        borderSide: BorderSide(color: DeepColorTokens.primary),
       ),
       contentPadding: EcoSpacing.asymmetric(
         horizontal: EcoSpacing.lg,
@@ -201,15 +203,17 @@ class EcoInputTheme {
       prefixIcon: prefixIcon,
       suffixIcon: suffixIcon,
       border: const UnderlineInputBorder(
-        borderSide: BorderSide(color: EcoColorTokens.neutral300),
+        borderSide: BorderSide(color: DeepColorTokens.neutral300),
       ),
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(
-          color: isDark ? EcoColorTokens.neutral600 : EcoColorTokens.neutral300,
+          color: isDark
+              ? DeepColorTokens.neutral600
+              : DeepColorTokens.neutral300,
         ),
       ),
       focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: EcoColorTokens.primary),
+        borderSide: BorderSide(color: DeepColorTokens.primary),
       ),
       contentPadding: EcoSpacing.asymmetric(vertical: EcoSpacing.md),
     );
@@ -225,8 +229,8 @@ class EcoInputTheme {
     bool isDark = false,
   }) {
     final fillColor = isDark
-        ? EcoColorTokens.neutral800
-        : EcoColorTokens.neutral50;
+        ? DeepColorTokens.neutral800
+        : DeepColorTokens.neutral50;
 
     return InputDecoration(
       labelText: labelText,
@@ -260,8 +264,8 @@ class EcoInputTheme {
     bool isDark = false,
   }) {
     final fillColor = isDark
-        ? EcoColorTokens.neutral800.withValues(alpha: 0.5)
-        : EcoColorTokens.neutral0;
+        ? DeepColorTokens.neutral800.withValues(alpha: 0.5)
+        : DeepColorTokens.neutral0;
 
     return InputDecoration(
       labelText: labelText,
@@ -273,20 +277,24 @@ class EcoInputTheme {
       border: OutlineInputBorder(
         borderRadius: EcoRadius.inputRadius,
         borderSide: BorderSide(
-          color: isDark ? EcoColorTokens.neutral600 : EcoColorTokens.neutral200,
+          color: isDark
+              ? DeepColorTokens.neutral600
+              : DeepColorTokens.neutral200,
           width: 1.5,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: EcoRadius.inputRadius,
         borderSide: BorderSide(
-          color: isDark ? EcoColorTokens.neutral600 : EcoColorTokens.neutral200,
+          color: isDark
+              ? DeepColorTokens.neutral600
+              : DeepColorTokens.neutral200,
           width: 1.5,
         ),
       ),
       focusedBorder: const OutlineInputBorder(
         borderRadius: EcoRadius.inputRadius,
-        borderSide: BorderSide(color: EcoColorTokens.primary),
+        borderSide: BorderSide(color: DeepColorTokens.primary),
       ),
       contentPadding: EcoSpacing.asymmetric(
         horizontal: EcoSpacing.xl,
@@ -317,8 +325,8 @@ class EcoInputTheme {
           label,
           style: EcoTypography.labelMediumLight.copyWith(
             color: isDark
-                ? EcoColorTokens.neutral300
-                : EcoColorTokens.neutral700,
+                ? DeepColorTokens.neutral300
+                : DeepColorTokens.neutral700,
             fontWeight: EcoTypography.medium,
           ),
         ),
@@ -331,8 +339,8 @@ class EcoInputTheme {
           onChanged: onChanged,
           style: EcoTypography.bodyLargeLight.copyWith(
             color: isDark
-                ? EcoColorTokens.neutral100
-                : EcoColorTokens.neutral800,
+                ? DeepColorTokens.neutral100
+                : DeepColorTokens.neutral800,
           ),
           decoration: standardDecoration(
             hintText: hint,
@@ -357,7 +365,7 @@ class EcoInputTheme {
       controller: controller,
       onChanged: onChanged,
       style: EcoTypography.bodyLargeLight.copyWith(
-        color: isDark ? EcoColorTokens.neutral100 : EcoColorTokens.neutral800,
+        color: isDark ? DeepColorTokens.neutral100 : DeepColorTokens.neutral800,
       ),
       decoration:
           searchDecoration(

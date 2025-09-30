@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Widget affichant la distance et l'horaire de collecte
 class OfferLocationInfo extends StatelessWidget {
   const OfferLocationInfo({
@@ -22,18 +24,14 @@ class OfferLocationInfo extends StatelessWidget {
           Icon(
             Icons.location_on,
             size: 13.0,
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.7),
+            color: DeepColorTokens.neutral600.withValues(alpha: 0.7),
           ),
           const SizedBox(width: 4.0),
           Text(
             '${distance!.toStringAsFixed(1)} km',
             style: TextStyle(
               fontSize: 12.0,
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
+              color: DeepColorTokens.neutral600.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(width: 8.0),
@@ -41,16 +39,14 @@ class OfferLocationInfo extends StatelessWidget {
         Icon(
           Icons.schedule,
           size: 13.0,
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+          color: DeepColorTokens.neutral700.withValues(alpha: 0.7),
         ),
         const SizedBox(width: 4.0),
         Text(
           _formatPickupTime(),
           style: TextStyle(
             fontSize: 12.0,
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.7),
+            color: DeepColorTokens.neutral600.withValues(alpha: 0.7),
           ),
         ),
       ],

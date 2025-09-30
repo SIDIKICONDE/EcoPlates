@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/responsive/responsive_utils.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/brand_provider.dart';
 import '../widgets/brand_card.dart';
 
@@ -29,7 +30,6 @@ class AllBrandsScreen extends ConsumerWidget {
         data: (brands) {
           final columns = ResponsiveUtils.getResponsiveColumns(
             context,
-            mobileColumns: 1,
             tabletColumns: 2,
             desktopColumns: 3,
             desktopLargeColumns: 4,
@@ -82,7 +82,7 @@ class AllBrandsScreen extends ConsumerWidget {
                   Icon(
                     Icons.error_outline,
                     size: ResponsiveUtils.getIconSize(context),
-                    color: Theme.of(context).colorScheme.error,
+                    color: DeepColorTokens.error,
                   ),
                   SizedBox(
                     height: context.verticalSpacing,
@@ -97,7 +97,7 @@ class AllBrandsScreen extends ConsumerWidget {
                   Text(
                     error.toString(),
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      color: DeepColorTokens.neutral600,
                       fontSize: FontSizes.bodyMedium.getSize(context),
                     ),
                     textAlign: TextAlign.center,

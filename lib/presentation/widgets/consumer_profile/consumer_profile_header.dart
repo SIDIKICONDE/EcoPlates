@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/themes/tokens/color_tokens.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/user.dart';
 import 'consumer_tier_utils.dart';
 
@@ -20,7 +21,6 @@ class ConsumerProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     // Valeurs par défaut si pas d'utilisateur
@@ -41,7 +41,7 @@ class ConsumerProfileHeader extends StatelessWidget {
             EcoColorTokens.success.withValues(
               alpha: 0.01,
             ),
-            colors.surface,
+            DeepColorTokens.surface,
             EcoColorTokens.eco.withValues(
               alpha: 0.01 / 2,
             ),
@@ -65,9 +65,7 @@ class ConsumerProfileHeader extends StatelessWidget {
             offset: Offset(0, 2),
           ),
           BoxShadow(
-            color: colors.shadow.withValues(
-              alpha: 0.01,
-            ),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 8.0,
             offset: Offset(0, 1),
           ),
@@ -140,14 +138,14 @@ class ConsumerProfileHeader extends StatelessWidget {
                       ),
                       CircleAvatar(
                         radius: 36.0,
-                        backgroundColor: colors.surface,
+                        backgroundColor: DeepColorTokens.surface,
                         child: CircleAvatar(
                           radius: 34.0,
-                          backgroundColor: colors.primaryContainer,
+                          backgroundColor: DeepColorTokens.primaryContainer,
                           child: Text(
                             _getInitials(displayName),
                             style: textTheme.headlineMedium?.copyWith(
-                              color: colors.onPrimaryContainer,
+                              color: DeepColorTokens.primaryDark,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -162,17 +160,17 @@ class ConsumerProfileHeader extends StatelessWidget {
                               4.0,
                             ),
                             decoration: BoxDecoration(
-                              color: colors.primary,
+                              color: DeepColorTokens.primary,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: colors.surface,
+                                color: DeepColorTokens.surface,
                                 width: 2.0,
                               ),
                             ),
                             child: Icon(
                               Icons.camera_alt,
                               size: 20.0 * 0.8,
-                              color: colors.onPrimary,
+                              color: DeepColorTokens.neutral0,
                             ),
                           ),
                         ),
@@ -197,7 +195,7 @@ class ConsumerProfileHeader extends StatelessWidget {
                         Text(
                           email,
                           style: textTheme.bodyMedium?.copyWith(
-                            color: colors.onSurface.withValues(
+                            color: DeepColorTokens.neutral600.withValues(
                               alpha: 0.5,
                             ),
                           ),
@@ -257,10 +255,10 @@ class ConsumerProfileHeader extends StatelessWidget {
                       onPressed: onEditProfile,
                       icon: Icon(
                         Icons.edit,
-                        color: colors.primary,
+                        color: DeepColorTokens.primary,
                       ),
                       style: IconButton.styleFrom(
-                        backgroundColor: colors.primaryContainer.withValues(
+                        backgroundColor: DeepColorTokens.primary.withValues(
                           alpha: 0.3,
                         ),
                       ),
@@ -279,7 +277,7 @@ class ConsumerProfileHeader extends StatelessWidget {
                   top: 8.0,
                 ),
                 decoration: BoxDecoration(
-                  color: colors.surface.withValues(
+                  color: DeepColorTokens.surface.withValues(
                     alpha: 0.8,
                   ),
                   borderRadius: BorderRadius.circular(12.0),
@@ -308,7 +306,6 @@ class ConsumerProfileHeader extends StatelessWidget {
     BuildContext context,
     ConsumerProfile? consumerProfile,
   ) {
-    final colors = Theme.of(context).colorScheme;
     return [
       Row(
         children: [
@@ -328,7 +325,7 @@ class ConsumerProfileHeader extends StatelessWidget {
               'Assiettes utilisées',
               '${consumerProfile?.totalPlatesUsed ?? 0}',
               Icons.dinner_dining,
-              colors.primary,
+              DeepColorTokens.primary,
             ),
           ),
         ],
@@ -348,7 +345,6 @@ class ConsumerProfileHeader extends StatelessWidget {
     BuildContext context,
     ConsumerProfile? consumerProfile,
   ) {
-    final colors = Theme.of(context).colorScheme;
     return [
       Expanded(
         child: _buildQuickStat(
@@ -366,7 +362,7 @@ class ConsumerProfileHeader extends StatelessWidget {
           'Assiettes utilisées',
           '${consumerProfile?.totalPlatesUsed ?? 0}',
           Icons.dinner_dining,
-          colors.primary,
+          DeepColorTokens.primary,
         ),
       ),
       _buildVerticalDivider(context),
@@ -383,7 +379,6 @@ class ConsumerProfileHeader extends StatelessWidget {
   }
 
   Widget _buildVerticalDivider(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return Container(
       height: 40.0,
       width: 1.0,
@@ -396,7 +391,7 @@ class ConsumerProfileHeader extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            colors.outline.withValues(
+            DeepColorTokens.neutral0.withValues(
               alpha: 0.3,
             ),
             Colors.transparent,
@@ -433,7 +428,7 @@ class ConsumerProfileHeader extends StatelessWidget {
         Text(
           label,
           style: textTheme.labelSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withValues(
+            color: DeepColorTokens.neutral0.withValues(
               alpha: 0.9,
             ),
           ),

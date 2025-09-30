@@ -46,6 +46,13 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 
+	<!-- Permissions réseau -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+
 	<!-- Permissions caméra -->
 	<key>NSCameraUsageDescription</key>
 	<string>EcoPlates a besoin d'accéder à votre caméra pour scanner les QR codes.</string>

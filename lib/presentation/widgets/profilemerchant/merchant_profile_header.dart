@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/enums/merchant_enums.dart';
 import '../../../core/services/image_cache_service.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/merchant_profile.dart';
 
@@ -29,83 +30,179 @@ class MerchantProfileHeader extends ConsumerWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth > 1024.0;
         final isWideScreen = constraints.maxWidth > 768.0;
         final avatarSize = isWideScreen ? 120.0 : 80.0;
 
         return Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: colors.surface,
+            color: DeepColorTokens
+                .neutral50, // Fond clair cohérent avec les autres composants
             borderRadius: BorderRadius.circular(16.0),
-            boxShadow: [
-              BoxShadow(
-                color: colors.shadow.withValues(alpha: 0.1),
-                blurRadius: 8.0,
-                offset: const Offset(0, 2),
-              ),
-            ],
           ),
-          child: Column(
-            children: [
-              // Avatar avec bouton d'édition
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  _buildAvatar(context, avatarSize, colors),
-                  if (onEditPhoto != null)
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: _buildEditPhotoButton(context, colors),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-
-              // Nom et catégorie
-              Text(
-                profile.name,
-                style: const TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
-              // Badge catégorie
-              _buildCategoryBadge(context, colors),
-
-              const SizedBox(height: 8.0),
-
-              // Statut d'ouverture
-              _buildOpenStatus(context, theme, colors),
-
-              // Description
-              if (profile.description != null) ...[
-                const SizedBox(height: 16.0),
-                Text(
-                  profile.description!,
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 3,
-                ),
-                if (onEditProfile != null) ...[
-                  const SizedBox(height: 16.0),
-                  _buildEditButton(context, theme, colors),
-                ],
-              ],
-
-              // Note et avis
-              if (profile.rating > 0) ...[
-                const SizedBox(height: 16.0),
-                _buildRatingSection(context, theme, colors),
-              ],
-            ],
-          ),
+          child: isDesktop
+              ? _buildDesktopLayout(context, theme, colors, avatarSize)
+              : _buildMobileLayout(context, theme, colors, avatarSize),
         );
       },
+    );
+  }
+
+  Widget _buildDesktopLayout(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colors,
+    double avatarSize,
+  ) {
+    return Center(
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 700.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Contenu textuel à gauche (plus d'espace)
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Nom et catégorie
+                  Text(
+                    profile.name,
+                    style: const TextStyle(
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+
+                  // Badge catégorie
+                  _buildCategoryBadge(context, colors),
+                  const SizedBox(height: 12.0),
+
+                  // Statut d'ouverture
+                  _buildOpenStatus(context, theme, colors),
+                  const SizedBox(height: 16.0),
+
+                  // Description
+                  if (profile.description != null) ...[
+                    Text(
+                      profile.description!,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        height: 1.5,
+                      ),
+                      maxLines: 4,
+                    ),
+                    if (onEditProfile != null) ...[
+                      const SizedBox(height: 16.0),
+                      _buildEditButton(context, theme, colors),
+                    ],
+                  ],
+
+                  // Note et avis
+                  if (profile.rating > 0) ...[
+                    const SizedBox(height: 16.0),
+                    _buildRatingSection(context, theme, colors),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 24.0),
+
+            // Avatar centré à droite (moins d'espace)
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  Center(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        _buildAvatar(context, avatarSize, colors),
+                        if (onEditPhoto != null)
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: _buildEditPhotoButton(context, colors),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colors,
+    double avatarSize,
+  ) {
+    return Column(
+      children: [
+        // Avatar avec bouton d'édition
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            _buildAvatar(context, avatarSize, colors),
+            if (onEditPhoto != null)
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: _buildEditPhotoButton(context, colors),
+              ),
+          ],
+        ),
+        const SizedBox(height: 16.0),
+
+        // Nom et catégorie
+        Text(
+          profile.name,
+          style: const TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+
+        // Badge catégorie
+        _buildCategoryBadge(context, colors),
+
+        const SizedBox(height: 8.0),
+
+        // Statut d'ouverture
+        _buildOpenStatus(context, theme, colors),
+
+        // Description
+        if (profile.description != null) ...[
+          const SizedBox(height: 16.0),
+          Text(
+            profile.description!,
+            style: const TextStyle(
+              fontSize: 14.0,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 3,
+          ),
+          if (onEditProfile != null) ...[
+            const SizedBox(height: 16.0),
+            _buildEditButton(context, theme, colors),
+          ],
+        ],
+
+        // Note et avis
+        if (profile.rating > 0) ...[
+          const SizedBox(height: 16.0),
+          _buildRatingSection(context, theme, colors),
+        ],
+      ],
     );
   }
 
@@ -121,7 +218,7 @@ class MerchantProfileHeader extends ConsumerWidget {
           placeholder: Container(
             width: size,
             height: size,
-            color: colors.surfaceContainerHighest,
+            color: DeepColorTokens.surfaceElevated,
             child: const Center(
               child: CircularProgressIndicator(),
             ),
@@ -143,12 +240,12 @@ class MerchantProfileHeader extends ConsumerWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.primary.withValues(alpha: 0.1),
+        color: DeepColorTokens.primaryLight.withValues(alpha: 0.3),
       ),
       child: Icon(
         Icons.store,
         size: size * 0.5,
-        color: colors.primary,
+        color: DeepColorTokens.primary,
       ),
     );
   }
@@ -157,14 +254,14 @@ class MerchantProfileHeader extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.primary,
+        color: DeepColorTokens.primary,
       ),
       child: IconButton(
         icon: Icon(
           Icons.camera_alt,
           size: 16.0,
         ),
-        color: colors.onPrimary,
+        color: DeepColorTokens.neutral0,
         onPressed: onEditPhoto,
         padding: const EdgeInsets.all(8.0),
         constraints: const BoxConstraints(),
@@ -180,7 +277,7 @@ class MerchantProfileHeader extends ConsumerWidget {
         vertical: 6.0,
       ),
       decoration: BoxDecoration(
-        color: colors.secondary.withValues(alpha: 0.1),
+        color: DeepColorTokens.secondaryLight.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(20.0),
       ),
       child: Row(
@@ -189,13 +286,13 @@ class MerchantProfileHeader extends ConsumerWidget {
           Icon(
             _getIconForCategory(profile.category),
             size: 16.0,
-            color: colors.secondary,
+            color: DeepColorTokens.secondary,
           ),
           const SizedBox(width: 6.0),
           Text(
             profile.category.displayName,
             style: TextStyle(
-              color: colors.secondary,
+              color: DeepColorTokens.secondary,
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
             ),
@@ -216,11 +313,11 @@ class MerchantProfileHeader extends ConsumerWidget {
     Color statusColor;
     switch (status) {
       case OpenStatus.open:
-        statusColor = Colors.green;
+        statusColor = DeepColorTokens.success;
       case OpenStatus.closingSoon:
-        statusColor = Colors.orange;
+        statusColor = DeepColorTokens.warning;
       case OpenStatus.closed:
-        statusColor = colors.error;
+        statusColor = DeepColorTokens.error;
     }
 
     return Row(
@@ -283,7 +380,7 @@ class MerchantProfileHeader extends ConsumerWidget {
       children: [
         const Icon(
           Icons.star,
-          color: Colors.amber,
+          color: DeepColorTokens.accent,
           size: 16.0,
         ),
         const SizedBox(width: 4.0),

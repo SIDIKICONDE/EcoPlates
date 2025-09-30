@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../offer_detail/index.dart';
 
 /// Modal générique pour afficher les détails d'une offre
 class OfferDetailModal extends ConsumerWidget {
   const OfferDetailModal({
-    required this.offer, super.key,
+    required this.offer,
+    super.key,
     this.title,
     this.subtitle,
     this.headerGradient,
@@ -86,7 +88,7 @@ class OfferDetailModal extends ConsumerWidget {
     return Container(
       height: MediaQuery.of(context).size.height * height,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: DeepColorTokens.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
       ),
       child: Column(
@@ -100,8 +102,8 @@ class OfferDetailModal extends ConsumerWidget {
                   (showUrgentHeader && isVeryUrgent
                       ? LinearGradient(
                           colors: [
-                            theme.colorScheme.errorContainer,
-                            theme.colorScheme.tertiaryContainer,
+                            DeepColorTokens.errorContainer,
+                            DeepColorTokens.tertiaryContainer,
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -109,9 +111,7 @@ class OfferDetailModal extends ConsumerWidget {
                       : null),
               color:
                   headerBackgroundColor ??
-                  (headerGradient == null
-                      ? theme.colorScheme.surfaceContainerLowest
-                      : null),
+                  (headerGradient == null ? DeepColorTokens.surface : null),
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(20.0),
               ),
@@ -127,7 +127,7 @@ class OfferDetailModal extends ConsumerWidget {
                           children: [
                             Icon(
                               Icons.warning,
-                              color: theme.colorScheme.error,
+                              color: DeepColorTokens.error,
                               size: 20.0,
                             ),
                             const SizedBox(width: 8.0),
@@ -135,7 +135,7 @@ class OfferDetailModal extends ConsumerWidget {
                               urgentHeaderText ??
                                   'URGENT - ${remainingTime.inMinutes} minutes restantes',
                               style: theme.textTheme.titleMedium?.copyWith(
-                                color: theme.colorScheme.error,
+                                color: DeepColorTokens.error,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -152,7 +152,7 @@ class OfferDetailModal extends ConsumerWidget {
                       Text(
                         subtitle ?? 'Chez ${offer.merchantName}',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: DeepColorTokens.neutral500,
                         ),
                       ),
                     ],
@@ -179,14 +179,14 @@ class OfferDetailModal extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 16.0),
                       padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.tertiaryContainer,
+                        color: DeepColorTokens.tertiaryContainer,
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.inventory_2,
-                            color: theme.colorScheme.tertiary,
+                            color: DeepColorTokens.tertiary,
                           ),
                           const SizedBox(width: 12.0),
                           Text(
@@ -194,7 +194,7 @@ class OfferDetailModal extends ConsumerWidget {
                                 ? 'Dernier article disponible !'
                                 : 'Plus que ${offer.quantity} articles disponibles',
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onTertiaryContainer,
+                              color: DeepColorTokens.neutral900,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -265,9 +265,9 @@ class OfferDetailModal extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: theme.colorScheme.secondaryContainer,
+            color: DeepColorTokens.secondaryContainer,
             borderRadius: BorderRadius.circular(12.0),
-            border: Border.all(color: theme.colorScheme.secondary),
+            border: Border.all(color: DeepColorTokens.secondary),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,7 +277,7 @@ class OfferDetailModal extends ConsumerWidget {
                   Icon(
                     Icons.restaurant_menu,
                     size: 20.0,
-                    color: theme.colorScheme.secondary,
+                    color: DeepColorTokens.secondary,
                   ),
                   const SizedBox(width: 4.0),
                   Expanded(
@@ -300,7 +300,7 @@ class OfferDetailModal extends ConsumerWidget {
                         vertical: 2.0,
                       ),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer,
+                        color: DeepColorTokens.primaryContainer,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Row(
@@ -309,13 +309,13 @@ class OfferDetailModal extends ConsumerWidget {
                           Icon(
                             Icons.eco,
                             size: 12.0,
-                            color: theme.colorScheme.primary,
+                            color: DeepColorTokens.primary,
                           ),
                           const SizedBox(width: 2.0),
                           Text(
                             'Végétarien',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.primary,
+                              color: DeepColorTokens.primary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -336,10 +336,10 @@ class OfferDetailModal extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: DeepColorTokens.surface,
         border: Border(
           top: BorderSide(
-            color: theme.colorScheme.outlineVariant,
+            color: DeepColorTokens.neutral300,
           ),
         ),
       ),

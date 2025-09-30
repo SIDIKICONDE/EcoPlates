@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../core/services/image_cache_service.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../core/widgets/eco_cached_image.dart';
 import '../../../../domain/entities/food_offer.dart';
 
@@ -75,7 +76,7 @@ class OfferCardImage extends StatelessWidget {
                   3.0,
                 ), // Cohérent avec l'image principale
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.1),
                   width: 6.0,
                 ),
               ),
@@ -99,11 +100,11 @@ class OfferCardImage extends StatelessWidget {
                     ? ResponsiveUtils.getIconSize(context, baseSize: 32.0)
                     : ResponsiveUtils.getIconSize(context, baseSize: 40.0),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.9),
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.9),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: DeepColorTokens.shadowMedium,
                       blurRadius: 4.0,
                       offset: const Offset(0, 2),
                     ),
@@ -118,8 +119,6 @@ class OfferCardImage extends StatelessWidget {
                   child: EcoCachedImage(
                     imageUrl: offer.merchantLogo!,
                     size: compact ? ImageSize.small : ImageSize.medium,
-                    fit: BoxFit
-                        .cover, // Les logos remplissent complètement le cercle
                   ),
                 ),
               ),
@@ -141,11 +140,11 @@ class OfferCardImage extends StatelessWidget {
                     ? ResponsiveUtils.getIconSize(context, baseSize: 32.0)
                     : ResponsiveUtils.getIconSize(context, baseSize: 40.0),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.9),
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.9),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: DeepColorTokens.shadowMedium,
                       blurRadius: 4.0,
                       offset: const Offset(0, 2),
                     ),
@@ -157,7 +156,7 @@ class OfferCardImage extends StatelessWidget {
                         ? offer.merchantName[0].toUpperCase()
                         : '?',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: DeepColorTokens.primary,
                       fontSize: compact ? 10.0 : 12.0, // Valeurs fixes
                       fontWeight: FontWeight.bold,
                     ),
@@ -185,14 +184,14 @@ class OfferCardImage extends StatelessWidget {
       width: 40.0,
       height: 40.0,
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: DeepColorTokens.neutral200,
         shape: BoxShape.circle,
       ),
       child: Center(
         child: Text(
           firstLetter,
           style: TextStyle(
-            color: Colors.grey.shade800,
+            color: DeepColorTokens.neutral800,
             fontSize: 14.0, // Valeur fixe
             fontWeight: FontWeight.bold,
           ),
@@ -218,12 +217,12 @@ class _OfferPlaceholderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: Colors.grey.shade100,
+      color: DeepColorTokens.neutral100,
       child: Center(
         child: Icon(
           Icons.image_not_supported,
           size: height * 0.3, // L'icône prend 30% de la hauteur disponible
-          color: Colors.grey.shade600,
+          color: DeepColorTokens.neutral600,
         ),
       ),
     );

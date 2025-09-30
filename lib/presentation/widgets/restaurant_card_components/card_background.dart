@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/services/image_cache_service.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import 'category_helper.dart';
 
@@ -32,7 +34,12 @@ class CardBackground extends StatelessWidget {
                         : Theme.of(context).colorScheme.surfaceContainerLowest,
                     child: Center(
                       child: CircularProgressIndicator(
-                        strokeWidth: 3.0,
+                        strokeWidth: ResponsiveUtils.responsiveValue(
+                          context,
+                          mobile: 2.5,
+                          tablet: 3.0,
+                          desktop: 3.5,
+                        ),
                       ),
                     ),
                   ),
@@ -47,12 +54,12 @@ class CardBackground extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withValues(alpha: 0.3),
-                Colors.black.withValues(alpha: 0.2),
+                DeepColorTokens.overlayMedium,
+                DeepColorTokens.overlayLight,
                 Colors.transparent,
                 Colors.transparent,
                 Colors.transparent,
-                Colors.black.withValues(alpha: 0.4),
+                DeepColorTokens.overlayMedium,
               ],
               stops: const [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
             ),
@@ -66,33 +73,48 @@ class CardBackground extends StatelessWidget {
     final color = CategoryHelper.getCategoryColor(category);
     final icon = CategoryHelper.getCategoryIcon(category);
 
+    // Tailles responsives
+    final iconSize = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 40.0,
+      tablet: 48.0,
+      desktop: 56.0,
+    );
+    final fontSize = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 14.0,
+      tablet: 16.0,
+      desktop: 18.0,
+    );
+    final spacing = ResponsiveUtils.getVerticalSpacing(context) * 0.33;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-            colors: [
-              color.withValues(alpha: 0.8),
-              color.withValues(alpha: 0.6),
-            ],
-          ),
+          colors: [
+            color.withValues(alpha: 0.8),
+            color.withValues(alpha: 0.6),
+          ],
         ),
+      ),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              size: 48.0,
-              color: Colors.white.withValues(alpha: 0.8),
+              size: iconSize,
+              color: DeepColorTokens.neutral0.withValues(alpha: 0.8),
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: spacing),
             Text(
               category,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
+              style: TextStyle(
+                color: DeepColorTokens.neutral0,
+                fontSize: fontSize,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],

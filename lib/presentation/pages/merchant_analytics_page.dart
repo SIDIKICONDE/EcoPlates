@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../widgets/analytics/analytics_app_bar.dart';
+import '../widgets/analytics/analytics_header.dart';
+import '../widgets/analytics/analytics_period_filter_chips.dart';
+import '../widgets/analytics/analytics_charts_section.dart';
 
 /// Page principale d'analyse pour les commerçants
 ///
@@ -17,8 +21,6 @@ class MerchantAnalyticsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-
     return AdaptiveScaffold(
       appBar: const AnalyticsAppBar() as PreferredSizeWidget,
       body: Container(
@@ -28,11 +30,11 @@ class MerchantAnalyticsPage extends ConsumerWidget {
             end: Alignment.bottomRight,
             colors: [
               // Fond subtil qui reflète les couleurs des cartes KPI
-              theme.colorScheme.surface.withValues(alpha: 0.1),
-              const Color(0xFF4CAF50).withValues(alpha: 0.1),
-              const Color(0xFF2196F3).withValues(alpha: 0.1),
-              const Color(0xFFFF9800).withValues(alpha: 0.1),
-              const Color(0xFF9C27B0).withValues(alpha: 0.1),
+              DeepColorTokens.surface.withValues(alpha: 0.1),
+              DeepColorTokens.primary.withValues(alpha: 0.1),
+              DeepColorTokens.secondary.withValues(alpha: 0.1),
+              DeepColorTokens.tertiary.withValues(alpha: 0.1),
+              DeepColorTokens.accent.withValues(alpha: 0.1),
             ],
             stops: const [0.0, 0.25, 0.5, 0.75, 1.0],
           ),

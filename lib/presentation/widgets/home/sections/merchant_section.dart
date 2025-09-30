@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/responsive/responsive_utils.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../providers/merchants_provider.dart';
 import '../../merchant_card.dart';
 import '../screens/all_merchants_screen.dart';
@@ -14,16 +15,8 @@ class MerchantSection extends ConsumerWidget {
   const MerchantSection({super.key});
 
   double _calculateCardHeight(BuildContext context) {
-    // Pour les cartes marchands, utilisons une hauteur adaptée
-    // qui est généralement différente des cartes d'offres
-    return ResponsiveUtils.responsiveValue(
-      context,
-      mobile: 200.0,
-      tablet: 220.0,
-      tabletLarge: 240.0,
-      desktop: 260.0,
-      desktopLarge: 280.0,
-    );
+    // Utilise la hauteur responsive standard des cartes marchands
+    return ResponsiveUtils.getMerchantCardHeight(context);
   }
 
   @override
@@ -36,10 +29,10 @@ class MerchantSection extends ConsumerWidget {
         // En-tête de section
         Padding(
           padding: EdgeInsets.fromLTRB(
-            20.0,
-            8.0,
-            20.0,
-            20.0,
+            ResponsiveCardConfig.getSliderPadding(context).left,
+            ResponsiveUtils.getVerticalSpacing(context) * 0.4,
+            ResponsiveCardConfig.getSliderPadding(context).right,
+            ResponsiveUtils.getVerticalSpacing(context),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,14 +43,14 @@ class MerchantSection extends ConsumerWidget {
                   Text(
                     'Nos partenaires',
                     style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(
+                      fontSize: ResponsiveCardConfig.getSectionTitleFontSize(
                         context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.9),
+                      ),
+                      fontWeight: FontWeight.w600,
+                      color: DeepColorTokens.neutral900.withValues(alpha: 0.9),
                     ),
                   ),
-                  TextButton.icon(
+                  TextButton(
                     onPressed: () {
                       unawaited(
                         Navigator.of(context).push(
@@ -67,16 +60,15 @@ class MerchantSection extends ConsumerWidget {
                         ),
                       );
                     },
-                    icon: Icon(
-                      Icons.arrow_forward,
-                      size: 16.0,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    label: Text(
+                    child: Text(
                       'Voir tout',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: DeepColorTokens.primary,
                         fontWeight: FontWeight.w500,
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                          context,
+                          14.0,
+                        ),
                       ),
                     ),
                   ),
@@ -98,19 +90,28 @@ class MerchantSection extends ConsumerWidget {
                     children: [
                       Icon(
                         Icons.store_outlined,
-                        size: 48.0,
-                        color: Theme.of(
+                        size: ResponsiveUtils.getIconSize(
                           context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.6),
+                          baseSize: 48.0,
+                        ),
+                        color: DeepColorTokens.neutral600.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
-                      SizedBox(height: 8.0),
+                      SizedBox(
+                        height:
+                            ResponsiveUtils.getVerticalSpacing(context) * 0.4,
+                      ),
                       Text(
                         'Aucun marchand disponible',
                         style: TextStyle(
-                          color: Theme.of(
+                          color: DeepColorTokens.neutral600.withValues(
+                            alpha: 0.8,
+                          ),
+                          fontSize: ResponsiveUtils.getResponsiveFontSize(
                             context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.8),
-                          fontSize: 14.0,
+                            14.0,
+                          ),
                         ),
                       ),
                     ],
@@ -118,9 +119,11 @@ class MerchantSection extends ConsumerWidget {
                 );
               }
 
-              final cardWidth = ResponsiveCardConfig.getSliderCardWidth(context);
+              final cardWidth = ResponsiveCardConfig.getSliderCardWidth(
+                context,
+              );
               final cardSpacing = ResponsiveCardConfig.getCardSpacing(context);
-              
+
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: ResponsiveCardConfig.getSliderPadding(context),
@@ -158,8 +161,12 @@ class MerchantSection extends ConsumerWidget {
                 },
               );
             },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
+            loading: () => Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  DeepColorTokens.primary,
+                ),
+              ),
             ),
             error: (error, stack) => Center(
               child: Column(
@@ -167,26 +174,38 @@ class MerchantSection extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.error_outline,
-                    size: 48.0,
-                    color: Theme.of(context).colorScheme.error,
+                    size: ResponsiveUtils.getIconSize(context, baseSize: 48.0),
+                    color: DeepColorTokens.error,
                   ),
-                  SizedBox(height: 16.0),
+                  SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
                   Text(
                     'Erreur de chargement',
                     style: TextStyle(
-                      color: Theme.of(
+                      color: DeepColorTokens.neutral600.withValues(alpha: 0.8),
+                      fontSize: ResponsiveUtils.getResponsiveFontSize(
                         context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.8),
-                      fontSize: 14.0,
+                        14.0,
+                      ),
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
                   TextButton.icon(
                     onPressed: () {
                       ref.invalidate(merchantsProvider);
                     },
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Réessayer'),
+                    icon: Icon(
+                      Icons.refresh,
+                      size: ResponsiveUtils.getIconSize(context),
+                    ),
+                    label: Text(
+                      'Réessayer',
+                      style: TextStyle(
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                          context,
+                          14.0,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -194,7 +213,7 @@ class MerchantSection extends ConsumerWidget {
           ),
         ),
 
-        SizedBox(height: 20.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/responsive/responsive_utils.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/offers_catalog_provider.dart';
 
 /// État vide pour les offres urgentes
@@ -19,14 +20,14 @@ class UrgentOffersEmptyState extends ConsumerWidget {
             Icon(
               Icons.check_circle,
               size: ResponsiveUtils.getIconSize(context, baseSize: 64.0),
-              color: Theme.of(context).colorScheme.primary,
+              color: DeepColorTokens.primary,
             ),
             SizedBox(height: context.verticalSpacing),
             Text(
               'Tout a été sauvé ! 🎉',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
+                color: DeepColorTokens.primary,
                 fontSize: FontSizes.titleMedium.getSize(context),
               ),
               textAlign: TextAlign.center,
@@ -35,7 +36,7 @@ class UrgentOffersEmptyState extends ConsumerWidget {
             Text(
               'Aucune offre urgente en ce moment.\nRevenez plus tard pour sauver de la nourriture !',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: DeepColorTokens.neutral700,
                 fontSize: FontSizes.bodyLarge.getSize(context),
               ),
               textAlign: TextAlign.center,

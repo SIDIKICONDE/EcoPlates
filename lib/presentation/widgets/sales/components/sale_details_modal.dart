@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/categories.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/sale.dart';
 
 /// Modal de détails d'une vente
@@ -26,7 +27,8 @@ class SaleDetailsModal extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color:
+            DeepColorTokens.neutral50, // Fond clair au lieu de surface sombre
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(12.0),
         ),
@@ -41,7 +43,7 @@ class SaleDetailsModal extends StatelessWidget {
               width: 40.0,
               height: 4.0,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant.withValues(
+                color: DeepColorTokens.neutral600.withValues(
                   alpha: 0.15,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -173,7 +175,7 @@ class SaleDetailsModal extends StatelessWidget {
                   _buildDetailRow(
                     'Réduction',
                     '-${sale.discountAmount.toStringAsFixed(2)}€',
-                    Colors.green,
+                    DeepColorTokens.success,
                     false,
                     context,
                   ),
@@ -181,7 +183,7 @@ class SaleDetailsModal extends StatelessWidget {
                   _buildDetailRow(
                     'Total',
                     '${sale.finalAmount.toStringAsFixed(2)}€',
-                    theme.colorScheme.primary,
+                    DeepColorTokens.primary,
                     true,
                     context,
                   ),
@@ -242,7 +244,9 @@ class SaleDetailsModal extends StatelessWidget {
                     _buildDetailRow(
                       'Temps restant',
                       _formatDuration(sale.remainingTime!),
-                      sale.remainingTime!.inMinutes < 30 ? Colors.orange : null,
+                      sale.remainingTime!.inMinutes < 30
+                          ? DeepColorTokens.warning
+                          : null,
                       false,
                       context,
                     ),

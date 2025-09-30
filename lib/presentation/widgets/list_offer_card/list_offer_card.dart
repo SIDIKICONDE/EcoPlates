@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../core/extensions/food_offer_extensions.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import 'merchant_logo_with_badge.dart';
 import 'offer_background_image.dart';
@@ -98,18 +99,18 @@ class _ListOfferCardState extends State<ListOfferCard>
                 bottom: 16.0,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: DeepColorTokens.neutral0,
                 borderRadius: BorderRadius.circular(16.0),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: DeepColorTokens.shadowLight,
                     blurRadius: 8.0,
                     offset: Offset(0.0, 4.0),
                   ),
                   // Ombre secondaire pour plus de profondeur
                   if (_elevationAnimation.value > 0)
                     BoxShadow(
-                      color: Colors.blue.withValues(alpha: 0.1),
+                      color: DeepColorTokens.primary.withValues(alpha: 0.1),
                       blurRadius: _elevationAnimation.value,
                       offset: Offset(0.0, _elevationAnimation.value / 2),
                     ),
@@ -131,13 +132,13 @@ class _ListOfferCardState extends State<ListOfferCard>
                           vertical: 4.0,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: DeepColorTokens.error,
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Text(
                           'FERMÉ',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: DeepColorTokens.neutral0,
                             fontSize: 10.0,
                             fontWeight: FontWeight.bold,
                           ),

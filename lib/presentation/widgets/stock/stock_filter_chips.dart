@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -60,7 +61,6 @@ class StockFilterChips extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final currentFilters = ref.watch(stockFiltersProvider);
     final stockItemsAsync = ref.watch(stockItemsProvider);
 
@@ -89,8 +89,8 @@ class StockFilterChips extends ConsumerWidget {
                 option.icon,
                 size: 18.0,
                 color: isSelected
-                    ? theme.colorScheme.onSecondaryContainer
-                    : theme.colorScheme.onSurfaceVariant,
+                    ? DeepColorTokens.primary
+                    : DeepColorTokens.neutral600,
               ),
               const SizedBox(width: 6.0),
               Text(
@@ -109,11 +109,11 @@ class StockFilterChips extends ConsumerWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? theme.colorScheme.onSecondaryContainer.withValues(
-                            alpha: 16.0,
+                        ? DeepColorTokens.primaryContainer.withValues(
+                            alpha: 0.2,
                           )
-                        : theme.colorScheme.onSurfaceVariant.withValues(
-                            alpha: 16.0,
+                        : DeepColorTokens.neutral100.withValues(
+                            alpha: 0.8,
                           ),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -123,8 +123,8 @@ class StockFilterChips extends ConsumerWidget {
                       fontSize: 12.0,
                       fontWeight: FontWeight.w500,
                       color: isSelected
-                          ? theme.colorScheme.onSecondaryContainer
-                          : theme.colorScheme.onSurfaceVariant,
+                          ? DeepColorTokens.primary
+                          : DeepColorTokens.neutral700,
                       height: 1.2,
                     ),
                   ),
@@ -135,9 +135,9 @@ class StockFilterChips extends ConsumerWidget {
           onSelected: (selected) {
             _onFilterSelected(ref, option, selected);
           },
-          backgroundColor: theme.colorScheme.surface,
-          selectedColor: theme.colorScheme.secondaryContainer,
-          checkmarkColor: theme.colorScheme.onSecondaryContainer,
+          backgroundColor: DeepColorTokens.surface,
+          selectedColor: DeepColorTokens.primaryContainer,
+          checkmarkColor: DeepColorTokens.primary,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         );
       }).toList(),

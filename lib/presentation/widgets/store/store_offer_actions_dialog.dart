@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/routes/route_constants.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/store_offers_provider.dart';
 import 'offer_promotion_manager.dart';
@@ -53,7 +54,7 @@ class _OfferActionsSheet extends ConsumerWidget {
                       Text(
                         'Stock: ${offer.quantity} • Prix: ${offer.discountedPrice.toStringAsFixed(2)}€',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: DeepColorTokens.neutral600,
                         ),
                       ),
                     ],
@@ -71,8 +72,8 @@ class _OfferActionsSheet extends ConsumerWidget {
             leading: Icon(
               offer.isAvailable ? Icons.visibility_off : Icons.visibility,
               color: offer.isAvailable
-                  ? theme.colorScheme.error
-                  : theme.colorScheme.primary,
+                  ? DeepColorTokens.error
+                  : DeepColorTokens.primary,
             ),
             title: Text(offer.isAvailable ? 'Désactiver' : 'Activer'),
             onTap: () {
@@ -104,10 +105,10 @@ class _OfferActionsSheet extends ConsumerWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.delete, color: theme.colorScheme.error),
+            leading: Icon(Icons.delete, color: DeepColorTokens.error),
             title: Text(
               'Supprimer',
-              style: TextStyle(color: theme.colorScheme.error),
+              style: TextStyle(color: DeepColorTokens.error),
             ),
             onTap: () {
               Navigator.of(context).pop();
@@ -189,7 +190,7 @@ class _DeleteConfirmationDialogWidget extends ConsumerWidget {
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
                     content: Text('"$offerTitle" supprimé'),
-                    backgroundColor: Colors.red,
+                    backgroundColor: DeepColorTokens.error,
                   ),
                 );
               }
@@ -199,14 +200,14 @@ class _DeleteConfirmationDialogWidget extends ConsumerWidget {
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
                     content: Text('Erreur lors de la suppression: $error'),
-                    backgroundColor: Colors.red,
+                    backgroundColor: DeepColorTokens.error,
                   ),
                 );
               }
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: DeepColorTokens.error,
           ),
           child: const Text('Supprimer'),
         ),

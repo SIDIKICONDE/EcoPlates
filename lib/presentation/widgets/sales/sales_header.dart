@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/sale.dart';
 import '../../providers/sales_provider.dart';
 
@@ -10,7 +12,6 @@ class SalesHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final salesAsync = ref.watch(salesProvider);
     final filters = ref.watch(salesFilterProvider);
 
@@ -63,7 +64,7 @@ class SalesHeader extends ConsumerWidget {
             vertical: 12.0,
           ),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(
+            color: DeepColorTokens.primary.withValues(
               alpha: 0.1,
             ),
             borderRadius: BorderRadius.circular(16.0),
@@ -79,19 +80,19 @@ class SalesHeader extends ConsumerWidget {
                     icon: Icons.shopping_cart,
                     value: sales.length.toString(),
                     label: 'Commandes\n$periodLabel',
-                    color: theme.colorScheme.primary,
+                    color: DeepColorTokens.primary,
                   ),
                   _StatItem(
                     icon: Icons.euro,
                     value: '${totalRevenue.toStringAsFixed(0)}€',
                     label: 'CA\n$periodLabel',
-                    color: Colors.green,
+                    color: DeepColorTokens.success,
                   ),
                   _StatItem(
                     icon: Icons.hourglass_empty,
                     value: pendingSales.toString(),
                     label: 'En attente',
-                    color: Colors.orange,
+                    color: DeepColorTokens.warning,
                     isHighlight: pendingSales > 0,
                   ),
                 ],
@@ -101,7 +102,7 @@ class SalesHeader extends ConsumerWidget {
               if (todaySavings > 0 ||
                   filters.status != null ||
                   filters.searchQuery.isNotEmpty) ...[
-                const SizedBox(height: 12.0),
+                SizedBox(height: context.verticalSpacing),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -109,25 +110,29 @@ class SalesHeader extends ConsumerWidget {
                     if (todaySavings > 0)
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0,
-                            vertical: 6.0,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.horizontalSpacing / 2,
+                            vertical: context.verticalSpacing / 3,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.green.withValues(
+                            color: DeepColorTokens.success.withValues(
                               alpha: 0.1,
                             ),
-                            borderRadius: BorderRadius.circular(16.0),
+                            borderRadius: BorderRadius.circular(
+                              context.borderRadius,
+                            ),
                           ),
                           child: Row(
                             children: [
-                              const SizedBox(width: 6.0),
+                              SizedBox(width: context.horizontalSpacing / 3),
                               Flexible(
                                 child: Text(
                                   '${totalSavings.toStringAsFixed(0)}€ économisés',
                                   style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: Colors.green[700],
+                                    fontSize: FontSizes.bodySmall.getSize(
+                                      context,
+                                    ),
+                                    color: DeepColorTokens.success,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -147,19 +152,21 @@ class SalesHeader extends ConsumerWidget {
                           vertical: 6.0,
                         ),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.outlineVariant.withValues(
+                          color: DeepColorTokens.neutral300.withValues(
                             alpha: 0.3,
                           ),
-                          borderRadius: BorderRadius.circular(16.0),
+                          borderRadius: BorderRadius.circular(
+                            context.borderRadius,
+                          ),
                         ),
                         child: Row(
                           children: [
-                            const SizedBox(width: 6.0),
+                            SizedBox(width: context.horizontalSpacing / 3),
                             Text(
                               'Filtres',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                                fontSize: 14.0,
+                              style: TextStyle(
+                                fontSize: FontSizes.bodySmall.getSize(context),
+                                color: DeepColorTokens.neutral600,
                               ),
                             ),
                           ],
@@ -179,10 +186,10 @@ class SalesHeader extends ConsumerWidget {
 
   Widget _buildShimmer(BuildContext context) {
     return Container(
-      height: 80.0,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 12.0,
+      height: context.buttonHeight * 2,
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing,
+        vertical: context.verticalSpacing,
       ),
       child: const Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
     );
@@ -229,34 +236,30 @@ class _StatItem extends StatelessWidget {
               vertical: 6.0,
             )
           : null,
-      decoration: isHighlight
-          ? BoxDecoration(
-              color: color.withValues(
-                alpha: 0.1,
-              ),
-              borderRadius: BorderRadius.circular(16.0),
-            )
-          : null,
+      decoration: BoxDecoration(
+        color: isHighlight ? color.withValues(alpha: 0.1) : null,
+        borderRadius: BorderRadius.circular(context.borderRadius),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 24.0),
-          const SizedBox(height: 4.0),
+          Icon(icon, color: color, size: ResponsiveUtils.getIconSize(context)),
+          SizedBox(height: context.verticalSpacing / 3),
           Text(
             value,
-            style: theme.textTheme.titleMedium?.copyWith(
+            style: TextStyle(
+              fontSize: FontSizes.titleMedium.getSize(context),
               fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-              fontSize: 16.0,
+              color: DeepColorTokens.neutral900,
             ),
           ),
-          const SizedBox(height: 4.0),
+          SizedBox(height: context.verticalSpacing / 3),
           Text(
             label,
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 12.0,
+            style: TextStyle(
+              fontSize: FontSizes.caption.getSize(context),
+              color: DeepColorTokens.neutral600,
             ),
           ),
         ],

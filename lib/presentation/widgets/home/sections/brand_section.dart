@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../core/router/routes/route_constants.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../providers/brand_provider.dart';
 import '../../brand_card.dart';
 import 'responsive_card_config.dart';
@@ -50,7 +51,7 @@ class BrandSection extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: DeepColorTokens.neutral0,
                 ),
               ),
               GestureDetector(
@@ -62,7 +63,7 @@ class BrandSection extends ConsumerWidget {
                   'Voir tout',
                   style: TextStyle(
                     fontSize: 14.0,
-                    color: Colors.blue,
+                    color: DeepColorTokens.primary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -77,9 +78,11 @@ class BrandSection extends ConsumerWidget {
           child: brandsAsync.when(
             data: (brands) {
               // Utiliser la configuration responsive
-              final cardWidth = ResponsiveCardConfig.getSliderCardWidth(context);
+              final cardWidth = ResponsiveCardConfig.getSliderCardWidth(
+                context,
+              );
               final cardSpacing = ResponsiveCardConfig.getCardSpacing(context);
-              
+
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: ResponsiveCardConfig.getSliderPadding(context),
@@ -92,32 +95,39 @@ class BrandSection extends ConsumerWidget {
                       horizontal: cardSpacing / 2,
                     ),
                     child: SizedBox(
-                      width: cardWidth, // Utilise la largeur responsive (4 cartes sur PC)
+                      width:
+                          cardWidth, // Utilise la largeur responsive (4 cartes sur PC)
                       child: BrandCard(
-                      brand: brand,
-                      onTap: () {
-                        // Navigation vers la page de la marque
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Marque sélectionnée: ${brand.name}'),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
-                      },
+                        brand: brand,
+                        onTap: () {
+                          // Navigation vers la page de la marque
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Marque sélectionnée: ${brand.name}',
+                              ),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
                   );
                 },
               );
             },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
+            loading: () => Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  DeepColorTokens.primary,
+                ),
+              ),
             ),
             error: (error, stack) => Center(
               child: Text(
                 'Erreur: $error',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: DeepColorTokens.error,
                   fontSize: 14.0,
                 ),
               ),

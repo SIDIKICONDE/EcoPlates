@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Badge affichant le temps restant pour collecter l'offre
 class OfferTimeBadge extends StatelessWidget {
   const OfferTimeBadge({required this.timeRemaining, super.key});
@@ -13,13 +15,13 @@ class OfferTimeBadge extends StatelessWidget {
         vertical: 4.0,
       ),
       decoration: BoxDecoration(
-        color: Colors.orange,
+        color: DeepColorTokens.warning,
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 2.0,
-            offset: const Offset(0, 1),
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -29,13 +31,13 @@ class OfferTimeBadge extends StatelessWidget {
           Icon(
             Icons.access_time,
             size: 14.0,
-            color: Colors.white,
+            color: DeepColorTokens.neutral0,
           ),
           const SizedBox(width: 4.0),
           Text(
             _formatTimeRemaining(timeRemaining),
             style: TextStyle(
-              color: Colors.white,
+              color: DeepColorTokens.neutral0,
               fontSize: 12.0,
               fontWeight: FontWeight.w600,
             ),

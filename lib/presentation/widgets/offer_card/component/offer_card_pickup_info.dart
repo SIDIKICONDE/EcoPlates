@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/food_offer.dart';
 
 /// Widget spécialisé pour afficher les informations de récupération
@@ -28,7 +29,7 @@ class OfferCardPickupInfo extends StatelessWidget {
       'Récupération: ${_formatPickupTime()}',
       style: TextStyle(
         fontSize: 10.0, // Valeur fixe
-        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+        color: DeepColorTokens.neutral700.withValues(alpha: 0.7),
       ),
     );
   }
@@ -44,7 +45,7 @@ class OfferCardPickupInfo extends StatelessWidget {
       '$pickupText • $timeText$distanceText',
       style: TextStyle(
         fontSize: 9.0, // Valeur fixe
-        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+        color: DeepColorTokens.neutral700.withValues(alpha: 0.7),
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,

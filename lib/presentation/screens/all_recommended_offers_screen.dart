@@ -1,326 +1,145 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/responsive/responsive_layout.dart';
 import '../../core/responsive/responsive_utils.dart';
+import '../../domain/entities/food_offer.dart';
+import '../providers/offers_catalog_provider.dart';
 import '../providers/recommended_offers_provider.dart';
-import '../widgets/common/offers_list_view.dart';
+import '../widgets/logo/index.dart';
+import '../widgets/offer_card.dart';
+import '../widgets/offer_card/offer_card_configs.dart';
+import '../widgets/urgent_offer_detail_modal.dart';
+import '../widgets/urgent_offers_animation_manager.dart';
+import '../widgets/urgent_offers_bottom_sheets.dart';
+import '../widgets/urgent_offers_empty_state.dart';
 
 /// Page affichant toutes les offres recommandées
-class AllRecommendedOffersScreen extends ConsumerWidget {
+class AllRecommendedOffersScreen extends ConsumerStatefulWidget {
   const AllRecommendedOffersScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AllRecommendedOffersScreen> createState() =>
+      _AllRecommendedOffersScreenState();
+}
+
+class _AllRecommendedOffersScreenState
+    extends ConsumerState<AllRecommendedOffersScreen>
+    with SingleTickerProviderStateMixin {
+  UrgentOffersAnimationManager? _animationManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationManager = UrgentOffersAnimationManager()
+      ..initializeAnimations(this);
+  }
+
+  @override
+  void dispose() {
+    _animationManager?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final offers = ref.watch(recommendedOffersProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Offres recommandées',
-          style: TextStyle(
-            fontSize: FontSizes.subtitleLarge.getSize(context),
-            fontWeight: FontWeight.w600,
-          ),
+        title: Row(
+          children: [
+            LogoMeal(
+              animationManager: _animationManager,
+              emoji: '⭐',
+            ),
+            SizedBox(width: context.horizontalSpacing / 2),
+            Text(
+              'Offres recommandées',
+              style: TextStyle(
+                fontSize: FontSizes.subtitleLarge.getSize(context),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
+        centerTitle: false,
         toolbarHeight: context.appBarHeight,
+        backgroundColor: Theme.of(
+          context,
+        ).colorScheme.secondaryContainer.withValues(alpha: 0.1),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              // Afficher les options de filtrage
-              _showFilterBottomSheet(context);
-            },
+            icon: Icon(
+              Icons.sort,
+              size: ResponsiveUtils.getIconSize(context),
+            ),
+            onPressed: () => UrgentOffersSortBottomSheet.show(context),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.filter_list,
+              size: ResponsiveUtils.getIconSize(context),
+            ),
+            onPressed: () => UrgentOffersFilterBottomSheet.show(context),
           ),
         ],
       ),
-      body: OffersListView(
-        offers: offers,
-        emptyStateSubtitle:
-            'Revenez plus tard pour découvrir\nde nouvelles offres anti-gaspi',
-        enableRefresh: true,
-        onRefresh: () async {
-          ref.invalidate(recommendedOffersProvider);
-        },
-        compactCards: true,
-        itemSpacing: context.verticalSpacing,
-      ),
+      body: offers.isEmpty
+          ? const UrgentOffersEmptyState()
+          : RefreshIndicator(
+              onRefresh: () async {
+                await ref.read(offersRefreshProvider.notifier).refreshIfStale();
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.horizontalSpacing,
+                  vertical: context.verticalSpacing,
+                ),
+                child: _buildGridView(context, offers),
+              ),
+            ),
     );
   }
 
-  void _showFilterBottomSheet(BuildContext context) {
-    unawaited(
-      showModalBottomSheet<void>(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(context.borderRadius),
+  Widget _buildGridView(BuildContext context, List<FoodOffer> offers) {
+    final screenSize = MediaQuery.of(context).size;
+
+    // Détection spécifique pour la taille 768x1024px (tablette portrait)
+    final is768x1024 =
+        screenSize.width >= 768 &&
+        screenSize.width < 769 &&
+        screenSize.height >= 1024 &&
+        screenSize.height < 1025;
+
+    return ResponsiveGrid(
+      tabletColumns: is768x1024 ? 2 : 3, // 2 colonnes pour 768x1024px, sinon 3
+      desktopColumns: 4, // 4 colonnes sur desktop standard
+      desktopLargeColumns: 5, // 5 colonnes sur desktop large
+      spacing: 2.0, // Gap minimal horizontal fixe
+      runSpacing: 2.0, // Gap minimal vertical fixe
+      childAspectRatio: OfferCardConfigs.urgentPage(
+        context,
+      ).aspectRatio,
+      children: offers.map((offer) {
+        final index = offers.indexOf(offer);
+
+        return OfferCard(
+          offer: offer,
+          distance: 0.5 + (index * 0.3),
+          compact:
+              true, // Aligne avec les sections d'accueil (cartes compactes)
+          imageBorderRadius: OfferCardConfigs.urgentPage(
+            context,
+          ).imageBorderRadius,
+          onTap: () => UrgentOfferDetailModal.show(
+            context,
+            offer,
+            _animationManager!.animationController,
+            _animationManager!.pulseAnimation,
           ),
-        ),
-        builder: (context) {
-          return Container(
-            padding: context.responsivePadding,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Filtrer les offres',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: FontSizes.titleMedium.getSize(context),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        size: ResponsiveUtils.getIconSize(context),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: context.verticalSpacing,
-                ),
-
-                // Filtres par catégorie
-                Text(
-                  'Catégorie',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: FontSizes.subtitleMedium.getSize(context),
-                  ),
-                ),
-                SizedBox(
-                  height: context.verticalSpacing / 2,
-                ),
-                Wrap(
-                  spacing: context.horizontalSpacing / 2,
-                  runSpacing: context.verticalSpacing / 2,
-                  children: [
-                    FilterChip(
-                      label: Text(
-                        'Boulangerie',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                    FilterChip(
-                      label: Text(
-                        'Fruits & Légumes',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                    FilterChip(
-                      label: Text(
-                        'Plats préparés',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                    FilterChip(
-                      label: Text(
-                        'Snacks',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                  ],
-                ),
-
-                SizedBox(
-                  height: context.verticalSpacing,
-                ),
-
-                // Filtres par régime
-                Text(
-                  'Régime alimentaire',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: FontSizes.subtitleMedium.getSize(context),
-                  ),
-                ),
-                SizedBox(
-                  height: context.verticalSpacing / 2,
-                ),
-                Wrap(
-                  spacing: context.horizontalSpacing / 2,
-                  runSpacing: context.verticalSpacing / 2,
-                  children: [
-                    FilterChip(
-                      label: Text(
-                        'Végétarien',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      avatar: Icon(
-                        Icons.eco,
-                        size: ResponsiveUtils.getIconSize(
-                          context,
-                          baseSize: 16.0,
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                    FilterChip(
-                      label: Text(
-                        'Vegan',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      avatar: Icon(
-                        Icons.spa,
-                        size: ResponsiveUtils.getIconSize(
-                          context,
-                          baseSize: 16.0,
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                    FilterChip(
-                      label: Text(
-                        'Sans gluten',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                  ],
-                ),
-
-                SizedBox(
-                  height: context.verticalSpacing,
-                ),
-
-                // Filtres par prix
-                Text(
-                  'Prix',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: FontSizes.subtitleMedium.getSize(context),
-                  ),
-                ),
-                SizedBox(
-                  height: context.verticalSpacing / 2,
-                ),
-                Wrap(
-                  spacing: context.horizontalSpacing / 2,
-                  runSpacing: context.verticalSpacing / 2,
-                  children: [
-                    FilterChip(
-                      label: Text(
-                        'Gratuit',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      avatar: Icon(
-                        Icons.star,
-                        size: ResponsiveUtils.getIconSize(
-                          context,
-                          baseSize: 16.0,
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                    FilterChip(
-                      label: Text(
-                        '< 5€',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                    FilterChip(
-                      label: Text(
-                        '5€ - 10€',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                    FilterChip(
-                      label: Text(
-                        '> 10€',
-                        style: TextStyle(
-                          fontSize: FontSizes.bodySmall.getSize(context),
-                        ),
-                      ),
-                      onSelected: (selected) {},
-                    ),
-                  ],
-                ),
-
-                SizedBox(
-                  height: context.verticalSpacing * 2,
-                ),
-
-                // Boutons d'action
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          // Réinitialiser les filtres
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Réinitialiser',
-                          style: TextStyle(
-                            fontSize: FontSizes.buttonMedium.getSize(context),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: context.horizontalSpacing / 2,
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Appliquer les filtres
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Filtres appliqués'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'Appliquer',
-                          style: TextStyle(
-                            fontSize: FontSizes.buttonMedium.getSize(context),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: context.verticalSpacing / 2,
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+        );
+      }).toList(),
     );
   }
 }

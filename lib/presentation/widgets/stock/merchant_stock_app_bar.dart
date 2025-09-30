@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../controllers/merchant_stock_controller.dart';
 import '../../pages/stock_item_form/page.dart';
@@ -89,7 +90,7 @@ class _MerchantLogo extends StatelessWidget {
         child: Icon(
           Icons.store,
           size: 20.0,
-          color: Colors.grey,
+          color: DeepColorTokens.neutral600,
         ),
       ),
     );

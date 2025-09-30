@@ -81,15 +81,15 @@ class ResponsiveCardConfig {
     final cardWidth = getSliderCardWidth(context);
 
     // Aspect des images utilisées dans les sliders (cartes compactes)
-    final bool isMobile = ResponsiveUtils.isMobile(context);
-    final double imageAspect = isMobile
+    final isMobile = ResponsiveUtils.isMobile(context);
+    final imageAspect = isMobile
         ? (isLandscape ? 16 / 7 : 2 / 1) // compact portrait: 2:1
         : (isLandscape ? 16 / 7 : 16 / 9);
 
-    final double imageHeight = cardWidth / imageAspect;
+    final imageHeight = cardWidth / imageAspect;
 
     // Hauteur de contenu estimée (zone texte + prix en mode compact)
-    final double contentBase = ResponsiveUtils.responsiveValue(
+    final contentBase = ResponsiveUtils.responsiveValue(
       context,
       mobile: 80.0,
       tablet: 96.0,
@@ -100,13 +100,13 @@ class ResponsiveCardConfig {
     );
 
     // Espacements verticaux/paddings cumulés
-    final double spacing = ResponsiveUtils.getVerticalSpacing(context) * 0.5;
+    final spacing = ResponsiveUtils.getVerticalSpacing(context) * 0.5;
 
     // Hauteur dynamique totale
-    double dynamicHeight = imageHeight + contentBase + spacing;
+    var dynamicHeight = imageHeight + contentBase + spacing;
 
     // Contraintes minimales et maximales par plateforme pour éviter les extrêmes
-    final double minH = ResponsiveUtils.responsiveValue(
+    final minH = ResponsiveUtils.responsiveValue(
       context,
       mobile: 220.0, // Réduit pour mobile plus compact
       tablet: 280.0,
@@ -114,7 +114,7 @@ class ResponsiveCardConfig {
       desktop: 340.0, // Augmenté pour accommoder les images plus grandes
       desktopLarge: 380.0, // Augmenté pour accommoder les images plus grandes
     );
-    final double maxH = ResponsiveUtils.responsiveValue(
+    final maxH = ResponsiveUtils.responsiveValue(
       context,
       mobile: 320.0, // Réduit pour mobile plus compact
       tablet: 420.0,

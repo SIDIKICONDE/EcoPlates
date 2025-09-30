@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/responsive/responsive_utils.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/merchants_provider.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/merchant_card.dart';
@@ -77,7 +78,7 @@ class AllMerchantsScreen extends ConsumerWidget {
               Icon(
                 Icons.error_outline,
                 size: ResponsiveUtils.getIconSize(context),
-                color: Theme.of(context).colorScheme.error,
+                color: DeepColorTokens.error,
               ),
               SizedBox(
                 height: context.verticalSpacing,
@@ -85,7 +86,7 @@ class AllMerchantsScreen extends ConsumerWidget {
               Text(
                 'Erreur de chargement',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
+                  color: DeepColorTokens.error,
                   fontSize: FontSizes.subtitleMedium.getSize(context),
                 ),
               ),

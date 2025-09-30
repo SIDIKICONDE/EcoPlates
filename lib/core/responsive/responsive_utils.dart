@@ -266,11 +266,11 @@ class ResponsiveUtils {
   static double getMerchantCardHeight(BuildContext context) {
     return responsiveValue(
       context,
-      mobile: 120.0,
-      tablet: 130.0,
-      tabletLarge: 135.0,
-      desktop: 140.0,
-      desktopLarge: 150.0,
+      mobile: 180.0,
+      tablet: 200.0,
+      tabletLarge: 220.0,
+      desktop: 240.0,
+      desktopLarge: 260.0,
     );
   }
 
@@ -288,7 +288,7 @@ class ResponsiveUtils {
 
   /// Calcule l'aspect ratio pour les cartes d'offres dans une grille
   /// Ratio < 1 = carte plus haute que large
-  /// Ratio = 1 = carte carrée  
+  /// Ratio = 1 = carte carrée
   /// Ratio > 1 = carte plus large que haute
   static double getOfferCardAspectRatio(BuildContext context) {
     // IMPORTANT: childAspectRatio = largeur / hauteur
@@ -296,10 +296,10 @@ class ResponsiveUtils {
     // sans débordement, tout en évitant trop d'espace blanc
     return responsiveValue(
       context,
-      mobile: 0.65,      // Ratio ajusté pour éliminer le débordement de 8px
-      tablet: 0.85,      // Légèrement plus compact sur tablette
+      mobile: 0.65, // Ratio ajusté pour éliminer le débordement de 8px
+      tablet: 0.85, // Légèrement plus compact sur tablette
       tabletLarge: 0.95, // Équilibré
-      desktop: 1.10,     // Plus large sur desktop
+      desktop: 1.10, // Plus large sur desktop
       desktopLarge: 1.15, // Plus large sur grand écran
     );
   }

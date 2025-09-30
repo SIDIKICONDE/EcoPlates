@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/enums/merchant_enums.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../data/services/merchant_profile_service.dart';
 import '../../../domain/entities/merchant_profile.dart';
 
@@ -160,7 +161,7 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
       style: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w600,
-        color: colors.onSurface,
+        color: DeepColorTokens.neutral900,
       ),
     );
   }
@@ -344,9 +345,11 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
           child: ExpansionTile(
             title: Text(day.displayName),
             subtitle: Text(
-              isClosed ? 'Fermé' : hours?.displayFormat ?? 'Non défini',
+              isClosed ? 'Non défini' : hours?.displayFormat ?? 'Non défini',
               style: TextStyle(
-                color: isClosed ? colors.error : Colors.green,
+                color: isClosed
+                    ? DeepColorTokens.neutral500
+                    : DeepColorTokens.success,
                 fontSize: 16.0,
               ),
             ),
@@ -430,8 +433,8 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
         ElevatedButton(
           onPressed: _isSaving ? null : _saveProfile,
           style: ElevatedButton.styleFrom(
-            backgroundColor: colors.primary,
-            foregroundColor: colors.onPrimary,
+            backgroundColor: DeepColorTokens.primary,
+            foregroundColor: DeepColorTokens.neutral0,
           ),
           child: _isSaving
               ? SizedBox(
@@ -496,7 +499,7 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Profil mis à jour avec succès'),
-            backgroundColor: Colors.green,
+            backgroundColor: DeepColorTokens.success,
           ),
         );
         widget.onSaved?.call();
@@ -507,7 +510,7 @@ class _MerchantProfileFormState extends ConsumerState<MerchantProfileForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Erreur: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: DeepColorTokens.error,
           ),
         );
       }

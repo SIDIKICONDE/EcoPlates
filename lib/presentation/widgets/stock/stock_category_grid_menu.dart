@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/categories.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -26,7 +27,11 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
 
   // Catégories avec style (centralisé)
   late final List<CategoryItem> _categories = [
-    const CategoryItem('Tous', Icons.grid_view_rounded, Colors.blueGrey),
+    const CategoryItem(
+      'Tous',
+      Icons.grid_view_rounded,
+      DeepColorTokens.neutral700,
+    ),
     ...Categories.ordered.map(
       (c) => CategoryItem(
         Categories.labelOf(c),
@@ -89,7 +94,7 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
               child: FadeTransition(
                 opacity: _fadeAnimation,
                 child: ColoredBox(
-                  color: Colors.black.withValues(alpha: 0.3),
+                  color: DeepColorTokens.overlayMedium,
                   child: Container(),
                 ),
               ),
@@ -112,7 +117,7 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                   borderRadius: BorderRadius.circular(16.0),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
+                      color: DeepColorTokens.shadowLight,
                       blurRadius: 16.0,
                       offset: Offset(0, 4),
                     ),
@@ -244,7 +249,9 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
           decoration: BoxDecoration(
             color: isSelected
                 ? category.color.withValues(alpha: 0.1)
-                : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
+                : theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.1,
+                  ),
             borderRadius: BorderRadius.circular(16.0),
             border: Border.all(
               color: isSelected

@@ -92,9 +92,9 @@ class _NearbySectionState extends ConsumerState<NearbySection>
         // En-tête de section avec localisation
         Padding(
           padding: EdgeInsets.fromLTRB(
-            10.0,
-            2.0,
-            10.0,
+            ResponsiveCardConfig.getSliderPadding(context).left,
+            ResponsiveUtils.getVerticalSpacing(context) * 0.1,
+            ResponsiveCardConfig.getSliderPadding(context).right,
             0,
           ),
           child: Row(
@@ -104,17 +104,29 @@ class _NearbySectionState extends ConsumerState<NearbySection>
                 child: Text(
                   'Près de chez vous',
                   style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+                    fontSize: ResponsiveCardConfig.getSectionTitleFontSize(
+                      context,
+                    ),
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.9),
                   ),
                 ),
               ),
               // Bouton de filtre distance
-              IconButton(
+              TextButton(
                 onPressed: () => _showDistanceFilter(context),
-                icon: Icon(
-                  Icons.tune,
-                  color: Colors.blue,
+                child: Text(
+                  'Filtrer',
+                  style: TextStyle(
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      14.0,
+                    ),
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -127,7 +139,7 @@ class _NearbySectionState extends ConsumerState<NearbySection>
           child: _buildOffersList(context, ref, allOffers),
         ),
 
-        SizedBox(height: 10.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
       ],
     );
   }
@@ -152,22 +164,28 @@ class _NearbySectionState extends ConsumerState<NearbySection>
           children: [
             Icon(
               Icons.location_off_outlined,
-              size: 48.0,
-              color: Colors.grey,
+              size: ResponsiveUtils.getIconSize(context, baseSize: 48.0),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
-            SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 0.4),
             Text(
               'Aucune offre à proximité',
               style: TextStyle(
-                color: Colors.grey.shade700,
-                fontSize: 14.0,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.8),
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context, 14.0),
               ),
             ),
             Text(
               'Élargissez votre zone de recherche',
               style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 12.0,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.7),
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context, 12.0),
               ),
             ),
           ],
@@ -259,9 +277,11 @@ class _NearbySectionState extends ConsumerState<NearbySection>
             children: [
               // Header avec indicateur de distance
               Container(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(
+                  ResponsiveUtils.getVerticalSpacing(context),
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -272,25 +292,47 @@ class _NearbySectionState extends ConsumerState<NearbySection>
                         Text(
                           offer.merchantName,
                           style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            fontSize: ResponsiveUtils.getResponsiveFontSize(
+                              context,
+                              16.0,
+                            ),
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
-                        SizedBox(height: 2.0),
+                        SizedBox(
+                          height:
+                              ResponsiveUtils.getVerticalSpacing(context) * 0.1,
+                        ),
                         Row(
                           children: [
                             Icon(
                               Icons.location_on,
-                              size: 16.0,
-                              color: Colors.grey.shade600,
+                              size: ResponsiveUtils.getIconSize(
+                                context,
+                                baseSize: 16.0,
+                              ),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
-                            SizedBox(width: 2.0),
+                            SizedBox(
+                              width:
+                                  ResponsiveUtils.getHorizontalSpacing(
+                                    context,
+                                  ) *
+                                  0.1,
+                            ),
                             Text(
                               'À 0.5 km • 8 min à pied',
                               style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.grey.shade600,
+                                fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                  context,
+                                  14.0,
+                                ),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
                             ),
                           ],
@@ -298,7 +340,13 @@ class _NearbySectionState extends ConsumerState<NearbySection>
                       ],
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: Icon(
+                        Icons.close,
+                        size: ResponsiveUtils.getIconSize(context),
+                      ),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
@@ -308,19 +356,34 @@ class _NearbySectionState extends ConsumerState<NearbySection>
               // Contenu de l'offre
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(
+                    ResponsiveUtils.getVerticalSpacing(context),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 16.0),
+                      SizedBox(
+                        height: ResponsiveUtils.getVerticalSpacing(context),
+                      ),
                       OfferDetailsSection(offer: offer),
-                      SizedBox(height: 20.0),
+                      SizedBox(
+                        height:
+                            ResponsiveUtils.getVerticalSpacing(context) * 1.25,
+                      ),
                       OfferAddressSection(offer: offer),
-                      SizedBox(height: 20.0),
+                      SizedBox(
+                        height:
+                            ResponsiveUtils.getVerticalSpacing(context) * 1.25,
+                      ),
                       OfferBadgesSection(offer: offer),
-                      SizedBox(height: 20.0),
+                      SizedBox(
+                        height:
+                            ResponsiveUtils.getVerticalSpacing(context) * 1.25,
+                      ),
                       OfferMetadataSection(offer: offer),
-                      SizedBox(height: 16.0),
+                      SizedBox(
+                        height: ResponsiveUtils.getVerticalSpacing(context),
+                      ),
                     ],
                   ),
                 ),
@@ -397,28 +460,30 @@ class _DistanceFilterModalState extends State<_DistanceFilterModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(24.0),
+      padding: EdgeInsets.all(
+        ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Distance de recherche',
             style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context, 20.0),
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          SizedBox(height: 8.0),
+          SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 0.4),
           Text(
             '${_selectedRadius.toStringAsFixed(1)} km',
             style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue,
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context, 16.0),
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          SizedBox(height: 20.0),
+          SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 1.25),
           Slider(
             value: _selectedRadius,
             min: 0.5,
@@ -431,51 +496,62 @@ class _DistanceFilterModalState extends State<_DistanceFilterModal> {
               });
             },
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 0.6),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 '0.5 km',
                 style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 12.0,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    12.0,
+                  ),
                 ),
               ),
               Text(
                 '5.0 km',
                 style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 12.0,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    12.0,
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 20.0),
+          SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 1.25),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () => widget.onRadiusChanged(_selectedRadius),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(
-                  vertical: 10.0,
+                  vertical: ResponsiveUtils.getVerticalSpacing(context) * 0.6,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    12.0,
-                  ),
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
               child: Text(
                 'Appliquer',
                 style: TextStyle(
-                  fontSize: 13.0,
-                  fontWeight: FontWeight.bold,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    13.0,
+                  ),
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
           ),
-          SizedBox(height: 16.0),
+          SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
         ],
       ),
     );

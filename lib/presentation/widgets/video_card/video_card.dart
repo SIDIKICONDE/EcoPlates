@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../../core/services/image_cache_service.dart';
 import '../../../core/services/video_pool_manager.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/utils/animation_manager.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/video_preview.dart';
@@ -109,8 +110,7 @@ class _VideoCardState extends State<VideoCard>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardWidth = widget.width ?? _defaultWidth;
     final cardHeight = widget.height ?? _defaultHeight;
 
@@ -135,8 +135,8 @@ class _VideoCardState extends State<VideoCard>
                 boxShadow: [
                   BoxShadow(
                     color: isDark
-                        ? Colors.black.withValues(alpha: 0.3)
-                        : Colors.black.withValues(alpha: 0.15),
+                        ? DeepColorTokens.shadowMedium
+                        : DeepColorTokens.shadowLight,
                     offset: const Offset(0, 2),
                   ),
                 ],
@@ -148,7 +148,7 @@ class _VideoCardState extends State<VideoCard>
                   children: [
                     _buildMediaContent(isDark),
                     _buildGradientOverlay(),
-                    if (widget.showInfo) _buildInfoOverlay(theme),
+                    if (widget.showInfo) _buildInfoOverlay(),
                     // _buildDurationBadge(), // Masqué selon demande utilisateur
                     // if (!_showVideo) _buildVideoIndicator(), // Masqué selon demande utilisateur
                   ],
@@ -206,15 +206,21 @@ class _VideoCardState extends State<VideoCard>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        if (isDark) Colors.grey[900]! else Colors.grey[300]!,
-                        if (isDark) Colors.grey[800]! else Colors.grey[200]!,
+                        if (isDark)
+                          DeepColorTokens.neutral900
+                        else
+                          DeepColorTokens.neutral200,
+                        if (isDark)
+                          DeepColorTokens.neutral800
+                        else
+                          DeepColorTokens.neutral100,
                       ],
                     ),
                   ),
                   child: Center(
                     child: CircularProgressIndicator(
                       strokeWidth: 3,
-                      color: Colors.white30,
+                      color: DeepColorTokens.neutral0.withValues(alpha: 0.3),
                     ),
                   ),
                 ),
@@ -224,15 +230,21 @@ class _VideoCardState extends State<VideoCard>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        if (isDark) Colors.grey[900]! else Colors.grey[300]!,
-                        if (isDark) Colors.grey[800]! else Colors.grey[200]!,
+                        if (isDark)
+                          DeepColorTokens.neutral900
+                        else
+                          DeepColorTokens.neutral200,
+                        if (isDark)
+                          DeepColorTokens.neutral800
+                        else
+                          DeepColorTokens.neutral100,
                       ],
                     ),
                   ),
                   child: Center(
                     child: Icon(
                       Icons.broken_image,
-                      color: isDark ? Colors.white30 : Colors.black26,
+                      color: DeepColorTokens.neutral0.withValues(alpha: 0.3),
                       size: 16.0 * 3,
                     ),
                   ),
@@ -246,12 +258,12 @@ class _VideoCardState extends State<VideoCard>
                       ? 40.0
                       : 60.0,
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.7),
+                    color: DeepColorTokens.neutral1000.withValues(alpha: 0.7),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.play_arrow,
-                    color: Colors.white,
+                    color: DeepColorTokens.neutral0,
                     size: (widget.height ?? _defaultHeight) <= 150
                         ? 20.0
                         : 30.0,
@@ -269,8 +281,14 @@ class _VideoCardState extends State<VideoCard>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                if (isDark) Colors.grey[900]! else Colors.grey[300]!,
-                if (isDark) Colors.grey[800]! else Colors.grey[200]!,
+                if (isDark)
+                  DeepColorTokens.neutral900
+                else
+                  DeepColorTokens.neutral200,
+                if (isDark)
+                  DeepColorTokens.neutral800
+                else
+                  DeepColorTokens.neutral100,
               ],
             ),
           ),
@@ -278,11 +296,11 @@ class _VideoCardState extends State<VideoCard>
             child: widget.play
                 ? CircularProgressIndicator(
                     strokeWidth: 3,
-                    color: Colors.white30,
+                    color: DeepColorTokens.neutral0.withValues(alpha: 0.3),
                   )
                 : Icon(
                     Icons.play_circle_outline,
-                    color: isDark ? Colors.white30 : Colors.black26,
+                    color: DeepColorTokens.neutral0.withValues(alpha: 0.3),
                     size: 16.0 * 3,
                   ),
           ),
@@ -301,7 +319,7 @@ class _VideoCardState extends State<VideoCard>
         end: Alignment.bottomCenter,
         colors: [
           Colors.transparent,
-          Colors.black.withValues(
+          DeepColorTokens.neutral1000.withValues(
             alpha: _isPressed
                 ? VideoCardConstants.pressedGradientEndOpacity
                 : VideoCardConstants.gradientEndOpacity,
@@ -315,7 +333,7 @@ class _VideoCardState extends State<VideoCard>
     ),
   );
 
-  Widget _buildInfoOverlay(ThemeData theme) {
+  Widget _buildInfoOverlay() {
     final isCompact =
         (widget.height ?? _defaultHeight) <=
         150; // Mode compact si hauteur <= 150
@@ -329,13 +347,13 @@ class _VideoCardState extends State<VideoCard>
         child: Text(
           widget.video.merchantName,
           style: TextStyle(
-            color: Colors.white,
+            color: DeepColorTokens.neutral0,
             fontWeight: FontWeight.w600,
             fontSize: 16.0,
             shadows: [
               Shadow(
                 blurRadius: 4.0,
-                color: Colors.black.withValues(alpha: 0.5),
+                color: DeepColorTokens.shadowDeep,
                 offset: Offset(0.0, 1.0),
               ),
             ],
@@ -358,7 +376,7 @@ class _VideoCardState extends State<VideoCard>
           Text(
             widget.video.title,
             style: TextStyle(
-              color: Colors.white,
+              color: DeepColorTokens.neutral0,
               fontWeight: FontWeight.w600,
               fontSize: 14.0,
               height: 1.2,
@@ -370,7 +388,7 @@ class _VideoCardState extends State<VideoCard>
           Text(
             widget.video.merchantName,
             style: TextStyle(
-              color: Colors.white70,
+              color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
               fontSize: 12.0,
             ),
             maxLines: 1,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 
 /// Section dédiée à l'adresse de récupération
@@ -15,10 +16,10 @@ class OfferAddressSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        color: DeepColorTokens.surfaceContainer,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          color: DeepColorTokens.neutral0.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -29,7 +30,7 @@ class OfferAddressSection extends StatelessWidget {
             children: [
               Icon(
                 Icons.location_on,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
                 size: 20.0,
               ),
               const SizedBox(width: 12.0),
@@ -49,9 +50,7 @@ class OfferAddressSection extends StatelessWidget {
                       '${offer.location.postalCode} ${offer.location.city}',
                       style: TextStyle(
                         fontSize: 14.0,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
                       ),
                     ),
                     const SizedBox(height: 12.0),
@@ -90,7 +89,7 @@ class OfferAddressSection extends StatelessWidget {
                             "Plus d'informations sur le marchand",
                             style: TextStyle(
                               fontSize: 14.0,
-                              color: Theme.of(context).colorScheme.primary,
+                              color: DeepColorTokens.primary,
                               fontStyle: FontStyle.italic,
                               decoration: TextDecoration.underline,
                             ),

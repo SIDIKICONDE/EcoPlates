@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/responsive_utils.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 
 /// Widget pour afficher un tag avec icône
 class RestaurantTag extends StatelessWidget {
@@ -9,33 +11,52 @@ class RestaurantTag extends StatelessWidget {
   Widget build(BuildContext context) {
     final (icon, color) = _getTagStyle(tag);
 
+    final horizontalPadding =
+        ResponsiveUtils.getHorizontalSpacing(context) * 0.33;
+    final verticalPadding = ResponsiveUtils.getVerticalSpacing(context) * 0.17;
+    final iconSize = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 10.0,
+      tablet: 12.0,
+      desktop: 14.0,
+    );
+    final fontSize = ResponsiveUtils.responsiveValue(
+      context,
+      mobile: 10.0,
+      tablet: 11.0,
+      desktop: 12.0,
+    );
+    final spacing = ResponsiveUtils.getHorizontalSpacing(context) * 0.17;
+
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 4.0,
+        horizontal: horizontalPadding,
+        vertical: verticalPadding,
       ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.16),
         border: Border.all(
           color: color.withValues(alpha: 0.16),
-        ),  
-        borderRadius: BorderRadius.circular(8.0),
+        ),
+        borderRadius: BorderRadius.circular(
+          ResponsiveUtils.getBorderRadius(context) * 0.5,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             icon,
-            size: 12.0,
+            size: iconSize,
             color: color,
           ),
-          SizedBox(width: 4.0),
+          SizedBox(width: spacing),
           Text(
             tag,
             style: TextStyle(
               color: color,
-              fontSize: 12.0,
-              fontWeight: FontWeight.w500,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -48,15 +69,15 @@ class RestaurantTag extends StatelessWidget {
       case 'végétarien':
       case 'vegan':
       case 'végé':
-        return (Icons.eco, Colors.green);
+        return (Icons.eco, DeepColorTokens.success);
       case 'bio':
-        return (Icons.grass, Colors.lightGreen);
+        return (Icons.grass, DeepColorTokens.success);
       case 'halal':
-        return (Icons.verified, Colors.teal);
+        return (Icons.verified, DeepColorTokens.info);
       case 'sans gluten':
-        return (Icons.grain_outlined, Colors.orange);
+        return (Icons.grain_outlined, DeepColorTokens.warning);
       default:
-        return (Icons.label, Colors.blue);
+        return (Icons.label, DeepColorTokens.primary);
     }
   }
 }

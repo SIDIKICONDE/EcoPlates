@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Section des paramètres et options du profil consommateur
 class ConsumerSettingsSection extends StatelessWidget {
   const ConsumerSettingsSection({super.key});
@@ -8,19 +10,16 @@ class ConsumerSettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Container(
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: colors.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: colors.shadow.withValues(
-              alpha: 0.01,
-            ),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 8.0,
             offset: Offset(0, 1),
           ),
@@ -34,7 +33,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             children: [
               Icon(
                 Icons.settings,
-                color: colors.primary,
+                color: DeepColorTokens.primary,
                 size: 24.0,
               ),
               SizedBox(width: 12.0),
@@ -124,13 +123,16 @@ class ConsumerSettingsSection extends StatelessWidget {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _showDeleteAccount(context),
-                  icon: Icon(Icons.delete_forever, color: colors.error),
+                  icon: Icon(
+                    Icons.delete_forever,
+                    color: DeepColorTokens.error,
+                  ),
                   label: Text(
                     'Supprimer le compte',
-                    style: TextStyle(color: colors.error),
+                    style: TextStyle(color: DeepColorTokens.error),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: colors.error),
+                    side: BorderSide(color: DeepColorTokens.error),
                   ),
                 ),
               ),
@@ -149,7 +151,6 @@ class ConsumerSettingsSection extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return InkWell(
@@ -164,7 +165,7 @@ class ConsumerSettingsSection extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(12.0),
               decoration: BoxDecoration(
-                color: colors.primaryContainer.withValues(
+                color: DeepColorTokens.primary.withValues(
                   alpha: 0.3,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -173,7 +174,7 @@ class ConsumerSettingsSection extends StatelessWidget {
               ),
               child: Icon(
                 icon,
-                color: colors.primary,
+                color: DeepColorTokens.primary,
                 size: 24.0,
               ),
             ),
@@ -194,7 +195,7 @@ class ConsumerSettingsSection extends StatelessWidget {
                   Text(
                     subtitle,
                     style: textTheme.bodySmall?.copyWith(
-                      color: colors.onSurface.withValues(
+                      color: DeepColorTokens.neutral900.withValues(
                         alpha: 0.9,
                       ),
                     ),
@@ -205,7 +206,7 @@ class ConsumerSettingsSection extends StatelessWidget {
 
             Icon(
               Icons.chevron_right,
-              color: colors.onSurface.withValues(
+              color: DeepColorTokens.neutral600.withValues(
                 alpha: 0.5,
               ),
             ),
@@ -232,7 +233,6 @@ class ConsumerSettingsSection extends StatelessWidget {
 
   Widget _buildNotificationBottomSheet(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Padding(
@@ -248,7 +248,7 @@ class ConsumerSettingsSection extends StatelessWidget {
               bottom: 24.0,
             ),
             decoration: BoxDecoration(
-              color: colors.outline.withValues(
+              color: DeepColorTokens.neutral400.withValues(
                 alpha: 0.3,
               ),
               borderRadius: BorderRadius.circular(2.0),
@@ -362,7 +362,7 @@ class ConsumerSettingsSection extends StatelessWidget {
                 _showComingSoon(context, 'Suppression de compte');
               },
               style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: DeepColorTokens.error,
               ),
               child: const Text('Supprimer'),
             ),

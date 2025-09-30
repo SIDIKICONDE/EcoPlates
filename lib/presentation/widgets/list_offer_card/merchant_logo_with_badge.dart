@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Widget pour afficher le logo du restaurant avec badge de quantité disponible
 class MerchantLogoWithBadge extends StatelessWidget {
   const MerchantLogoWithBadge({
@@ -17,11 +19,11 @@ class MerchantLogoWithBadge extends StatelessWidget {
       width: 60.0,
       height: 60.0,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: DeepColorTokens.neutral0,
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 4.0,
             offset: Offset(0.0, 2.0),
           ),
@@ -35,7 +37,7 @@ class MerchantLogoWithBadge extends StatelessWidget {
             height: 60.0,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Colors.blue.shade100,
+              color: DeepColorTokens.primaryLight.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Text(
@@ -43,7 +45,7 @@ class MerchantLogoWithBadge extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue.shade800,
+                color: DeepColorTokens.primary,
               ),
             ),
           ),
@@ -57,9 +59,11 @@ class MerchantLogoWithBadge extends StatelessWidget {
               height: 20.0,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: availableQuantity <= 3 ? Colors.red : Colors.green,
+                color: availableQuantity <= 3
+                    ? DeepColorTokens.urgent
+                    : DeepColorTokens.success,
                 border: Border.all(
-                  color: Colors.white,
+                  color: DeepColorTokens.neutral0,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(10.0),
@@ -69,7 +73,7 @@ class MerchantLogoWithBadge extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: DeepColorTokens.neutral0,
                 ),
               ),
             ),

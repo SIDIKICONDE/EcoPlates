@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../common/offer_card_favorite_button.dart';
 import 'offer_card_description.dart';
@@ -52,7 +53,6 @@ class OfferCardContent extends StatelessWidget {
           // Section contenu principale
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               // Nom du marchand
               Row(
@@ -86,7 +86,7 @@ class OfferCardContent extends StatelessWidget {
               // Ligne de séparation
               Container(
                 height: 0.5,
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: DeepColorTokens.neutral500.withValues(alpha: 0.3),
               ),
 
               const SizedBox(height: 3.0), // Valeur fixe
@@ -122,7 +122,6 @@ class OfferCardContent extends StatelessWidget {
           // Section contenu principale
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               // Nom du marchand
               OfferCardMerchantName(
@@ -147,7 +146,7 @@ class OfferCardContent extends StatelessWidget {
               // Ligne de séparation
               Container(
                 height: 0.5,
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: DeepColorTokens.neutral500.withValues(alpha: 0.3),
               ),
 
               const SizedBox(height: 6.0), // Valeur fixe

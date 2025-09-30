@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Widget affiché quand il n'y a aucun favori
 class EmptyFavoritesWidget extends StatelessWidget {
   const EmptyFavoritesWidget({super.key});
@@ -7,7 +9,6 @@ class EmptyFavoritesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Container(
@@ -17,9 +18,7 @@ class EmptyFavoritesWidget extends StatelessWidget {
           Icon(
             Icons.favorite_border,
             size: 48.0,
-            color: colors.onSurface.withValues(
-              alpha: 0.3,
-            ),
+            color: DeepColorTokens.neutral500,
           ),
           SizedBox(
             height: 16.0,
@@ -27,9 +26,7 @@ class EmptyFavoritesWidget extends StatelessWidget {
           Text(
             'Aucun favori pour le moment',
             style: textTheme.titleMedium?.copyWith(
-              color: colors.onSurface.withValues(
-                alpha: 0.9,
-              ),
+              color: DeepColorTokens.neutral900,
             ),
           ),
           SizedBox(
@@ -38,9 +35,7 @@ class EmptyFavoritesWidget extends StatelessWidget {
           Text(
             'Explorez nos restaurants et ajoutez vos plats préférés !',
             style: textTheme.bodySmall?.copyWith(
-              color: colors.onSurface.withValues(
-                alpha: 0.5,
-              ),
+              color: DeepColorTokens.neutral500,
             ),
             textAlign: TextAlign.center,
           ),

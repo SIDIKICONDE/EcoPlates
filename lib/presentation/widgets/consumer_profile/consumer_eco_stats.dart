@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/themes/tokens/color_tokens.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/user.dart';
 import '../../providers/consumer_profile_provider.dart';
 import 'eco_calculations.dart';
@@ -16,7 +17,6 @@ class ConsumerEcoStats extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final consumerProfile = ref.watch(consumerEcoStatsProvider);
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Container(
@@ -29,7 +29,7 @@ class ConsumerEcoStats extends ConsumerWidget {
             EcoColorTokens.success.withValues(
               alpha: 0.1,
             ),
-            colors.surface,
+            DeepColorTokens.surface,
           ],
         ),
         borderRadius: BorderRadius.circular(
@@ -51,7 +51,7 @@ class ConsumerEcoStats extends ConsumerWidget {
                   ),
                   child: Icon(
                     Icons.eco,
-                    color: Colors.white,
+                    color: DeepColorTokens.neutral0,
                     size: 16.0,
                   ),
                 ),
@@ -101,7 +101,7 @@ class ConsumerEcoStats extends ConsumerWidget {
                   value: '${consumerProfile?.totalPlatesUsed ?? 0}',
                   unit: 'total',
                   icon: Icons.dinner_dining,
-                  color: colors.primary,
+                  color: DeepColorTokens.primary,
                   subtitle: 'Depuis le début',
                 ),
                 EcoStatCard(
@@ -111,7 +111,8 @@ class ConsumerEcoStats extends ConsumerWidget {
                   ),
                   unit: 'g',
                   icon: Icons.recycling,
-                  color: EcoColorTokens.warning,
+                  color: EcoColorTokens
+                      .warning, // Orange brûlé pour attirer l'attention sur l'impact environnemental
                   subtitle: 'Plastique économisé',
                 ),
               ],
@@ -131,7 +132,7 @@ class ConsumerEcoStats extends ConsumerWidget {
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: colors.surface.withValues(
+                color: DeepColorTokens.surface.withValues(
                   alpha: 0.1,
                 ),
               ),
@@ -164,7 +165,7 @@ class ConsumerEcoStats extends ConsumerWidget {
                             consumerProfile?.totalPlatesUsed ?? 0,
                           ),
                           style: textTheme.bodySmall?.copyWith(
-                            color: colors.onSurface.withValues(
+                            color: DeepColorTokens.neutral700.withValues(
                               alpha: 0.7,
                             ),
                           ),

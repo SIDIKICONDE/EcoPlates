@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/responsive/responsive_utils.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 
 /// Menu avec tabs optimisé pour tablettes
 class TabletTabMenu extends ConsumerStatefulWidget {
@@ -38,7 +39,8 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
   @override
   Widget build(BuildContext context) {
     final isTablet = ResponsiveUtils.isTablet(context);
-    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     // Si ce n'est pas une tablette, retourner un widget vide
     if (!isTablet) {
@@ -58,11 +60,17 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
         Container(
           width: 280,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: const [
+                DeepColorTokens.surface,
+                DeepColorTokens.surfaceContainer,
+              ],
+            ),
             border: Border(
               right: BorderSide(
-                color: Theme.of(context).dividerColor,
-                width: 1,
+                color: DeepColorTokens.neutral0.withValues(alpha: 0.1),
               ),
             ),
           ),
@@ -73,19 +81,41 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
                 padding: const EdgeInsets.all(24),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.eco,
-                      size: 32,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'EcoPlates',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        gradient: DeepColorTokens.primaryGradient,
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      child: Icon(
+                        Icons.eco,
+                        size: 28,
+                        color: DeepColorTokens.neutral0,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'EcoPlates',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: DeepColorTokens.neutral0,
+                          ),
+                        ),
+                        Text(
+                          'Tablette',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: DeepColorTokens.neutral0.withValues(
+                              alpha: 0.7,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -142,8 +172,17 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
                   children: [
                     const Divider(),
                     ListTile(
-                      leading: const Icon(Icons.settings_outlined),
-                      title: const Text('Paramètres'),
+                      leading: Icon(
+                        Icons.settings_outlined,
+                        color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
+                      ),
+                      title: Text(
+                        'Paramètres',
+                        style: TextStyle(
+                          color: DeepColorTokens.neutral0,
+                          fontSize: 15,
+                        ),
+                      ),
                       onTap: () {
                         // Navigation vers paramètres
                       },
@@ -191,10 +230,10 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
         // Enhanced bottom navigation for tablets
         Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: DeepColorTokens.surface,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: DeepColorTokens.neutral0.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, -2),
               ),
@@ -262,12 +301,12 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
     String? badge,
   }) {
     final isSelected = _currentIndex == index;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       child: Material(
         color: isSelected
-            ? Theme.of(context).colorScheme.primaryContainer
+            ? DeepColorTokens.primary.withValues(alpha: 0.1)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
@@ -285,8 +324,8 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
                       isSelected ? selectedIcon : icon,
                       size: 24,
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurface,
+                          ? DeepColorTokens.primary
+                          : DeepColorTokens.neutral0.withValues(alpha: 0.7),
                     ),
                     if (badge != null)
                       Positioned(
@@ -295,7 +334,7 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            color: DeepColorTokens.urgent,
                             shape: BoxShape.circle,
                           ),
                           constraints: const BoxConstraints(
@@ -321,10 +360,12 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
                     label,
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurface,
+                          ? DeepColorTokens.primary
+                          : DeepColorTokens.neutral0,
                     ),
                   ),
                 ),
@@ -346,7 +387,7 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
     String? badge,
   }) {
     final isSelected = _currentIndex == index;
-    
+
     return Expanded(
       child: InkWell(
         onTap: () {
@@ -363,8 +404,8 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
                     isSelected ? selectedIcon : icon,
                     size: 28, // Plus grand pour les tablettes
                     color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        ? DeepColorTokens.primary
+                        : DeepColorTokens.neutral0.withValues(alpha: 0.6),
                   ),
                   if (badge != null)
                     Positioned(
@@ -373,7 +414,7 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: DeepColorTokens.urgent,
                           shape: BoxShape.circle,
                         ),
                         constraints: const BoxConstraints(
@@ -400,8 +441,8 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
                   fontSize: 13,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                      ? DeepColorTokens.primary
+                      : DeepColorTokens.neutral0.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -413,28 +454,57 @@ class _TabletTabMenuState extends ConsumerState<TabletTabMenu>
 
   /// Placeholder pour le contenu (à remplacer par vos pages)
   Widget _buildContentPlaceholder(String title) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.tablet,
-            size: 80,
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Interface optimisée pour tablettes',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: const [
+            DeepColorTokens.surface,
+            DeepColorTokens.surfaceContainer,
+          ],
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                gradient: DeepColorTokens.confidenceGradient,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.tablet,
+                size: 60,
+                color: DeepColorTokens.neutral0,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: DeepColorTokens.neutral0,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                'Interface optimisée pour tablettes',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

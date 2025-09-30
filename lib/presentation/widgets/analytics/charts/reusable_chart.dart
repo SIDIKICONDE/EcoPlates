@@ -228,8 +228,6 @@ class _ReusableChartState extends State<ReusableChart> {
                               horizontalPadding: chartWidth > calculatedWidth
                                   ? 0
                                   : 8.0,
-                              connectionPointRadius: 4.0,
-                              connectionPointBackgroundRadius: 6.0,
                             ),
                             child: const SizedBox.expand(),
                           ),

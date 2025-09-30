@@ -1,8 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/sales_provider.dart';
+import '../home/sections/responsive_card_config.dart';
 import 'components/index.dart';
 
 /// Liste des ventes avec gestion des états de chargement
@@ -25,13 +28,13 @@ class SalesListView extends ConsumerWidget {
                     Icon(
                       Icons.receipt_long_outlined,
                       size: 48.0,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      color: DeepColorTokens.neutral600,
                     ),
                     const SizedBox(height: 10.0),
                     Text(
                       'Aucune vente trouvée',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: DeepColorTokens.neutral600,
                         fontSize: 18.0,
                       ),
                     ),
@@ -39,7 +42,7 @@ class SalesListView extends ConsumerWidget {
                     Text(
                       'Modifiez vos filtres pour voir plus de résultats',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: DeepColorTokens.neutral600,
                         fontSize: 14.0,
                       ),
                     ),
@@ -50,14 +53,35 @@ class SalesListView extends ConsumerWidget {
           );
         }
 
-        return SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            final sale = sales[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: SaleCard(sale: sale),
-            );
-          }, childCount: sales.length),
+        return SliverToBoxAdapter(
+          child: Builder(
+            builder: (context) {
+              final columns = ResponsiveCardConfig.getOptimalGridColumns(
+                context,
+              );
+              final cardWidth = ResponsiveCardConfig.getGridCardWidth(
+                context,
+                columnsCount: columns,
+              );
+              final spacing = ResponsiveCardConfig.getCardSpacing(context);
+
+              return Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                children: sales
+                    .map(
+                      (sale) => SizedBox(
+                        width: cardWidth,
+                        child: Container(
+                          constraints: BoxConstraints(maxHeight: 200.0),
+                          child: SaleCard(sale: sale),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              );
+            },
+          ),
         );
       },
       loading: () => SliverToBoxAdapter(
@@ -79,13 +103,13 @@ class SalesListView extends ConsumerWidget {
                 Icon(
                   Icons.error_outline,
                   size: 36.0,
-                  color: Colors.red,
+                  color: DeepColorTokens.error,
                 ),
                 const SizedBox(height: 10.0),
                 Text(
                   'Erreur de chargement',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.red,
+                    color: DeepColorTokens.error,
                     fontSize: 16.0,
                   ),
                 ),

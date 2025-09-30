@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/responsive/responsive_utils.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/food_offer.dart';
 import '../../../providers/meals_provider.dart';
 import '../../../screens/all_meals_screen.dart';
@@ -54,10 +55,10 @@ class MealsSection extends ConsumerWidget {
         // En-tête de section
         Padding(
           padding: EdgeInsets.fromLTRB(
-            20.0,
-            4.0, // réduit
-            20.0,
-            8.0, // réduit
+            ResponsiveCardConfig.getSliderPadding(context).left,
+            ResponsiveUtils.getVerticalSpacing(context) * 0.2,
+            ResponsiveCardConfig.getSliderPadding(context).right,
+            ResponsiveUtils.getVerticalSpacing(context) * 0.4,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,8 +70,10 @@ class MealsSection extends ConsumerWidget {
                     'Repas complets',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                      fontSize: 18.0,
+                      color: DeepColorTokens.neutral900.withValues(alpha: 0.9),
+                      fontSize: ResponsiveCardConfig.getSectionTitleFontSize(
+                        context,
+                      ),
                     ),
                   ),
                   TextButton.icon(
@@ -85,15 +88,21 @@ class MealsSection extends ConsumerWidget {
                     },
                     icon: Icon(
                       Icons.arrow_forward,
-                      size: 16.0,
-                      color: Colors.blue,
+                      size: ResponsiveUtils.getIconSize(
+                        context,
+                        baseSize: 16.0,
+                      ),
+                      color: DeepColorTokens.primary,
                     ),
                     label: Text(
                       'Voir tout',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: DeepColorTokens.primary,
                         fontWeight: FontWeight.w500,
-                        fontSize: 14.0,
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                          context,
+                          14.0,
+                        ),
                       ),
                     ),
                   ),
@@ -109,7 +118,7 @@ class MealsSection extends ConsumerWidget {
           child: _buildMealsList(context, ref, allMeals),
         ),
 
-        SizedBox(height: 16.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
       ],
     );
   }
@@ -129,15 +138,15 @@ class MealsSection extends ConsumerWidget {
           children: [
             Icon(
               Icons.restaurant_outlined,
-              size: 48.0,
-              color: Colors.grey,
+              size: ResponsiveUtils.getIconSize(context, baseSize: 48.0),
+              color: DeepColorTokens.neutral600.withValues(alpha: 0.6),
             ),
-            SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 0.4),
             Text(
               'Aucun repas disponible',
               style: TextStyle(
-                color: Colors.grey.shade700,
-                fontSize: 14.0,
+                color: DeepColorTokens.neutral600.withValues(alpha: 0.8),
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context, 14.0),
               ),
             ),
           ],
@@ -199,9 +208,11 @@ class MealsSection extends ConsumerWidget {
         children: [
           // Header de la modal
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(
+              ResponsiveUtils.getVerticalSpacing(context),
+            ),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: DeepColorTokens.surfaceElevated,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,25 +223,34 @@ class MealsSection extends ConsumerWidget {
                     Text(
                       'Repas complet',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: DeepColorTokens.primary,
                         fontWeight: FontWeight.w600,
-                        fontSize: 18.0,
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                          context,
+                          18.0,
+                        ),
                       ),
                     ),
                     Text(
                       meal.title,
                       style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.black87,
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                          context,
+                          14.0,
+                        ),
+                        color: DeepColorTokens.neutral900,
                       ),
                     ),
                   ],
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close),
+                  icon: Icon(
+                    Icons.close,
+                    size: ResponsiveUtils.getIconSize(context),
+                  ),
                   style: IconButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: DeepColorTokens.surface,
                   ),
                 ),
               ],
@@ -240,31 +260,41 @@ class MealsSection extends ConsumerWidget {
           // Contenu scrollable
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(
+                ResponsiveUtils.getVerticalSpacing(context),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 16.0),
+                  SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
 
                   // Composition du repas
                   _buildMealComposition(context, meal),
-                  SizedBox(height: 24.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+                  ),
 
                   // Détails pratiques
                   OfferDetailsSection(offer: meal),
-                  SizedBox(height: 24.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+                  ),
 
                   // Adresse
                   OfferAddressSection(offer: meal),
-                  SizedBox(height: 24.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+                  ),
 
                   // Badges allergènes
                   OfferBadgesSection(offer: meal),
-                  SizedBox(height: 24.0),
+                  SizedBox(
+                    height: ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+                  ),
 
                   // Métadonnées
                   OfferMetadataSection(offer: meal),
-                  SizedBox(height: 16.0),
+                  SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
                 ],
               ),
             ),
@@ -297,19 +327,19 @@ class MealsSection extends ConsumerWidget {
         Text(
           'Composition du repas',
           style: TextStyle(
-            fontSize: 18.0,
+            fontSize: ResponsiveUtils.getResponsiveFontSize(context, 18.0),
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: DeepColorTokens.neutral900,
           ),
         ),
-        SizedBox(height: 12.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) * 0.6),
         Container(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(ResponsiveUtils.getVerticalSpacing(context)),
           decoration: BoxDecoration(
-            color: Colors.green.shade50,
+            color: DeepColorTokens.primaryContainer.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(12.0),
             border: Border.all(
-              color: Colors.green.shade200,
+              color: DeepColorTokens.primaryContainer,
             ),
           ),
           child: Column(
@@ -319,31 +349,42 @@ class MealsSection extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.restaurant_menu,
-                    size: 20.0,
-                    color: Colors.green,
+                    size: ResponsiveUtils.getIconSize(context, baseSize: 20.0),
+                    color: DeepColorTokens.primary,
                   ),
-                  SizedBox(width: 8.0),
+                  SizedBox(
+                    width: ResponsiveUtils.getHorizontalSpacing(context) * 0.4,
+                  ),
                   Expanded(
                     child: Text(
                       meal.description,
                       style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.black87,
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                          context,
+                          14.0,
+                        ),
+                        color: DeepColorTokens.neutral900,
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 12.0),
+              SizedBox(
+                height: ResponsiveUtils.getVerticalSpacing(context) * 0.6,
+              ),
               Row(
                 children: [
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 4.0,
+                      horizontal:
+                          ResponsiveUtils.getHorizontalSpacing(context) * 0.4,
+                      vertical:
+                          ResponsiveUtils.getVerticalSpacing(context) * 0.2,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade100,
+                      color: DeepColorTokens.secondaryContainer.withValues(
+                        alpha: 0.5,
+                      ),
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: Row(
@@ -351,15 +392,25 @@ class MealsSection extends ConsumerWidget {
                       children: [
                         Icon(
                           Icons.eco,
-                          size: 14.0,
-                          color: Colors.blue,
+                          size: ResponsiveUtils.getIconSize(
+                            context,
+                            baseSize: 14.0,
+                          ),
+                          color: DeepColorTokens.secondary,
                         ),
-                        SizedBox(width: 4.0),
+                        SizedBox(
+                          width:
+                              ResponsiveUtils.getHorizontalSpacing(context) *
+                              0.2,
+                        ),
                         Text(
                           'Végétarien',
                           style: TextStyle(
-                            fontSize: 12.0,
-                            color: Colors.blue.shade800,
+                            fontSize: ResponsiveUtils.getResponsiveFontSize(
+                              context,
+                              12.0,
+                            ),
+                            color: DeepColorTokens.onSecondaryContainer,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

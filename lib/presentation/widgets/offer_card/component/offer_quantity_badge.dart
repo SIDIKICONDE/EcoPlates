@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Badge affichant la quantité restante d'offres
 class OfferQuantityBadge extends StatelessWidget {
   const OfferQuantityBadge({required this.quantity, super.key});
@@ -14,7 +16,7 @@ class OfferQuantityBadge extends StatelessWidget {
         vertical: 2.0,
       ),
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: DeepColorTokens.primary,
         borderRadius: BorderRadius.circular(6.0),
       ),
       child: Row(
@@ -23,13 +25,13 @@ class OfferQuantityBadge extends StatelessWidget {
           Icon(
             Icons.inventory_2,
             size: 12.0,
-            color: Colors.white,
+            color: DeepColorTokens.neutral0,
           ),
           const SizedBox(width: 2.0),
           Text(
             '$quantity',
             style: TextStyle(
-              color: Colors.white,
+              color: DeepColorTokens.neutral0,
               fontSize: 11.0,
               fontWeight: FontWeight.w600,
             ),

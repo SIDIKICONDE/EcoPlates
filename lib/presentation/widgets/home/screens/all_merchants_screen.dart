@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../providers/merchants_provider.dart';
 import '../../merchant_card.dart';
 
@@ -11,7 +12,7 @@ class AllMerchantsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final merchantsAsync = ref.watch(merchantsProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nos partenaires'),
@@ -24,7 +25,7 @@ class AllMerchantsScreen extends ConsumerWidget {
               child: Text('Aucun marchand disponible'),
             );
           }
-          
+
           return ListView.builder(
             padding: const EdgeInsets.all(16.0),
             itemCount: merchants.length,
@@ -58,7 +59,7 @@ class AllMerchantsScreen extends ConsumerWidget {
               const Icon(
                 Icons.error_outline,
                 size: 48.0,
-                color: Colors.red,
+                color: DeepColorTokens.error,
               ),
               const SizedBox(height: 16.0),
               const Text('Erreur de chargement'),

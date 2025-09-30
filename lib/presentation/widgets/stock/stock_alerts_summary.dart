@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/stock_items_provider.dart';
 
 /// Widget affichant un résumé des alertes de stock
@@ -79,7 +80,7 @@ class StockAlertsSummary extends ConsumerWidget {
                   label: lowStockItems.length == 1
                       ? 'article stock faible'
                       : 'articles stock faible',
-                  color: Colors.orange,
+                  color: DeepColorTokens.warning,
                   icon: Icons.warning_outlined,
                 ),
             ],

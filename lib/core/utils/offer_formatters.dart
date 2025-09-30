@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/categories.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../domain/entities/food_offer.dart';
 
 /// Utilitaires pour formater les données des offres
@@ -101,17 +102,17 @@ class OfferFormatters {
   static Color getStatusColor(OfferStatus status) {
     switch (status) {
       case OfferStatus.draft:
-        return Colors.grey;
+        return DeepColorTokens.neutral600;
       case OfferStatus.available:
-        return Colors.green;
+        return DeepColorTokens.success;
       case OfferStatus.reserved:
-        return Colors.orange;
+        return DeepColorTokens.warning;
       case OfferStatus.collected:
-        return Colors.blue;
+        return DeepColorTokens.primary;
       case OfferStatus.expired:
-        return Colors.red;
+        return DeepColorTokens.error;
       case OfferStatus.cancelled:
-        return Colors.red;
+        return DeepColorTokens.error;
     }
   }
 }

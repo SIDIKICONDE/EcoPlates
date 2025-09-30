@@ -8,6 +8,7 @@ import '../../../core/services/image_cache_service.dart';
 import '../../../core/services/video_background_service.dart';
 import '../../../core/services/video_pool_manager.dart';
 import '../../../core/themes/design_tokens.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/eco_cached_image.dart';
 import '../../../domain/entities/video_preview.dart';
 
@@ -358,7 +359,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                 ignoring: _isMini, // Pas de flou en mode mini
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  color: Colors.black.withValues(
+                  color: DeepColorTokens.neutral1000.withValues(
                     alpha: _isMini ? 0 : 0.5 * _fadeAnimation.value,
                   ),
                   child: BackdropFilter(
@@ -416,14 +417,17 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                           borderRadius: BorderRadius.circular(16.0),
                         ),
                         clipBehavior: Clip.antiAlias,
-                        color: Colors.black,
+                        color: DeepColorTokens.neutral900,
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            if (isReady) AspectRatio(
-                                    aspectRatio: _controller!.value.aspectRatio,
-                                    child: VideoPlayer(_controller!),
-                                  ) else _buildLoading(),
+                            if (isReady)
+                              AspectRatio(
+                                aspectRatio: _controller!.value.aspectRatio,
+                                child: VideoPlayer(_controller!),
+                              )
+                            else
+                              _buildLoading(),
 
                             // Top bar
                             if (_showControls) ...[
@@ -436,12 +440,14 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                     horizontal: EcoSpacing.sm,
                                     vertical: EcoSpacing.sm / 2,
                                   ),
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: [
-                                        Colors.black87,
+                                        DeepColorTokens.neutral900.withValues(
+                                          alpha: 0.87,
+                                        ),
                                         Colors.transparent,
                                       ],
                                     ),
@@ -453,13 +459,11 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                           widget.video.title,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall
-                                              ?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                          style: TextStyle(
+                                            color: DeepColorTokens.neutral0,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14.0,
+                                          ),
                                         ),
                                       ),
                                       IconButton(
@@ -471,7 +475,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                           _isMini
                                               ? Icons.open_in_full_rounded
                                               : Icons.close_fullscreen_rounded,
-                                          color: Colors.white,
+                                          color: DeepColorTokens.neutral0,
                                         ),
                                         iconSize: 16.0,
                                         padding: EdgeInsets.zero,
@@ -485,7 +489,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                           _muted
                                               ? Icons.volume_off_rounded
                                               : Icons.volume_up_rounded,
-                                          color: Colors.white,
+                                          color: DeepColorTokens.neutral0,
                                         ),
                                         iconSize: 16.0,
                                         padding: EdgeInsets.zero,
@@ -496,9 +500,9 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                       IconButton(
                                         tooltip: 'Fermer',
                                         onPressed: widget.onClose,
-                                        icon: const Icon(
+                                        icon: Icon(
                                           Icons.close_rounded,
-                                          color: Colors.white,
+                                          color: DeepColorTokens.neutral0,
                                         ),
                                         iconSize: 16.0,
                                         padding: EdgeInsets.zero,
@@ -515,8 +519,8 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                 child: IconButton(
                                   onPressed: _togglePlayPause,
                                   style: IconButton.styleFrom(
-                                    backgroundColor: Colors.black.withValues(alpha: 
-                                      EcoColorTokens.opacity24,
+                                    backgroundColor: Colors.black.withValues(
+                                      alpha: EcoColorTokens.opacity24,
                                     ),
                                     shape: const CircleBorder(),
                                     padding: const EdgeInsets.all(12),
@@ -525,7 +529,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
                                     _controller!.value.isPlaying
                                         ? Icons.pause_rounded
                                         : Icons.play_arrow_rounded,
-                                    color: Colors.white,
+                                    color: DeepColorTokens.neutral0,
                                     size: 32,
                                   ),
                                 ),
@@ -562,11 +566,11 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
         EcoCachedImage(
           imageUrl: widget.video.thumbnailUrl,
           size: ImageSize.small,
-          errorWidget: const ColoredBox(color: Colors.black),
+          errorWidget: ColoredBox(color: DeepColorTokens.neutral900),
         ),
         Center(
           child: CircularProgressIndicator(
-            color: Colors.white70,
+            color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
             strokeWidth: 3,
           ),
         ),
@@ -586,7 +590,7 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
         Text(
           _fmt(position),
           style: TextStyle(
-            color: Colors.white70,
+            color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
             fontSize: 16.0 - 2,
           ),
         ),
@@ -598,14 +602,14 @@ class _FloatingVideoOverlayState extends State<_FloatingVideoOverlay>
               _seek(v);
               _planHideControls();
             },
-            activeColor: Colors.white,
-            inactiveColor: Colors.white24,
+            activeColor: DeepColorTokens.neutral0,
+            inactiveColor: DeepColorTokens.neutral0.withValues(alpha: 0.24),
           ),
         ),
         Text(
           _fmt(duration),
           style: TextStyle(
-            color: Colors.white70,
+            color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
             fontSize: 16.0 - 2,
           ),
         ),

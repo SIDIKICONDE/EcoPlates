@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/themes/tokens/color_tokens.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 
 /// Section d'activité récente du consommateur
 class ConsumerActivitySection extends StatelessWidget {
@@ -9,7 +10,6 @@ class ConsumerActivitySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     // TODO: Récupérer les données d'activité depuis un provider
@@ -20,11 +20,11 @@ class ConsumerActivitySection extends StatelessWidget {
         16.0,
       ),
       decoration: BoxDecoration(
-        color: colors.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: colors.shadow.withValues(
+            color: DeepColorTokens.neutral0.withValues(
               alpha: 0.08,
             ),
             blurRadius: 8.0,
@@ -40,7 +40,7 @@ class ConsumerActivitySection extends StatelessWidget {
             children: [
               Icon(
                 Icons.history,
-                color: colors.primary,
+                color: DeepColorTokens.primary,
                 size: 24.0,
               ),
               SizedBox(
@@ -87,7 +87,6 @@ class ConsumerActivitySection extends StatelessWidget {
 
   Widget _buildActivityTile(BuildContext context, ActivityItem activity) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Container(
@@ -146,7 +145,7 @@ class ConsumerActivitySection extends StatelessWidget {
                 Text(
                   activity.subtitle,
                   style: textTheme.bodySmall?.copyWith(
-                    color: colors.onSurface.withValues(
+                    color: DeepColorTokens.neutral0.withValues(
                       alpha: 0.87,
                     ),
                   ),
@@ -162,7 +161,7 @@ class ConsumerActivitySection extends StatelessWidget {
               Text(
                 activity.timeAgo,
                 style: textTheme.labelSmall?.copyWith(
-                  color: colors.onSurface.withValues(
+                  color: DeepColorTokens.neutral0.withValues(
                     alpha: 0.38,
                   ),
                 ),
@@ -183,7 +182,7 @@ class ConsumerActivitySection extends StatelessWidget {
                   child: Text(
                     activity.badge!,
                     style: textTheme.labelSmall?.copyWith(
-                      color: colors.onPrimary,
+                      color: DeepColorTokens.neutral0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -198,7 +197,6 @@ class ConsumerActivitySection extends StatelessWidget {
 
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Container(
@@ -208,7 +206,7 @@ class ConsumerActivitySection extends StatelessWidget {
           Icon(
             Icons.eco_outlined,
             size: 48.0,
-            color: colors.onSurface.withValues(
+            color: DeepColorTokens.neutral0.withValues(
               alpha: 0.38,
             ),
           ),
@@ -218,7 +216,7 @@ class ConsumerActivitySection extends StatelessWidget {
           Text(
             'Aucune activité pour le moment',
             style: textTheme.titleMedium?.copyWith(
-              color: colors.onSurface.withValues(
+              color: DeepColorTokens.neutral0.withValues(
                 alpha: 0.87,
               ),
             ),
@@ -229,7 +227,7 @@ class ConsumerActivitySection extends StatelessWidget {
           Text(
             'Commencez à utiliser EcoPlates pour voir votre impact ici !',
             style: textTheme.bodySmall?.copyWith(
-              color: colors.onSurface.withValues(
+              color: DeepColorTokens.neutral0.withValues(
                 alpha: 0.38,
               ),
             ),

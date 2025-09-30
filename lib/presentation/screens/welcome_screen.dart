@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/responsive/responsive.dart';
 import '../../core/router/routes/route_constants.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../widgets/common/eco_button.dart';
 
 /// Page de bienvenue pour choisir le type d'utilisateur
@@ -21,10 +22,10 @@ class WelcomeScreen extends ConsumerWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Theme.of(context).primaryColor.withValues(
+              DeepColorTokens.primary.withValues(
                 alpha: 0.8,
               ),
-              Theme.of(context).primaryColor.withValues(
+              DeepColorTokens.primary.withValues(
                 alpha: 0.9,
               ),
             ],
@@ -192,13 +193,12 @@ class WelcomeScreen extends ConsumerWidget {
               },
               icon: Icons.store,
               backgroundColor: Colors.white,
-              foregroundColor: Theme.of(context).primaryColor,
+              foregroundColor: DeepColorTokens.primary,
               size: EcoButtonSizeHelper.getAdaptiveSize(context),
             ),
           ),
 
-          const VerticalGap(multiplier: 0.5),  // Réduction de l'espacement
-
+          const VerticalGap(multiplier: 0.5), // Réduction de l'espacement
           // Bouton Consommateur avec le nouveau système EcoButton
           FractionallySizedBox(
             widthFactor: 0.8,
@@ -216,7 +216,7 @@ class WelcomeScreen extends ConsumerWidget {
             ),
           ),
 
-          const VerticalGap(multiplier: 1),
+          const VerticalGap(),
 
           // Bouton test menu tablette
           FractionallySizedBox(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../pages/stock_item_form/page.dart';
 import '../../providers/stock_items_provider.dart';
@@ -138,8 +139,8 @@ class StockListItemCompact extends ConsumerWidget {
                       height: 8.0,
                       decoration: BoxDecoration(
                         color: item.status == StockItemStatus.active
-                            ? Colors.green
-                            : Colors.orange,
+                            ? DeepColorTokens.success
+                            : DeepColorTokens.warning,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -199,9 +200,11 @@ class StockListItemCompact extends ConsumerWidget {
   void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
     switch (action) {
       case 'edit':
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (context) => StockItemFormPage(item: item),
+        unawaited(
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (context) => StockItemFormPage(item: item),
+            ),
           ),
         );
       case 'toggle':

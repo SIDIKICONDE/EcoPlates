@@ -10,10 +10,7 @@ import 'common/offer_detail_modal.dart';
 /// Modal de détail pour les offres urgentes
 class UrgentOfferDetailModal extends ConsumerWidget {
   const UrgentOfferDetailModal({
-    super.key,
-    required this.offer,
-    required this.animationController,
-    required this.pulseAnimation,
+    required this.offer, required this.animationController, required this.pulseAnimation, super.key,
   });
 
   final FoodOffer offer;

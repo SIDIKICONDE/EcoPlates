@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/services/qr_code_service.dart';
 import '../../../core/services/totp_service.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 
 /// Widget pour afficher un QR code sécurisé avec rotation automatique
 class QRCodeDisplayWidget extends ConsumerStatefulWidget {
@@ -75,7 +76,6 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final qrCodeAsync = ref.watch(currentQRCodeProvider(widget.orderId));
     final timerAsync = ref.watch(totpTimerProvider);
     final progressAsync = ref.watch(totpProgressProvider);
@@ -93,8 +93,10 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
             // Titre
             Text(
               'QR Code Sécurisé',
-              style: theme.textTheme.headlineSmall?.copyWith(
+              style: TextStyle(
+                color: DeepColorTokens.neutral800,
                 fontWeight: FontWeight.bold,
+                fontSize: 20.0,
               ),
             ),
             const SizedBox(height: 16),
@@ -103,7 +105,7 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
             qrCodeAsync.when(
               data: (qrPayload) {
                 if (qrPayload == null) {
-                  return _buildErrorState(theme);
+                  return _buildErrorState();
                 }
 
                 // Détecter le changement de QR code
@@ -116,10 +118,10 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
                   },
                 );
 
-                return _buildQRCode(qrPayload, theme);
+                return _buildQRCode(qrPayload, Theme.of(context));
               },
               loading: _buildLoadingState,
-              error: (error, stack) => _buildErrorState(theme),
+              error: (error, stack) => _buildErrorState(),
             ),
 
             const SizedBox(height: 24),
@@ -131,7 +133,6 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
                   data: (progress) => _buildTimerSection(
                     timeRemaining,
                     progress,
-                    theme,
                   ),
                   loading: () => const SizedBox.shrink(),
                   error: (_, __) => const SizedBox.shrink(),
@@ -144,7 +145,7 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
             const SizedBox(height: 16),
 
             // Instructions
-            _buildInstructions(theme),
+            _buildInstructions(),
           ],
         ),
       ),
@@ -165,23 +166,23 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: DeepColorTokens.neutral0,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: theme.colorScheme.primary,
+                  color: DeepColorTokens.primary,
                   width: 3,
                 ),
               ),
               child: QrImageView(
                 data: qrPayload.rawData,
                 size: widget.size,
-                backgroundColor: Colors.white,
+                backgroundColor: DeepColorTokens.neutral0,
                 errorStateBuilder: (cxt, err) {
                   return const Center(
                     child: Text(
                       'Erreur QR',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: DeepColorTokens.error),
                     ),
                   );
                 },
@@ -200,14 +201,13 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
   Widget _buildTimerSection(
     int timeRemaining,
     double progress,
-    ThemeData theme,
   ) {
     final isExpiringSoon = timeRemaining <= 10;
     final timerColor = isExpiringSoon
-        ? Colors.red
+        ? DeepColorTokens.error
         : timeRemaining <= 20
-        ? Colors.orange
-        : theme.colorScheme.primary;
+        ? DeepColorTokens.warning
+        : DeepColorTokens.primary;
 
     if (isExpiringSoon && widget.onExpired != null) {
       widget.onExpired!();
@@ -229,7 +229,7 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
                   child: CircularProgressIndicator(
                     value: progress,
                     strokeWidth: 6,
-                    backgroundColor: Colors.grey[300],
+                    backgroundColor: DeepColorTokens.neutral300,
                     valueColor: AlwaysStoppedAnimation<Color>(timerColor),
                   ),
                 ),
@@ -272,41 +272,41 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
     );
   }
 
-  Widget _buildInstructions(ThemeData theme) {
+  Widget _buildInstructions() {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+        color: DeepColorTokens.primaryContainer.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
-        children: [
+        children: const [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.info_outline,
                 size: 16,
-                color: theme.colorScheme.onPrimaryContainer,
+                color: DeepColorTokens.primary,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Instructions',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onPrimaryContainer,
+                  color: DeepColorTokens.primary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Présentez ce QR code au commerçant.\n'
             'Le code se renouvelle automatiquement toutes les 30 secondes.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12,
-              color: theme.colorScheme.onPrimaryContainer,
+              color: DeepColorTokens.primary,
             ),
           ),
         ],
@@ -324,15 +324,15 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
     );
   }
 
-  Widget _buildErrorState(ThemeData theme) {
+  Widget _buildErrorState() {
     return Container(
       height: widget.size,
       width: widget.size,
       decoration: BoxDecoration(
-        color: Colors.red[50],
+        color: DeepColorTokens.errorContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.red,
+          color: DeepColorTokens.error,
           width: 2,
         ),
       ),
@@ -342,13 +342,13 @@ class _QRCodeDisplayWidgetState extends ConsumerState<QRCodeDisplayWidget>
           Icon(
             Icons.error_outline,
             size: 64,
-            color: Colors.red[700],
+            color: DeepColorTokens.errorDark,
           ),
           const SizedBox(height: 16),
           Text(
             'Erreur de génération',
             style: TextStyle(
-              color: Colors.red[700],
+              color: DeepColorTokens.errorDark,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -371,8 +371,8 @@ class SimpleQRCodeDisplay extends StatelessWidget {
   const SimpleQRCodeDisplay({
     required this.data,
     this.size = 200.0,
-    this.backgroundColor = Colors.white,
-    this.foregroundColor = Colors.black,
+    this.backgroundColor = DeepColorTokens.neutral0,
+    this.foregroundColor = DeepColorTokens.neutral1000,
     super.key,
   });
 
@@ -390,7 +390,7 @@ class SimpleQRCodeDisplay extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: DeepColorTokens.shadowLight,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -409,7 +409,7 @@ class SimpleQRCodeDisplay extends StatelessWidget {
             child: Text(
               'QR Error',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: DeepColorTokens.error),
             ),
           );
         },

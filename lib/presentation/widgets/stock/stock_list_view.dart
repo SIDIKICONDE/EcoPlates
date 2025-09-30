@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 import 'stock_list_item.dart';
@@ -129,7 +130,6 @@ class StockListView extends ConsumerWidget {
   }
 
   Widget _buildLoadingState(BuildContext context, BoxConstraints constraints) {
-    final theme = Theme.of(context);
     final isCompact = constraints.maxWidth < 600;
 
     return Center(
@@ -146,7 +146,7 @@ class StockListView extends ConsumerWidget {
                   ? const Duration(seconds: 2)
                   : Duration.zero,
               child: CircularProgressIndicator(
-                color: theme.colorScheme.primary,
+                color: DeepColorTokens.primary,
                 strokeWidth: 3,
               ),
             ),
@@ -160,7 +160,7 @@ class StockListView extends ConsumerWidget {
                 'Chargement des articles...',
                 style: TextStyle(
                   fontSize: isCompact ? 16.0 : 20.0,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral600,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,
@@ -175,8 +175,8 @@ class StockListView extends ConsumerWidget {
                   'Préparation de votre inventaire',
                   style: TextStyle(
                     fontSize: isCompact ? 12.0 : 16.0,
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.9,
+                    color: DeepColorTokens.neutral600.withValues(
+                      alpha: 0.8,
                     ),
                     fontStyle: FontStyle.italic,
                   ),
@@ -196,7 +196,6 @@ class StockListView extends ConsumerWidget {
     Object error,
     BoxConstraints constraints,
   ) {
-    final theme = Theme.of(context);
     final isCompact = constraints.maxWidth < 600;
 
     return Center(
@@ -217,15 +216,15 @@ class StockListView extends ConsumerWidget {
                   isCompact ? 12.0 : 16.0,
                 ),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.errorContainer.withValues(
-                    alpha: 0.1,
+                  color: DeepColorTokens.errorContainer.withValues(
+                    alpha: 0.15,
                   ),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.error_outline_rounded,
                   size: isCompact ? 40.0 : 53.0,
-                  color: theme.colorScheme.error,
+                  color: DeepColorTokens.error,
                 ),
               ),
             ),
@@ -240,7 +239,7 @@ class StockListView extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: isCompact ? 24.0 : 24.0 * 1.2,
                   fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
+                  color: DeepColorTokens.neutral0,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -255,7 +254,7 @@ class StockListView extends ConsumerWidget {
                 StockErrorMessages.getErrorMessage(error),
                 style: TextStyle(
                   fontSize: isCompact ? 14.0 : 16.0,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral600,
                   height: 1.4,
                 ),
                 textAlign: TextAlign.center,
@@ -292,7 +291,6 @@ class StockListView extends ConsumerWidget {
     WidgetRef ref,
     BoxConstraints constraints,
   ) {
-    final theme = Theme.of(context);
     final filters = ref.watch(stockFiltersProvider);
     final isCompact = constraints.maxWidth < 600;
 
@@ -318,8 +316,8 @@ class StockListView extends ConsumerWidget {
                   isCompact ? 12.0 : 16.0,
                 ),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.3,
+                  color: DeepColorTokens.neutral100.withValues(
+                    alpha: 0.6,
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -328,7 +326,7 @@ class StockListView extends ConsumerWidget {
                       ? Icons.search_off_rounded
                       : Icons.inventory_2_outlined,
                   size: isCompact ? 40.0 : 53.0,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral600,
                 ),
               ),
             ),
@@ -345,7 +343,7 @@ class StockListView extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: isCompact ? 24.0 : 24.0 * 1.2,
                   fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
+                  color: DeepColorTokens.neutral0,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -362,7 +360,7 @@ class StockListView extends ConsumerWidget {
                     : 'Commencez par ajouter des articles à votre stock',
                 style: TextStyle(
                   fontSize: isCompact ? 14.0 : 16.0,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral600,
                   height: 1.4,
                 ),
                 textAlign: TextAlign.center,
@@ -403,8 +401,6 @@ class StockListView extends ConsumerWidget {
 
   /// Widget pour l'indicateur de scroll infini
   Widget _buildInfiniteScrollIndicator(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Center(
@@ -415,20 +411,20 @@ class StockListView extends ConsumerWidget {
               : Duration.zero,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: const [
               SizedBox(
                 width: 24.0,
                 height: 24.0,
                 child: CircularProgressIndicator(
                   strokeWidth: 3,
-                  color: theme.colorScheme.primary,
+                  color: DeepColorTokens.primary,
                 ),
               ),
-              const SizedBox(width: 4.0),
+              SizedBox(width: 4.0),
               Text(
                 'Chargement...',
                 style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral600,
                   fontSize: 14.0,
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../themes/tokens/deep_color_tokens.dart';
 import 'failures.dart';
 
 /// Gestionnaire d'erreurs centralisé pour le côté commerçant
@@ -287,12 +288,12 @@ class MerchantErrorHandler {
       SnackBar(
         content: Text(message),
         backgroundColor: isRecoverable
-            ? Colors.orange.shade700
-            : Colors.red.shade700,
+            ? DeepColorTokens.warning
+            : DeepColorTokens.error,
         action: isRecoverable
             ? SnackBarAction(
                 label: 'Réessayer',
-                textColor: Colors.white,
+                textColor: DeepColorTokens.neutral0,
                 onPressed: () {
                   // Trigger retry logic
                 },
@@ -337,7 +338,7 @@ class MerchantErrorHandler {
               Text(
                 'Code: ${failure.code}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade600,
+                  color: DeepColorTokens.neutral600,
                 ),
               ),
             ],
@@ -350,7 +351,7 @@ class MerchantErrorHandler {
                   child: Text(
                     '${entry.key}: ${entry.value.join(', ')}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.red.shade700,
+                      color: DeepColorTokens.error,
                     ),
                   ),
                 ),
@@ -392,16 +393,16 @@ class MerchantErrorHandler {
   /// Retourne la couleur appropriée pour le type d'erreur
   static Color _getErrorColor(BuildContext context, Failure failure) {
     if (failure is NetworkFailure || failure is TimeoutFailure) {
-      return Colors.orange.shade700;
+      return DeepColorTokens.warning;
     } else if (failure is AuthenticationFailure ||
         failure is PermissionFailure) {
-      return Colors.red.shade700;
+      return DeepColorTokens.error;
     } else if (failure is ValidationFailure) {
-      return Colors.amber.shade700;
+      return DeepColorTokens.warning;
     } else if (failure is PaymentFailure) {
-      return Colors.red.shade900;
+      return DeepColorTokens.error;
     } else {
-      return Colors.red.shade700;
+      return DeepColorTokens.error;
     }
   }
 

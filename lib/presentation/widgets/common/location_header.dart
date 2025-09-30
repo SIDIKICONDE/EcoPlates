@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/routes/route_constants.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/browse_view_provider.dart';
 import '../../providers/location_state_provider.dart';
 import '../../providers/user_location_text_provider.dart';
@@ -45,7 +46,7 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
           color: _isPressed
-              ? Theme.of(context).colorScheme.surfaceContainerHighest
+              ? DeepColorTokens.surfaceElevated
               : Colors.transparent,
           borderRadius: BorderRadius.circular(
             12.0,
@@ -66,8 +67,8 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                       : Icons.location_off,
                   size: 20.0,
                   color: locationState.isActive
-                      ? theme.primaryColor
-                      : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      ? DeepColorTokens.primary
+                      : DeepColorTokens.neutral900.withValues(alpha: 0.5),
                 ),
                 SizedBox(width: 12.0),
               ],
@@ -85,10 +86,8 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                               theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: locationState.isActive
-                                    ? Theme.of(context).colorScheme.onSurface
-                                    : Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface.withValues(
+                                    ? DeepColorTokens.neutral900
+                                    : DeepColorTokens.neutral900.withValues(
                                         alpha: 0.8,
                                       ),
                               ),
@@ -103,7 +102,7 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
                 'emplacement choisi',
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(
+                  color: DeepColorTokens.neutral900.withValues(
                     alpha: 0.6,
                   ),
                   fontWeight: FontWeight.normal,
@@ -114,7 +113,7 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
               Icon(
                 Icons.arrow_drop_down,
                 size: 20.0,
-                color: Theme.of(context).colorScheme.onSurface.withValues(
+                color: DeepColorTokens.neutral900.withValues(
                   alpha: 0.6,
                 ),
               ),
@@ -135,7 +134,7 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
           child: CircularProgressIndicator(
             strokeWidth: 2.0,
             valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorScheme.onSurface.withValues(
+              DeepColorTokens.neutral900.withValues(
                 alpha: 0.6,
               ),
             ),
@@ -145,7 +144,7 @@ class _LocationHeaderState extends ConsumerState<LocationHeader> {
         Text(
           'Recherche...',
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface.withValues(
+            color: DeepColorTokens.neutral900.withValues(
               alpha: 0.6,
             ),
             fontWeight: FontWeight.w500,
@@ -193,7 +192,7 @@ class LocationOptionsSheet extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: SafeArea(
@@ -206,7 +205,7 @@ class LocationOptionsSheet extends ConsumerWidget {
               width: 40.0,
               height: 4.0,
               decoration: BoxDecoration(
-                color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                color: DeepColorTokens.neutral400.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.0),
               ),
             ),
@@ -320,10 +319,10 @@ class LocationOptionsSheet extends ConsumerWidget {
               Icon(
                 icon,
                 color: enabled
-                    ? Theme.of(context).colorScheme.onSurface.withValues(
+                    ? DeepColorTokens.neutral900.withValues(
                         alpha: 0.8,
                       )
-                    : Theme.of(context).colorScheme.onSurface.withValues(
+                    : DeepColorTokens.neutral900.withValues(
                         alpha: 0.6,
                       ),
                 size: 24.0,
@@ -339,10 +338,8 @@ class LocationOptionsSheet extends ConsumerWidget {
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,
                         color: enabled
-                            ? Theme.of(context).colorScheme.onSurface
-                            : Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withValues(
+                            ? DeepColorTokens.neutral900
+                            : DeepColorTokens.neutral900.withValues(
                                 alpha: 0.6,
                               ),
                       ),
@@ -353,10 +350,9 @@ class LocationOptionsSheet extends ConsumerWidget {
                         subtitle,
                         style: TextStyle(
                           fontSize: 14.0,
-                          color: Theme.of(context).colorScheme.onSurface
-                              .withValues(
-                                alpha: 0.6,
-                              ),
+                          color: DeepColorTokens.neutral900.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
                     ],

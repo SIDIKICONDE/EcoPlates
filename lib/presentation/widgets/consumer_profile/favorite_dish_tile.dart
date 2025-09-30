@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import 'favorites_models.dart';
 
 /// Tuile affichant un plat favori
@@ -16,16 +17,15 @@ class FavoriteDishTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Container(
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: colors.surface,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(6.0),
         border: Border.all(
-          color: colors.outline.withValues(alpha: 0.3),
+          color: DeepColorTokens.neutral0.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -35,12 +35,12 @@ class FavoriteDishTile extends StatelessWidget {
             width: 40.0,
             height: 40.0,
             decoration: BoxDecoration(
-              color: colors.primaryContainer.withValues(alpha: 0.3),
+              color: DeepColorTokens.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6.0),
             ),
             child: Icon(
               Icons.restaurant,
-              color: colors.primary,
+              color: DeepColorTokens.primary,
               size: 18.0,
             ),
           ),
@@ -62,7 +62,7 @@ class FavoriteDishTile extends StatelessWidget {
                 Text(
                   dish.restaurantName,
                   style: textTheme.bodySmall?.copyWith(
-                    color: colors.onSurface.withValues(alpha: 0.6),
+                    color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 3.0),
@@ -71,7 +71,7 @@ class FavoriteDishTile extends StatelessWidget {
                     Text(
                       '${dish.price.toStringAsFixed(2)} €',
                       style: textTheme.labelLarge?.copyWith(
-                        color: colors.primary,
+                        color: DeepColorTokens.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -79,7 +79,7 @@ class FavoriteDishTile extends StatelessWidget {
                     Text(
                       'Commandé ${dish.orderCount}x',
                       style: textTheme.labelSmall?.copyWith(
-                        color: colors.onSurface.withValues(
+                        color: DeepColorTokens.neutral0.withValues(
                           alpha: 0.5,
                         ),
                       ),
@@ -95,7 +95,7 @@ class FavoriteDishTile extends StatelessWidget {
             onPressed: onToggleFavorite ?? () {},
             icon: Icon(
               Icons.favorite,
-              color: colors.error,
+              color: DeepColorTokens.error,
             ),
             iconSize: 18.0,
           ),

@@ -11,7 +11,8 @@ class OfferCardConfigs {
         aspectRatio: ResponsiveUtils.responsiveValue(
           context,
           mobile: 1.8, // Plus équilibré sur mobile pour le contenu texte
-          tablet: 1.0, // Carré sur tablette
+          tablet:
+              0.7, // Hauteur augmentée sur tablette pour plus d'impact visuel
           tabletLarge: 1.1, // Légèrement large sur tablette large
           desktop: 1.3, // Plus large sur desktop pour utiliser l'espace
           desktopLarge: 1.4, // Encore plus large sur grand écran
@@ -19,14 +20,11 @@ class OfferCardConfigs {
         imageBorderRadius: const BorderRadius.only(
           topLeft: Radius.circular(8.0),
           topRight: Radius.circular(8.0),
-          bottomLeft: Radius.zero,
-          bottomRight: Radius.zero,
         ),
       );
 
   /// Configuration pour les sections d'accueil (urgent, nearby, recommended, meals)
   static final homeSections = OfferCardPageConfig(
-    aspectRatio: null, // Utilise la fonction responsive
     imageBorderRadius: BorderRadius.circular(
       8.0,
     ), // Coins complètement arrondis pour les sections
@@ -34,12 +32,9 @@ class OfferCardConfigs {
 
   /// Configuration par défaut pour toutes les autres pages
   static const defaultConfig = OfferCardPageConfig(
-    aspectRatio: null, // Utilise la fonction responsive
     imageBorderRadius: BorderRadius.only(
       topLeft: Radius.circular(8.0),
       topRight: Radius.circular(8.0),
-      bottomLeft: Radius.zero,
-      bottomRight: Radius.zero,
     ), // Coins du bas non arrondis pour les autres pages
   );
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/services/promotion_service.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../core/widgets/adaptive_widgets.dart';
 import '../providers/store_offers_provider.dart';
 import '../widgets/store/global_promotion_dialog.dart';
@@ -21,10 +22,10 @@ class PromotionsManagementPage extends ConsumerWidget {
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
         title: Row(
-          children: [
-            Icon(Icons.local_offer, color: theme.colorScheme.primary),
-            const SizedBox(width: 12.0),
-            const Text('Gestion des promotions'),
+          children: const [
+            Icon(Icons.local_offer, color: DeepColorTokens.primary),
+            SizedBox(width: 12.0),
+            Text('Gestion des promotions'),
           ],
         ),
         actions: [
@@ -114,13 +115,17 @@ class PromotionsManagementPage extends ConsumerWidget {
                           Icon(
                             Icons.local_offer_outlined,
                             size: 64.0,
-                            color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                            color: DeepColorTokens.primary.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           const SizedBox(height: 16.0),
                           Text(
                             'Toutes vos offres ont une promotion !',
                             style: theme.textTheme.bodyLarge?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                              color: DeepColorTokens.neutral0.withValues(
+                                alpha: 0.6,
+                              ),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -153,7 +158,7 @@ class PromotionsManagementPage extends ConsumerWidget {
               Icon(
                 Icons.error,
                 size: 48.0,
-                color: theme.colorScheme.error,
+                color: DeepColorTokens.error,
               ),
               const SizedBox(height: 16.0),
               Text(
@@ -164,7 +169,7 @@ class PromotionsManagementPage extends ConsumerWidget {
               Text(
                 error.toString(),
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -181,7 +186,7 @@ class PromotionsManagementPage extends ConsumerWidget {
         onPressed: () => _showGlobalPromotionDialog(context),
         label: const Text('Promotion globale'),
         icon: const Icon(Icons.campaign),
-        backgroundColor: theme.colorScheme.primary,
+        backgroundColor: DeepColorTokens.primary,
       ),
     );
   }
@@ -192,18 +197,18 @@ class PromotionsManagementPage extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            theme.colorScheme.primaryContainer,
-            theme.colorScheme.primaryContainer.withValues(alpha: 0.8),
+            DeepColorTokens.surfaceContainer,
+            DeepColorTokens.surface,
           ],
         ),
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.1),
+            color: DeepColorTokens.primary.withValues(alpha: 0.1),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -216,14 +221,14 @@ class PromotionsManagementPage extends ConsumerWidget {
             children: [
               Icon(
                 Icons.analytics,
-                color: theme.colorScheme.onPrimaryContainer,
+                color: DeepColorTokens.neutral0,
                 size: 24.0,
               ),
               const SizedBox(width: 12.0),
               Text(
                 'Statistiques des promotions',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer,
+                  color: DeepColorTokens.neutral0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -238,7 +243,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                   icon: Icons.local_offer,
                   label: 'Actives',
                   value: stats.activePromotions.toString(),
-                  color: theme.colorScheme.primary,
+                  color: DeepColorTokens.primary,
                 ),
               ),
               Expanded(
@@ -247,7 +252,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                   icon: Icons.euro,
                   label: 'Réductions',
                   value: '${stats.totalDiscountGiven.toStringAsFixed(0)}€',
-                  color: theme.colorScheme.error,
+                  color: DeepColorTokens.error,
                 ),
               ),
               Expanded(
@@ -257,7 +262,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                   label: 'Ventes',
                   value:
                       '${stats.totalRevenueFromPromotions.toStringAsFixed(0)}€',
-                  color: theme.colorScheme.secondary,
+                  color: DeepColorTokens.secondary,
                 ),
               ),
             ],
@@ -271,7 +276,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                   icon: Icons.visibility,
                   label: 'Vues',
                   value: stats.promotionViews.toString(),
-                  color: theme.colorScheme.tertiary,
+                  color: DeepColorTokens.tertiary,
                 ),
               ),
               Expanded(
@@ -280,7 +285,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                   icon: Icons.shopping_cart,
                   label: 'Conversions',
                   value: '${(stats.conversionRate * 100).toStringAsFixed(1)}%',
-                  color: theme.colorScheme.primary,
+                  color: DeepColorTokens.primary,
                 ),
               ),
               Expanded(
@@ -289,7 +294,7 @@ class PromotionsManagementPage extends ConsumerWidget {
                   icon: Icons.percent,
                   label: 'Moyenne',
                   value: '${stats.averageDiscount.toStringAsFixed(0)}%',
-                  color: theme.colorScheme.error,
+                  color: DeepColorTokens.error,
                 ),
               ),
             ],
@@ -330,7 +335,7 @@ class PromotionsManagementPage extends ConsumerWidget {
         Text(
           label,
           style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+            color: DeepColorTokens.neutral600,
           ),
           textAlign: TextAlign.center,
         ),
@@ -354,9 +359,9 @@ class PromotionsManagementPage extends ConsumerWidget {
       case 'stats':
         // TODO: Navigation vers page de statistiques détaillées
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Statistiques détaillées à venir...'),
-            backgroundColor: Colors.blue,
+            backgroundColor: DeepColorTokens.primary,
           ),
         );
     }
@@ -388,11 +393,11 @@ class PromotionsManagementPage extends ConsumerWidget {
 
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text(
                           'Toutes les promotions ont été supprimées',
                         ),
-                        backgroundColor: Colors.green,
+                        backgroundColor: DeepColorTokens.success,
                       ),
                     );
                   }
@@ -401,14 +406,14 @@ class PromotionsManagementPage extends ConsumerWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Erreur lors de la suppression: $e'),
-                        backgroundColor: Colors.red,
+                        backgroundColor: DeepColorTokens.error,
                       ),
                     );
                   }
                 }
               },
               style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: DeepColorTokens.error,
               ),
               child: const Text('Supprimer'),
             ),

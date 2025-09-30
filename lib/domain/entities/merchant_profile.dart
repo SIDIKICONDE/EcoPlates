@@ -120,7 +120,7 @@ class MerchantProfile {
 
     final currentTime = now.hour * 60 + now.minute;
     return currentTime >= todayHours.openTimeInMinutes &&
-           currentTime <= todayHours.closeTimeInMinutes;
+        currentTime <= todayHours.closeTimeInMinutes;
   }
 
   /// Obtenir le statut d'ouverture actuel
@@ -155,9 +155,9 @@ class MerchantProfile {
   /// Validation des règles métier
   bool isValid() {
     return name.isNotEmpty &&
-           id.isNotEmpty &&
-           (phoneNumber == null || _isValidPhoneNumber(phoneNumber!)) &&
-           (email == null || _isValidEmail(email!));
+        id.isNotEmpty &&
+        (phoneNumber == null || _isValidPhoneNumber(phoneNumber!)) &&
+        (email == null || _isValidEmail(email!));
   }
 
   static bool _isValidPhoneNumber(String phone) {
@@ -253,13 +253,14 @@ class GeoCoordinates {
     const earthRadius = 6371000.0; // en mètres
     final dLat = _toRadians(other.latitude - latitude);
     final dLon = _toRadians(other.longitude - longitude);
-    
-    final a = 
+
+    final a =
         math.sin(dLat / 2) * math.sin(dLat / 2) +
-        math.cos(_toRadians(latitude)) * 
-        math.cos(_toRadians(other.latitude)) *
-        math.sin(dLon / 2) * math.sin(dLon / 2);
-    
+        math.cos(_toRadians(latitude)) *
+            math.cos(_toRadians(other.latitude)) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
+
     final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
     return earthRadius * c;
   }
@@ -287,11 +288,11 @@ class OpeningHours {
 
   /// Créer des horaires pour un jour fermé
   const OpeningHours.closed()
-      : openTime = '00:00',
-        closeTime = '00:00',
-        breakStart = null,
-        breakEnd = null,
-        isClosed = true;
+    : openTime = '00:00',
+      closeTime = '00:00',
+      breakStart = null,
+      breakEnd = null,
+      isClosed = true;
 
   final String openTime; // Format: "HH:mm"
   final String closeTime; // Format: "HH:mm"
@@ -302,9 +303,9 @@ class OpeningHours {
   /// Convertir l'heure en minutes depuis minuit
   int get openTimeInMinutes => _timeToMinutes(openTime);
   int get closeTimeInMinutes => _timeToMinutes(closeTime);
-  int? get breakStartInMinutes => 
+  int? get breakStartInMinutes =>
       breakStart != null ? _timeToMinutes(breakStart!) : null;
-  int? get breakEndInMinutes => 
+  int? get breakEndInMinutes =>
       breakEnd != null ? _timeToMinutes(breakEnd!) : null;
 
   static int _timeToMinutes(String time) {
@@ -315,9 +316,9 @@ class OpeningHours {
   /// Formatage pour affichage
   String get displayFormat {
     if (isClosed) {
-      return 'Fermé';
+      return '';
     }
-    
+
     var format = '$openTime - $closeTime';
     if (breakStart != null && breakEnd != null) {
       format += ' (pause: $breakStart - $breakEnd)';
@@ -327,26 +328,26 @@ class OpeningHours {
 
   /// Format court sans pause
   String get shortFormat {
-    if (isClosed) return 'Fermé';
+    if (isClosed) return '';
     return '$openTime - $closeTime';
   }
 
   /// Vérifier si une heure est dans les horaires d'ouverture
   bool isTimeInRange(int minutes) {
     if (isClosed) return false;
-    
+
     // Gérer le cas où les horaires passent minuit
     if (closeTimeInMinutes < openTimeInMinutes) {
       return minutes >= openTimeInMinutes || minutes <= closeTimeInMinutes;
     }
-    
+
     // Vérifier si c'est pendant la pause
     if (breakStartInMinutes != null && breakEndInMinutes != null) {
       if (minutes >= breakStartInMinutes! && minutes < breakEndInMinutes!) {
         return false;
       }
     }
-    
+
     return minutes >= openTimeInMinutes && minutes <= closeTimeInMinutes;
   }
 
@@ -366,4 +367,3 @@ class OpeningHours {
     );
   }
 }
-

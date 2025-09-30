@@ -43,7 +43,9 @@ class StoreOffersEmptyState extends StatelessWidget {
 /// État d'erreur pour les offres
 class StoreOffersErrorState extends StatelessWidget {
   const StoreOffersErrorState({
-    required this.error, required this.onRetry, super.key,
+    required this.error,
+    required this.onRetry,
+    super.key,
   });
 
   final String error;

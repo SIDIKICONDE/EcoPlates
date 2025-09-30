@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 
 /// Badge pour afficher le niveau d'alerte d'un article de stock
@@ -83,7 +84,7 @@ class StockAlertBadge extends StatelessWidget {
       case StockAlertLevel.normal:
         return theme.colorScheme.primary;
       case StockAlertLevel.low:
-        return Colors.orange;
+        return DeepColorTokens.warning;
       case StockAlertLevel.outOfStock:
         return theme.colorScheme.error;
     }
@@ -136,7 +137,7 @@ class StockIndicator extends StatelessWidget {
               color: item.isOutOfStock
                   ? theme.colorScheme.error
                   : item.isLowStock
-                  ? Colors.orange
+                  ? DeepColorTokens.warning
                   : theme.colorScheme.onSurfaceVariant,
             ),
           ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
+
 /// Bouton réutilisable avec design responsif pour EcoPlates
 class ResponsiveButton extends StatelessWidget {
   const ResponsiveButton({
@@ -97,7 +99,7 @@ class ResponsiveButton extends StatelessWidget {
       case ButtonVariant.primary:
         return ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
-          foregroundColor: Theme.of(context).primaryColor,
+          foregroundColor: DeepColorTokens.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
@@ -108,12 +110,12 @@ class ResponsiveButton extends StatelessWidget {
           overlayColor: WidgetStateProperty.resolveWith<Color?>(
             (Set<WidgetState> states) {
               if (states.contains(WidgetState.hovered)) {
-                return Theme.of(context).primaryColor.withValues(
+                return DeepColorTokens.primary.withValues(
                   alpha: 0.08,
                 );
               }
               if (states.contains(WidgetState.pressed)) {
-                return Theme.of(context).primaryColor.withValues(
+                return DeepColorTokens.primary.withValues(
                   alpha: 0.12,
                 );
               }
@@ -156,9 +158,9 @@ class ResponsiveButton extends StatelessWidget {
       case ButtonVariant.outline:
         return ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
-          foregroundColor: Theme.of(context).primaryColor,
+          foregroundColor: DeepColorTokens.primary,
           side: BorderSide(
-            color: Theme.of(context).primaryColor,
+            color: DeepColorTokens.primary,
             width: 1.5,
           ),
           shape: RoundedRectangleBorder(
@@ -170,12 +172,12 @@ class ResponsiveButton extends StatelessWidget {
           overlayColor: WidgetStateProperty.resolveWith<Color?>(
             (Set<WidgetState> states) {
               if (states.contains(WidgetState.hovered)) {
-                return Theme.of(context).primaryColor.withValues(
+                return DeepColorTokens.primary.withValues(
                   alpha: 0.08,
                 );
               }
               if (states.contains(WidgetState.pressed)) {
-                return Theme.of(context).primaryColor.withValues(
+                return DeepColorTokens.primary.withValues(
                   alpha: 0.12,
                 );
               }
@@ -234,9 +236,9 @@ class ResponsiveButton extends StatelessWidget {
     switch (variant) {
       case ButtonVariant.primary:
       case ButtonVariant.outline:
-        return Theme.of(context).primaryColor;
+        return DeepColorTokens.primary;
       case ButtonVariant.secondary:
-        return Colors.white;
+        return DeepColorTokens.neutral0;
     }
   }
 
@@ -245,9 +247,9 @@ class ResponsiveButton extends StatelessWidget {
     switch (variant) {
       case ButtonVariant.primary:
       case ButtonVariant.outline:
-        return Theme.of(context).primaryColor;
+        return DeepColorTokens.primary;
       case ButtonVariant.secondary:
-        return Colors.white;
+        return DeepColorTokens.neutral0;
     }
   }
 }

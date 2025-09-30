@@ -21,7 +21,7 @@ void showCategoryModal(
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0x00000000),
       builder: (BuildContext context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.75,
@@ -40,7 +40,9 @@ void showCategoryModal(
                 width: 40.0,
                 height: 4.0,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.4,
+                  ),
                   borderRadius: BorderRadius.circular(2.0),
                 ),
               ),
@@ -87,7 +89,7 @@ void showCategoryModal(
                     final icon = getCategoryIcon(category);
 
                     return Material(
-                      color: Colors.transparent,
+                      color: const Color(0x00000000),
                       child: InkWell(
                         onTap: () {
                           onCategorySelected(category);
@@ -103,7 +105,9 @@ void showCategoryModal(
                                       .withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(12.0),
                             border: Border.all(
-                              color: isSelected ? color : Colors.transparent,
+                              color: isSelected
+                                  ? color
+                                  : const Color(0x00000000),
                               width: isSelected ? 2.0 : 1.0,
                             ),
                           ),
@@ -184,7 +188,7 @@ void showUnitModal(
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0x00000000),
       builder: (BuildContext context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.6,
@@ -203,7 +207,9 @@ void showUnitModal(
                 width: 40.0,
                 height: 4.0,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.4,
+                  ),
                   borderRadius: BorderRadius.circular(2.0),
                 ),
               ),
@@ -253,12 +259,12 @@ void showUnitModal(
                         decoration: BoxDecoration(
                           color: isSelected
                               ? theme.colorScheme.primaryContainer
-                              : Colors.transparent,
+                              : const Color(0x00000000),
                           borderRadius: BorderRadius.circular(20.0),
                           border: Border.all(
                             color: isSelected
                                 ? theme.colorScheme.primary
-                                : Colors.transparent,
+                                : const Color(0x00000000),
                           ),
                         ),
                         child: Icon(
@@ -313,7 +319,7 @@ void showStatusModal(
   unawaited(
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0x00000000),
       builder: (BuildContext context) {
         return Container(
           decoration: BoxDecoration(
@@ -332,7 +338,9 @@ void showStatusModal(
                 width: 40.0,
                 height: 4.0,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.4,
+                  ),
                   borderRadius: BorderRadius.circular(2.0),
                 ),
               ),

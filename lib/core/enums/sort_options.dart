@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/tokens/deep_color_tokens.dart';
 
 /// Options de tri pour les offres alimentaires
 enum SortOption {
@@ -39,19 +40,19 @@ enum SortOption {
   Color get color {
     switch (this) {
       case SortOption.relevance:
-        return Colors.blue;
+        return DeepColorTokens.primary;
       case SortOption.urgency:
-        return Colors.red;
+        return DeepColorTokens.error;
       case SortOption.distance:
-        return Colors.green;
+        return DeepColorTokens.success;
       case SortOption.priceLow:
-        return Colors.orange;
+        return DeepColorTokens.warning;
       case SortOption.priceHigh:
-        return Colors.purple;
+        return DeepColorTokens.secondary;
       case SortOption.newest:
-        return Colors.teal;
+        return DeepColorTokens.tertiary;
       case SortOption.rating:
-        return Colors.amber;
+        return DeepColorTokens.accent;
     }
   }
 }

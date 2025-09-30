@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/offer_reservation_provider.dart';
 import '../providers/user_reservations_provider.dart';
 
@@ -31,7 +33,9 @@ class MyReservationsPage extends ConsumerWidget {
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: colorScheme.outlineVariant),
+                    side: BorderSide(
+                      color: DeepColorTokens.neutral0.withValues(alpha: 0.1),
+                    ),
                   ),
                   child: ListTile(
                     title: Text(r.title),
@@ -57,7 +61,7 @@ class MyReservationsPage extends ConsumerWidget {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                backgroundColor: colorScheme.error,
+                                backgroundColor: DeepColorTokens.error,
                                 content: Text('Annulation impossible: $e'),
                               ),
                             );
@@ -94,19 +98,25 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.event_busy, size: 64, color: colorScheme.outline),
+          Icon(
+            Icons.event_busy,
+            size: 64,
+            color: DeepColorTokens.neutral0.withValues(alpha: 0.3),
+          ),
           SizedBox(height: 16.0),
           Text(
             'Aucune réservation',
             style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
+              color: DeepColorTokens.neutral0.withValues(alpha: 0.7),
               fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: 16.0),
           Text(
             'Vos réservations apparaîtront ici',
-            style: TextStyle(color: colorScheme.onSurfaceVariant),
+            style: TextStyle(
+              color: DeepColorTokens.neutral0.withValues(alpha: 0.6),
+            ),
           ),
         ],
       ),

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/consumer_tabs.dart';
 import '../../core/constants/merchant_tabs.dart';
 import '../../core/responsive/responsive_utils.dart';
+import '../providers/app_mode_provider.dart';
 
 /// Shell unifié qui affiche un NavigationBar dynamique selon le contexte
 /// - Si la route commence par /consumer, on affiche les onglets consumer
 /// - Si la route commence par /merchant, on affiche les onglets merchant
 /// - Sinon, on n'affiche pas de barre (welcome, pages publiques)
-class AppShell extends StatelessWidget {
+class AppShell extends ConsumerWidget {
   const AppShell({required this.child, super.key});
 
   final Widget child;
@@ -26,7 +28,7 @@ class AppShell extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.toString();
     final screenWidth = MediaQuery.of(context).size.width;
     
@@ -90,7 +92,7 @@ class AppShell extends StatelessWidget {
         return Scaffold(
           body: Row(
             children: [
-              _buildMerchantSidebar(context, selectedIndex, screenWidth),
+              _buildMerchantSidebar(context, ref, selectedIndex, screenWidth),
               const VerticalDivider(width: 1, thickness: 1),
               Expanded(
                 child: Container(
@@ -207,9 +209,17 @@ class AppShell extends StatelessWidget {
     );
   }
   
-  Widget _buildMerchantSidebar(BuildContext context, int selectedIndex, double screenWidth) {
+  Widget _buildMerchantSidebar(BuildContext context, WidgetRef ref, int selectedIndex, double screenWidth) {
     // Largeur fixe de la sidebar
     const sidebarWidth = 250.0;
+    
+    // Récupérer l'utilisateur actuel
+    final currentUser = ref.watch(currentUserProvider);
+    
+    // Pour l'instant, utiliser des données mockées
+    // TODO: Remplacer par les vraies données du marchand
+    const merchantName = 'Boulangerie Paul';
+    const merchantLogoUrl = 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400';
     
     return Container(
       width: sidebarWidth,
@@ -217,34 +227,68 @@ class AppShell extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(24),
-            child: Row(
+            padding: const EdgeInsets.all(20),
+            child: Column(
               children: [
-                Icon(
-                  Icons.store,
-                  size: 32,
-                  color: Theme.of(context).colorScheme.primary,
+                // Logo du marchand
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: merchantLogoUrl.isNotEmpty
+                        ? Image.network(
+                            merchantLogoUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => ColoredBox(
+                              color: Theme.of(context).colorScheme.primaryContainer,
+                              child: Icon(
+                                Icons.store,
+                                size: 40,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          )
+                        : ColoredBox(
+                            color: Theme.of(context).colorScheme.primaryContainer,
+                            child: Icon(
+                              Icons.store,
+                              size: 40,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                  ),
                 ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'EcoPlates',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    Text(
-                      'Merchant',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 16),
+                // Nom du marchand
+                Text(
+                  merchantName,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Espace Marchand',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
                 ),
               ],
             ),

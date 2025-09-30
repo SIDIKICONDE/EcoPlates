@@ -1,17 +1,16 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 
-import '../../core/enums/merchant_enums.dart';
+import '../../core/responsive/responsive.dart';
 import '../../data/services/merchant_profile_service.dart';
 import '../../domain/entities/merchant_profile.dart';
+import '../widgets/profilemerchant/components/empty_profile_view.dart';
+import '../widgets/profilemerchant/components/error_profile_view.dart';
+import '../widgets/profilemerchant/components/profile_additional_actions.dart';
 import '../widgets/profilemerchant/merchant_contact_info.dart';
 import '../widgets/profilemerchant/merchant_opening_hours.dart';
-import '../widgets/profilemerchant/merchant_profile_form.dart';
 import '../widgets/profilemerchant/merchant_profile_header.dart';
+import '../widgets/profilemerchant/mixins/profile_dialog_mixin.dart';
 
 /// Page de profil du marchand
 ///
@@ -20,11 +19,18 @@ import '../widgets/profilemerchant/merchant_profile_header.dart';
 /// - Informations de la boutique
 /// - Préférences de notification
 /// - Paramètres de sécurité
-class MerchantProfilePage extends ConsumerWidget {
+class MerchantProfilePage extends ConsumerStatefulWidget {
   const MerchantProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MerchantProfilePage> createState() =>
+      _MerchantProfilePageState();
+}
+
+class _MerchantProfilePageState extends ConsumerState<MerchantProfilePage>
+    with ProfileDialogMixin<MerchantProfilePage> {
+  @override
+  Widget build(BuildContext context) {
     final profileAsyncValue = ref.watch(merchantProfileProvider);
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
@@ -39,450 +45,154 @@ class MerchantProfilePage extends ConsumerWidget {
           // Bouton de rafraîchissement
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () {
-              unawaited(ref.read(merchantProfileProvider.notifier).refresh());
-            },
+            onPressed: () =>
+                ref.read(merchantProfileProvider.notifier).refresh(),
           ),
         ],
       ),
       body: profileAsyncValue.when<Widget>(
         data: (MerchantProfile? profile) => profile != null
-            ? _buildProfileContent(context, ref, profile)
-            : _buildEmptyProfile(context, ref),
+            ? _buildProfileContent(profile)
+            : EmptyProfileView(onCreateProfile: _createNewProfile),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (Object error, StackTrace stack) =>
-            _buildErrorView(context, ref, error),
+            ErrorProfileView(error: error, onRetry: _retryLoading),
       ),
     );
   }
 
-  Widget _buildProfileContent(
-    BuildContext context,
-    WidgetRef ref,
-    MerchantProfile profile,
-  ) {
+  Widget _buildProfileContent(MerchantProfile profile) {
     return RefreshIndicator(
-      onRefresh: () async {
-        await ref.read(merchantProfileProvider.notifier).refresh();
-      },
-      child: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          // En-tête du profil
-          MerchantProfileHeader(
-            profile: profile,
-            onEditPhoto: () => _showPhotoOptions(context, ref),
-            onEditProfile: () => _showEditForm(context, profile),
-          ),
-          SizedBox(height: 16.0),
+      onRefresh: () => ref.read(merchantProfileProvider.notifier).refresh(),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final screenWidth = constraints.maxWidth;
+          final isDesktop = screenWidth > 1024; // Desktop
+          final isTablet = screenWidth > 768 && screenWidth <= 1024; // Tablette
 
-          // Informations de contact
-          MerchantContactInfo(profile: profile),
-          SizedBox(height: 16.0),
+          if (isDesktop) {
+            // Disposition professionnelle pour desktop : grille 3 colonnes
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  // Header full width
+                  MerchantProfileHeader(
+                    profile: profile,
+                    onEditPhoto: showPhotoOptions,
+                    onEditProfile: () => showEditForm(profile),
+                  ),
+                  const SizedBox(height: 24.0),
 
-          // Horaires d'ouverture
-          MerchantOpeningHours(profile: profile),
-          SizedBox(height: 16.0),
-
-          // Actions supplémentaires
-          _buildAdditionalActions(context, ref, profile),
-          SizedBox(
-            height: 16.0,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyProfile(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.person_outline,
-              size: 64.0,
-            ),
-            const SizedBox(height: 16.0),
-            Text(
-              'Aucun profil trouvé',
-              style: theme.textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16.0),
-            Text(
-              'Créez votre profil pour commencer',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colors.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton.icon(
-              onPressed: () => _createNewProfile(context, ref),
-              icon: const Icon(Icons.add),
-              label: const Text('Créer mon profil'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colors.primary,
-                foregroundColor: colors.onPrimary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 12.0,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorView(
-    BuildContext context,
-    WidgetRef ref,
-    Object error,
-  ) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 48.0,
-              color: colors.error,
-            ),
-            const SizedBox(height: 16.0),
-            Text(
-              'Erreur de chargement',
-              style: theme.textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              error.toString(),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colors.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24.0),
-            ElevatedButton.icon(
-              onPressed: () {
-                unawaited(ref.read(merchantProfileProvider.notifier).refresh());
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Réessayer'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAdditionalActions(
-    BuildContext context,
-    WidgetRef ref,
-    MerchantProfile profile,
-  ) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(
-          color: colors.outline.withValues(alpha: 0.1),
-        ),
-      ),
-      child: Column(
-        children: [
-          ListTile(
-            leading: Icon(
-              Icons.edit,
-              color: colors.primary,
-            ),
-            title: Text(
-              'Modifier le profil',
-              style: TextStyle(color: colors.onSurface),
-            ),
-            subtitle: Text(
-              'Mettre à jour vos informations',
-              style: TextStyle(color: colors.onSurfaceVariant),
-            ),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: colors.onSurfaceVariant,
-            ),
-            onTap: () => _showEditForm(context, profile),
-          ),
-          const Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.notifications,
-              color: colors.primary,
-            ),
-            title: Text(
-              'Notifications',
-              style: TextStyle(color: colors.onSurface),
-            ),
-            subtitle: Text(
-              'Gérer les préférences',
-              style: TextStyle(color: colors.onSurfaceVariant),
-            ),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: colors.onSurfaceVariant,
-            ),
-            onTap: () {
-              // TODO: Naviguer vers les paramètres de notifications
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Paramètres de notifications à venir'),
-                ),
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.security,
-              color: colors.primary,
-            ),
-            title: Text(
-              'Sécurité',
-              style: TextStyle(color: colors.onSurface),
-            ),
-            subtitle: Text(
-              'Mot de passe et confidentialité',
-              style: TextStyle(color: colors.onSurfaceVariant),
-            ),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: colors.onSurfaceVariant,
-            ),
-            onTap: () {
-              // TODO: Naviguer vers les paramètres de sécurité
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Paramètres de sécurité à venir'),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showEditForm(BuildContext context, MerchantProfile profile) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(16.0),
-            ),
-          ),
-          child: Column(
-            children: [
-              // Indicateur de glissement
-              Container(
-                margin: const EdgeInsets.only(top: 8.0),
-                width: 40.0,
-                height: 4.0,
-                decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2.0),
-                ),
-              ),
-              // Titre
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Modifier le profil',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
+                  // Grille principale : Contact | Horaires | Actions
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Colonne 1 : Informations de contact (3/8)
+                      Expanded(
+                        flex: 3,
+                        child: MerchantContactInfo(profile: profile),
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => context.pop(),
-                    ),
-                  ],
-                ),
+                      const SizedBox(width: 16.0),
+
+                      // Colonne 2 : Horaires d'ouverture (3/8)
+                      Expanded(
+                        flex: 3,
+                        child: MerchantOpeningHours(profile: profile),
+                      ),
+                      const SizedBox(width: 16.0),
+
+                      // Colonne 3 : Actions supplémentaires (2/8)
+                      Expanded(
+                        flex: 2,
+                        child: ProfileAdditionalActions(
+                          profile: profile,
+                          onEditProfile: () => showEditForm(profile),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              const Divider(height: 1.0),
-              // Formulaire
-              Expanded(
-                child: MerchantProfileForm(
+            );
+          } else if (isTablet) {
+            // Disposition tablette : 2 colonnes avec actions en bas
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  // Header
+                  MerchantProfileHeader(
+                    profile: profile,
+                    onEditPhoto: showPhotoOptions,
+                    onEditProfile: () => showEditForm(profile),
+                  ),
+                  const SizedBox(height: 24.0),
+
+                  // Deux colonnes : Contact et Horaires
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: MerchantContactInfo(profile: profile),
+                      ),
+                      const SizedBox(width: 20.0),
+                      Expanded(
+                        child: MerchantOpeningHours(profile: profile),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24.0),
+
+                  // Actions en bas
+                  ProfileAdditionalActions(
+                    profile: profile,
+                    onEditProfile: () => showEditForm(profile),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            // Disposition mobile : verticale
+            return ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                // Header
+                MerchantProfileHeader(
                   profile: profile,
+                  onEditPhoto: showPhotoOptions,
+                  onEditProfile: () => showEditForm(profile),
                 ),
-              ),
-            ],
-          ),
-        ),
+                const VerticalGap(),
+
+                // Contact
+                MerchantContactInfo(profile: profile),
+                const VerticalGap(),
+
+                // Horaires
+                MerchantOpeningHours(profile: profile),
+                const VerticalGap(),
+
+                // Actions
+                ProfileAdditionalActions(
+                  profile: profile,
+                  onEditProfile: () => showEditForm(profile),
+                ),
+                const VerticalGap(),
+              ],
+            );
+          }
+        },
       ),
     );
   }
 
-  void _showPhotoOptions(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
-    unawaited(
-      showModalBottomSheet<void>(
-        context: context,
-        backgroundColor: colors.surface,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(16.0),
-          ),
-        ),
-        builder: (context) => SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(
-                  Icons.camera_alt,
-                  color: colors.primary,
-                ),
-                title: Text(
-                  'Prendre une photo',
-                  style: TextStyle(color: colors.onSurface),
-                ),
-                onTap: () {
-                  context.pop();
-                  unawaited(_pickImage(context, ref, ImageSource.camera));
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.photo_library,
-                  color: colors.primary,
-                ),
-                title: Text(
-                  'Choisir depuis la galerie',
-                  style: TextStyle(color: colors.onSurface),
-                ),
-                onTap: () {
-                  context.pop();
-                  unawaited(_pickImage(context, ref, ImageSource.gallery));
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.delete, color: colors.error),
-                title: Text(
-                  'Supprimer la photo',
-                  style: TextStyle(color: colors.error),
-                ),
-                onTap: () async {
-                  context.pop();
-                  try {
-                    await ref
-                        .read(merchantProfileProvider.notifier)
-                        .deleteLogo();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Photo supprimée'),
-                        ),
-                      );
-                    }
-                  } on Exception catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Erreur: $e'),
-                          backgroundColor: colors.error,
-                        ),
-                      );
-                    }
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void _createNewProfile() {
+    final newProfile = createNewProfile();
+    showEditForm(newProfile);
   }
 
-  Future<void> _pickImage(
-    BuildContext context,
-    WidgetRef ref,
-    ImageSource source,
-  ) async {
-    final picker = ImagePicker();
-    try {
-      final image = await picker.pickImage(
-        source: source,
-        maxWidth: 1024.0,
-        maxHeight: 1024.0,
-        imageQuality: 85,
-      );
-      if (image != null) {
-        await ref.read(merchantProfileProvider.notifier).uploadLogo(image.path);
-        if (context.mounted) {
-          final theme = Theme.of(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Photo mise à jour',
-                style: TextStyle(color: theme.colorScheme.onPrimary),
-              ),
-              backgroundColor: theme.colorScheme.primary,
-            ),
-          );
-        }
-      }
-    } on Exception catch (e) {
-      if (context.mounted) {
-        final theme = Theme.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Erreur: $e',
-              style: TextStyle(color: theme.colorScheme.onError),
-            ),
-            backgroundColor: theme.colorScheme.error,
-          ),
-        );
-      }
-    }
-  }
-
-  void _createNewProfile(BuildContext context, WidgetRef ref) {
-    // Créer un profil vide avec des valeurs par défaut
-    final newProfile = MerchantProfile(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: '',
-      category: MerchantCategory.other,
-      createdAt: DateTime.now(),
-    );
-
-    _showEditForm(context, newProfile);
+  Future<void> _retryLoading() async {
+    await ref.read(merchantProfileProvider.notifier).refresh();
   }
 }

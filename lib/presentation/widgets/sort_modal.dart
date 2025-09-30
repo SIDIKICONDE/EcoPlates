@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/enums/sort_options.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../providers/sort_provider.dart';
 
 /// Modal de tri pour les offres alimentaires
@@ -20,8 +21,10 @@ class SortModal extends ConsumerWidget {
           // En-tête
           Text(
             'Trier par',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            style: TextStyle(
+              color: DeepColorTokens.neutral800,
               fontWeight: FontWeight.w600,
+              fontSize: 14.0,
             ),
           ),
           SizedBox(height: 8.0),
@@ -37,8 +40,8 @@ class SortModal extends ConsumerWidget {
                   leading: Icon(
                     option.icon,
                     color: isSelected
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey[600],
+                        ? DeepColorTokens.primary
+                        : DeepColorTokens.neutral600,
                     size: 24.0,
                   ),
                   title: Text(
@@ -48,15 +51,15 @@ class SortModal extends ConsumerWidget {
                           ? FontWeight.w600
                           : FontWeight.normal,
                       color: isSelected
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey[800],
+                          ? DeepColorTokens.primary
+                          : DeepColorTokens.neutral800,
                       fontSize: 14.0,
                     ),
                   ),
                   trailing: isSelected
                       ? Icon(
                           Icons.check,
-                          color: Theme.of(context).primaryColor,
+                          color: DeepColorTokens.primary,
                           size: 20.0,
                         )
                       : null,

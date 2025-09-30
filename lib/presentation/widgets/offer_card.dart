@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../domain/entities/food_offer.dart';
 import 'offer_card/component/offer_card_content.dart';
 import 'offer_card/component/offer_card_image.dart';
@@ -81,7 +82,9 @@ class _OfferCardState extends State<OfferCard>
             scale: _scaleAnimation.value,
             child: Container(
               decoration: BoxDecoration(
-                color: isDark ? Colors.grey[900] : Colors.white,
+                color: isDark
+                    ? DeepColorTokens.surface
+                    : DeepColorTokens.neutral0,
                 borderRadius: BorderRadius.circular(
                   8.0,
                 ), // Radius réduit pour un look moins arrondi
@@ -102,8 +105,6 @@ class _OfferCardState extends State<OfferCard>
                       ]),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize:
-                      MainAxisSize.max, // Remplit toute la hauteur disponible
                   children: [
                     // Section image - prend l'espace restant
                     Expanded(

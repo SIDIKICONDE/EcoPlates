@@ -327,6 +327,63 @@ class ResponsiveBuilder extends StatelessWidget {
   }
 }
 
+/// Grille responsive optimisée pour les cartes avec hauteur contrôlée
+class ResponsiveCardGrid extends StatelessWidget {
+  const ResponsiveCardGrid({
+    required this.children,
+    super.key,
+    this.mobileColumns = 1,
+    this.tabletColumns = 2,
+    this.desktopColumns = 3,
+    this.spacing = 16.0,
+    this.runSpacing,
+    this.maxCardHeight = 160.0,
+    this.physics,
+    this.shrinkWrap = false,
+  });
+
+  final List<Widget> children;
+  final int mobileColumns;
+  final int tabletColumns;
+  final int desktopColumns;
+  final double spacing;
+  final double? runSpacing;
+  final double maxCardHeight;
+  final ScrollPhysics? physics;
+  final bool shrinkWrap;
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 905;
+
+    final columns = isMobile
+        ? mobileColumns
+        : isTablet
+        ? tabletColumns
+        : desktopColumns;
+
+    final itemWidth = (screenWidth - (columns + 1) * spacing) / columns;
+
+    return Wrap(
+      spacing: spacing,
+      runSpacing: runSpacing ?? spacing,
+      children: children
+          .map(
+            (child) => SizedBox(
+              width: itemWidth,
+              child: Container(
+                constraints: BoxConstraints(maxHeight: maxCardHeight),
+                child: child,
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
 /// Container avec padding responsive
 class ResponsiveContainer extends StatelessWidget {
   const ResponsiveContainer({

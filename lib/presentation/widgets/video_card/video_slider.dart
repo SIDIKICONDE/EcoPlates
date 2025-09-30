@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/video_preview.dart';
 import 'constants.dart';
 import 'video_card.dart';
@@ -62,12 +63,11 @@ class _VideoSliderState extends State<VideoSlider>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.title != null) ...[
-          _buildHeader(theme),
+          _buildHeader(),
           const SizedBox(height: 8.0),
         ],
         LayoutBuilder(
@@ -96,7 +96,7 @@ class _VideoSliderState extends State<VideoSlider>
     );
   }
 
-  Widget _buildHeader(ThemeData theme) => Padding(
+  Widget _buildHeader() => Padding(
     padding: widget.padding,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,7 +107,7 @@ class _VideoSliderState extends State<VideoSlider>
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
-            color: Colors.black,
+            color: DeepColorTokens.neutral800,
           ),
         ),
         if (widget.onSeeAllTap != null)
@@ -129,7 +129,7 @@ class _VideoSliderState extends State<VideoSlider>
                   'Tout voir',
                   style: TextStyle(
                     fontSize: 14.0,
-                    color: Colors.blue,
+                    color: DeepColorTokens.primary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -137,7 +137,7 @@ class _VideoSliderState extends State<VideoSlider>
                 Icon(
                   Icons.chevron_right_rounded,
                   size: 20.0,
-                  color: Colors.blue,
+                  color: DeepColorTokens.primary,
                 ),
               ],
             ),

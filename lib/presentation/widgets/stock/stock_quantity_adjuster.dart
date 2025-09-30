@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -110,8 +111,8 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(
-            alpha: 16.0,
+          color: DeepColorTokens.neutral400.withValues(
+            alpha: DeepColorTokens.opacity10,
           ),
         ),
       ),
@@ -135,9 +136,9 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             tooltip: 'Diminuer la quantité',
             style: IconButton.styleFrom(
               foregroundColor: canDecrease
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface.withValues(
-                      alpha: 16.0,
+                  ? DeepColorTokens.primary
+                  : DeepColorTokens.neutral500.withValues(
+                      alpha: DeepColorTokens.opacity10,
                     ),
               padding: const EdgeInsets.symmetric(
                 horizontal: 8.0,
@@ -155,14 +156,14 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
-                    color: theme.colorScheme.onSurface,
+                    color: DeepColorTokens.neutral800,
                   ),
                 ),
                 Text(
                   widget.item.unit,
                   style: TextStyle(
                     fontSize: 16.0,
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: DeepColorTokens.neutral600,
                   ),
                 ),
               ],
@@ -177,9 +178,9 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             tooltip: 'Augmenter la quantité',
             style: IconButton.styleFrom(
               foregroundColor: canIncrease
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface.withValues(
-                      alpha: 16.0,
+                  ? DeepColorTokens.primary
+                  : DeepColorTokens.neutral500.withValues(
+                      alpha: DeepColorTokens.opacity10,
                     ),
               padding: const EdgeInsets.symmetric(
                 horizontal: 8.0,
@@ -211,7 +212,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             child: Container(
               decoration: BoxDecoration(
                 color: canDecrease
-                    ? theme.colorScheme.secondaryContainer
+                    ? DeepColorTokens.secondaryContainer
                     : Colors.transparent,
                 shape: BoxShape.circle,
               ),
@@ -219,9 +220,9 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
                 Icons.remove,
                 size: 16.0,
                 color: canDecrease
-                    ? theme.colorScheme.onSecondaryContainer
-                    : theme.colorScheme.onSurface.withValues(
-                        alpha: 16.0,
+                    ? DeepColorTokens.secondary
+                    : DeepColorTokens.neutral500.withValues(
+                        alpha: DeepColorTokens.opacity10,
                       ),
               ),
             ),
@@ -245,7 +246,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16.0,
-                color: theme.colorScheme.onSurface,
+                color: DeepColorTokens.neutral800,
               ),
             ),
           ),
@@ -261,7 +262,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             child: Container(
               decoration: BoxDecoration(
                 color: canIncrease
-                    ? theme.colorScheme.secondaryContainer
+                    ? DeepColorTokens.secondaryContainer
                     : Colors.transparent,
                 shape: BoxShape.circle,
               ),
@@ -269,9 +270,9 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
                 Icons.add,
                 size: 16.0,
                 color: canIncrease
-                    ? theme.colorScheme.onSecondaryContainer
-                    : theme.colorScheme.onSurface.withValues(
-                        alpha: 16.0,
+                    ? DeepColorTokens.secondary
+                    : DeepColorTokens.neutral500.withValues(
+                        alpha: DeepColorTokens.opacity10,
                       ),
               ),
             ),

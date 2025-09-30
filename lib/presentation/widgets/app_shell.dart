@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/constants/consumer_tabs.dart';
 import '../../core/constants/merchant_tabs.dart';
-import '../../core/responsive/responsive_utils.dart';
 import '../providers/app_mode_provider.dart';
 
 /// Shell unifié qui affiche un NavigationBar dynamique selon le contexte
@@ -212,9 +211,6 @@ class AppShell extends ConsumerWidget {
   Widget _buildMerchantSidebar(BuildContext context, WidgetRef ref, int selectedIndex, double screenWidth) {
     // Largeur fixe de la sidebar
     const sidebarWidth = 250.0;
-    
-    // Récupérer l'utilisateur actuel
-    final currentUser = ref.watch(currentUserProvider);
     
     // Pour l'instant, utiliser des données mockées
     // TODO: Remplacer par les vraies données du marchand

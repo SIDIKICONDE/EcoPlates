@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
 import '../../widgets/stock/stock_threshold_field.dart';
@@ -34,7 +35,6 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
 
   late String? _selectedCategory;
   late StockItemStatus _selectedStatus;
-  late StockItemStatus _originalStatus;
   bool _isSubmitting = false;
   bool _hasChanges = false;
 
@@ -62,7 +62,6 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
     );
     _selectedCategory = widget.item?.category;
     _selectedStatus = widget.item?.status ?? StockItemStatus.active;
-    _originalStatus = widget.item?.status ?? StockItemStatus.active;
 
     // Écouter les changements seulement en mode édition
     if (isEditMode) {
@@ -112,7 +111,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Veuillez sélectionner une catégorie'),
-          backgroundColor: Theme.of(context).colorScheme.error,
+          backgroundColor: DeepColorTokens.error,
         ),
       );
       return;
@@ -195,7 +194,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Erreur : $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: DeepColorTokens.error,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -228,7 +227,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: DeepColorTokens.error,
             ),
             child: const Text('Supprimer'),
           ),
@@ -254,7 +253,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Erreur lors de la suppression : $e'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: DeepColorTokens.error,
               behavior: SnackBarBehavior.floating,
             ),
           );
@@ -265,8 +264,6 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditMode ? "Modifier l'article" : 'Nouvel article'),
@@ -288,7 +285,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                     height: 20.0,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.0,
-                      color: theme.colorScheme.onSurface,
+                      color: DeepColorTokens.neutral900,
                     ),
                   )
                 : Text(
@@ -318,12 +315,12 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                     Icon(
                       Icons.info_outline,
                       size: 20.0,
-                      color: theme.colorScheme.onSurfaceVariant,
+                      color: DeepColorTokens.neutral700,
                     ),
                     Text(
                       'SKU: ',
                       style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: DeepColorTokens.neutral700,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                       ),
@@ -334,10 +331,12 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                         vertical: 4.0,
                       ),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHighest,
+                        color: DeepColorTokens.neutral200,
                         borderRadius: BorderRadius.circular(6.0),
                         border: Border.all(
-                          color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                          color: DeepColorTokens.neutral400.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                       ),
                       child: Text(
@@ -354,7 +353,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                       'Dernière maj: ${formatDateTime(widget.item!.updatedAt)}',
                       style: TextStyle(
                         fontSize: 12.0,
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: DeepColorTokens.neutral700,
                       ),
                     ),
                   ],
@@ -425,8 +424,8 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                     _selectedCategory ?? 'Sélectionner une catégorie',
                     style: TextStyle(
                       color: _selectedCategory != null
-                          ? theme.colorScheme.onSurface
-                          : theme.colorScheme.onSurfaceVariant,
+                          ? DeepColorTokens.neutral900
+                          : DeepColorTokens.neutral700,
                     ),
                   ),
                 ),
@@ -458,14 +457,14 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                         margin: EdgeInsets.only(right: 12.0),
                         decoration: BoxDecoration(
                           color: _selectedStatus == StockItemStatus.active
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.tertiary,
+                              ? DeepColorTokens.primary
+                              : DeepColorTokens.tertiary,
                           shape: BoxShape.circle,
                         ),
                       ),
                       Text(
                         _selectedStatus.label,
-                        style: TextStyle(color: theme.colorScheme.onSurface),
+                        style: TextStyle(color: DeepColorTokens.neutral900),
                       ),
                     ],
                   ),
@@ -555,7 +554,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                           _unitController.text.isEmpty
                               ? 'pièce'
                               : _unitController.text,
-                          style: TextStyle(color: theme.colorScheme.onSurface),
+                          style: TextStyle(color: DeepColorTokens.neutral900),
                         ),
                       ),
                     ),
@@ -600,17 +599,19 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                 Container(
                   padding: EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    color: DeepColorTokens.primaryContainer.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                      color: DeepColorTokens.primary.withValues(alpha: 0.5),
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         Icons.info_outline,
-                        color: theme.colorScheme.onPrimaryContainer,
+                        color: DeepColorTokens.neutral0,
                         size: 20.0,
                       ),
                       SizedBox(width: 8.0),
@@ -619,7 +620,7 @@ class _StockItemFormPageState extends ConsumerState<StockItemFormPage> {
                           'L\'article sera créé avec le statut "${_selectedStatus.label}"',
                           style: TextStyle(
                             fontSize: 14.0,
-                            color: theme.colorScheme.onPrimaryContainer,
+                            color: DeepColorTokens.neutral0,
                           ),
                         ),
                       ),

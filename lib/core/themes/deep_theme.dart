@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'component_themes/button_theme.dart';
-import 'component_themes/card_theme.dart';
-import 'component_themes/input_theme.dart';
-import 'component_themes/navigation_theme.dart';
 import 'tokens/deep_color_tokens.dart';
-import 'tokens/elevation_tokens.dart';
 import 'tokens/radius_tokens.dart';
 import 'tokens/spacing_tokens.dart';
 import 'tokens/typography_tokens.dart';

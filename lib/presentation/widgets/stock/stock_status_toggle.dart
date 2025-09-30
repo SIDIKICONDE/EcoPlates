@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
+import '../offer_card/offer_card_configs.dart';
 
 /// Widget pour basculer le statut d'un article (actif/inactif)
 ///
@@ -108,7 +110,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildStatusLabel(context, isActive),
-        SizedBox(width: 8.0),
+        SizedBox(width: ResponsiveUtils.getHorizontalSpacing(context) / 2),
         _buildSwitchOnly(context, isActive),
       ],
     );
@@ -123,7 +125,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
       children: [
         _buildSwitchOnly(context, isActive, compact: true),
         if (widget.showLabel) ...[
-          SizedBox(height: 4.0),
+          SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 4),
           _buildStatusLabel(context, isActive, compact: true),
         ],
       ],
@@ -137,9 +139,10 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
   }) {
     if (_isToggling) {
       if (widget.showLoading) {
+        final iconSize = ResponsiveUtils.getIconSize(context, baseSize: 16.0);
         return SizedBox(
-          width: compact ? 16.0 : 16.0 * 1.25,
-          height: compact ? 16.0 : 16.0 * 1.25,
+          width: compact ? iconSize : iconSize * 1.25,
+          height: compact ? iconSize : iconSize * 1.25,
           child: CircularProgressIndicator(
             strokeWidth: 3,
             color: DeepColorTokens.primary,
@@ -169,7 +172,7 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
 
     if (widget.animate) {
       return AnimatedContainer(
-        duration: const Duration(milliseconds: 150), // Animation plus rapide
+        duration: const Duration(milliseconds: 150),
         curve: Curves.easeInOut,
         child: switchWidget,
       );
@@ -183,9 +186,14 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
     bool isActive, {
     bool compact = false,
   }) {
+    const config = OfferCardConfigs.defaultConfig;
     final labelPadding = EdgeInsets.symmetric(
-      horizontal: compact ? 8.0 : 12.0,
-      vertical: compact ? 2.0 : 4.0,
+      horizontal: compact
+          ? ResponsiveUtils.getHorizontalSpacing(context) / 2
+          : ResponsiveUtils.getHorizontalSpacing(context) * 0.75,
+      vertical: compact
+          ? ResponsiveUtils.getVerticalSpacing(context) / 8
+          : ResponsiveUtils.getVerticalSpacing(context) / 4,
     );
 
     final labelContainer = Container(
@@ -198,20 +206,26 @@ class _StockStatusToggleState extends ConsumerState<StockStatusToggle> {
             : DeepColorTokens.neutral300.withValues(
                 alpha: 0.2,
               ),
-        borderRadius: BorderRadius.circular(
-          compact ? 16.0 : 20.0,
-        ),
+        borderRadius:
+            config.imageBorderRadius ??
+            BorderRadius.circular(
+              compact
+                  ? ResponsiveUtils.getVerticalSpacing(context)
+                  : ResponsiveUtils.getVerticalSpacing(context) * 1.25,
+            ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: compact ? 4.0 : 8.0,
+            width: compact
+                ? ResponsiveUtils.getHorizontalSpacing(context) / 4
+                : ResponsiveUtils.getHorizontalSpacing(context) / 2,
           ),
           Text(
             widget.item.status.label,
             style: TextStyle(
-              fontSize: compact ? 16.0 : 16.0,
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context, 16.0),
               fontWeight: FontWeight.w500,
               color: isActive
                   ? DeepColorTokens.neutral0

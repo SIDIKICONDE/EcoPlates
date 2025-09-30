@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
+import '../offer_card/offer_card_configs.dart';
 
 /// Champ de saisie pour configurer le seuil d'alerte de stock faible
 class StockThresholdField extends StatefulWidget {
@@ -50,16 +52,23 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // Utiliser la configuration responsive d'OfferCardConfigs
+    const config = OfferCardConfigs.defaultConfig;
 
     return Card(
       margin: EdgeInsets.zero,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius:
+            config.imageBorderRadius ??
+            BorderRadius.circular(
+              ResponsiveUtils.getVerticalSpacing(context),
+            ),
       ),
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(
+          ResponsiveUtils.getVerticalSpacing(context),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,17 +76,22 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
               children: [
                 Icon(
                   Icons.notifications_outlined,
-                  size: 16.0,
-                  color: theme.colorScheme.primary,
+                  size: ResponsiveUtils.getIconSize(context, baseSize: 16.0),
+                  color: DeepColorTokens.primary,
                 ),
-                SizedBox(width: 8.0),
+                SizedBox(
+                  width: ResponsiveUtils.getHorizontalSpacing(context) / 2,
+                ),
                 Expanded(
                   child: Text(
                     'Alerte de stock faible',
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: ResponsiveUtils.getResponsiveFontSize(
+                        context,
+                        16.0,
+                      ),
                       fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.onSurface,
+                      color: DeepColorTokens.neutral900,
                     ),
                   ),
                 ),
@@ -90,17 +104,20 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
             ),
 
             if (_isEnabled) ...[
-              SizedBox(height: 16.0),
+              SizedBox(height: ResponsiveUtils.getVerticalSpacing(context)),
 
               Text(
                 "Seuil d'alerte",
                 style: TextStyle(
-                  fontSize: 16.0,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    16.0,
+                  ),
+                  color: DeepColorTokens.neutral700,
                 ),
               ),
 
-              SizedBox(height: 8.0),
+              SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
 
               Row(
                 children: [
@@ -117,17 +134,23 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
                         suffixText: widget.unit,
                         isDense: true,
                         contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12.0,
-                          vertical: 12.0,
+                          horizontal:
+                              ResponsiveUtils.getHorizontalSpacing(context) / 2,
+                          vertical:
+                              ResponsiveUtils.getVerticalSpacing(context) / 2,
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
+                          borderRadius: BorderRadius.circular(
+                            ResponsiveUtils.getVerticalSpacing(context),
+                          ),
                           borderSide: BorderSide(
-                            color: theme.colorScheme.outlineVariant,
+                            color: DeepColorTokens.neutral400,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
+                          borderRadius: BorderRadius.circular(
+                            ResponsiveUtils.getVerticalSpacing(context),
+                          ),
                         ),
                       ),
                       onChanged: (value) {
@@ -136,9 +159,13 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
                       },
                     ),
                   ),
-                  SizedBox(width: 12.0),
+                  SizedBox(
+                    width: ResponsiveUtils.getHorizontalSpacing(context) / 2,
+                  ),
                   Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(
+                      ResponsiveUtils.getVerticalSpacing(context) / 2,
+                    ),
                     decoration: BoxDecoration(
                       color: DeepColorTokens.warning.withValues(alpha: 16.0),
                       border: Border.all(
@@ -149,13 +176,16 @@ class _StockThresholdFieldState extends State<StockThresholdField> {
                 ],
               ),
 
-              SizedBox(height: 8.0),
+              SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
 
               Text(
                 'Une notification sera envoyée lorsque le stock atteint ou passe sous ce seuil',
                 style: TextStyle(
-                  fontSize: 16.0,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    16.0,
+                  ),
+                  color: DeepColorTokens.neutral700,
                   fontStyle: FontStyle.italic,
                 ),
               ),

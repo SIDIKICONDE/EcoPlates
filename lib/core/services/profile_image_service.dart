@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../data/services/merchant_profile_service.dart';
 
 /// Service pour gérer les images du profil marchand
 class ProfileImageService {

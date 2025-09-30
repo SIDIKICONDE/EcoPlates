@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
@@ -130,12 +131,10 @@ class StockListView extends ConsumerWidget {
   }
 
   Widget _buildLoadingState(BuildContext context, BoxConstraints constraints) {
-    final isCompact = constraints.maxWidth < 600;
-
     return Center(
       child: Padding(
         padding: EdgeInsets.all(
-          isCompact ? 16.0 : 20.0,
+          ResponsiveUtils.getVerticalSpacing(context),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -150,7 +149,7 @@ class StockListView extends ConsumerWidget {
                 strokeWidth: 3,
               ),
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
             AnimatedOpacity(
               opacity: showAnimations ? 0.8 : 1.0,
               duration: showAnimations
@@ -159,7 +158,10 @@ class StockListView extends ConsumerWidget {
               child: Text(
                 'Chargement des articles...',
                 style: TextStyle(
-                  fontSize: isCompact ? 16.0 : 20.0,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    16.0,
+                  ),
                   color: DeepColorTokens.neutral600,
                   fontWeight: FontWeight.w500,
                 ),
@@ -167,14 +169,17 @@ class StockListView extends ConsumerWidget {
               ),
             ),
             if (showAnimations) ...[
-              const SizedBox(height: 8.0),
+              SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
               AnimatedOpacity(
                 opacity: 0.6,
                 duration: const Duration(milliseconds: 1000),
                 child: Text(
                   'Préparation de votre inventaire',
                   style: TextStyle(
-                    fontSize: isCompact ? 12.0 : 16.0,
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      14.0,
+                    ),
                     color: DeepColorTokens.neutral600.withValues(
                       alpha: 0.8,
                     ),
@@ -196,12 +201,10 @@ class StockListView extends ConsumerWidget {
     Object error,
     BoxConstraints constraints,
   ) {
-    final isCompact = constraints.maxWidth < 600;
-
     return Center(
       child: Padding(
         padding: EdgeInsets.all(
-          isCompact ? 16.0 : 20.0,
+          ResponsiveUtils.getVerticalSpacing(context),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -213,7 +216,7 @@ class StockListView extends ConsumerWidget {
                   : Duration.zero,
               child: Container(
                 padding: EdgeInsets.all(
-                  isCompact ? 12.0 : 16.0,
+                  ResponsiveUtils.getVerticalSpacing(context) * 0.75,
                 ),
                 decoration: BoxDecoration(
                   color: DeepColorTokens.errorContainer.withValues(
@@ -223,12 +226,12 @@ class StockListView extends ConsumerWidget {
                 ),
                 child: Icon(
                   Icons.error_outline_rounded,
-                  size: isCompact ? 40.0 : 53.0,
+                  size: ResponsiveUtils.getIconSize(context, baseSize: 40.0),
                   color: DeepColorTokens.error,
                 ),
               ),
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
             AnimatedOpacity(
               opacity: showAnimations ? 0.9 : 1.0,
               duration: showAnimations
@@ -237,14 +240,17 @@ class StockListView extends ConsumerWidget {
               child: Text(
                 'Une erreur est survenue',
                 style: TextStyle(
-                  fontSize: isCompact ? 24.0 : 24.0 * 1.2,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    24.0,
+                  ),
                   fontWeight: FontWeight.w600,
                   color: DeepColorTokens.neutral0,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
             AnimatedOpacity(
               opacity: showAnimations ? 0.7 : 1.0,
               duration: showAnimations
@@ -253,14 +259,17 @@ class StockListView extends ConsumerWidget {
               child: Text(
                 StockErrorMessages.getErrorMessage(error),
                 style: TextStyle(
-                  fontSize: isCompact ? 14.0 : 16.0,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    14.0,
+                  ),
                   color: DeepColorTokens.neutral600,
                   height: 1.4,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
             AnimatedScale(
               scale: showAnimations ? 1.0 : 0.95,
               duration: showAnimations
@@ -274,8 +283,8 @@ class StockListView extends ConsumerWidget {
                 label: const Text('Réessayer'),
                 style: FilledButton.styleFrom(
                   padding: EdgeInsets.symmetric(
-                    horizontal: isCompact ? 12.0 : 16.0,
-                    vertical: isCompact ? 8.0 : 12.0,
+                    horizontal: ResponsiveUtils.getHorizontalSpacing(context),
+                    vertical: ResponsiveUtils.getVerticalSpacing(context) * 0.5,
                   ),
                 ),
               ),
@@ -292,7 +301,6 @@ class StockListView extends ConsumerWidget {
     BoxConstraints constraints,
   ) {
     final filters = ref.watch(stockFiltersProvider);
-    final isCompact = constraints.maxWidth < 600;
 
     // Messages différents selon si on a des filtres ou non
     final hasActiveFilters =
@@ -301,7 +309,7 @@ class StockListView extends ConsumerWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(
-          isCompact ? 16.0 : 20.0,
+          ResponsiveUtils.getVerticalSpacing(context),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -313,7 +321,7 @@ class StockListView extends ConsumerWidget {
                   : Duration.zero,
               child: Container(
                 padding: EdgeInsets.all(
-                  isCompact ? 12.0 : 16.0,
+                  ResponsiveUtils.getVerticalSpacing(context) * 0.75,
                 ),
                 decoration: BoxDecoration(
                   color: DeepColorTokens.neutral100.withValues(
@@ -325,12 +333,12 @@ class StockListView extends ConsumerWidget {
                   hasActiveFilters
                       ? Icons.search_off_rounded
                       : Icons.inventory_2_outlined,
-                  size: isCompact ? 40.0 : 53.0,
+                  size: ResponsiveUtils.getIconSize(context, baseSize: 40.0),
                   color: DeepColorTokens.neutral600,
                 ),
               ),
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
             AnimatedOpacity(
               opacity: showAnimations ? 0.9 : 1.0,
               duration: showAnimations
@@ -341,14 +349,17 @@ class StockListView extends ConsumerWidget {
                     ? 'Aucun article trouvé'
                     : 'Aucun article en stock',
                 style: TextStyle(
-                  fontSize: isCompact ? 24.0 : 24.0 * 1.2,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    24.0,
+                  ),
                   fontWeight: FontWeight.w600,
                   color: DeepColorTokens.neutral0,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
             AnimatedOpacity(
               opacity: showAnimations ? 0.7 : 1.0,
               duration: showAnimations
@@ -359,7 +370,10 @@ class StockListView extends ConsumerWidget {
                     ? 'Essayez de modifier vos critères de recherche'
                     : 'Commencez par ajouter des articles à votre stock',
                 style: TextStyle(
-                  fontSize: isCompact ? 14.0 : 16.0,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    14.0,
+                  ),
                   color: DeepColorTokens.neutral600,
                   height: 1.4,
                 ),
@@ -369,7 +383,7 @@ class StockListView extends ConsumerWidget {
 
             // Bouton pour effacer les filtres si on en a
             if (hasActiveFilters) ...[
-              const SizedBox(height: 8.0),
+              SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 2),
               AnimatedScale(
                 scale: showAnimations ? 1.0 : 0.95,
                 duration: showAnimations
@@ -386,8 +400,9 @@ class StockListView extends ConsumerWidget {
                   label: const Text('Effacer les filtres'),
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
-                      horizontal: isCompact ? 12.0 : 16.0,
-                      vertical: isCompact ? 6.0 : 12.0,
+                      horizontal: ResponsiveUtils.getHorizontalSpacing(context),
+                      vertical:
+                          ResponsiveUtils.getVerticalSpacing(context) * 0.5,
                     ),
                   ),
                 ),
@@ -402,7 +417,9 @@ class StockListView extends ConsumerWidget {
   /// Widget pour l'indicateur de scroll infini
   Widget _buildInfiniteScrollIndicator(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: EdgeInsets.all(
+        ResponsiveUtils.getVerticalSpacing(context) * 0.75,
+      ),
       child: Center(
         child: AnimatedOpacity(
           opacity: showAnimations ? 0.8 : 1.0,
@@ -411,21 +428,26 @@ class StockListView extends ConsumerWidget {
               : Duration.zero,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               SizedBox(
-                width: 24.0,
-                height: 24.0,
+                width: ResponsiveUtils.getIconSize(context, baseSize: 24.0),
+                height: ResponsiveUtils.getIconSize(context, baseSize: 24.0),
                 child: CircularProgressIndicator(
                   strokeWidth: 3,
                   color: DeepColorTokens.primary,
                 ),
               ),
-              SizedBox(width: 4.0),
+              SizedBox(
+                width: ResponsiveUtils.getHorizontalSpacing(context) / 4,
+              ),
               Text(
                 'Chargement...',
                 style: TextStyle(
                   color: DeepColorTokens.neutral600,
-                  fontSize: 14.0,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    14.0,
+                  ),
                 ),
               ),
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/stock_items_provider.dart';
 
@@ -21,16 +22,16 @@ class StockAlertsSummary extends ConsumerWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: 20.0,
-        vertical: 12.0,
+        horizontal: context.horizontalSpacing,
+        vertical: context.verticalSpacing * 0.5,
       ),
-      padding: EdgeInsets.all(12.0),
+      padding: context.responsivePadding,
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest.withValues(
           alpha: 0.15,
         ),
         borderRadius: BorderRadius.circular(
-          16.0,
+          context.borderRadius,
         ),
       ),
       child: Column(
@@ -38,27 +39,25 @@ class StockAlertsSummary extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
+              ResponsiveIcon(
                 Icons.notifications_active_outlined,
-                size: 24.0,
                 color: theme.colorScheme.primary,
               ),
-              SizedBox(width: 12.0),
-              Text(
+              HorizontalGap(),
+              ResponsiveText(
                 'Alertes de stock',
+                fontSize: FontSizes.subtitleSmall,
                 style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.0),
+          VerticalGap(),
 
           Wrap(
-            spacing: 12.0,
-            runSpacing: 8.0,
+            spacing: context.horizontalSpacing,
+            runSpacing: context.verticalSpacing * 0.3,
             children: [
               if (outOfStockItems.isNotEmpty)
                 _buildAlertChip(
@@ -100,37 +99,37 @@ class StockAlertsSummary extends ConsumerWidget {
   }) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 12.0,
-        vertical: 6.0,
+        horizontal: context.horizontalSpacing * 0.5,
+        vertical: context.verticalSpacing * 0.25,
       ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(
-          16.0,
+          context.borderRadius,
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
+          ResponsiveIcon(
             icon,
-            size: 20.0,
             color: color,
+            size: 20.0,
           ),
-          SizedBox(width: 6.0),
-          Text(
+          HorizontalGap(multiplier: 0.25),
+          ResponsiveText(
             '$count',
+            fontSize: FontSizes.bodyMedium,
             style: TextStyle(
-              fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          SizedBox(width: 6.0),
-          Text(
+          HorizontalGap(multiplier: 0.25),
+          ResponsiveText(
             label,
+            fontSize: FontSizes.bodyMedium,
             style: TextStyle(
-              fontSize: 16.0,
               color: color.withValues(
                 alpha: 0.85,
               ),

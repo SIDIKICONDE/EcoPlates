@@ -101,7 +101,7 @@ class OfferDetailModal extends ConsumerWidget {
                   headerGradient ??
                   (showUrgentHeader && isVeryUrgent
                       ? LinearGradient(
-                          colors: [
+                          colors: const [
                             DeepColorTokens.errorContainer,
                             DeepColorTokens.tertiaryContainer,
                           ],

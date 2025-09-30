@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/categories.dart';
+import '../../../core/responsive/responsive.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/stock_items_provider.dart';
@@ -76,7 +77,6 @@ class _StockCategoryFloatingMenuState
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final currentFilters = ref.watch(stockFiltersProvider);
     final selectedCategory = currentFilters.searchQuery.isEmpty
         ? 'Tous'
@@ -95,125 +95,182 @@ class _StockCategoryFloatingMenuState
         // Menu des catégories
         if (_isOpen)
           Positioned(
-            bottom: 80.0,
-            right: 16.0,
+            bottom: context.buttonHeight + context.verticalSpacing,
+            right: context.horizontalSpacing,
             child: Container(
-              constraints: const BoxConstraints(
-                maxHeight: 400.0,
+              constraints: BoxConstraints(
+                maxWidth: context.responsive(
+                  mobile: 250.0,
+                  tablet: 300.0,
+                  desktop: 320.0,
+                ),
+                maxHeight: context.responsive(
+                  mobile: 400.0,
+                  tablet: 500.0,
+                  desktop: 600.0,
+                ),
+                minWidth: context.responsive(
+                  mobile: 200.0,
+                  tablet: 250.0,
+                  desktop: 280.0,
+                ),
               ),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(16.0),
+                color: DeepColorTokens.neutral0,
+                borderRadius: BorderRadius.circular(context.borderRadius),
                 boxShadow: [
                   BoxShadow(
-                    color: DeepColorTokens.shadowLight,
-                    blurRadius: 16.0,
-                    offset: const Offset(0, 4),
+                    color: DeepColorTokens.shadowLight.withValues(alpha: 0.3),
+                    blurRadius: context.responsive(
+                      mobile: 8.0,
+                      tablet: 12.0,
+                      desktop: 16.0,
+                    ),
+                    offset: Offset(
+                      0,
+                      context.responsive(
+                        mobile: 2.0,
+                        tablet: 3.0,
+                        desktop: 4.0,
+                      ),
+                    ),
                   ),
                 ],
               ),
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Titre du menu
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Catégories',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
+                padding: EdgeInsets.symmetric(
+                  vertical: context.verticalSpacing,
+                ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: context.responsive(
+                      mobile: 200.0,
+                      tablet: 250.0,
+                      desktop: 280.0,
                     ),
-                    const Divider(height: 1),
-                    // Liste des catégories
-                    ..._categories.map((c) {
-                      final isSelected =
-                          selectedCategory == c.label ||
-                          selectedCategory == c.slug;
-                      final color = c.color;
-
-                      return Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            // Mettre à jour le filtre en stockant le slug (ou vide pour 'Tous')
-                            ref
-                                .read(stockFiltersProvider.notifier)
-                                .updateSearchQuery(c.slug);
-                            _toggleMenu();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 12.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? color.withValues(alpha: 0.1)
-                                  : Colors.transparent,
-                              border: isSelected
-                                  ? Border(
-                                      left: BorderSide(
-                                        color: color,
-                                        width: 2.0,
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 24.0,
-                                  height: 24.0,
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? color.withValues(alpha: 0.2)
-                                        : color.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                  child: Icon(
-                                    c.icon,
-                                    size: 16.0,
-                                    color: isSelected
-                                        ? color
-                                        : color.withValues(alpha: 0.7),
-                                  ),
-                                ),
-                                const SizedBox(width: 12.0),
-                                Expanded(
-                                  child: Text(
-                                    c.label,
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w600
-                                          : FontWeight.w400,
-                                      color: isSelected
-                                          ? color
-                                          : theme.colorScheme.onSurface,
-                                    ),
-                                  ),
-                                ),
-                                if (isSelected)
-                                  Icon(
-                                    Icons.check_circle,
-                                    size: 16.0,
-                                    color: color,
-                                  ),
-                              ],
-                            ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Titre du menu
+                      Padding(
+                        padding: context.responsivePadding,
+                        child: ResponsiveText(
+                          'Catégories',
+                          fontSize: FontSizes.subtitleSmall,
+                          style: TextStyle(
+                            color: DeepColorTokens.neutral900,
                           ),
                         ),
-                      );
-                    }),
-                    const SizedBox(height: 16.0),
-                  ],
+                      ),
+                      const Divider(height: 1),
+                      // Liste des catégories
+                      ..._categories.map((c) {
+                        final isSelected =
+                            selectedCategory == c.label ||
+                            selectedCategory == c.slug;
+                        final color = c.color;
+
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              // Mettre à jour le filtre en stockant le slug (ou vide pour 'Tous')
+                              ref
+                                  .read(stockFiltersProvider.notifier)
+                                  .updateSearchQuery(c.slug);
+                              _toggleMenu();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.horizontalSpacing,
+                                vertical: context.verticalSpacing * 0.5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? color.withValues(alpha: 0.1)
+                                    : Colors.transparent,
+                                border: isSelected
+                                    ? Border(
+                                        left: BorderSide(
+                                          color: color,
+                                          width: context.responsive(
+                                            mobile: 2.0,
+                                            tablet: 3.0,
+                                            desktop: 4.0,
+                                          ),
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: context.responsive(
+                                      mobile: 24.0,
+                                      tablet: 28.0,
+                                      desktop: 32.0,
+                                    ),
+                                    height: context.responsive(
+                                      mobile: 24.0,
+                                      tablet: 28.0,
+                                      desktop: 32.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? color.withValues(alpha: 0.2)
+                                          : color.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(
+                                        context.borderRadius,
+                                      ),
+                                    ),
+                                    child: ResponsiveIcon(
+                                      c.icon,
+                                      size: context.responsive(
+                                        mobile: 16.0,
+                                        tablet: 18.0,
+                                        desktop: 20.0,
+                                      ),
+                                      color: isSelected
+                                          ? color
+                                          : color.withValues(alpha: 0.7),
+                                    ),
+                                  ),
+                                  HorizontalGap(),
+                                  Expanded(
+                                    child: ResponsiveText(
+                                      c.label,
+                                      fontSize: FontSizes.bodySmall,
+                                      style: TextStyle(
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.w400,
+                                        color: isSelected
+                                            ? color
+                                            : DeepColorTokens.neutral900,
+                                      ),
+                                    ),
+                                  ),
+                                  if (isSelected)
+                                    ResponsiveIcon(
+                                      Icons.check_circle,
+                                      size: context.responsive(
+                                        mobile: 16.0,
+                                        tablet: 18.0,
+                                        desktop: 20.0,
+                                      ),
+                                      color: color,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                      VerticalGap(),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -222,11 +279,15 @@ class _StockCategoryFloatingMenuState
         // Bouton flottant principal
         FloatingActionButton.small(
           onPressed: _toggleMenu,
-          backgroundColor: theme.colorScheme.primary,
-          elevation: 16.0,
-          child: Icon(
+          backgroundColor: DeepColorTokens.primary,
+          elevation: context.responsive(
+            mobile: 16.0,
+            tablet: 20.0,
+            desktop: 24.0,
+          ),
+          child: ResponsiveIcon(
             _isOpen ? Icons.close : Icons.filter_list,
-            color: theme.colorScheme.onPrimary,
+            color: DeepColorTokens.neutral0,
           ),
         ),
       ],

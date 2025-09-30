@@ -3,9 +3,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/categories.dart';
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/food_offer.dart';
 import '../../providers/stock_items_provider.dart';
+
+/// Configurations centralisées pour le menu grille de catégories
+class StockCategoryGridMenuConfigs {
+  /// Configuration par défaut pour le menu grille
+  static StockCategoryGridMenuConfig get defaultConfig =>
+      const StockCategoryGridMenuConfig(
+        aspectRatio: 1.0, // Carré parfait
+        minTileSize: 80.0,
+        maxTileSize: 140.0,
+      );
+}
+
+/// Configuration pour le menu grille de catégories
+class StockCategoryGridMenuConfig {
+  const StockCategoryGridMenuConfig({
+    required this.aspectRatio,
+    required this.minTileSize,
+    required this.maxTileSize,
+  });
+
+  /// Rapport largeur/hauteur pour les tuiles
+  final double aspectRatio;
+
+  /// Taille minimale d'une tuile
+  final double minTileSize;
+
+  /// Taille maximale d'une tuile
+  final double maxTileSize;
+}
 
 /// Menu flottant avec grille de catégories
 ///
@@ -107,13 +137,13 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
             child: ScaleTransition(
               scale: _scaleAnimation,
               child: Container(
-                width: 350.0,
+                width: ResponsiveUtils.getMaxContentWidth(context),
                 constraints: BoxConstraints(
-                  maxWidth: 350.0,
+                  maxWidth: ResponsiveUtils.getMaxContentWidth(context),
                 ),
-                padding: EdgeInsets.all(24.0),
+                padding: ResponsiveUtils.getResponsivePadding(context),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
+                  color: DeepColorTokens.surface,
                   borderRadius: BorderRadius.circular(16.0),
                   boxShadow: [
                     BoxShadow(
@@ -132,36 +162,77 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                       children: [
                         Icon(
                           Icons.category,
-                          size: 20.0,
-                          color: theme.colorScheme.primary,
+                          size: ResponsiveUtils.getIconSize(
+                            context,
+                            baseSize: 20.0,
+                          ),
+                          color: DeepColorTokens.primary,
                         ),
-                        SizedBox(width: 12.0),
+                        SizedBox(
+                          width:
+                              ResponsiveUtils.getHorizontalSpacing(context) / 2,
+                        ),
                         Text(
                           'Catégories',
                           style: TextStyle(
-                            fontSize: 18.0,
+                            fontSize: ResponsiveUtils.getResponsiveFontSize(
+                              context,
+                              18.0,
+                            ),
                             fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
+                            color: DeepColorTokens.neutral0,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 24.0),
+                    SizedBox(
+                      height: ResponsiveUtils.getVerticalSpacing(context),
+                    ),
 
                     // Grille de catégories
                     Flexible(
                       child: SingleChildScrollView(
                         child: Wrap(
-                          spacing: 12.0,
-                          runSpacing: 12.0,
+                          spacing:
+                              ResponsiveUtils.getHorizontalSpacing(context) / 2,
+                          runSpacing:
+                              ResponsiveUtils.getVerticalSpacing(context) / 2,
                           alignment: WrapAlignment.center,
                           children: _categories.map((category) {
                             final isSelected =
                                 selectedCategory == category.name;
-                            const tileSize = 100.0;
+                            final config =
+                                StockCategoryGridMenuConfigs.defaultConfig;
+
+                            // Calcul de la taille basée sur le rapport d'aspect et les contraintes
+                            final availableWidth =
+                                ResponsiveUtils.getMaxContentWidth(context);
+                            final columnsCount =
+                                ResponsiveUtils.responsiveValue(
+                                  context,
+                                  mobile: 3,
+                                  tablet: 4,
+                                  tabletLarge: 5,
+                                  desktop: 6,
+                                  desktopLarge: 7,
+                                );
+
+                            final spacing =
+                                ResponsiveUtils.getHorizontalSpacing(context) /
+                                2;
+                            final totalSpacing = spacing * (columnsCount - 1);
+                            final tileWidth =
+                                (availableWidth - totalSpacing) / columnsCount;
+                            final constrainedWidth = tileWidth.clamp(
+                              config.minTileSize,
+                              config.maxTileSize,
+                            );
+                            final tileHeight =
+                                constrainedWidth / config.aspectRatio;
+
                             return SizedBox(
-                              width: tileSize,
-                              height: tileSize,
+                              width: constrainedWidth,
+                              height: tileHeight,
                               child: _buildCategoryTile(
                                 context,
                                 category,
@@ -174,26 +245,37 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                       ),
                     ),
 
-                    SizedBox(height: 20.0),
+                    SizedBox(
+                      height: ResponsiveUtils.getVerticalSpacing(context) * 0.8,
+                    ),
 
                     // Bouton fermer
                     TextButton.icon(
                       onPressed: _toggleMenu,
                       icon: Icon(
                         Icons.close,
-                        size: 20.0,
+                        size: ResponsiveUtils.getIconSize(
+                          context,
+                          baseSize: 20.0,
+                        ),
                       ),
                       label: Text(
                         'Fermer',
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: ResponsiveUtils.getResponsiveFontSize(
+                            context,
+                            16.0,
+                          ),
                         ),
                       ),
                       style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.primary,
+                        foregroundColor: DeepColorTokens.primary,
                         padding: EdgeInsets.symmetric(
-                          horizontal: 24.0,
-                          vertical: 12.0,
+                          horizontal: ResponsiveUtils.getHorizontalSpacing(
+                            context,
+                          ),
+                          vertical:
+                              ResponsiveUtils.getVerticalSpacing(context) / 2,
                         ),
                       ),
                     ),
@@ -209,11 +291,11 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
           right: 20.0,
           child: FloatingActionButton(
             onPressed: _toggleMenu,
-            backgroundColor: theme.colorScheme.primary,
+            backgroundColor: DeepColorTokens.primary,
             elevation: 16.0,
             child: Icon(
               _isOpen ? Icons.close : Icons.category,
-              color: theme.colorScheme.onPrimary,
+              color: DeepColorTokens.neutral0,
               size: 24.0,
             ),
           ),
@@ -249,14 +331,14 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
           decoration: BoxDecoration(
             color: isSelected
                 ? category.color.withValues(alpha: 0.1)
-                : theme.colorScheme.surfaceContainerHighest.withValues(
+                : DeepColorTokens.surfaceContainer.withValues(
                     alpha: 0.1,
                   ),
             borderRadius: BorderRadius.circular(16.0),
             border: Border.all(
               color: isSelected
                   ? category.color
-                  : theme.colorScheme.outline.withValues(alpha: 0.3),
+                  : DeepColorTokens.neutral600.withValues(alpha: 0.3),
             ),
           ),
           child: Column(
@@ -264,7 +346,9 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
             children: [
               // Icône de la catégorie
               Container(
-                padding: EdgeInsets.all(12.0),
+                padding: EdgeInsets.all(
+                  ResponsiveUtils.getVerticalSpacing(context) / 3,
+                ),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? category.color.withValues(alpha: 0.1)
@@ -276,29 +360,35 @@ class _StockCategoryGridMenuState extends ConsumerState<StockCategoryGridMenu>
                   color: isSelected
                       ? category.color
                       : category.color.withValues(alpha: 0.6),
+                  size: ResponsiveUtils.getIconSize(context),
                 ),
               ),
-              SizedBox(height: 8.0),
+              SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 6),
               // Nom de la catégorie
               Text(
                 category.name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 14.0,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    14.0,
+                  ),
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected
                       ? category.color
-                      : theme.colorScheme.onSurfaceVariant,
+                      : DeepColorTokens.neutral600,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               // Badge de sélection
               if (isSelected) ...[
-                SizedBox(height: 4.0),
+                SizedBox(
+                  height: ResponsiveUtils.getVerticalSpacing(context) / 6,
+                ),
                 Container(
-                  width: 6.0,
-                  height: 6.0,
+                  width: ResponsiveUtils.getIconSize(context, baseSize: 6.0),
+                  height: ResponsiveUtils.getIconSize(context, baseSize: 6.0),
                   decoration: BoxDecoration(
                     color: category.color,
                     shape: BoxShape.circle,

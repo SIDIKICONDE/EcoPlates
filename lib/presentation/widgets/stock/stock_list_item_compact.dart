@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../pages/stock_item_form/page.dart';
 import '../../providers/stock_items_provider.dart';
+import '../offer_card/offer_card_configs.dart';
 import 'stock_alert_badge.dart';
 
 /// Version compacte et simplifiée d'un item de stock
@@ -26,26 +28,41 @@ class StockListItemCompact extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+    // Utiliser la configuration responsive d'OfferCardConfigs selon le contexte
+    final config = _getResponsiveConfig(context);
 
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: dense ? 8.0 : 16.0,
-        vertical: 4.0,
+        horizontal: dense
+            ? ResponsiveUtils.getHorizontalSpacing(context) / 2
+            : ResponsiveUtils.getHorizontalSpacing(context),
+        vertical: dense
+            ? ResponsiveUtils.getVerticalSpacing(context) / 4
+            : ResponsiveUtils.getVerticalSpacing(context) / 2,
       ),
       child: Material(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(
-          dense ? 8.0 : 12.0,
-        ),
+        color: DeepColorTokens.surface,
+        borderRadius:
+            config.imageBorderRadius ??
+            BorderRadius.circular(
+              dense
+                  ? ResponsiveUtils.getVerticalSpacing(context)
+                  : ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+            ),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(
-            dense ? 8.0 : 12.0,
-          ),
+          borderRadius:
+              config.imageBorderRadius ??
+              BorderRadius.circular(
+                dense
+                    ? ResponsiveUtils.getVerticalSpacing(context)
+                    : ResponsiveUtils.getVerticalSpacing(context) * 1.5,
+              ),
           child: Padding(
             padding: EdgeInsets.all(
-              dense ? 8.0 : 12.0,
+              dense
+                  ? ResponsiveUtils.getVerticalSpacing(context)
+                  : ResponsiveUtils.getVerticalSpacing(context) * 1.5,
             ),
             child: Row(
               children: [
@@ -61,9 +78,12 @@ class StockListItemCompact extends ConsumerWidget {
                             child: Text(
                               item.name,
                               style: TextStyle(
-                                fontSize: dense ? 14.0 : 16.0,
+                                fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                  context,
+                                  dense ? 14.0 : 16.0,
+                                ),
                                 fontWeight: FontWeight.w500,
-                                color: theme.colorScheme.onSurface,
+                                color: DeepColorTokens.neutral0,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -78,7 +98,9 @@ class StockListItemCompact extends ConsumerWidget {
                         ],
                       ),
                       SizedBox(
-                        height: dense ? 2.0 : 4.0,
+                        height: dense
+                            ? ResponsiveUtils.getVerticalSpacing(context) / 4
+                            : ResponsiveUtils.getVerticalSpacing(context) / 2,
                       ),
                       // Prix et catégorie
                       Row(
@@ -86,32 +108,61 @@ class StockListItemCompact extends ConsumerWidget {
                           Text(
                             item.formattedPrice,
                             style: TextStyle(
-                              fontSize: dense ? 14.0 : 16.0,
+                              fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                context,
+                                dense ? 14.0 : 16.0,
+                              ),
                               fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.primary,
+                              color: DeepColorTokens.primary,
                             ),
                           ),
                           Text(
                             ' / ${item.unit}',
                             style: TextStyle(
-                              fontSize: dense ? 12.0 : 14.0,
-                              color: theme.colorScheme.onSurfaceVariant,
+                              fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                context,
+                                dense ? 12.0 : 14.0,
+                              ),
+                              color: DeepColorTokens.neutral600,
                             ),
                           ),
                           SizedBox(
-                            width: dense ? 4.0 : 8.0,
+                            width: dense
+                                ? ResponsiveUtils.getHorizontalSpacing(
+                                        context,
+                                      ) /
+                                      4
+                                : ResponsiveUtils.getHorizontalSpacing(
+                                        context,
+                                      ) /
+                                      2,
                           ),
                           Container(
-                            width: 4.0,
-                            height: 4.0,
+                            width: ResponsiveUtils.getIconSize(
+                              context,
+                              baseSize: 4.0,
+                            ),
+                            height: ResponsiveUtils.getIconSize(
+                              context,
+                              baseSize: 4.0,
+                            ),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.onSurfaceVariant
-                                  .withValues(alpha: 0.5),
+                              color: DeepColorTokens.neutral600.withValues(
+                                alpha: 0.5,
+                              ),
                               shape: BoxShape.circle,
                             ),
                           ),
                           SizedBox(
-                            width: dense ? 4.0 : 8.0,
+                            width: dense
+                                ? ResponsiveUtils.getHorizontalSpacing(
+                                        context,
+                                      ) /
+                                      4
+                                : ResponsiveUtils.getHorizontalSpacing(
+                                        context,
+                                      ) /
+                                      2,
                           ),
                           Expanded(
                             child: Text(
@@ -119,8 +170,11 @@ class StockListItemCompact extends ConsumerWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: dense ? 12.0 : 14.0,
-                                color: theme.colorScheme.onSurfaceVariant,
+                                fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                  context,
+                                  dense ? 12.0 : 14.0,
+                                ),
+                                color: DeepColorTokens.neutral600,
                               ),
                             ),
                           ),
@@ -135,8 +189,14 @@ class StockListItemCompact extends ConsumerWidget {
                   children: [
                     // Indicateur de statut
                     Container(
-                      width: 8.0,
-                      height: 8.0,
+                      width: ResponsiveUtils.getIconSize(
+                        context,
+                        baseSize: 8.0,
+                      ),
+                      height: ResponsiveUtils.getIconSize(
+                        context,
+                        baseSize: 8.0,
+                      ),
                       decoration: BoxDecoration(
                         color: item.status == StockItemStatus.active
                             ? DeepColorTokens.success
@@ -144,13 +204,18 @@ class StockListItemCompact extends ConsumerWidget {
                         shape: BoxShape.circle,
                       ),
                     ),
-                    const SizedBox(width: 4.0),
+                    SizedBox(
+                      width: ResponsiveUtils.getHorizontalSpacing(context) / 4,
+                    ),
                     // Menu action
                     PopupMenuButton<String>(
                       icon: Icon(
                         Icons.more_vert,
-                        color: theme.colorScheme.onSurfaceVariant,
-                        size: 20.0,
+                        color: DeepColorTokens.neutral600,
+                        size: ResponsiveUtils.getIconSize(
+                          context,
+                          baseSize: 20.0,
+                        ),
                       ),
                       onSelected: (value) =>
                           _handleMenuAction(context, ref, value),
@@ -160,7 +225,10 @@ class StockListItemCompact extends ConsumerWidget {
                           child: ListTile(
                             leading: Icon(
                               Icons.edit,
-                              size: 20.0,
+                              size: ResponsiveUtils.getIconSize(
+                                context,
+                                baseSize: 20.0,
+                              ),
                             ),
                             title: const Text('Modifier'),
                             contentPadding: EdgeInsets.zero,
@@ -174,7 +242,10 @@ class StockListItemCompact extends ConsumerWidget {
                               item.status == StockItemStatus.active
                                   ? Icons.pause
                                   : Icons.play_arrow,
-                              size: 20.0,
+                              size: ResponsiveUtils.getIconSize(
+                                context,
+                                baseSize: 20.0,
+                              ),
                             ),
                             title: Text(
                               item.status == StockItemStatus.active
@@ -195,6 +266,13 @@ class StockListItemCompact extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Obtient la configuration responsive appropriée selon le contexte
+  OfferCardPageConfig _getResponsiveConfig(BuildContext context) {
+    // Utiliser la configuration par défaut d'OfferCardConfigs
+    // qui applique déjà la responsivité via ResponsiveUtils.responsiveValue
+    return OfferCardConfigs.defaultConfig;
   }
 
   void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
@@ -220,7 +298,7 @@ class StockListItemCompact extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(StockErrorMessages.getErrorMessage(error)),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: DeepColorTokens.error,
             behavior: SnackBarBehavior.floating,
           ),
         );

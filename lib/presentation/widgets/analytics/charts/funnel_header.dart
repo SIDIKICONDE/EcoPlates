@@ -21,7 +21,7 @@ class FunnelHeader extends StatelessWidget {
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
+              colors: const [
                 DeepColorTokens.primary,
                 DeepColorTokens.secondary,
               ],

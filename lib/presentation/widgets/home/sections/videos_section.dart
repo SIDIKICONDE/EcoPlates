@@ -82,7 +82,7 @@ class VideosSection extends ConsumerWidget {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       Icon(
                         Icons.play_circle_outline,
                         size: 48.0,

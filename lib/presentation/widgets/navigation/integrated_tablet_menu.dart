@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../pages/browse_page.dart';
 import '../../pages/consumer_profile_page.dart';
-import '../../screens/main_home_screen.dart';
 import '../../screens/all_urgent_offers_screen.dart';
+import '../../screens/main_home_screen.dart';
 
 /// Menu tablette intégré avec les vraies pages de l'application
 class IntegratedTabletMenu extends ConsumerStatefulWidget {

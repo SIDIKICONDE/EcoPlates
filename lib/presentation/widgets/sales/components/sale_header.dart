@@ -52,7 +52,6 @@ class SaleHeader extends StatelessWidget {
                 color: statusColor.withValues(alpha: 0.15),
                 border: Border.all(
                   color: statusColor.withValues(alpha: 0.3),
-                  width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(6.0),
               ),

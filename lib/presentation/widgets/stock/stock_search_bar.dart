@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../providers/stock_items_provider.dart';
+import '../offer_card/offer_card_configs.dart';
 
 /// Barre de recherche avancée pour filtrer les articles de stock
 ///
@@ -86,15 +88,21 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final config = OfferCardConfigs.defaultConfig;
+
     return Container(
-      height: 48.0,
+      height: ResponsiveUtils.getVerticalSpacing(context) * 3,
       decoration: BoxDecoration(
         border: Border.all(
           color: DeepColorTokens.neutral400.withValues(
             alpha: DeepColorTokens.opacity10,
           ),
         ),
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius:
+            config.imageBorderRadius ??
+            BorderRadius.circular(
+              ResponsiveUtils.getVerticalSpacing(context) / 2,
+            ),
       ),
       child: TextField(
         controller: _controller,
@@ -104,14 +112,14 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
           prefixIcon: Icon(
             Icons.search,
             color: DeepColorTokens.neutral600,
-            size: 20.0,
+            size: ResponsiveUtils.getIconSize(context, baseSize: 20.0),
           ),
           suffixIcon: _controller.text.isNotEmpty
               ? IconButton(
                   icon: Icon(
                     Icons.clear,
                     color: DeepColorTokens.neutral600,
-                    size: 20.0,
+                    size: ResponsiveUtils.getIconSize(context, baseSize: 20.0),
                   ),
                   onPressed: _clearSearch,
                   tooltip: 'Effacer la recherche',
@@ -120,14 +128,14 @@ class _StockSearchBarState extends ConsumerState<StockSearchBar> {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 12.0,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: ResponsiveUtils.getHorizontalSpacing(context),
+            vertical: ResponsiveUtils.getVerticalSpacing(context) * 0.75,
           ),
         ),
         style: TextStyle(
           color: DeepColorTokens.neutral800,
-          fontSize: 16.0,
+          fontSize: ResponsiveUtils.getResponsiveFontSize(context, 16.0),
           height: 1.2,
         ),
         textInputAction: TextInputAction.search,

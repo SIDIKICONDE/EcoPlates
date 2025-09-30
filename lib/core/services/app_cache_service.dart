@@ -86,7 +86,7 @@ class AppCacheService {
 
   /// Vérifie si une clé existe et n'est pas expirée
   bool contains(String key) {
-    return get(key) != null;
+    return get<dynamic>(key) != null;
   }
 
   /// Supprime une entrée du cache

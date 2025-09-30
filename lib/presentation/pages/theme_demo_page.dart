@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/themes/tokens/deep_color_tokens.dart';
+
 import '../../core/themes/deep_theme.dart';
+import '../../core/themes/tokens/deep_color_tokens.dart';
 
 class ThemeDemoPage extends StatefulWidget {
   const ThemeDemoPage({super.key});

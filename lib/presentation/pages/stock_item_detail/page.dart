@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive.dart';
+import '../../../core/responsive/responsive_layout.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../../domain/entities/stock_item.dart';
@@ -52,32 +54,59 @@ class StockItemDetailPage extends ConsumerWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(
-          16.0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _HeaderCard(item: currentItem),
-            SizedBox(
-              height: 16.0,
-            ),
-            _StatsCard(item: currentItem),
-            if (currentItem.lowStockThreshold != null) ...[
-              SizedBox(
-                height: 16.0,
-              ),
-              _AlertThresholdCard(item: currentItem),
+        padding: context.responsivePadding,
+        child: ResponsiveLayout(
+          mobile: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _HeaderCard(item: currentItem),
+              VerticalGap(),
+              _StatsCard(item: currentItem),
+              if (currentItem.lowStockThreshold != null) ...[
+                VerticalGap(),
+                _AlertThresholdCard(item: currentItem),
+              ],
+              if (currentItem.description?.isNotEmpty ?? false) ...[
+                VerticalGap(),
+                _DescriptionCard(text: currentItem.description!),
+              ],
+              VerticalGap(),
+              _ActionsSection(item: currentItem),
             ],
-            if (currentItem.description?.isNotEmpty ?? false) ...[
-              SizedBox(
-                height: 16.0,
-              ),
-              _DescriptionCard(text: currentItem.description!),
+          ),
+          tablet: ResponsiveCardGrid(
+            tabletColumns: 2,
+            desktopColumns: 2,
+            spacing: context.horizontalSpacing,
+            runSpacing: context.verticalSpacing,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _HeaderCard(item: currentItem),
+              _StatsCard(item: currentItem),
+              if (currentItem.lowStockThreshold != null)
+                _AlertThresholdCard(item: currentItem),
+              if (currentItem.description?.isNotEmpty ?? false)
+                _DescriptionCard(text: currentItem.description!),
+              _ActionsSection(item: currentItem),
             ],
-            SizedBox(height: 16.0),
-            _ActionsSection(item: currentItem),
-          ],
+          ),
+          desktop: ResponsiveCardGrid(
+            tabletColumns: 2,
+            spacing: context.horizontalSpacing,
+            runSpacing: context.verticalSpacing,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _HeaderCard(item: currentItem),
+              _StatsCard(item: currentItem),
+              if (currentItem.lowStockThreshold != null)
+                _AlertThresholdCard(item: currentItem),
+              if (currentItem.description?.isNotEmpty ?? false)
+                _DescriptionCard(text: currentItem.description!),
+              _ActionsSection(item: currentItem),
+            ],
+          ),
         ),
       ),
     );
@@ -91,10 +120,13 @@ class _HeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing / 3,
+        vertical: context.verticalSpacing / 6,
+      ),
       decoration: BoxDecoration(
-        color: DeepColorTokens.surface,
-        borderRadius: BorderRadius.circular(12.0),
+        color: DeepColorTokens.neutral200,
+        borderRadius: BorderRadius.circular(context.borderRadius / 3),
         border: Border.all(
           color: DeepColorTokens.neutral400.withValues(alpha: 0.1),
         ),
@@ -108,17 +140,14 @@ class _HeaderCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    ResponsiveText(
                       item.name,
-                      style: const TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      fontSize: FontSizes.titleSmall,
                     ),
-                    const SizedBox(height: 8.0),
+                    VerticalGap(height: context.verticalSpacing / 4),
                     Wrap(
-                      spacing: 8.0,
-                      runSpacing: 8.0,
+                      spacing: context.horizontalSpacing / 2,
+                      runSpacing: context.verticalSpacing / 3,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         _SkuChip(sku: item.sku),
@@ -128,7 +157,7 @@ class _HeaderCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 16.0),
+              HorizontalGap(),
               _StatusDot(status: item.status),
             ],
           ),
@@ -145,50 +174,100 @@ class _StatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing / 3,
+        vertical: context.verticalSpacing / 6,
+      ),
       decoration: BoxDecoration(
-        color: DeepColorTokens.surface,
-        borderRadius: BorderRadius.circular(12.0),
+        color: DeepColorTokens.neutral200,
+        borderRadius: BorderRadius.circular(context.borderRadius / 3),
         border: Border.all(
           color: DeepColorTokens.neutral400.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Wrap(
-            spacing: 16.0,
-            runSpacing: 16.0,
-            children: [
-              _StatTile(
-                label: 'Prix',
-                value: item.formattedPrice,
-                suffix: '/ ${item.unit}',
-                color: DeepColorTokens.primary,
-              ),
-              _StatTile(
-                label: 'Quantité',
-                value: item.formattedQuantity,
-                color: item.isOutOfStock
-                    ? DeepColorTokens.error
-                    : DeepColorTokens.secondary,
-              ),
-            ],
+          ResponsiveLayout(
+            mobile: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _StatTile(
+                  label: 'Prix',
+                  value: item.formattedPrice,
+                  suffix: '/ ${item.unit}',
+                  color: DeepColorTokens.primary,
+                ),
+                VerticalGap(height: context.verticalSpacing / 3),
+                _StatTile(
+                  label: 'Quantité',
+                  value: item.formattedQuantity,
+                  color: item.isOutOfStock
+                      ? DeepColorTokens.error
+                      : DeepColorTokens.secondary,
+                ),
+              ],
+            ),
+            tablet: Row(
+              children: [
+                Expanded(
+                  child: _StatTile(
+                    label: 'Prix',
+                    value: item.formattedPrice,
+                    suffix: '/ ${item.unit}',
+                    color: DeepColorTokens.primary,
+                  ),
+                ),
+                HorizontalGap(),
+                Expanded(
+                  child: _StatTile(
+                    label: 'Quantité',
+                    value: item.formattedQuantity,
+                    color: item.isOutOfStock
+                        ? DeepColorTokens.error
+                        : DeepColorTokens.secondary,
+                  ),
+                ),
+              ],
+            ),
+            desktop: Row(
+              children: [
+                Expanded(
+                  child: _StatTile(
+                    label: 'Prix',
+                    value: item.formattedPrice,
+                    suffix: '/ ${item.unit}',
+                    color: DeepColorTokens.primary,
+                  ),
+                ),
+                HorizontalGap(),
+                Expanded(
+                  child: _StatTile(
+                    label: 'Quantité',
+                    value: item.formattedQuantity,
+                    color: item.isOutOfStock
+                        ? DeepColorTokens.error
+                        : DeepColorTokens.secondary,
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 16.0),
+          VerticalGap(height: context.verticalSpacing / 3),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Icon(
                 Icons.update,
-                size: 16.0,
+                size: FontSizes.caption.getSize(context),
                 color: DeepColorTokens.neutral600.withValues(alpha: 0.6),
               ),
-              const SizedBox(width: 4.0),
+              HorizontalGap(width: context.horizontalSpacing / 6),
               Text(
                 _formatLastUpdate(item.updatedAt),
                 style: TextStyle(
-                  fontSize: 12.0,
+                  fontSize: FontSizes.caption.getSize(context),
                   color: DeepColorTokens.neutral600.withValues(alpha: 0.6),
                 ),
               ),
@@ -226,24 +305,27 @@ class _AlertThresholdCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing / 3,
+        vertical: context.verticalSpacing / 6,
+      ),
       decoration: BoxDecoration(
-        color: DeepColorTokens.surface,
-        borderRadius: BorderRadius.circular(12.0),
+        color: DeepColorTokens.neutral200,
+        borderRadius: BorderRadius.circular(context.borderRadius / 3),
         border: Border.all(
           color: DeepColorTokens.primary.withValues(alpha: 0.3),
-          width: 2.0,
+          width: context.responsive(mobile: 1.5, tablet: 2.0, desktop: 2.5),
         ),
       ),
       child: Row(
         children: [
           const StockAlertBadge(alertLevel: StockAlertLevel.low),
-          const SizedBox(width: 12.0),
+          HorizontalGap(width: context.horizontalSpacing / 2),
           Expanded(
             child: Text(
               'Une alerte sera déclenchée quand le stock atteint ${item.lowStockThreshold} ${item.unit}',
-              style: const TextStyle(
-                fontSize: 14.0,
+              style: TextStyle(
+                fontSize: FontSizes.bodySmall.getSize(context),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -261,10 +343,13 @@ class _DescriptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing / 3,
+        vertical: context.verticalSpacing / 6,
+      ),
       decoration: BoxDecoration(
-        color: DeepColorTokens.surface,
-        borderRadius: BorderRadius.circular(12.0),
+        color: DeepColorTokens.neutral200,
+        borderRadius: BorderRadius.circular(context.borderRadius / 3),
         border: Border.all(
           color: DeepColorTokens.neutral400.withValues(alpha: 0.1),
         ),
@@ -272,18 +357,15 @@ class _DescriptionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          ResponsiveText(
             'Description',
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-            ),
+            fontSize: FontSizes.subtitleSmall,
           ),
-          const SizedBox(height: 8.0),
+          VerticalGap(height: context.verticalSpacing / 4),
           Text(
             text,
             style: TextStyle(
-              fontSize: 14.0,
+              fontSize: FontSizes.bodySmall.getSize(context),
               color: DeepColorTokens.neutral800,
               height: 1.5,
             ),
@@ -301,10 +383,13 @@ class _ActionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing / 3,
+        vertical: context.verticalSpacing / 6,
+      ),
       decoration: BoxDecoration(
-        color: DeepColorTokens.surface,
-        borderRadius: BorderRadius.circular(12.0),
+        color: DeepColorTokens.neutral200,
+        borderRadius: BorderRadius.circular(context.borderRadius / 3),
         border: Border.all(
           color: DeepColorTokens.neutral400.withValues(alpha: 0.1),
         ),
@@ -312,21 +397,30 @@ class _ActionsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Wrap(
-            spacing: 16.0,
-            runSpacing: 16.0,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            alignment: WrapAlignment.spaceBetween,
-            children: [
-              StockStatusToggle(
-                item: item,
-              ),
-              StockQuantityAdjuster(
-                item: item,
-              ),
-            ],
+          ResponsiveLayout(
+            mobile: Column(
+              children: [
+                StockStatusToggle(item: item),
+                VerticalGap(height: context.verticalSpacing / 3),
+                StockQuantityAdjuster(item: item),
+              ],
+            ),
+            tablet: Row(
+              children: [
+                Expanded(child: StockStatusToggle(item: item)),
+                HorizontalGap(),
+                Expanded(child: StockQuantityAdjuster(item: item)),
+              ],
+            ),
+            desktop: Row(
+              children: [
+                Expanded(child: StockStatusToggle(item: item)),
+                HorizontalGap(),
+                Expanded(child: StockQuantityAdjuster(item: item)),
+              ],
+            ),
           ),
-          const SizedBox(height: 16.0),
+          VerticalGap(),
           FilledButton.icon(
             onPressed: () {
               unawaited(
@@ -352,15 +446,18 @@ class _SkuChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing / 2,
+        vertical: context.verticalSpacing / 4,
+      ),
       decoration: BoxDecoration(
         color: DeepColorTokens.neutral800,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(context.borderRadius / 2),
       ),
       child: Text(
         sku,
         style: TextStyle(
-          fontSize: 12.0,
+          fontSize: FontSizes.caption.getSize(context),
           color: DeepColorTokens.neutral600,
           fontFamily: 'monospace',
           fontWeight: FontWeight.w500,
@@ -376,15 +473,18 @@ class _CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing / 2,
+        vertical: context.verticalSpacing / 4,
+      ),
       decoration: BoxDecoration(
         color: DeepColorTokens.primaryContainer,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(context.borderRadius / 2),
       ),
       child: Text(
         category,
         style: TextStyle(
-          fontSize: 12.0,
+          fontSize: FontSizes.caption.getSize(context),
           color: DeepColorTokens.primary,
           fontWeight: FontWeight.w500,
         ),
@@ -406,8 +506,8 @@ class _StatusDot extends StatelessWidget {
         : DeepColorTokens.secondary;
 
     return Container(
-      width: 12.0,
-      height: 12.0,
+      width: FontSizes.caption.getSize(context),
+      height: FontSizes.caption.getSize(context),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color,
@@ -431,38 +531,47 @@ class _StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalSpacing / 2,
+        vertical: context.verticalSpacing / 4,
+      ),
       decoration: BoxDecoration(
         color: color?.withValues(alpha: 0.1) ?? DeepColorTokens.neutral800,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(context.borderRadius / 2),
       ),
-      child: Row(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: color ?? DeepColorTokens.neutral800,
-            ),
-          ),
-          if (suffix != null) ...[
-            const SizedBox(width: 4.0),
-            Text(
-              suffix!,
-              style: TextStyle(
-                fontSize: 14.0,
-                color: color ?? DeepColorTokens.neutral600,
-                fontWeight: FontWeight.w500,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: FontSizes.bodyMedium.getSize(context),
+                  fontWeight: FontWeight.bold,
+                  color: color ?? DeepColorTokens.neutral800,
+                ),
               ),
-            ),
-          ],
-          const SizedBox(width: 8.0),
+              if (suffix != null) ...[
+                HorizontalGap(width: context.horizontalSpacing / 6),
+                Text(
+                  suffix!,
+                  style: TextStyle(
+                    fontSize: FontSizes.caption.getSize(context),
+                    color: color ?? DeepColorTokens.neutral600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ],
+          ),
+          VerticalGap(height: context.verticalSpacing / 6),
           Text(
             label,
             style: TextStyle(
-              fontSize: 12.0,
+              fontSize: FontSizes.caption.getSize(context),
               color: DeepColorTokens.neutral600,
               fontWeight: FontWeight.w400,
             ),

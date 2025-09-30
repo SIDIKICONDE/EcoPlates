@@ -135,7 +135,7 @@ class StockFilterChips extends ConsumerWidget {
           onSelected: (selected) {
             _onFilterSelected(ref, option, selected);
           },
-          backgroundColor: DeepColorTokens.surface,
+          backgroundColor: DeepColorTokens.neutral0,
           selectedColor: DeepColorTokens.primaryContainer,
           checkmarkColor: DeepColorTokens.primary,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

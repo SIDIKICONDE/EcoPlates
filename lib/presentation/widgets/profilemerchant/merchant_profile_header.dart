@@ -113,7 +113,6 @@ class MerchantProfileHeader extends ConsumerWidget {
 
             // Avatar centré à droite (moins d'espace)
             Expanded(
-              flex: 1,
               child: Column(
                 children: [
                   Center(

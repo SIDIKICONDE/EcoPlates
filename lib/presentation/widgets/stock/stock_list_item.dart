@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../pages/stock_item_form/page.dart';
+import '../offer_card/offer_card_configs.dart';
 import 'stock_alert_badge.dart';
 import 'stock_quantity_adjuster.dart';
 import 'stock_status_toggle.dart';
@@ -44,50 +46,43 @@ class StockListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = OfferCardConfigs.defaultConfig;
+
     return Column(
       children: [
         Container(
           margin: EdgeInsets.symmetric(
             horizontal: dense
-                ? (compactMode ? 4.0 : 8.0)
-                : (compactMode ? 8.0 : 12.0),
+                ? ResponsiveUtils.getHorizontalSpacing(context) / 4
+                : ResponsiveUtils.getHorizontalSpacing(context) / 2,
             vertical: dense
-                ? (compactMode ? 2.0 : 4.0)
-                : (compactMode ? 4.0 : 8.0),
+                ? ResponsiveUtils.getVerticalSpacing(context) / 8
+                : ResponsiveUtils.getVerticalSpacing(context) / 4,
           ),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(
-              dense ? (compactMode ? 8.0 : 12.0) : (compactMode ? 12.0 : 16.0),
-            ),
+            color: DeepColorTokens.neutral0,
+            borderRadius:
+                config.imageBorderRadius ??
+                BorderRadius.circular(
+                  ResponsiveUtils.getVerticalSpacing(context),
+                ),
             border: Border.all(
               color: DeepColorTokens.neutral300.withValues(alpha: 0.3),
               width: 0.5,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: DeepColorTokens.shadowLight,
-                blurRadius: dense
-                    ? (compactMode ? 2.0 : 4.0)
-                    : (compactMode ? 4.0 : 8.0),
-                offset: const Offset(0, 1),
-              ),
-              BoxShadow(
-                color: DeepColorTokens.shadowLight.withValues(alpha: 0.5),
-                blurRadius: dense
-                    ? (compactMode ? 4.0 : 8.0)
-                    : (compactMode ? 8.0 : 16.0),
-                offset: const Offset(0, 2),
-              ),
-            ],
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(
-                compactMode ? 12.0 : 16.0,
-              ),
+              hoverColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              borderRadius:
+                  config.imageBorderRadius ??
+                  BorderRadius.circular(
+                    ResponsiveUtils.getVerticalSpacing(context),
+                  ),
               child: AnimatedContainer(
                 duration: showAnimations
                     ? const Duration(milliseconds: 200)
@@ -95,8 +90,8 @@ class StockListItem extends StatelessWidget {
                 curve: Curves.easeInOut,
                 padding: EdgeInsets.all(
                   dense
-                      ? (compactMode ? 3.0 : 6.0)
-                      : (compactMode ? 6.0 : 10.0),
+                      ? ResponsiveUtils.getVerticalSpacing(context) / 8
+                      : ResponsiveUtils.getVerticalSpacing(context) / 4,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,9 +100,7 @@ class StockListItem extends StatelessWidget {
                     Expanded(child: _buildItemInfo(context)),
 
                     SizedBox(
-                      width: dense
-                          ? (compactMode ? 2.0 : 3.0)
-                          : (compactMode ? 2.0 : 3.0),
+                      width: ResponsiveUtils.getHorizontalSpacing(context) / 4,
                     ),
 
                     // Contrôles (quantité et statut)
@@ -123,13 +116,9 @@ class StockListItem extends StatelessWidget {
   }
 
   Widget _buildItemInfo(BuildContext context) {
-    final fontSize = dense
-        ? (compactMode ? 11.0 : 13.0)
-        : (compactMode ? 13.0 : 18.0);
-    final smallFontSize = dense
-        ? (compactMode ? 11.0 - 2 : 11.0)
-        : (compactMode ? 11.0 : 13.0);
-    const spacing = 6.0;
+    final fontSize = ResponsiveUtils.getResponsiveFontSize(context, 16.0);
+    final smallFontSize = ResponsiveUtils.getResponsiveFontSize(context, 12.0);
+    final spacing = ResponsiveUtils.getVerticalSpacing(context) / 4;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +134,7 @@ class StockListItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.w600,
-                  color: DeepColorTokens.neutral0,
+                  color: DeepColorTokens.neutral900,
                 ),
                 child: Text(
                   item.name,
@@ -157,9 +146,7 @@ class StockListItem extends StatelessWidget {
 
             // Badge d'alerte avec animation
             SizedBox(
-              width: dense
-                  ? (compactMode ? 2.0 / 2 : 2.0)
-                  : (compactMode ? 2.0 : 3.0),
+              width: ResponsiveUtils.getHorizontalSpacing(context) / 4,
             ),
             AnimatedScale(
               scale: showAnimations ? 1.0 : 0.8,
@@ -179,21 +166,21 @@ class StockListItem extends StatelessWidget {
 
         // SKU et catégorie avec amélioration visuelle
         Wrap(
-          spacing: compactMode ? 2.0 : 3.0,
-          runSpacing: compactMode ? 2.0 : 2.0,
+          spacing: ResponsiveUtils.getHorizontalSpacing(context) / 4,
+          runSpacing: ResponsiveUtils.getVerticalSpacing(context) / 8,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: compactMode ? 2.0 : 2.0,
-                vertical: compactMode ? 2.0 / 4 : 2.0 / 2,
+                horizontal: ResponsiveUtils.getHorizontalSpacing(context) / 8,
+                vertical: ResponsiveUtils.getVerticalSpacing(context) / 16,
               ),
               decoration: BoxDecoration(
                 color: DeepColorTokens.neutral100.withValues(
                   alpha: 0.6,
                 ),
                 borderRadius: BorderRadius.circular(
-                  compactMode ? 4.0 : 8.0,
+                  ResponsiveUtils.getVerticalSpacing(context) / 4,
                 ),
               ),
               child: Text(
@@ -210,15 +197,15 @@ class StockListItem extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: compactMode ? 2.0 : 3.0,
-                vertical: compactMode ? 2.0 / 2 : 2.0 / 4 * 3,
+                horizontal: ResponsiveUtils.getHorizontalSpacing(context) / 6,
+                vertical: ResponsiveUtils.getVerticalSpacing(context) / 12,
               ),
               decoration: BoxDecoration(
                 color: DeepColorTokens.primaryContainer.withValues(
                   alpha: 0.15,
                 ),
                 borderRadius: BorderRadius.circular(
-                  compactMode ? 8.0 : 12.0,
+                  ResponsiveUtils.getVerticalSpacing(context) / 2,
                 ),
                 border: Border.all(
                   color: DeepColorTokens.primary.withValues(
@@ -241,26 +228,26 @@ class StockListItem extends StatelessWidget {
           ],
         ),
 
-        SizedBox(height: 6.0),
+        SizedBox(height: spacing),
 
         // Prix et dernière mise à jour avec amélioration
         Wrap(
-          spacing: compactMode ? 3.0 : 6.0,
-          runSpacing: compactMode ? 2.0 : 2.0,
+          spacing: ResponsiveUtils.getHorizontalSpacing(context) / 3,
+          runSpacing: ResponsiveUtils.getVerticalSpacing(context) / 8,
           crossAxisAlignment: WrapCrossAlignment.center,
           alignment: WrapAlignment.spaceBetween,
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: compactMode ? 2.0 : 3.0,
-                vertical: compactMode ? 2.0 / 2 : 2.0,
+                horizontal: ResponsiveUtils.getHorizontalSpacing(context) / 6,
+                vertical: ResponsiveUtils.getVerticalSpacing(context) / 8,
               ),
               decoration: BoxDecoration(
                 color: DeepColorTokens.secondaryContainer.withValues(
                   alpha: 0.3,
                 ),
                 borderRadius: BorderRadius.circular(
-                  compactMode ? 8.0 : 12.0,
+                  ResponsiveUtils.getVerticalSpacing(context) / 2,
                 ),
               ),
               child: Row(
@@ -269,21 +256,25 @@ class StockListItem extends StatelessWidget {
                   Text(
                     item.formattedPrice,
                     style: TextStyle(
-                      fontSize: compactMode ? 11.0 : 13.0,
+                      fontSize: ResponsiveUtils.getResponsiveFontSize(
+                        context,
+                        14.0,
+                      ),
                       fontWeight: FontWeight.w700,
-                      color: DeepColorTokens.neutral0,
+                      color: DeepColorTokens.neutral900,
                     ),
                   ),
                   SizedBox(
-                    width: compactMode ? 2.0 / 2 : 2.0,
+                    width: ResponsiveUtils.getHorizontalSpacing(context) / 8,
                   ),
                   Text(
                     '/ ${item.unit}',
                     style: TextStyle(
-                      fontSize: compactMode ? 11.0 - 2 : 11.0,
-                      color: DeepColorTokens.neutral0.withValues(
-                        alpha: 0.9,
+                      fontSize: ResponsiveUtils.getResponsiveFontSize(
+                        context,
+                        12.0,
                       ),
+                      color: DeepColorTokens.neutral600,
                     ),
                   ),
                 ],
@@ -295,13 +286,13 @@ class StockListItem extends StatelessWidget {
               children: [
                 Icon(
                   Icons.update,
-                  size: compactMode ? 6.0 : 18.0,
+                  size: ResponsiveUtils.getIconSize(context, baseSize: 16.0),
                   color: DeepColorTokens.neutral600.withValues(
                     alpha: 0.8,
                   ),
                 ),
                 SizedBox(
-                  width: compactMode ? 2.0 / 2 : 2.0,
+                  width: ResponsiveUtils.getHorizontalSpacing(context) / 8,
                 ),
                 Text(
                   _formatLastUpdate(item.updatedAt),
@@ -321,7 +312,7 @@ class StockListItem extends StatelessWidget {
 
         // Description optionnelle avec animation
         if (item.description?.isNotEmpty ?? false) ...[
-          SizedBox(height: 6.0),
+          SizedBox(height: spacing),
           AnimatedOpacity(
             opacity: showAnimations ? 0.9 : 1.0,
             duration: showAnimations
@@ -329,20 +320,23 @@ class StockListItem extends StatelessWidget {
                 : Duration.zero,
             child: Container(
               padding: EdgeInsets.all(
-                compactMode ? 2.0 : 3.0,
+                ResponsiveUtils.getVerticalSpacing(context) / 8,
               ),
               decoration: BoxDecoration(
                 color: DeepColorTokens.neutral100.withValues(
                   alpha: 0.3,
                 ),
                 borderRadius: BorderRadius.circular(
-                  compactMode ? 8.0 : 12.0,
+                  ResponsiveUtils.getVerticalSpacing(context) / 2,
                 ),
               ),
               child: Text(
                 item.description!,
                 style: TextStyle(
-                  fontSize: compactMode ? 11.0 : 13.0,
+                  fontSize: ResponsiveUtils.getResponsiveFontSize(
+                    context,
+                    12.0,
+                  ),
                   color: DeepColorTokens.neutral700,
                   fontStyle: FontStyle.italic,
                   height: 1.4,
@@ -370,9 +364,7 @@ class StockListItem extends StatelessWidget {
           child: IconButton(
             icon: Icon(
               Icons.edit_outlined,
-              size: dense
-                  ? (compactMode ? 18.0 - 4 : 18.0 - 2)
-                  : (compactMode ? 18.0 - 2 : 18.0),
+              size: ResponsiveUtils.getIconSize(context, baseSize: 18.0),
               color: DeepColorTokens.primary,
             ),
             onPressed: () {
@@ -387,12 +379,8 @@ class StockListItem extends StatelessWidget {
             },
             tooltip: 'Modifier',
             constraints: BoxConstraints(
-              minWidth: dense
-                  ? (compactMode ? 48.0 / 2 : 48.0 / 4 * 3)
-                  : (compactMode ? 48.0 / 4 * 3 : 48.0),
-              minHeight: dense
-                  ? (compactMode ? 48.0 / 2 : 48.0 / 4 * 3)
-                  : (compactMode ? 48.0 / 4 * 3 : 48.0),
+              minWidth: ResponsiveUtils.getIconSize(context, baseSize: 48.0),
+              minHeight: ResponsiveUtils.getIconSize(context, baseSize: 48.0),
             ),
             style: IconButton.styleFrom(
               backgroundColor: DeepColorTokens.primary.withValues(
@@ -403,7 +391,7 @@ class StockListItem extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: 6.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 4),
 
         // Toggle statut sans animation
         StockStatusToggle(
@@ -412,7 +400,7 @@ class StockListItem extends StatelessWidget {
           showLabel: !compactMode,
         ),
 
-        SizedBox(height: 6.0),
+        SizedBox(height: ResponsiveUtils.getVerticalSpacing(context) / 4),
 
         // Ajusteur de quantité avec animation
         AnimatedScale(

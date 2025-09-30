@@ -103,7 +103,7 @@ class ResponsiveCardConfig {
     final spacing = ResponsiveUtils.getVerticalSpacing(context) * 0.5;
 
     // Hauteur dynamique totale
-    var dynamicHeight = imageHeight + contentBase + spacing;
+    final dynamicHeight = imageHeight + contentBase + spacing;
 
     // Contraintes minimales et maximales par plateforme pour éviter les extrêmes
     final minH = ResponsiveUtils.responsiveValue(

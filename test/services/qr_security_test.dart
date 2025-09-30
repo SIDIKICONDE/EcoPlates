@@ -393,7 +393,7 @@ void main() {
       final qrData = base64Url.encode(utf8.encode(jsonEncode(validPayload)));
 
       when(
-        mockDio.post(
+        mockDio.post<Map<String, dynamic>>(
           any,
           data: anyNamed('data'),
           queryParameters: anyNamed('queryParameters'),
@@ -446,7 +446,7 @@ void main() {
       final qrData = base64Url.encode(utf8.encode(jsonEncode(validPayload)));
 
       when(
-        mockDio.post(
+        mockDio.post<Map<String, dynamic>>(
           any,
           data: anyNamed('data'),
           queryParameters: anyNamed('queryParameters'),
@@ -492,7 +492,7 @@ void main() {
       // Simulate offline scan
       var callCount = 0;
       when(
-        mockDio.post(
+        mockDio.post<Map<String, dynamic>>(
           any,
           data: anyNamed('data'),
           queryParameters: anyNamed('queryParameters'),
@@ -632,7 +632,7 @@ void main() {
 
       var replayCallCount = 0;
       when(
-        mockDio.post(
+        mockDio.post<Map<String, dynamic>>(
           any,
           data: anyNamed('data'),
           queryParameters: anyNamed('queryParameters'),

@@ -188,7 +188,7 @@ class OfferFormHelpers {
       ),
     );
 
-    if (confirmed ?? false && context.mounted) {
+    if (confirmed == true && context.mounted) {
       try {
         await ref.read(offerFormProvider.notifier).deleteOffer(offer.id);
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/stock_item.dart';
 import '../../providers/stock_items_provider.dart';
+import '../offer_card/offer_card_configs.dart';
 
 /// Widget pour ajuster la quantité d'un article avec des boutons +/-
 ///
@@ -73,7 +75,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(StockErrorMessages.getErrorMessage(error)),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: DeepColorTokens.error,
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 3),
           ),
@@ -91,23 +93,23 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final canDecrease = widget.item.quantity > widget.minQuantity;
     final canIncrease = widget.item.quantity < widget.maxQuantity;
 
     if (widget.compactMode) {
-      return _buildCompactAdjuster(context, theme, canDecrease, canIncrease);
+      return _buildCompactAdjuster(context, canDecrease, canIncrease);
     } else {
-      return _buildStandardAdjuster(context, theme, canDecrease, canIncrease);
+      return _buildStandardAdjuster(context, canDecrease, canIncrease);
     }
   }
 
   Widget _buildStandardAdjuster(
     BuildContext context,
-    ThemeData theme,
     bool canDecrease,
     bool canIncrease,
   ) {
+    final config = OfferCardConfigs.defaultConfig;
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -115,6 +117,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             alpha: DeepColorTokens.opacity10,
           ),
         ),
+        borderRadius: config.imageBorderRadius,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -125,14 +128,17 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
                 ? () => _adjustQuantity(-widget.step)
                 : null,
             icon: (widget.showLoading && _isAdjusting)
-                ? const SizedBox(
-                    width: 16.0,
-                    height: 16.0,
+                ? SizedBox(
+                    width: ResponsiveUtils.getIconSize(context, baseSize: 16.0),
+                    height: ResponsiveUtils.getIconSize(
+                      context,
+                      baseSize: 16.0,
+                    ),
                     child: CircularProgressIndicator(
                       strokeWidth: 3,
                     ),
                   )
-                : const Icon(Icons.remove),
+                : Icon(Icons.remove),
             tooltip: 'Diminuer la quantité',
             style: IconButton.styleFrom(
               foregroundColor: canDecrease
@@ -140,8 +146,8 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
                   : DeepColorTokens.neutral500.withValues(
                       alpha: DeepColorTokens.opacity10,
                     ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveUtils.getHorizontalSpacing(context) / 2,
               ),
             ),
           ),
@@ -155,14 +161,20 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
                   widget.item.quantity.toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      16.0,
+                    ),
                     color: DeepColorTokens.neutral800,
                   ),
                 ),
                 Text(
                   widget.item.unit,
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      16.0,
+                    ),
                     color: DeepColorTokens.neutral600,
                   ),
                 ),
@@ -182,8 +194,8 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
                   : DeepColorTokens.neutral500.withValues(
                       alpha: DeepColorTokens.opacity10,
                     ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveUtils.getHorizontalSpacing(context) / 2,
               ),
             ),
           ),
@@ -194,7 +206,6 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
 
   Widget _buildCompactAdjuster(
     BuildContext context,
-    ThemeData theme,
     bool canDecrease,
     bool canIncrease,
   ) {
@@ -208,7 +219,9 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             onTap: canDecrease && !_isAdjusting
                 ? () => _adjustQuantity(-widget.step)
                 : null,
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(
+              ResponsiveUtils.getVerticalSpacing(context),
+            ),
             child: Container(
               decoration: BoxDecoration(
                 color: canDecrease
@@ -218,7 +231,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
               ),
               child: Icon(
                 Icons.remove,
-                size: 16.0,
+                size: ResponsiveUtils.getIconSize(context, baseSize: 16.0),
                 color: canDecrease
                     ? DeepColorTokens.secondary
                     : DeepColorTokens.neutral500.withValues(
@@ -231,21 +244,23 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
 
         // Quantité compacte
         if (widget.showLoading && _isAdjusting)
-          const SizedBox(
-            width: 16.0,
-            height: 16.0,
+          SizedBox(
+            width: ResponsiveUtils.getIconSize(context, baseSize: 16.0),
+            height: ResponsiveUtils.getIconSize(context, baseSize: 16.0),
             child: CircularProgressIndicator(
               strokeWidth: 3,
             ),
           )
         else
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveUtils.getHorizontalSpacing(context) / 2,
+            ),
             child: Text(
               widget.item.formattedQuantity,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 16.0,
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context, 16.0),
                 color: DeepColorTokens.neutral800,
               ),
             ),
@@ -258,7 +273,9 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
             onTap: canIncrease && !_isAdjusting
                 ? () => _adjustQuantity(widget.step)
                 : null,
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(
+              ResponsiveUtils.getVerticalSpacing(context),
+            ),
             child: Container(
               decoration: BoxDecoration(
                 color: canIncrease
@@ -268,7 +285,7 @@ class _StockQuantityAdjusterState extends ConsumerState<StockQuantityAdjuster> {
               ),
               child: Icon(
                 Icons.add,
-                size: 16.0,
+                size: ResponsiveUtils.getIconSize(context, baseSize: 16.0),
                 color: canIncrease
                     ? DeepColorTokens.secondary
                     : DeepColorTokens.neutral500.withValues(

@@ -31,13 +31,13 @@ class FavoritePlaceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.store,
                 color: DeepColorTokens.primary,
                 size: 16.0,
               ),
-              const Spacer(),
+              Spacer(),
               Icon(
                 Icons.favorite,
                 color: DeepColorTokens.error,

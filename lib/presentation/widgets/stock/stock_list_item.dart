@@ -56,7 +56,7 @@ class StockListItem extends StatelessWidget {
                 : (compactMode ? 4.0 : 8.0),
           ),
           decoration: BoxDecoration(
-            color: DeepColorTokens.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(
               dense ? (compactMode ? 8.0 : 12.0) : (compactMode ? 12.0 : 16.0),
             ),

@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Configuration pour un graphique réutilisable
@@ -378,7 +379,7 @@ class _ReusableChartState extends State<ReusableChart> {
                 borderRadius: BorderRadius.circular(4.0),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: DeepColorTokens.shadowLight,
                     offset: Offset(0, 1),
                     blurRadius: 2.0,
                   ),
@@ -436,7 +437,7 @@ class _ChartGridPainter extends CustomPainter {
       end: Alignment.bottomCenter,
       colors: [
         theme.colorScheme.primary.withValues(alpha: 0.02),
-        Colors.transparent,
+        DeepColorTokens.neutral1000.withValues(alpha: 0.0),
       ],
     );
 
@@ -462,16 +463,14 @@ class _RevenueLinePainter extends CustomPainter {
     this.baseColor, {
     this.useSpaceEvenly = false,
     this.horizontalPadding = 0,
-    this.connectionPointRadius = 4.0,
-    this.connectionPointBackgroundRadius = 6.0,
   });
 
   final List<DataPoint> data;
   final Color baseColor;
   final bool useSpaceEvenly;
   final double horizontalPadding;
-  final double connectionPointRadius;
-  final double connectionPointBackgroundRadius;
+  final double connectionPointRadius = 4.0;
+  final double connectionPointBackgroundRadius = 6.0;
 
   @override
   void paint(Canvas canvas, ui.Size size) {
@@ -545,9 +544,9 @@ class _RevenueLinePainter extends CustomPainter {
 
       final pointColor = pointColors[i % pointColors.length];
 
-      // Ombre noire pour meilleur contraste
+      // Ombre profonde pour meilleur contraste
       final shadowPaint = Paint()
-        ..color = Colors.black.withValues(alpha: 0.3)
+        ..color = DeepColorTokens.shadowMedium
         ..style = PaintingStyle.fill
         ..maskFilter = MaskFilter.blur(BlurStyle.normal, 4.0);
 
@@ -557,14 +556,14 @@ class _RevenueLinePainter extends CustomPainter {
         shadowPaint,
       );
 
-      // Cercle blanc de fond pour visibilité
-      final whitePaint = Paint()
-        ..color = Colors.white
+      // Cercle neutre de fond pour visibilité
+      final backgroundPaint = Paint()
+        ..color = DeepColorTokens.neutral0
         ..style = PaintingStyle.fill;
       canvas.drawCircle(
         Offset(x, y),
         connectionPointBackgroundRadius,
-        whitePaint,
+        backgroundPaint,
       );
 
       // Cercle principal coloré
@@ -591,7 +590,7 @@ class _RevenueLinePainter extends CustomPainter {
 
     // Ajouter un effet d'ombre subtile sous la ligne
     final lineShadowPaint = Paint()
-      ..color = Colors.black.withValues(alpha: 0.1)
+      ..color = DeepColorTokens.shadowLight
       ..style = PaintingStyle.stroke
       ..strokeWidth = 6.0
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3.0);

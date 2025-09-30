@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../providers/analytics_provider.dart';
 
 class LoadingSection extends StatelessWidget {
@@ -24,8 +25,8 @@ class LoadingSection extends StatelessWidget {
                 width: 64.0,
                 height: 64.0,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(
-                    alpha: 0.1,
+                  color: DeepColorTokens.primaryContainer.withValues(
+                    alpha: 0.8,
                   ),
                   borderRadius: BorderRadius.circular(
                     16.0,
@@ -85,8 +86,8 @@ class ErrorSection extends ConsumerWidget {
                 width: 64.0,
                 height: 64.0,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.error.withValues(
-                    alpha: 0.1,
+                  color: DeepColorTokens.errorContainer.withValues(
+                    alpha: 0.8,
                   ),
                   borderRadius: BorderRadius.circular(
                     16.0,
@@ -95,7 +96,7 @@ class ErrorSection extends ConsumerWidget {
                 child: Icon(
                   Icons.error_outline,
                   size: 32.0,
-                  color: theme.colorScheme.error,
+                  color: DeepColorTokens.error,
                 ),
               ),
               SizedBox(
@@ -127,8 +128,8 @@ class ErrorSection extends ConsumerWidget {
                 icon: const Icon(Icons.refresh),
                 label: const Text('Réessayer'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: theme.colorScheme.error,
-                  foregroundColor: theme.colorScheme.onError,
+                  backgroundColor: DeepColorTokens.error,
+                  foregroundColor: DeepColorTokens.neutral0,
                 ),
               ),
             ],

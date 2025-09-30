@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 import 'reusable_chart.dart';
 
@@ -18,12 +19,12 @@ class RevenueChart extends StatelessWidget {
       config: ChartConfig(
         title: 'Évolution des revenus',
         icon: Icons.trending_up,
-        iconColor: Theme.of(context).colorScheme.primary,
+        iconColor: DeepColorTokens.primary,
         totalValue: analytics.totalRevenue,
         data: analytics.revenueData,
         valueFormatter: _formatCurrency,
         showLine: true,
-        lineColor: Theme.of(context).colorScheme.primary,
+        lineColor: DeepColorTokens.primary,
       ),
     );
   }

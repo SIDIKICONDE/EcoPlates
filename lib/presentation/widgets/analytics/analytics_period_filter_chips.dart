@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive_utils.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/analytics_stats.dart';
 import '../../providers/analytics_provider.dart';
 
@@ -14,7 +16,6 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedPeriod = ref.watch(analyticsPeriodProvider);
-    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,22 +26,23 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
             Container(
               padding: EdgeInsets.all(4.0),
               decoration: BoxDecoration(
-                color: theme.colorScheme.tertiaryContainer.withValues(
-                  alpha: 0.1,
+                color: DeepColorTokens.tertiaryContainer.withValues(
+                  alpha: 0.8,
                 ),
               ),
               child: Icon(
                 Icons.calendar_view_day,
                 size: 20.0,
-                color: theme.colorScheme.tertiary,
+                color: DeepColorTokens.tertiary,
               ),
             ),
             SizedBox(width: 12.0),
             Text(
               "Période d'analyse",
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w700,
+              style: TextStyle(
+                fontSize: FontSizes.subtitleMedium.getSize(context),
+                fontWeight: FontSizes.subtitleMedium.getFontWeight(),
+                color: DeepColorTokens.neutral900,
                 letterSpacing: 0.2,
               ),
             ),
@@ -65,8 +67,8 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
                         _getPeriodIcon(period),
                         size: 16.0 * 0.875,
                         color: isSelected
-                            ? theme.colorScheme.onPrimary
-                            : theme.colorScheme.onSurfaceVariant,
+                            ? Colors.white
+                            : DeepColorTokens.neutral600,
                       ),
                       SizedBox(width: 4.0),
                       Text(period.shortLabel),
@@ -78,9 +80,9 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
                       ref.read(analyticsPeriodProvider.notifier).update(period);
                     }
                   },
-                  selectedColor: _getPeriodColor(period, theme),
-                  backgroundColor: theme.colorScheme.surface.withValues(
-                    alpha: 0.1,
+                  selectedColor: _getPeriodColor(period),
+                  backgroundColor: DeepColorTokens.surface.withValues(
+                    alpha: 0.8,
                   ),
                   showCheckmark: false,
                   pressElevation: 16.0,
@@ -108,12 +110,10 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
           decoration: BoxDecoration(
             color: _getPeriodColor(
               selectedPeriod,
-              theme,
             ).withValues(alpha: 0.1),
             border: Border.all(
               color: _getPeriodColor(
                 selectedPeriod,
-                theme,
               ).withValues(alpha: 0.3),
             ),
           ),
@@ -122,15 +122,14 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
               Icon(
                 Icons.info_outline,
                 size: 14.0,
-                color: _getPeriodColor(selectedPeriod, theme),
+                color: _getPeriodColor(selectedPeriod),
               ),
               SizedBox(width: 12.0),
               Text(
                 _getPeriodDescription(selectedPeriod),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(
-                    alpha: 0.8,
-                  ),
+                style: TextStyle(
+                  fontSize: FontSizes.bodySmall.getSize(context),
+                  color: DeepColorTokens.neutral700,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -154,16 +153,16 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
     }
   }
 
-  Color _getPeriodColor(AnalyticsPeriod period, ThemeData theme) {
+  Color _getPeriodColor(AnalyticsPeriod period) {
     switch (period) {
       case AnalyticsPeriod.day:
-        return const Color(0xFF4CAF50); // Vert
+        return DeepColorTokens.success; // Vert forêt profond
       case AnalyticsPeriod.week:
-        return const Color(0xFF2196F3); // Bleu
+        return DeepColorTokens.primary; // Bleu profond Nyth
       case AnalyticsPeriod.month:
-        return const Color(0xFFFF9800); // Orange
+        return DeepColorTokens.warning; // Orange brûlé profond
       case AnalyticsPeriod.year:
-        return const Color(0xFF9C27B0); // Violet
+        return DeepColorTokens.secondary; // Violet profond Nyth
     }
   }
 

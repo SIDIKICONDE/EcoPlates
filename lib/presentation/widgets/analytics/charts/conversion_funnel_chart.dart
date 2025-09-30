@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 import 'funnel_animation_mixin.dart';
 import 'funnel_header.dart';
@@ -26,8 +27,6 @@ class _ConversionFunnelChartState extends State<ConversionFunnelChart>
         FunnelAnimationMixin<ConversionFunnelChart> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return AnimatedBuilder(
       animation: fadeAnimation,
       builder: (context, child) {
@@ -44,18 +43,18 @@ class _ConversionFunnelChartState extends State<ConversionFunnelChart>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    theme.colorScheme.primaryContainer.withValues(alpha: 0.8),
-                    theme.colorScheme.secondaryContainer.withValues(alpha: 0.6),
-                    theme.colorScheme.tertiaryContainer.withValues(alpha: 0.4),
+                    DeepColorTokens.primaryContainer.withValues(alpha: 0.8),
+                    DeepColorTokens.secondaryContainer.withValues(alpha: 0.6),
+                    DeepColorTokens.tertiaryContainer.withValues(alpha: 0.4),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16.0),
                 border: Border.all(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                  color: DeepColorTokens.neutral400.withValues(alpha: 0.2),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    color: DeepColorTokens.shadowLight,
                     blurRadius: 12.0,
                     offset: const Offset(0, 4.0),
                   ),
@@ -111,7 +110,6 @@ class _FunnelVisualization extends StatelessWidget {
         .findAncestorStateOfType<_ConversionFunnelChartState>()!
         .widget
         .analytics;
-    final theme = Theme.of(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -136,8 +134,8 @@ class _FunnelVisualization extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        theme.colorScheme.primary.withValues(alpha: 0.8),
-                        theme.colorScheme.primary.withValues(alpha: 0.4),
+                        DeepColorTokens.primary.withValues(alpha: 0.8),
+                        DeepColorTokens.primary.withValues(alpha: 0.4),
                       ],
                     ),
                   ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 import 'step_details_dialog.dart';
 
@@ -23,7 +25,6 @@ class FunnelStepWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isFirst = index == 0;
     final dropRate = isFirst
         ? 0.0
@@ -105,7 +106,8 @@ class FunnelStepWidget extends StatelessWidget {
                       Expanded(
                         child: Text(
                           step.label,
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: TextStyle(
+                            fontSize: FontSizes.bodyMedium.getSize(context),
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
@@ -123,7 +125,9 @@ class FunnelStepWidget extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
+                              fontSize: FontSizes.subtitleSmall.getSize(
+                                context,
+                              ),
                             ),
                           ),
                           Container(
@@ -144,7 +148,7 @@ class FunnelStepWidget extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16.0,
+                                fontSize: FontSizes.bodySmall.getSize(context),
                               ),
                             ),
                           ),
@@ -158,15 +162,13 @@ class FunnelStepWidget extends StatelessWidget {
           ),
 
           // Indicateur de taux d'abandon
-          if (!isFirst && dropRate > 0)
-            _buildDropIndicator(theme, dropRate, context),
+          if (!isFirst && dropRate > 0) _buildDropIndicator(dropRate, context),
         ],
       ),
     );
   }
 
   Widget _buildDropIndicator(
-    ThemeData theme,
     double dropRate,
     BuildContext context,
   ) {
@@ -178,11 +180,11 @@ class FunnelStepWidget extends StatelessWidget {
           8.0,
         ),
         decoration: BoxDecoration(
-          color: theme.colorScheme.error,
+          color: DeepColorTokens.error,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.error.withValues(
+              color: DeepColorTokens.error.withValues(
                 alpha: 0.3,
               ),
               blurRadius: 6.0,
@@ -204,7 +206,7 @@ class FunnelStepWidget extends StatelessWidget {
               '-${dropRate.toStringAsFixed(1)}%',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 16.0,
+                fontSize: FontSizes.caption.getSize(context),
                 fontWeight: FontWeight.w600,
               ),
             ),

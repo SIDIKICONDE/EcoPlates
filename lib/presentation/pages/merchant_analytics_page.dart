@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/themes/tokens/deep_color_tokens.dart';
 import '../../core/widgets/adaptive_widgets.dart';
+import '../providers/analytics_provider.dart';
 import '../widgets/analytics/analytics_app_bar.dart';
+import '../widgets/analytics/analytics_charts_section.dart';
 import '../widgets/analytics/analytics_header.dart';
 import '../widgets/analytics/analytics_period_filter_chips.dart';
-import '../widgets/analytics/analytics_charts_section.dart';
 
 /// Page principale d'analyse pour les commerçants
 ///
@@ -41,39 +42,26 @@ class MerchantAnalyticsPage extends ConsumerWidget {
         ),
         child: RefreshIndicator(
           onRefresh: () async {
-            // TODO: Implémenter le rafraîchissement des analytics
-            await Future<void>.delayed(Duration(seconds: 1));
+            await ref.refreshAnalytics();
           },
           child: CustomScrollView(
             physics: AlwaysScrollableScrollPhysics(),
-            slivers: [
+            slivers: const [
               // En-tête avec KPIs principaux
               SliverToBoxAdapter(
+                child: AnalyticsHeader(),
+              ),
+
+              // Section des filtres de période
+              SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Analytics - À implémenter',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: AnalyticsPeriodFilterChips(),
                 ),
               ),
 
-              // Placeholder pour les graphiques
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Container(
-                    height: 300,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Text('Graphiques à implémenter'),
-                    ),
-                  ),
-                ),
-              ),
+              // Section des graphiques
+              AnalyticsChartsSection(),
             ],
           ),
         ),

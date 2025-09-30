@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// import '../../../../core/responsive/responsive.dart';
+import '../../../../core/responsive/responsive_utils.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 class TopProductsChart extends StatelessWidget {
@@ -14,8 +15,6 @@ class TopProductsChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 16.0,
@@ -25,14 +24,14 @@ class TopProductsChart extends StatelessWidget {
           padding: EdgeInsets.all(16.0),
           child: Container(
             decoration: BoxDecoration(
-              color: theme.colorScheme.tertiary.withValues(
+              color: DeepColorTokens.tertiaryContainer.withValues(
                 alpha: 0.1,
               ),
               borderRadius: BorderRadius.circular(
                 12.0,
               ),
               border: Border.all(
-                color: theme.colorScheme.tertiary.withValues(
+                color: DeepColorTokens.tertiary.withValues(
                   alpha: 0.3,
                 ),
               ),
@@ -46,8 +45,8 @@ class TopProductsChart extends StatelessWidget {
                         8.0,
                       ),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.tertiary.withValues(
-                          alpha: 0.2,
+                        color: DeepColorTokens.tertiaryContainer.withValues(
+                          alpha: 0.8,
                         ),
                         borderRadius: BorderRadius.circular(
                           8.0,
@@ -56,7 +55,7 @@ class TopProductsChart extends StatelessWidget {
                       child: Icon(
                         Icons.emoji_events,
                         size: 24.0,
-                        color: theme.colorScheme.tertiary,
+                        color: DeepColorTokens.tertiary,
                       ),
                     ),
                     SizedBox(
@@ -66,8 +65,9 @@ class TopProductsChart extends StatelessWidget {
                       child: Text(
                         'Top Produits',
                         style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
+                          fontSize: FontSizes.subtitleLarge.getSize(context),
+                          fontWeight: FontSizes.subtitleLarge.getFontWeight(),
+                          color: DeepColorTokens.neutral900,
                         ),
                       ),
                     ),
@@ -84,18 +84,16 @@ class TopProductsChart extends StatelessWidget {
   }
 
   Widget _buildChartContent(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       height: 400.0,
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            theme.colorScheme.surfaceContainerHighest.withValues(
+            DeepColorTokens.surfaceContainer.withValues(
               alpha: 0.8,
             ),
-            theme.colorScheme.surface.withValues(
+            DeepColorTokens.surface.withValues(
               alpha: 0.6,
             ),
           ],
@@ -128,13 +126,13 @@ class TopProductsChart extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(12.0),
                 border: Border.all(
-                  color: _getRankColor(theme, rank).withValues(
+                  color: _getRankColor(rank).withValues(
                     alpha: 0.3,
                   ),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: _getRankColor(theme, rank).withValues(
+                    color: _getRankColor(rank).withValues(
                       alpha: 0.1,
                     ),
                     blurRadius: 8.0,
@@ -152,13 +150,13 @@ class TopProductsChart extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          _getRankColor(theme, rank).withValues(
+                          _getRankColor(rank).withValues(
                             alpha: 0.8,
                           ),
-                          _getRankColor(theme, rank).withValues(
+                          _getRankColor(rank).withValues(
                             alpha: 0.6,
                           ),
-                          _getRankColor(theme, rank).withValues(
+                          _getRankColor(rank).withValues(
                             alpha: 0.4,
                           ),
                         ],
@@ -168,14 +166,14 @@ class TopProductsChart extends StatelessWidget {
                         20.0,
                       ),
                       border: Border.all(
-                        color: _getRankColor(theme, rank).withValues(
+                        color: _getRankColor(rank).withValues(
                           alpha: 0.5,
                         ),
                         width: 2.0,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: _getRankColor(theme, rank).withValues(
+                          color: _getRankColor(rank).withValues(
                             alpha: 0.3,
                           ),
                           blurRadius: 8.0,
@@ -183,7 +181,7 @@ class TopProductsChart extends StatelessWidget {
                           spreadRadius: 1.0,
                         ),
                         BoxShadow(
-                          color: _getRankColor(theme, rank).withValues(
+                          color: _getRankColor(rank).withValues(
                             alpha: 0.2,
                           ),
                           blurRadius: 4.0,
@@ -209,7 +207,7 @@ class TopProductsChart extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold,
-                              color: _getRankColor(theme, rank),
+                              color: _getRankColor(rank),
                               letterSpacing: 0.5,
                               shadows: [
                                 Shadow(
@@ -235,10 +233,10 @@ class TopProductsChart extends StatelessWidget {
                       children: [
                         Text(
                           product.name,
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: TextStyle(
+                            fontSize: FontSizes.bodyLarge.getSize(context),
                             fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                            fontSize: 16.0,
+                            color: DeepColorTokens.neutral900,
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -256,13 +254,11 @@ class TopProductsChart extends StatelessWidget {
                               colors: [
                                 _getCategoryColor(
                                   product.category,
-                                  theme,
                                 ).withValues(
                                   alpha: 0.8,
                                 ),
                                 _getCategoryColor(
                                   product.category,
-                                  theme,
                                 ).withValues(
                                   alpha: 0.6,
                                 ),
@@ -272,7 +268,7 @@ class TopProductsChart extends StatelessWidget {
                               6.0,
                             ),
                             border: Border.all(
-                              color: _getCategoryColor(product.category, theme)
+                              color: _getCategoryColor(product.category)
                                   .withValues(
                                     alpha: 0.7,
                                   ),
@@ -280,10 +276,10 @@ class TopProductsChart extends StatelessWidget {
                           ),
                           child: Text(
                             product.category,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: _getCategoryColor(product.category, theme),
-                              fontSize: 12.0,
+                            style: TextStyle(
+                              fontSize: FontSizes.caption.getSize(context),
                               fontWeight: FontWeight.w500,
+                              color: _getCategoryColor(product.category),
                             ),
                           ),
                         ),
@@ -304,10 +300,10 @@ class TopProductsChart extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              theme.colorScheme.primary.withValues(
+                              DeepColorTokens.primary.withValues(
                                 alpha: 0.8,
                               ),
-                              theme.colorScheme.primary.withValues(
+                              DeepColorTokens.primary.withValues(
                                 alpha: 0.6,
                               ),
                             ],
@@ -316,17 +312,17 @@ class TopProductsChart extends StatelessWidget {
                             8.0,
                           ),
                           border: Border.all(
-                            color: theme.colorScheme.primary.withValues(
+                            color: DeepColorTokens.primary.withValues(
                               alpha: 0.7,
                             ),
                           ),
                         ),
                         child: Text(
                           _formatCurrency(product.revenue),
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: TextStyle(
+                            fontSize: FontSizes.bodyMedium.getSize(context),
                             fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                            fontSize: 14.0,
+                            color: DeepColorTokens.primary,
                           ),
                         ),
                       ),
@@ -338,20 +334,19 @@ class TopProductsChart extends StatelessWidget {
                           Icon(
                             Icons.inventory_2,
                             size: 16.0,
-                            color: theme.colorScheme.onSurfaceVariant
-                                .withValues(
-                                  alpha: 0.7,
-                                ),
+                            color: DeepColorTokens.neutral600.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                           SizedBox(
                             width: 4.0,
                           ),
                           Text(
                             '${product.quantity}',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              fontSize: 12.0,
+                            style: TextStyle(
+                              fontSize: FontSizes.caption.getSize(context),
                               fontWeight: FontWeight.w500,
-                              color: theme.colorScheme.onSurfaceVariant,
+                              color: DeepColorTokens.neutral600,
                             ),
                           ),
                         ],
@@ -375,32 +370,32 @@ class TopProductsChart extends StatelessWidget {
     return formatter.format(amount);
   }
 
-  Color _getRankColor(ThemeData theme, int rank) {
-    // Palette étendue de couleurs pour les rangs
+  Color _getRankColor(int rank) {
+    // Palette étendue de couleurs profondes pour les rangs
     final rankColors = [
-      Colors.amber,
-      Colors.blue,
-      Colors.green,
-      Colors.purple,
-      Colors.red,
-      Colors.teal,
-      Colors.orange,
-      Colors.pink,
-      Colors.indigo,
-      Colors.cyan,
+      DeepColorTokens.accent,
+      DeepColorTokens.primary,
+      DeepColorTokens.secondary,
+      DeepColorTokens.tertiary,
+      DeepColorTokens.error,
+      DeepColorTokens.info,
+      DeepColorTokens.warning,
+      DeepColorTokens.premium,
+      DeepColorTokens.trust,
+      DeepColorTokens.professional,
     ];
     return rankColors[(rank - 1) % rankColors.length];
   }
 
-  Color _getCategoryColor(String category, ThemeData theme) {
-    // Couleurs par défaut pour les catégories
+  Color _getCategoryColor(String category) {
+    // Couleurs profondes par défaut pour les catégories
     final categoryColors = {
-      'Plat principal': Colors.blue,
-      'Dessert': Colors.pink,
-      'Boisson': Colors.orange,
-      'Entrée': Colors.green,
-      'Accompagnement': Colors.purple,
+      'Plat principal': DeepColorTokens.primary,
+      'Dessert': DeepColorTokens.secondary,
+      'Boisson': DeepColorTokens.tertiary,
+      'Entrée': DeepColorTokens.success,
+      'Accompagnement': DeepColorTokens.accent,
     };
-    return categoryColors[category] ?? theme.colorScheme.tertiary;
+    return categoryColors[category] ?? DeepColorTokens.neutral600;
   }
 }

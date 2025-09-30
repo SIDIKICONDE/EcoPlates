@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Section des statistiques clés du tunnel de conversion
@@ -13,15 +15,13 @@ class FunnelStatsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
+        color: DeepColorTokens.surfaceContainer.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          color: DeepColorTokens.neutral600.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -32,23 +32,23 @@ class FunnelStatsSection extends StatelessWidget {
             'Visiteurs',
             analytics.conversionFunnel.first.count.toString(),
             Icons.visibility,
-            theme.colorScheme.primary,
+            DeepColorTokens.primary,
           ),
-          _buildStatDivider(theme),
+          _buildStatDivider(),
           _buildStatItem(
             context,
             'Conversions',
             analytics.conversionFunnel.last.count.toString(),
             Icons.shopping_cart_checkout,
-            theme.colorScheme.secondary,
+            DeepColorTokens.secondary,
           ),
-          _buildStatDivider(theme),
+          _buildStatDivider(),
           _buildStatItem(
             context,
             'Taux final',
             '${analytics.conversionFunnel.last.percentage.toStringAsFixed(1)}%',
             Icons.percent,
-            theme.colorScheme.tertiary,
+            DeepColorTokens.tertiary,
           ),
         ],
       ),
@@ -72,27 +72,28 @@ class FunnelStatsSection extends StatelessWidget {
         const SizedBox(height: 8.0),
         Text(
           value,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
+            fontSize: FontSizes.titleSmall.getSize(context),
+            fontWeight: FontSizes.titleSmall.getFontWeight(),
             color: color,
           ),
         ),
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            fontSize: 12.0,
+          style: TextStyle(
+            fontSize: FontSizes.caption.getSize(context),
+            color: DeepColorTokens.neutral600,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStatDivider(ThemeData theme) {
+  Widget _buildStatDivider() {
     return Container(
       width: 1.0,
       height: 40.0,
-      color: theme.colorScheme.outline.withValues(alpha: 0.3),
+      color: DeepColorTokens.neutral600.withValues(alpha: 0.3),
     );
   }
 }

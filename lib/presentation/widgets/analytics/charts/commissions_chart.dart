@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 import 'reusable_chart.dart';
 
@@ -22,7 +23,7 @@ class CommissionsChart extends StatelessWidget {
       config: ChartConfig(
         title: 'Commissions payées',
         icon: Icons.account_balance_wallet,
-        iconColor: Theme.of(context).colorScheme.tertiary,
+        iconColor: DeepColorTokens.tertiary,
         totalValue: analytics.totalCommissions,
         data: analytics.commissionData,
         valueFormatter: _formatCurrency,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Graphique d'évolution de la satisfaction client
@@ -17,11 +18,11 @@ class CustomerSatisfactionChart extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16.0),
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: DeepColorTokens.surface,
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: DeepColorTokens.neutral900.withValues(alpha: 0.1),
             blurRadius: 8.0,
             offset: Offset(0.0, 4.0),
           ),
@@ -37,11 +38,11 @@ class CustomerSatisfactionChart extends StatelessWidget {
                 width: 40.0,
                 height: 40.0,
                 decoration: BoxDecoration(
-                  color: Colors.amber.shade100,
+                  color: DeepColorTokens.accentSubtle,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.amber.withValues(alpha: 0.3),
+                      color: DeepColorTokens.accent.withValues(alpha: 0.3),
                       blurRadius: 8.0,
                       offset: Offset(0.0, 2.0),
                     ),
@@ -49,7 +50,7 @@ class CustomerSatisfactionChart extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.star,
-                  color: Colors.amber,
+                  color: DeepColorTokens.accent,
                   size: 20.0,
                 ),
               ),
@@ -63,14 +64,14 @@ class CustomerSatisfactionChart extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: DeepColorTokens.neutral0,
                       ),
                     ),
                     Text(
                       '${_calculateAverageRating().toStringAsFixed(1)} ⭐ sur ${analytics.totalReviews} avis',
                       style: TextStyle(
                         fontSize: 14.0,
-                        color: Colors.grey.shade600,
+                        color: DeepColorTokens.neutral600,
                       ),
                     ),
                   ],
@@ -87,15 +88,23 @@ class CustomerSatisfactionChart extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _buildRatingBar(5, _getRatingCount(5), Colors.green),
+                _buildRatingBar(5, _getRatingCount(5), DeepColorTokens.success),
                 SizedBox(width: 4.0),
-                _buildRatingBar(4, _getRatingCount(4), Colors.lightGreen),
+                _buildRatingBar(
+                  4,
+                  _getRatingCount(4),
+                  DeepColorTokens.successLight,
+                ),
                 SizedBox(width: 4.0),
-                _buildRatingBar(3, _getRatingCount(3), Colors.yellow),
+                _buildRatingBar(3, _getRatingCount(3), DeepColorTokens.warning),
                 SizedBox(width: 4.0),
-                _buildRatingBar(2, _getRatingCount(2), Colors.orange),
+                _buildRatingBar(
+                  2,
+                  _getRatingCount(2),
+                  DeepColorTokens.warningDark,
+                ),
                 SizedBox(width: 4.0),
-                _buildRatingBar(1, _getRatingCount(1), Colors.red),
+                _buildRatingBar(1, _getRatingCount(1), DeepColorTokens.error),
               ],
             ),
           ),
@@ -108,7 +117,7 @@ class CustomerSatisfactionChart extends StatelessWidget {
               'Évolution sur les 30 derniers jours',
               style: TextStyle(
                 fontSize: 12.0,
-                color: Colors.grey.shade500,
+                color: DeepColorTokens.neutral600,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -163,7 +172,7 @@ class CustomerSatisfactionChart extends StatelessWidget {
               (index) => Icon(
                 Icons.star,
                 size: 10.0,
-                color: Colors.amber,
+                color: DeepColorTokens.accent,
               ),
             ),
           ),
@@ -172,7 +181,7 @@ class CustomerSatisfactionChart extends StatelessWidget {
             count.toString(),
             style: TextStyle(
               fontSize: 10.0,
-              color: Colors.grey.shade600,
+              color: DeepColorTokens.onSurfaceVariant,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -201,15 +210,15 @@ class RatingDistributionChart extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.blue.shade50,
-            Colors.purple.shade50,
-            Colors.pink.shade50,
+            DeepColorTokens.primaryContainer.withValues(alpha: 0.5),
+            DeepColorTokens.secondaryContainer.withValues(alpha: 0.5),
+            DeepColorTokens.tertiaryContainer.withValues(alpha: 0.5),
           ],
         ),
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.purple.withValues(alpha: 0.1),
+            color: DeepColorTokens.secondary.withValues(alpha: 0.1),
             blurRadius: 8.0,
             offset: Offset(0.0, 4.0),
           ),
@@ -224,11 +233,11 @@ class RatingDistributionChart extends StatelessWidget {
                 width: 40.0,
                 height: 40.0,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: DeepColorTokens.surface,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.purple.withValues(alpha: 0.2),
+                      color: DeepColorTokens.secondary.withValues(alpha: 0.2),
                       blurRadius: 8.0,
                       offset: Offset(0.0, 2.0),
                     ),
@@ -237,7 +246,7 @@ class RatingDistributionChart extends StatelessWidget {
                 child: Icon(
                   Icons.pie_chart,
                   size: 20.0,
-                  color: Colors.purple,
+                  color: DeepColorTokens.secondary,
                 ),
               ),
               SizedBox(width: 12.0),
@@ -250,14 +259,14 @@ class RatingDistributionChart extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w700,
-                        color: Colors.black,
+                        color: DeepColorTokens.neutral0,
                       ),
                     ),
                     Text(
                       '${analytics.totalReviews} avis',
                       style: TextStyle(
                         fontSize: 12.0,
-                        color: Colors.grey.shade600,
+                        color: DeepColorTokens.neutral600,
                       ),
                     ),
                   ],
@@ -300,7 +309,9 @@ class RatingDistributionChart extends StatelessWidget {
             (index) => Icon(
               index < stars ? Icons.star : Icons.star_border,
               size: 14.0,
-              color: index < stars ? Colors.amber : Colors.grey.shade300,
+              color: index < stars
+                  ? DeepColorTokens.accent
+                  : DeepColorTokens.neutral600,
             ),
           ),
         ),
@@ -312,7 +323,7 @@ class RatingDistributionChart extends StatelessWidget {
           child: Container(
             height: 8.0,
             decoration: BoxDecoration(
-              color: Colors.grey.shade200,
+              color: DeepColorTokens.surfaceContainer,
               borderRadius: BorderRadius.circular(4.0),
             ),
             child: FractionallySizedBox(
@@ -364,17 +375,17 @@ class RatingDistributionChart extends StatelessWidget {
   Color _getRatingColor(int stars) {
     switch (stars) {
       case 5:
-        return Colors.green;
+        return DeepColorTokens.success;
       case 4:
-        return Colors.lightGreen;
+        return DeepColorTokens.successLight;
       case 3:
-        return Colors.yellow.shade700;
+        return DeepColorTokens.warning;
       case 2:
-        return Colors.orange;
+        return DeepColorTokens.warningDark;
       case 1:
-        return Colors.red;
+        return DeepColorTokens.error;
       default:
-        return Colors.grey;
+        return DeepColorTokens.neutral600;
     }
   }
 }

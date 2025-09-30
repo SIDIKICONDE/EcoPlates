@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 import 'kpi_card.dart';
 
@@ -16,11 +17,11 @@ class KpiConfigs {
     title: "Chiffre d'affaires",
     compactTitle: 'CA',
     icon: Icons.euro,
-    primaryColor: Color(0xFF4CAF50), // Vert
+    primaryColor: DeepColorTokens.success, // Vert forêt profond
     gradientColors: [
-      Color(0xFF4CAF50),
-      Color(0xFF66BB6A),
-      Color(0xFF81C784),
+      DeepColorTokens.success,
+      DeepColorTokens.successLight,
+      DeepColorTokens.successContainer,
     ],
     getValue: _formatCurrencyRevenue,
     getGrowth: _getRevenueGrowth,
@@ -30,11 +31,11 @@ class KpiConfigs {
   static const KpiCardConfig orders = KpiCardConfig(
     title: 'Commandes',
     icon: Icons.shopping_bag,
-    primaryColor: Color(0xFF2196F3), // Bleu
+    primaryColor: DeepColorTokens.primary, // Bleu profond
     gradientColors: [
-      Color(0xFF2196F3),
-      Color(0xFF42A5F5),
-      Color(0xFF64B5F6),
+      DeepColorTokens.primary,
+      DeepColorTokens.primaryLight,
+      DeepColorTokens.primaryContainer,
     ],
     getValue: _formatOrders,
     getGrowth: _getOrdersGrowth,
@@ -45,11 +46,11 @@ class KpiConfigs {
     title: 'Panier moyen',
     compactTitle: 'Panier moy.',
     icon: Icons.shopping_cart,
-    primaryColor: Color(0xFFFF9800), // Orange
+    primaryColor: DeepColorTokens.warning, // Orange brûlé profond
     gradientColors: [
-      Color(0xFFFF9800),
-      Color(0xFFFFB74D),
-      Color(0xFFFFCC80),
+      DeepColorTokens.warning,
+      DeepColorTokens.warningLight,
+      DeepColorTokens.warningContainer,
     ],
     getValue: _formatAverageOrder,
     getGrowth: _getAverageOrderGrowth,
@@ -60,11 +61,11 @@ class KpiConfigs {
     title: 'Taux conversion',
     compactTitle: 'Conv.',
     icon: Icons.trending_up,
-    primaryColor: Color(0xFF9C27B0), // Violet
+    primaryColor: DeepColorTokens.secondary, // Violet profond
     gradientColors: [
-      Color(0xFF9C27B0),
-      Color(0xFFBA68C8),
-      Color(0xFFCE93D8),
+      DeepColorTokens.secondary,
+      DeepColorTokens.secondaryLight,
+      DeepColorTokens.secondaryContainer,
     ],
     getValue: _formatConversionRate,
     getGrowth: _getConversionRateGrowth,

@@ -1,6 +1,8 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 class CategoriesChart extends StatelessWidget {
@@ -13,8 +15,6 @@ class CategoriesChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 16.0,
@@ -32,7 +32,7 @@ class CategoriesChart extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.0),
                   border: Border.all(
-                    color: theme.colorScheme.tertiary.withValues(
+                    color: DeepColorTokens.tertiary.withValues(
                       alpha: 0.5,
                     ),
                   ),
@@ -42,15 +42,15 @@ class CategoriesChart extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.tertiary.withValues(
-                          alpha: 0.3,
+                        color: DeepColorTokens.tertiaryContainer.withValues(
+                          alpha: 0.8,
                         ),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Icon(
                         Icons.pie_chart,
                         size: 20.0,
-                        color: theme.colorScheme.tertiary,
+                        color: DeepColorTokens.tertiary,
                       ),
                     ),
                     SizedBox(
@@ -59,10 +59,10 @@ class CategoriesChart extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Par catégories',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.onSurface,
-                          fontSize: 16.0,
+                        style: TextStyle(
+                          fontSize: FontSizes.subtitleMedium.getSize(context),
+                          fontWeight: FontSizes.subtitleMedium.getFontWeight(),
+                          color: DeepColorTokens.neutral900,
                         ),
                       ),
                     ),
@@ -81,8 +81,6 @@ class CategoriesChart extends StatelessWidget {
   }
 
   Widget _buildChartContent(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       height: 200.0,
       padding: EdgeInsets.all(16.0),
@@ -91,9 +89,9 @@ class CategoriesChart extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
-            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-            theme.colorScheme.surface.withValues(alpha: 0.4),
+            DeepColorTokens.surfaceContainer.withValues(alpha: 0.8),
+            DeepColorTokens.surfaceElevated.withValues(alpha: 0.6),
+            DeepColorTokens.surface.withValues(alpha: 0.4),
           ],
           stops: const [0.0, 0.5, 1.0],
         ),
@@ -111,17 +109,17 @@ class CategoriesChart extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    theme.colorScheme.tertiary.withValues(alpha: 0.8),
-                    theme.colorScheme.tertiary.withValues(alpha: 0.4),
+                    DeepColorTokens.tertiaryLight.withValues(alpha: 0.8),
+                    DeepColorTokens.tertiary.withValues(alpha: 0.4),
                   ],
                 ),
                 border: Border.all(
-                  color: theme.colorScheme.tertiary.withValues(alpha: 0.6),
+                  color: DeepColorTokens.tertiary.withValues(alpha: 0.6),
                   width: 2.0,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.tertiary.withValues(alpha: 0.3),
+                    color: DeepColorTokens.shadowMedium,
                     blurRadius: 8.0,
                     offset: const Offset(0, 4),
                   ),
@@ -180,9 +178,10 @@ class CategoriesChart extends StatelessWidget {
                           Expanded(
                             child: Text(
                               category.name,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontSize: 16.0,
+                              style: TextStyle(
+                                fontSize: FontSizes.bodyMedium.getSize(context),
                                 fontWeight: FontWeight.w500,
+                                color: DeepColorTokens.neutral800,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -200,9 +199,9 @@ class CategoriesChart extends StatelessWidget {
                             ),
                             child: Text(
                               '${category.percentage.toStringAsFixed(1)}%',
-                              style: theme.textTheme.bodySmall?.copyWith(
+                              style: TextStyle(
+                                fontSize: FontSizes.bodySmall.getSize(context),
                                 fontWeight: FontWeight.w700,
-                                fontSize: 16.0,
                                 color: Color(category.color),
                               ),
                             ),

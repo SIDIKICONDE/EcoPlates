@@ -181,4 +181,6 @@ class DeepColorTokens {
   static const double opacity50 = 0.50;
   static const double opacity70 = 0.70;
   static const double opacity90 = 0.90;
+
+  static Color? get onSurfaceVariant => null;
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// import '../../../../core/responsive/design_tokens.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Dialogue pour afficher les détails d'une étape du tunnel de conversion
@@ -91,7 +91,7 @@ class StepDetailsDialog extends StatelessWidget {
             value,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: isError ? Colors.red : null,
+              color: isError ? DeepColorTokens.error : null,
             ),
           ),
         ],

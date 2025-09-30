@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Widget de chargement avec effet shimmer pour les cartes KPI
@@ -48,10 +50,10 @@ class _KpiCardShimmerState extends State<KpiCardShimmer>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Colors.grey[300]!,
-                Colors.grey[100]!,
-                Colors.grey[300]!,
+              colors: const [
+                DeepColorTokens.neutral300,
+                DeepColorTokens.neutral200,
+                DeepColorTokens.neutral300,
               ],
               stops: [
                 0.0,
@@ -69,13 +71,13 @@ class _KpiCardShimmerState extends State<KpiCardShimmer>
                 children: [
                   CircleAvatar(
                     radius: 12,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: DeepColorTokens.neutral400,
                   ),
                   SizedBox(width: 8),
                   Container(
                     height: 12,
                     width: 80,
-                    color: Colors.grey,
+                    color: DeepColorTokens.neutral400,
                   ),
                 ],
               ),
@@ -83,13 +85,13 @@ class _KpiCardShimmerState extends State<KpiCardShimmer>
               Container(
                 height: 24,
                 width: 120,
-                color: Colors.grey,
+                color: DeepColorTokens.neutral400,
               ),
               SizedBox(height: 8),
               Container(
                 height: 16,
                 width: 60,
-                color: Colors.grey,
+                color: DeepColorTokens.neutral400,
               ),
             ],
           ),
@@ -135,7 +137,6 @@ class KpiCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final growthPercentage = config.getGrowth(analytics);
     final isPositiveGrowth = config.getIsPositive(analytics);
 
@@ -157,7 +158,7 @@ class KpiCard extends StatelessWidget {
         ],
       ),
       child: Material(
-        color: Colors.transparent,
+        color: DeepColorTokens.neutral1000.withValues(alpha: 0.0),
         child: InkWell(
           borderRadius: BorderRadius.circular(16.0),
           onTap: () {},
@@ -173,7 +174,7 @@ class KpiCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                        color: Colors.white24,
+                        color: DeepColorTokens.neutral0.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -186,9 +187,9 @@ class KpiCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         _getTitle(context),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white,
-                          fontSize: 14.0,
+                        style: TextStyle(
+                          color: DeepColorTokens.neutral0,
+                          fontSize: FontSizes.bodyMedium.getSize(context),
                           fontWeight: FontWeight.w600,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -206,10 +207,10 @@ class KpiCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     config.getValue(analytics),
-                    style: theme.textTheme.headlineMedium?.copyWith(
+                    style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      fontSize: 24.0,
-                      color: Colors.white,
+                      fontSize: FontSizes.titleMedium.getSize(context),
+                      color: DeepColorTokens.neutral0,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -224,7 +225,7 @@ class KpiCard extends StatelessWidget {
                       vertical: 4.0,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white24,
+                      color: DeepColorTokens.neutral0.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Row(
@@ -235,15 +236,15 @@ class KpiCard extends StatelessWidget {
                               ? Icons.trending_up
                               : Icons.trending_down,
                           size: 14.0,
-                          color: Colors.white,
+                          color: DeepColorTokens.neutral0,
                         ),
                         const SizedBox(width: 4.0),
                         Text(
                           '${growthPercentage.abs().toStringAsFixed(1)}%',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: DeepColorTokens.neutral0,
                             fontWeight: FontWeight.w600,
-                            fontSize: 12.0,
+                            fontSize: FontSizes.caption.getSize(context),
                           ),
                         ),
                       ],

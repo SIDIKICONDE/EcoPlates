@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/responsive_utils.dart';
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 
 /// Widget pour l'en-tête du graphique du tunnel de conversion
@@ -13,8 +15,6 @@ class FunnelHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Row(
       children: [
         Container(
@@ -22,16 +22,14 @@ class FunnelHeader extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.secondary,
+                DeepColorTokens.primary,
+                DeepColorTokens.secondary,
               ],
             ),
             borderRadius: BorderRadius.circular(12.0),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.primary.withValues(
-                  alpha: 0.24,
-                ),
+                color: DeepColorTokens.shadowMedium,
                 blurRadius: 8.0,
                 offset: const Offset(0, 4.0),
               ),
@@ -50,9 +48,10 @@ class FunnelHeader extends StatelessWidget {
             children: [
               Text(
                 'Tunnel de Conversion',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16.0,
+                style: TextStyle(
+                  fontSize: FontSizes.subtitleLarge.getSize(context),
+                  fontWeight: FontSizes.subtitleLarge.getFontWeight(),
+                  color: DeepColorTokens.neutral900,
                 ),
               ),
               const SizedBox(height: 4.0),
@@ -61,15 +60,15 @@ class FunnelHeader extends StatelessWidget {
                   Icon(
                     Icons.trending_up,
                     size: 16.0 * 0.75,
-                    color: theme.colorScheme.primary,
+                    color: DeepColorTokens.primary,
                   ),
                   const SizedBox(width: 4.0),
                   Text(
                     'Taux global: ${analytics.conversionRate.toStringAsFixed(1)}%',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.primary,
+                    style: TextStyle(
+                      fontSize: FontSizes.bodySmall.getSize(context),
+                      color: DeepColorTokens.primary,
                       fontWeight: FontWeight.w500,
-                      fontSize: 16.0,
                     ),
                   ),
                   const SizedBox(width: 8.0),
@@ -79,14 +78,17 @@ class FunnelHeader extends StatelessWidget {
                       vertical: 4.0,
                     ),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer,
+                      color: DeepColorTokens.secondaryContainer.withValues(
+                        alpha: 0.8,
+                      ),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                     child: Text(
                       analytics.period.label,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontSize: 16.0,
+                      style: TextStyle(
+                        fontSize: FontSizes.caption.getSize(context),
                         fontWeight: FontWeight.w500,
+                        color: DeepColorTokens.neutral700,
                       ),
                     ),
                   ),

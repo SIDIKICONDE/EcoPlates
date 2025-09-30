@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/responsive/responsive.dart';
+import '../../../core/responsive/responsive_utils.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../domain/entities/analytics_stats.dart';
 import '../../providers/analytics_provider.dart';
 import 'kpi_cards/kpi_cards.dart';
@@ -14,6 +17,7 @@ import 'kpi_cards/kpi_cards.dart';
 /// - Taux de conversion
 ///
 /// Chaque carte montre l'évolution par rapport à la période précédente
+/// Le composant est entièrement responsive grâce au système ResponsiveUtils
 class AnalyticsHeader extends ConsumerWidget {
   const AnalyticsHeader({super.key});
 
@@ -29,11 +33,8 @@ class AnalyticsHeader extends ConsumerWidget {
   }
 
   Widget _buildHeader(BuildContext context, AnalyticsStats analytics) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isWide = screenWidth > 768.0;
-
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: context.responsivePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -44,31 +45,25 @@ class AnalyticsHeader extends ConsumerWidget {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(
-                      2.0,
-                    ),
+                    padding: EdgeInsets.all(context.borderRadius / 2),
                     decoration: BoxDecoration(
-                      color:
-                          Theme.of(
-                            context,
-                          ).colorScheme.primaryContainer.withValues(
-                            alpha: 0.3,
-                          ),
-                      borderRadius: BorderRadius.circular(
-                        8.0,
+                      color: DeepColorTokens.primaryContainer.withValues(
+                        alpha: 0.3,
                       ),
+                      borderRadius: BorderRadius.circular(context.borderRadius),
                     ),
                     child: Icon(
                       Icons.insights,
-                      size: 18.0,
-                      color: Theme.of(context).colorScheme.primary,
+                      size: context.buttonHeight * 0.4,
+                      color: DeepColorTokens.primary,
                     ),
                   ),
-                  SizedBox(width: 6.0),
+                  SizedBox(width: context.horizontalSpacing / 4),
                   Text(
                     'Business Insights',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
+                    style: TextStyle(
+                      fontSize: FontSizes.titleMedium.getSize(context),
+                      fontWeight: FontSizes.titleMedium.getFontWeight(),
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -79,194 +74,216 @@ class AnalyticsHeader extends ConsumerWidget {
                 label: Text(
                   analytics.period.label,
                   style: TextStyle(
-                    fontSize: 11.0,
+                    fontSize: FontSizes.label.getSize(context),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .secondaryContainer
-                    .withValues(
-                      alpha: 0.3,
-                    ),
+                backgroundColor: DeepColorTokens.secondaryContainer.withValues(
+                  alpha: 0.3,
+                ),
               ),
             ],
           ),
 
-          SizedBox(height: 10.0),
+          SizedBox(height: context.verticalSpacing / 2.5),
 
           // Grille des KPIs
-          if (isWide)
-            _buildWideLayout(context, analytics)
-          else
-            _buildCompactLayout(context, analytics),
+          _buildResponsiveKpiLayout(context, analytics),
         ],
       ),
     );
   }
 
-  Widget _buildWideLayout(BuildContext context, AnalyticsStats analytics) {
+  Widget _buildResponsiveKpiLayout(
+    BuildContext context,
+    AnalyticsStats analytics,
+  ) {
+    if (context.isMobile) {
+      return _buildGridLayout(
+        context,
+        analytics,
+        crossAxisCount: 2,
+        spacing: context.borderRadius,
+      );
+    } else {
+      return _buildRowLayout(context, analytics, spacing: context.borderRadius);
+    }
+  }
+
+  Widget _buildRowLayout(
+    BuildContext context,
+    AnalyticsStats analytics, {
+    required double spacing,
+  }) {
     return Row(
       children: KpiConfigs.all.map((config) {
         return Expanded(
           child: Padding(
             padding: EdgeInsets.only(
-              right: config != KpiConfigs.all.last ? 6.0 : 0,
+              right: config != KpiConfigs.all.last ? spacing : 0,
             ),
-            child: KpiCard(
-              config: config,
-              analytics: analytics,
-            ),
+            child: KpiCard(config: config, analytics: analytics),
           ),
         );
       }).toList(),
     );
   }
 
-  Widget _buildCompactLayout(BuildContext context, AnalyticsStats analytics) {
-    final firstRow = KpiConfigs.all.take(2);
-    final secondRow = KpiConfigs.all.skip(2);
+  Widget _buildGridLayout(
+    BuildContext context,
+    AnalyticsStats analytics, {
+    required int crossAxisCount,
+    required double spacing,
+  }) {
+    final rows = <Widget>[];
+    final configs = KpiConfigs.all.toList();
 
-    return Column(
-      children: [
+    for (var i = 0; i < configs.length; i += crossAxisCount) {
+      final rowConfigs = configs.skip(i).take(crossAxisCount).toList();
+
+      rows.add(
         Row(
-          children: firstRow.map((config) {
+          children: rowConfigs.map((config) {
             return Expanded(
               child: Padding(
                 padding: EdgeInsets.only(
-                  right: config != firstRow.last ? 6.0 : 0,
+                  right: config != rowConfigs.last ? spacing : 0,
                 ),
-                child: KpiCard(
-                  config: config,
-                  analytics: analytics,
-                ),
+                child: KpiCard(config: config, analytics: analytics),
               ),
             );
           }).toList(),
         ),
-        SizedBox(height: 6.0),
-        Row(
-          children: secondRow.map((config) {
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  right: config != secondRow.last ? 6.0 : 0,
-                ),
-                child: KpiCard(
-                  config: config,
-                  analytics: analytics,
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
+      );
+
+      if (i + crossAxisCount < configs.length) {
+        rows.add(SizedBox(height: spacing));
+      }
+    }
+
+    return Column(children: rows);
   }
 
   Widget _buildLoadingHeader(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isWide = screenWidth > 768.0;
-
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: context.responsivePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Skeleton du titre
           Container(
-            height: 16.0,
-            width: 150.0,
+            height: context.buttonHeight * 0.3,
+            width: context.isMobile
+                ? 120
+                : context.isTablet
+                ? 150
+                : 180,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(
-                4.0,
-              ),
+              color: DeepColorTokens.neutral200,
+              borderRadius: BorderRadius.circular(context.borderRadius / 2),
             ),
           ),
-
-          SizedBox(height: 10.0),
-
-          // Skeleton des cartes KPI avec shimmer
-          if (isWide)
-            Row(
-              children: KpiConfigs.all.map((config) {
-                return Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      right: config != KpiConfigs.all.last ? 6.0 : 0,
-                    ),
-                    child: const KpiCardShimmer(),
-                  ),
-                );
-              }).toList(),
-            )
-          else
-            Column(
-              children: [
-                Row(
-                  children: KpiConfigs.all.take(2).map((config) {
-                    return Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          right: config != KpiConfigs.all.take(2).last
-                              ? 6.0
-                              : 0,
-                        ),
-                        child: const KpiCardShimmer(),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 6.0),
-                Row(
-                  children: KpiConfigs.all.skip(2).map((config) {
-                    return Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          right: config != KpiConfigs.all.skip(2).last
-                              ? 6.0
-                              : 0,
-                        ),
-                        child: const KpiCardShimmer(),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
+          SizedBox(height: context.verticalSpacing / 2.5),
+          _buildResponsiveKpiLoadingLayout(context),
         ],
       ),
     );
   }
 
+  Widget _buildResponsiveKpiLoadingLayout(BuildContext context) {
+    if (context.isMobile) {
+      return _buildGridLoadingLayout(
+        context,
+        crossAxisCount: 2,
+        spacing: context.borderRadius,
+      );
+    } else {
+      return _buildRowLoadingLayout(context, spacing: context.borderRadius);
+    }
+  }
+
+  Widget _buildRowLoadingLayout(
+    BuildContext context, {
+    required double spacing,
+  }) {
+    return Row(
+      children: KpiConfigs.all.map((config) {
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              right: config != KpiConfigs.all.last ? spacing : 0,
+            ),
+            child: const KpiCardShimmer(),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildGridLoadingLayout(
+    BuildContext context, {
+    required int crossAxisCount,
+    required double spacing,
+  }) {
+    final rows = <Widget>[];
+    final configs = KpiConfigs.all.toList();
+
+    for (var i = 0; i < configs.length; i += crossAxisCount) {
+      final rowConfigs = configs.skip(i).take(crossAxisCount).toList();
+
+      rows.add(
+        Row(
+          children: rowConfigs.map((config) {
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: config != rowConfigs.last ? spacing : 0,
+                ),
+                child: const KpiCardShimmer(),
+              ),
+            );
+          }).toList(),
+        ),
+      );
+
+      if (i + crossAxisCount < configs.length) {
+        rows.add(SizedBox(height: spacing));
+      }
+    }
+
+    return Column(children: rows);
+  }
+
   Widget _buildErrorHeader(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: context.responsivePadding,
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: context.responsivePadding,
           child: Column(
             children: [
               Icon(
                 Icons.error_outline,
-                size: 48.0,
-                color: Theme.of(context).colorScheme.error,
+                size: context.buttonHeight * 1.2,
+                color: DeepColorTokens.error,
               ),
-              SizedBox(height: 10.0),
+              SizedBox(height: context.verticalSpacing / 2.5),
               Text(
                 'Erreur de chargement',
-                style: Theme.of(context).textTheme.titleMedium,
+                style: TextStyle(
+                  fontSize: FontSizes.subtitleMedium.getSize(context),
+                  fontWeight: FontSizes.subtitleMedium.getFontWeight(),
+                ),
               ),
-              SizedBox(height: 2.0),
+              SizedBox(height: context.verticalSpacing / 8),
               Text(
                 'Impossible de charger les données analytiques',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                style: TextStyle(
+                  fontSize: FontSizes.bodyMedium.getSize(context),
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 10.0),
+              SizedBox(height: context.verticalSpacing / 2.5),
               FilledButton.icon(
                 onPressed: () => ref.refreshAnalytics(),
                 icon: const Icon(Icons.refresh),

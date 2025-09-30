@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../../domain/entities/analytics_stats.dart';
 import 'reusable_chart.dart';
 
@@ -17,7 +18,7 @@ class OrdersChart extends StatelessWidget {
       config: ChartConfig(
         title: 'Commandes par période',
         icon: Icons.bar_chart,
-        iconColor: Theme.of(context).colorScheme.secondary,
+        iconColor: DeepColorTokens.secondary,
         totalValue: analytics.totalOrders.toDouble(),
         data: analytics.ordersData,
         valueFormatter: (value) => '${value.toInt()} cmd',

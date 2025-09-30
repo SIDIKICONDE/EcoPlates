@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../../core/widgets/adaptive_widgets.dart';
 import '../../providers/analytics_provider.dart';
 
@@ -114,7 +115,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   leading: Icon(
                     Icons.picture_as_pdf,
                     size: 20.0,
-                    color: const Color(0xFFDC2626),
+                    color: DeepColorTokens.error,
                   ),
                   title: Text(
                     'Exporter PDF',
@@ -135,7 +136,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   leading: Icon(
                     Icons.table_chart,
                     size: 20.0,
-                    color: const Color(0xFF16A34A),
+                    color: DeepColorTokens.success,
                   ),
                   title: Text(
                     'Exporter Excel',
@@ -157,7 +158,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   leading: Icon(
                     Icons.settings,
                     size: 20.0,
-                    color: const Color(0xFF6B7280),
+                    color: DeepColorTokens.neutral600,
                   ),
                   title: Text(
                     'Paramètres',
@@ -178,7 +179,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   leading: Icon(
                     Icons.help_outline,
                     size: 20.0,
-                    color: const Color(0xFF2563EB),
+                    color: DeepColorTokens.primary,
                   ),
                   title: Text(
                     'Aide',
@@ -269,7 +270,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Rapport $format exporté avec succès !'),
-            backgroundColor: Colors.green,
+            backgroundColor: DeepColorTokens.success,
             duration: const Duration(seconds: 3),
           ),
         );
@@ -296,7 +297,7 @@ class AnalyticsAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 'Ces paramètres peuvent être modifiés dans les réglages généraux.',
                 style: TextStyle(
                   fontSize: 13.0,
-                  color: Colors.grey,
+                  color: DeepColorTokens.neutral600,
                 ),
               ),
             ],
@@ -394,7 +395,7 @@ class _MerchantLogo extends StatelessWidget {
         child: Icon(
           Icons.analytics,
           size: 20.0,
-          color: Colors.grey,
+          color: DeepColorTokens.neutral600,
         ),
       ),
     );

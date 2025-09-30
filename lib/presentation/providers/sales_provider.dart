@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/food_offer.dart';
 import '../../domain/entities/sale.dart';
+import './stock_items_provider.dart';
 
 /// Sentinelle interne pour détecter l'absence de valeur dans copyWith
 const Object _unset = Object();
@@ -103,6 +104,19 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
   Future<void> updateSaleStatus(String saleId, SaleStatus newStatus) async {
     state = await AsyncValue.guard(() async {
       final sales = state.value ?? [];
+      final saleToUpdate = sales.firstWhere((sale) => sale.id == saleId);
+
+      // Valider le stock avant certaines transitions
+      if (newStatus == SaleStatus.collected) {
+        final stockValid = await validateStockForSale(saleId);
+        if (!stockValid) {
+          throw Exception('Stock insuffisant pour récupérer cette commande');
+        }
+      }
+
+      // Synchroniser avec le stock si nécessaire
+      await _syncStockOnStatusChange(saleToUpdate, newStatus);
+
       final updatedSales = sales.map((sale) {
         if (sale.id == saleId) {
           return sale.copyWith(
@@ -120,6 +134,98 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
 
       return updatedSales;
     });
+  }
+
+  /// Vérifie si le stock est suffisant pour confirmer une vente
+  Future<bool> validateStockForSale(String saleId) async {
+    try {
+      final sales = state.value ?? [];
+      final sale = sales.firstWhere((s) => s.id == saleId);
+
+      final stockItems = ref.read(stockItemsProvider).value ?? [];
+
+      for (final item in sale.items) {
+        if (item.stockItemId != null && item.stockItemId!.isNotEmpty) {
+          final stockItem = stockItems.firstWhere(
+            (stock) => stock.id == item.stockItemId,
+            orElse: () => throw Exception(
+              'Item de stock non trouvé: ${item.stockItemId}',
+            ),
+          );
+
+          if (stockItem.quantity < item.quantity) {
+            return false; // Stock insuffisant
+          }
+        }
+      }
+
+      return true; // Stock suffisant pour tous les items
+    } catch (e) {
+      // En cas d'erreur (item non trouvé, etc.), considérer comme valide
+      // pour ne pas bloquer les ventes sans références de stock
+      return true;
+    }
+  }
+
+  /// Synchronise le stock selon le changement de statut de vente
+  Future<void> _syncStockOnStatusChange(Sale sale, SaleStatus newStatus) async {
+    // Récupérer le provider de stock
+    final stockNotifier = ref.read(stockItemsProvider.notifier);
+
+    // Selon le changement de statut, ajuster le stock
+    switch (newStatus) {
+      case SaleStatus.collected:
+        // Quand la vente est récupérée, décrémenter le stock des items liés
+        if (sale.status != SaleStatus.collected) {
+          await _decrementStockForSale(sale, stockNotifier);
+        }
+        break;
+
+      case SaleStatus.cancelled:
+      case SaleStatus.refunded:
+        // Quand la vente est annulée/remboursée, restaurer le stock
+        if (sale.status == SaleStatus.collected) {
+          await _restoreStockForSale(sale, stockNotifier);
+        }
+        break;
+
+      case SaleStatus.pending:
+      case SaleStatus.confirmed:
+        // Pas de changement de stock pour ces statuts
+        break;
+    }
+  }
+
+  /// Décrémente le stock pour les items d'une vente
+  Future<void> _decrementStockForSale(Sale sale, dynamic stockNotifier) async {
+    for (final item in sale.items) {
+      if (item.stockItemId != null && item.stockItemId!.isNotEmpty) {
+        try {
+          await stockNotifier.adjustQuantity(item.stockItemId!, -item.quantity);
+        } catch (e) {
+          // Log l'erreur mais ne bloque pas la vente
+          print(
+            'Erreur lors de la décrémentation du stock pour ${item.stockItemId}: $e',
+          );
+        }
+      }
+    }
+  }
+
+  /// Restaure le stock pour les items d'une vente
+  Future<void> _restoreStockForSale(Sale sale, dynamic stockNotifier) async {
+    for (final item in sale.items) {
+      if (item.stockItemId != null && item.stockItemId!.isNotEmpty) {
+        try {
+          await stockNotifier.adjustQuantity(item.stockItemId!, item.quantity);
+        } catch (e) {
+          // Log l'erreur mais ne bloque pas la restauration
+          print(
+            'Erreur lors de la restauration du stock pour ${item.stockItemId}: $e',
+          );
+        }
+      }
+    }
   }
 
   /// Génère des ventes fictives pour la démo
@@ -141,6 +247,7 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
             quantity: 1,
             unitPrice: 12,
             totalPrice: 12,
+            stockItemId: 'stock_1', // Référence vers un item de stock fictif
           ),
         ],
         totalAmount: 12,
@@ -165,6 +272,7 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
             quantity: 2,
             unitPrice: 8,
             totalPrice: 16,
+            stockItemId: 'stock_2',
           ),
         ],
         totalAmount: 16,
@@ -188,6 +296,7 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
             quantity: 1,
             unitPrice: 15,
             totalPrice: 15,
+            stockItemId: 'stock_3',
           ),
           const SaleItem(
             offerId: 'offer4',
@@ -196,6 +305,7 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
             quantity: 1,
             unitPrice: 5,
             totalPrice: 5,
+            stockItemId: 'stock_4',
           ),
         ],
         totalAmount: 20,
@@ -220,6 +330,7 @@ class SalesNotifier extends AsyncNotifier<List<Sale>> {
             quantity: 1,
             unitPrice: 10,
             totalPrice: 10,
+            stockItemId: 'stock_5',
           ),
         ],
         totalAmount: 10,

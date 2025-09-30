@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/responsive/responsive.dart';
-import '../../../core/themes/deep_theme.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 
 class AccountTypeSelectionPage extends StatelessWidget {
   const AccountTypeSelectionPage({super.key});
@@ -96,7 +96,7 @@ class AccountTypeSelectionPage extends StatelessWidget {
                   Text(
                     'EcoPlates',
                     style: TextStyle(
-                      fontSize: FontSizes.displayMedium.getSize(context),
+                      fontSize: FontSizes.titleLarge.getSize(context),
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -143,7 +143,7 @@ class AccountTypeSelectionPage extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
-        if (!context.isDesktopDevice) ...[
+        if (!context.isDesktop) ...[
           Icon(
             Icons.eco_rounded,
             size: 80,
@@ -155,7 +155,7 @@ class AccountTypeSelectionPage extends StatelessWidget {
           'Bienvenue sur EcoPlates',
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: FontSizes.headlineLarge.getSize(context),
+            fontSize: FontSizes.titleLarge.getSize(context),
             fontWeight: FontWeight.bold,
             color: DeepColorTokens.textPrimary,
           ),
@@ -311,35 +311,39 @@ class _AccountTypeCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               // Liste des caractéristiques
               if (features.isNotEmpty) ...[
                 SizedBox(height: context.verticalSpacing * 1.5),
-                ...features.map((feature) => Padding(
-                  padding: EdgeInsets.only(bottom: context.verticalSpacing / 2),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.check_circle_rounded,
-                        size: ResponsiveUtils.getIconSize(context) * 0.8,
-                        color: DeepColorTokens.success,
-                      ),
-                      SizedBox(width: context.horizontalSpacing / 2),
-                      Expanded(
-                        child: Text(
-                          feature,
-                          style: TextStyle(
-                            fontSize: FontSizes.bodySmall.getSize(context),
-                            color: DeepColorTokens.textSecondary,
+                ...features.map(
+                  (feature) => Padding(
+                    padding: EdgeInsets.only(
+                      bottom: context.verticalSpacing / 2,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.check_circle_rounded,
+                          size: ResponsiveUtils.getIconSize(context) * 0.8,
+                          color: DeepColorTokens.success,
+                        ),
+                        SizedBox(width: context.horizontalSpacing / 2),
+                        Expanded(
+                          child: Text(
+                            feature,
+                            style: TextStyle(
+                              fontSize: FontSizes.bodySmall.getSize(context),
+                              color: DeepColorTokens.textSecondary,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                )),
+                ),
               ],
-              
+
               // Bouton d'action
               SizedBox(height: context.verticalSpacing),
               Container(

@@ -56,7 +56,7 @@ class StockItemDetailPage extends ConsumerWidget {
       body: SingleChildScrollView(
         padding: context.responsivePadding,
         child: ResponsiveLayout(
-          mobile: Column(
+          mobile: (_) => Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _HeaderCard(item: currentItem),
@@ -74,7 +74,7 @@ class StockItemDetailPage extends ConsumerWidget {
               _ActionsSection(item: currentItem),
             ],
           ),
-          tablet: ResponsiveCardGrid(
+          tablet: (_) => ResponsiveCardGrid(
             tabletColumns: 2,
             desktopColumns: 2,
             spacing: context.horizontalSpacing,
@@ -91,7 +91,7 @@ class StockItemDetailPage extends ConsumerWidget {
               _ActionsSection(item: currentItem),
             ],
           ),
-          desktop: ResponsiveCardGrid(
+          desktop: (_) => ResponsiveCardGrid(
             tabletColumns: 2,
             spacing: context.horizontalSpacing,
             runSpacing: context.verticalSpacing,
@@ -190,7 +190,7 @@ class _StatsCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ResponsiveLayout(
-            mobile: Column(
+            mobile: (_) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 _StatTile(
@@ -209,7 +209,7 @@ class _StatsCard extends StatelessWidget {
                 ),
               ],
             ),
-            tablet: Row(
+            tablet: (_) => Row(
               children: [
                 Expanded(
                   child: _StatTile(
@@ -231,7 +231,7 @@ class _StatsCard extends StatelessWidget {
                 ),
               ],
             ),
-            desktop: Row(
+            desktop: (_) => Row(
               children: [
                 Expanded(
                   child: _StatTile(
@@ -398,21 +398,21 @@ class _ActionsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ResponsiveLayout(
-            mobile: Column(
+            mobile: (_) => Column(
               children: [
                 StockStatusToggle(item: item),
                 VerticalGap(height: context.verticalSpacing / 3),
                 StockQuantityAdjuster(item: item),
               ],
             ),
-            tablet: Row(
+            tablet: (_) => Row(
               children: [
                 Expanded(child: StockStatusToggle(item: item)),
                 HorizontalGap(),
                 Expanded(child: StockQuantityAdjuster(item: item)),
               ],
             ),
-            desktop: Row(
+            desktop: (_) => Row(
               children: [
                 Expanded(child: StockStatusToggle(item: item)),
                 HorizontalGap(),

@@ -50,6 +50,7 @@ abstract class SaleItem with _$SaleItem {
     required int quantity,
     required double unitPrice,
     required double totalPrice,
+    String? stockItemId, // Référence vers l'item de stock pour synchronisation
   }) = _SaleItem;
 
   factory SaleItem.fromJson(Map<String, dynamic> json) =>

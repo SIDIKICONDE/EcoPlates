@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/responsive/responsive.dart';
 import '../../../core/services/supabase_auth_service.dart';
-import '../../../core/themes/deep_theme.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../widgets/auth/auth_form_widgets.dart';
 
 class MerchantSignupPage extends ConsumerStatefulWidget {
@@ -18,14 +18,14 @@ class MerchantSignupPage extends ConsumerStatefulWidget {
 class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
   final _formKey = GlobalKey<FormState>();
   final _pageController = PageController();
-  
+
   // Étape 1 - Informations personnelles
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   // Étape 2 - Informations commerciales
   final _businessNameController = TextEditingController();
   final _businessRegistrationController = TextEditingController();
@@ -35,12 +35,12 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
   final _postalCodeController = TextEditingController();
-  
+
   int _currentStep = 0;
   bool _isLoading = false;
   bool _acceptTerms = false;
   String? _selectedBusinessType;
-  
+
   final List<String> _businessTypes = [
     'Restaurant',
     'Boulangerie',
@@ -102,7 +102,7 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
 
   Future<void> _handleSignup() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (!_acceptTerms) {
       _showError('Veuillez accepter les conditions d\'utilisation');
       return;
@@ -112,7 +112,7 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
 
     try {
       final authService = SupabaseAuthService.instance;
-      
+
       // Créer le compte utilisateur
       final response = await authService.signUpWithEmail(
         email: _emailController.text.trim(),
@@ -125,7 +125,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
       if (response.user != null && mounted) {
         // Les informations du marchand seront complétées dans un second temps
         // via une page de configuration du profil après connexion
-        _showSuccess('Inscription réussie ! Vérifiez votre email pour confirmer votre compte.');
+        _showSuccess(
+          'Inscription réussie ! Vérifiez votre email pour confirmer votre compte.',
+        );
         context.go('/merchant/setup');
       }
     } catch (e) {
@@ -139,7 +141,7 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
 
   void _showError(String message) {
     if (!mounted) return;
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -150,7 +152,7 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
 
   void _showSuccess(String message) {
     if (!mounted) return;
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -236,14 +238,16 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
                   Text(
                     'Développez votre commerce',
                     style: TextStyle(
-                      fontSize: FontSizes.headlineLarge.getSize(context),
+                      fontSize: FontSizes.titleLarge.getSize(context),
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                   SizedBox(height: context.verticalSpacing),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: context.horizontalSpacing * 3),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.horizontalSpacing * 3,
+                    ),
                     child: Text(
                       'Réduisez vos pertes et atteignez de nouveaux clients éco-responsables',
                       textAlign: TextAlign.center,
@@ -299,8 +303,8 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
           Expanded(
             child: Container(
               height: 2,
-              color: _currentStep > 0 
-                  ? DeepColorTokens.primary 
+              color: _currentStep > 0
+                  ? DeepColorTokens.primary
                   : DeepColorTokens.divider,
             ),
           ),
@@ -342,9 +346,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
           subtitle: 'Étape 1 : Informations personnelles',
           showBackButton: true,
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 3),
-        
+
         // Nom complet
         AuthTextField(
           controller: _nameController,
@@ -362,9 +366,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             return null;
           },
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 1.5),
-        
+
         // Email
         AuthTextField(
           controller: _emailController,
@@ -381,9 +385,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             return null;
           },
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 1.5),
-        
+
         // Téléphone
         AuthTextField(
           controller: _phoneController,
@@ -400,9 +404,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             return null;
           },
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 1.5),
-        
+
         // Mot de passe
         AuthTextField(
           controller: _passwordController,
@@ -422,9 +426,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             return null;
           },
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 1.5),
-        
+
         // Confirmation mot de passe
         AuthTextField(
           controller: _confirmPasswordController,
@@ -441,9 +445,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             return null;
           },
         ),
-        
+
         const Spacer(),
-        
+
         // Bouton suivant
         AuthPrimaryButton(
           text: 'Suivant',
@@ -451,9 +455,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
           onPressed: _nextStep,
           isLoading: _isLoading,
         ),
-        
+
         SizedBox(height: context.verticalSpacing),
-        
+
         // Lien connexion
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -485,9 +489,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
           subtitle: 'Étape 2 : Détails de votre commerce',
           showBackButton: false,
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 3),
-        
+
         // Nom du commerce
         AuthTextField(
           controller: _businessNameController,
@@ -501,12 +505,12 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             return null;
           },
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 1.5),
-        
+
         // Type de commerce
         DropdownButtonFormField<String>(
-          value: _selectedBusinessType,
+          initialValue: _selectedBusinessType,
           decoration: InputDecoration(
             labelText: 'Type de commerce',
             prefixIcon: Icon(
@@ -557,9 +561,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             return null;
           },
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 1.5),
-        
+
         // Numéro SIRET (optionnel)
         AuthTextField(
           controller: _businessRegistrationController,
@@ -571,9 +575,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             FilteringTextInputFormatter.allow(RegExp(r'[\d\s]')),
           ],
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 1.5),
-        
+
         // Adresse
         AuthTextField(
           controller: _addressController,
@@ -586,9 +590,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             return null;
           },
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 1.5),
-        
+
         // Ville et code postal
         Row(
           children: [
@@ -629,9 +633,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             ),
           ],
         ),
-        
+
         SizedBox(height: context.verticalSpacing * 2),
-        
+
         // Conditions d'utilisation
         AuthCheckbox(
           value: _acceptTerms,
@@ -663,9 +667,9 @@ class _MerchantSignupPageState extends ConsumerState<MerchantSignupPage> {
             ),
           ),
         ),
-        
+
         const Spacer(),
-        
+
         // Boutons
         Row(
           children: [
@@ -717,7 +721,9 @@ class _StepIndicatorItem extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: isActive ? DeepColorTokens.primary : DeepColorTokens.neutral300,
+            color: isActive
+                ? DeepColorTokens.primary
+                : DeepColorTokens.neutral300,
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -730,7 +736,9 @@ class _StepIndicatorItem extends StatelessWidget {
                 : Text(
                     number,
                     style: TextStyle(
-                      color: isActive ? Colors.white : DeepColorTokens.textSecondary,
+                      color: isActive
+                          ? Colors.white
+                          : DeepColorTokens.textSecondary,
                       fontWeight: FontWeight.bold,
                       fontSize: FontSizes.bodyMedium.getSize(context),
                     ),
@@ -742,7 +750,9 @@ class _StepIndicatorItem extends StatelessWidget {
           title,
           style: TextStyle(
             fontSize: FontSizes.caption.getSize(context),
-            color: isActive ? DeepColorTokens.textPrimary : DeepColorTokens.textSecondary,
+            color: isActive
+                ? DeepColorTokens.textPrimary
+                : DeepColorTokens.textSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

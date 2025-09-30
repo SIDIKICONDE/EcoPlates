@@ -34,9 +34,9 @@ class WelcomeScreen extends ConsumerWidget {
         child: SafeArea(
           child: CenteredResponsiveLayout(
             child: ResponsiveLayout(
-              mobile: _buildMobileLayout(context),
-              tablet: _buildTabletLayout(context),
-              desktop: _buildDesktopLayout(context),
+              mobile: (_) => _buildMobileLayout(context),
+              tablet: (_) => _buildTabletLayout(context),
+              desktop: (_) => _buildDesktopLayout(context),
             ),
           ),
         ),

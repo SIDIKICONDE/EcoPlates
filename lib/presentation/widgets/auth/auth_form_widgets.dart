@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/responsive/responsive.dart';
-import '../../../core/themes/deep_theme.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 
 /// Champ de texte personnalisé pour l'authentification
 class AuthTextField extends StatefulWidget {
@@ -99,7 +99,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
               )
             : null,
         filled: true,
-        fillColor: widget.enabled 
+        fillColor: widget.enabled
             ? DeepColorTokens.surfaceBackground
             : DeepColorTokens.neutral200,
         border: OutlineInputBorder(
@@ -156,13 +156,13 @@ class AuthPrimaryButton extends StatelessWidget {
   final Color? textColor;
 
   const AuthPrimaryButton({
-    super.key,
     required this.text,
     required this.onPressed,
     this.isLoading = false,
     this.icon,
     this.backgroundColor,
     this.textColor,
+    super.key,
   });
 
   @override
@@ -221,16 +221,16 @@ class AuthPrimaryButton extends StatelessWidget {
 
 /// Bouton secondaire pour l'authentification
 class AuthSecondaryButton extends StatelessWidget {
-  final String text;
-  final VoidCallback? onPressed;
-  final IconData? icon;
 
   const AuthSecondaryButton({
-    super.key,
     required this.text,
     required this.onPressed,
     this.icon,
+    super.key,
   });
+  final String text;
+  final VoidCallback? onPressed;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -269,22 +269,22 @@ class AuthSecondaryButton extends StatelessWidget {
 
 /// Bouton pour l'authentification sociale
 class SocialAuthButton extends StatelessWidget {
-  final String text;
-  final String? imagePath;
-  final IconData? icon;
-  final VoidCallback? onPressed;
-  final Color backgroundColor;
-  final Color textColor;
 
   const SocialAuthButton({
-    super.key,
     required this.text,
     this.imagePath,
     this.icon,
     required this.onPressed,
     this.backgroundColor = Colors.white,
     this.textColor = DeepColorTokens.textPrimary,
+    super.key,
   });
+  final String text;
+  final String? imagePath;
+  final IconData? icon;
+  final VoidCallback? onPressed;
+  final Color backgroundColor;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -340,12 +340,12 @@ class SocialAuthButton extends StatelessWidget {
 
 /// Diviseur avec texte
 class AuthDivider extends StatelessWidget {
-  final String text;
 
   const AuthDivider({
     super.key,
     this.text = 'ou',
   });
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -360,7 +360,9 @@ class AuthDivider extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.horizontalSpacing),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.horizontalSpacing,
+            ),
             child: Text(
               text,
               style: TextStyle(
@@ -383,16 +385,16 @@ class AuthDivider extends StatelessWidget {
 
 /// Header pour les pages d'authentification
 class AuthPageHeader extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final bool showBackButton;
 
   const AuthPageHeader({
-    super.key,
     required this.title,
     required this.subtitle,
     this.showBackButton = true,
+    super.key,
   });
+  final String title;
+  final String subtitle;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -414,7 +416,7 @@ class AuthPageHeader extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            fontSize: FontSizes.headlineLarge.getSize(context),
+            fontSize: FontSizes.titleLarge.getSize(context),
             fontWeight: FontWeight.bold,
             color: DeepColorTokens.textPrimary,
           ),
@@ -434,16 +436,17 @@ class AuthPageHeader extends StatelessWidget {
 
 /// Checkbox avec label pour les conditions
 class AuthCheckbox extends StatelessWidget {
-  final bool value;
-  final ValueChanged<bool?> onChanged;
-  final Widget label;
 
   const AuthCheckbox({
-    super.key,
+
     required this.value,
     required this.onChanged,
     required this.label,
+    super.key,
   });
+  final bool value;
+  final ValueChanged<bool?> onChanged;
+  final Widget label;
 
   @override
   Widget build(BuildContext context) {

@@ -162,6 +162,25 @@ class DeepColorTokens {
     ],
   );
 
+  // ===== COULEURS DE TEXTE =====
+  static const Color textPrimary = Color(
+    0xFF212529,
+  ); // neutral900 - Texte principal
+  static const Color textSecondary = Color(
+    0xFF495057,
+  ); // neutral700 - Texte secondaire
+  static const Color textTertiary = Color(
+    0xFFADB5BD,
+  ); // neutral500 - Texte tertiaire/hints
+
+  // ===== COULEURS DE SURFACE ET DIVISEURS =====
+  static const Color surfaceBackground = Color(
+    0xFFF8F9FA,
+  ); // neutral50 - Fond de surface claire
+  static const Color divider = Color(
+    0xFFE9ECEF,
+  ); // neutral200 - Couleur des diviseurs
+
   // ===== OVERLAYS ET TRANSPARENCES =====
   static Color overlayDark = const Color(0xFF000000).withValues(alpha: 0.7);
   static Color overlayMedium = const Color(0xFF000000).withValues(alpha: 0.5);

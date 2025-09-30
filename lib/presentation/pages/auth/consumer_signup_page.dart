@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/responsive/responsive.dart';
 import '../../../core/services/supabase_auth_service.dart';
-import '../../../core/themes/deep_theme.dart';
+import '../../../core/themes/tokens/deep_color_tokens.dart';
 import '../../widgets/auth/auth_form_widgets.dart';
 
 class ConsumerSignupPage extends ConsumerStatefulWidget {
@@ -22,7 +22,7 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _acceptTerms = false;
   bool _acceptMarketing = false;
@@ -39,7 +39,7 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
 
   Future<void> _handleSignup() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (!_acceptTerms) {
       _showError('Veuillez accepter les conditions d\'utilisation');
       return;
@@ -49,7 +49,7 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
 
     try {
       final authService = SupabaseAuthService.instance;
-      
+
       final response = await authService.signUpWithEmail(
         email: _emailController.text.trim(),
         password: _passwordController.text,
@@ -73,11 +73,11 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
 
   Future<void> _handleGoogleSignup() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final authService = SupabaseAuthService.instance;
       await authService.signInWithGoogle();
-      
+
       if (mounted) {
         context.go('/home');
       }
@@ -92,7 +92,7 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
 
   void _showError(String message) {
     if (!mounted) return;
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -103,7 +103,7 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
 
   void _showSuccess(String message) {
     if (!mounted) return;
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -175,14 +175,16 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
                   Text(
                     'Rejoignez la communauté',
                     style: TextStyle(
-                      fontSize: FontSizes.headlineLarge.getSize(context),
+                      fontSize: FontSizes.titleLarge.getSize(context),
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                   SizedBox(height: context.verticalSpacing),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: context.horizontalSpacing * 3),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.horizontalSpacing * 3,
+                    ),
                     child: Text(
                       'Des milliers d\'offres vous attendent pour réduire le gaspillage alimentaire',
                       textAlign: TextAlign.center,
@@ -226,9 +228,9 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
             subtitle: 'Inscrivez-vous pour commencer à sauver de la nourriture',
             showBackButton: true,
           ),
-          
+
           SizedBox(height: context.verticalSpacing * 3),
-          
+
           // Nom complet
           AuthTextField(
             controller: _nameController,
@@ -246,9 +248,9 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
               return null;
             },
           ),
-          
+
           SizedBox(height: context.verticalSpacing * 1.5),
-          
+
           // Email
           AuthTextField(
             controller: _emailController,
@@ -259,15 +261,17 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
               if (value == null || value.isEmpty) {
                 return 'L\'email est requis';
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(
+                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+              ).hasMatch(value)) {
                 return 'Email invalide';
               }
               return null;
             },
           ),
-          
+
           SizedBox(height: context.verticalSpacing * 1.5),
-          
+
           // Téléphone
           AuthTextField(
             controller: _phoneController,
@@ -279,9 +283,9 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
               FilteringTextInputFormatter.allow(RegExp(r'[\d\s\+\-\(\)]')),
             ],
           ),
-          
+
           SizedBox(height: context.verticalSpacing * 1.5),
-          
+
           // Mot de passe
           AuthTextField(
             controller: _passwordController,
@@ -301,9 +305,9 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
               return null;
             },
           ),
-          
+
           SizedBox(height: context.verticalSpacing * 1.5),
-          
+
           // Confirmation mot de passe
           AuthTextField(
             controller: _confirmPasswordController,
@@ -320,9 +324,9 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
               return null;
             },
           ),
-          
+
           SizedBox(height: context.verticalSpacing * 2),
-          
+
           // Conditions d'utilisation
           AuthCheckbox(
             value: _acceptTerms,
@@ -333,16 +337,16 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
                   fontSize: FontSizes.bodySmall.getSize(context),
                   color: DeepColorTokens.textSecondary,
                 ),
-                children: [
-                  const TextSpan(text: 'J\'accepte les '),
+                children: const [
+                  TextSpan(text: "J'accepte les "),
                   TextSpan(
-                    text: 'conditions d\'utilisation',
+                    text: "conditions d'utilisation",
                     style: TextStyle(
                       color: DeepColorTokens.primary,
                       decoration: TextDecoration.underline,
                     ),
                   ),
-                  const TextSpan(text: ' et la '),
+                  TextSpan(text: ' et la '),
                   TextSpan(
                     text: 'politique de confidentialité',
                     style: TextStyle(
@@ -354,11 +358,12 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
               ),
             ),
           ),
-          
+
           // Newsletter
           AuthCheckbox(
             value: _acceptMarketing,
-            onChanged: (value) => setState(() => _acceptMarketing = value ?? false),
+            onChanged: (value) =>
+                setState(() => _acceptMarketing = value ?? false),
             label: Text(
               'Je souhaite recevoir des offres et promotions par email',
               style: TextStyle(
@@ -367,19 +372,19 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
               ),
             ),
           ),
-          
+
           SizedBox(height: context.verticalSpacing * 2),
-          
+
           // Bouton inscription
           AuthPrimaryButton(
             text: 'S\'inscrire',
             onPressed: _handleSignup,
             isLoading: _isLoading,
           ),
-          
+
           // Divider
           const AuthDivider(text: 'ou continuer avec'),
-          
+
           // Social auth
           Row(
             children: [
@@ -398,17 +403,19 @@ class _ConsumerSignupPageState extends ConsumerState<ConsumerSignupPage> {
                     icon: Icons.apple_rounded,
                     backgroundColor: Colors.black,
                     textColor: Colors.white,
-                    onPressed: _isLoading ? null : () {
-                      // Implémenter Apple Sign In
-                    },
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            // Implémenter Apple Sign In
+                          },
                   ),
                 ),
               ],
             ],
           ),
-          
+
           SizedBox(height: context.verticalSpacing * 2),
-          
+
           // Lien connexion
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

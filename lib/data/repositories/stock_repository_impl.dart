@@ -5,7 +5,7 @@ import '../../domain/repositories/stock_repository.dart';
 import '../models/stock_item_model.dart';
 
 /// Implémentation mock du repository de stock
-/// 
+///
 /// Utilise un stockage en mémoire avec des données de test
 /// et simule des délais réseau pour tester les états de chargement.
 class StockRepositoryImpl implements StockRepository {
@@ -130,7 +130,8 @@ class StockRepositoryImpl implements StockRepository {
     }
 
     // Génération d'un ID unique mock
-    final newId = 'item_${DateTime.now().millisecondsSinceEpoch}_${_random.nextInt(9999)}';
+    final newId =
+        'item_${DateTime.now().millisecondsSinceEpoch}_${_random.nextInt(9999)}';
 
     final model = StockItemModel.fromEntity(
       item.copyWith(
@@ -175,7 +176,9 @@ class StockRepositoryImpl implements StockRepository {
 
     // Filtre par statut
     if (filter.status != null) {
-      filtered = filtered.where((item) => item.status == filter.status).toList();
+      filtered = filtered
+          .where((item) => item.status == filter.status)
+          .toList();
     }
 
     // Filtre par catégorie
@@ -226,6 +229,73 @@ class StockRepositoryImpl implements StockRepository {
     final now = DateTime.now();
 
     _items.addAll([
+      // Items liés aux ventes (pour démonstration de la synchronisation)
+      StockItemModel(
+        id: 'stock_1',
+        name: 'Panier anti-gaspi du soir',
+        sku: 'PANIER-SOIR-001',
+        category: 'Paniers',
+        price: 12.0,
+        quantity: 5, // Stock limité pour tester la validation
+        unit: 'panier',
+        status: StockItemStatus.active,
+        updatedAt: now.subtract(const Duration(minutes: 30)),
+        description: 'Panier anti-gaspi du soir avec produits frais',
+        lowStockThreshold: 10,
+      ),
+      StockItemModel(
+        id: 'stock_2',
+        name: 'Panier boulangerie',
+        sku: 'PANIER-BOUL-002',
+        category: 'Paniers',
+        price: 8.0,
+        quantity: 12,
+        unit: 'panier',
+        status: StockItemStatus.active,
+        updatedAt: now.subtract(const Duration(hours: 1)),
+        description: 'Panier boulangerie avec pains et viennoiseries',
+        lowStockThreshold: 15,
+      ),
+      StockItemModel(
+        id: 'stock_3',
+        name: 'Menu végétarien',
+        sku: 'MENU-VEG-003',
+        category: 'Menus',
+        price: 15.0,
+        quantity: 8,
+        unit: 'menu',
+        status: StockItemStatus.active,
+        updatedAt: now.subtract(const Duration(hours: 2)),
+        description: 'Menu végétarien complet',
+        lowStockThreshold: 10,
+      ),
+      StockItemModel(
+        id: 'stock_4',
+        name: 'Dessert du jour',
+        sku: 'DESSERT-JOUR-004',
+        category: 'Desserts',
+        price: 5.0,
+        quantity: 15,
+        unit: 'portion',
+        status: StockItemStatus.active,
+        updatedAt: now.subtract(const Duration(hours: 2)),
+        description: 'Dessert du jour préparé frais',
+        lowStockThreshold: 20,
+      ),
+      StockItemModel(
+        id: 'stock_5',
+        name: 'Panier surprise',
+        sku: 'PANIER-SURPRISE-005',
+        category: 'Paniers',
+        price: 10.0,
+        quantity: 0, // Rupture de stock pour tester
+        unit: 'panier',
+        status: StockItemStatus.active,
+        updatedAt: now.subtract(const Duration(days: 1)),
+        description: 'Panier surprise avec produits de saison',
+        lowStockThreshold: 5,
+      ),
+
       // Fruits & Légumes
       StockItemModel(
         id: 'fruit_001',

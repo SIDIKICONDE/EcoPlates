@@ -65,6 +65,7 @@ _SaleItem _$SaleItemFromJson(Map<String, dynamic> json) => _SaleItem(
   quantity: (json['quantity'] as num).toInt(),
   unitPrice: (json['unitPrice'] as num).toDouble(),
   totalPrice: (json['totalPrice'] as num).toDouble(),
+  stockItemId: json['stockItemId'] as String?,
 );
 
 Map<String, dynamic> _$SaleItemToJson(_SaleItem instance) => <String, dynamic>{
@@ -74,6 +75,7 @@ Map<String, dynamic> _$SaleItemToJson(_SaleItem instance) => <String, dynamic>{
   'quantity': instance.quantity,
   'unitPrice': instance.unitPrice,
   'totalPrice': instance.totalPrice,
+  'stockItemId': instance.stockItemId,
 };
 
 const _$FoodCategoryEnumMap = {

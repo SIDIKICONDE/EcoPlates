@@ -15,14 +15,14 @@ class ResponsiveLayout extends StatelessWidget {
          'Au moins mobile ou child doit être fourni',
        );
 
-  /// Widget pour mobile (< 600px)
-  final Widget? mobile;
+  /// Builder pour mobile (< 600px)
+  final Widget Function(BuildContext)? mobile;
 
-  /// Widget pour tablette (600-904px)
-  final Widget? tablet;
+  /// Builder pour tablette (600-904px)
+  final Widget Function(BuildContext)? tablet;
 
-  /// Widget pour desktop (>= 905px)
-  final Widget? desktop;
+  /// Builder pour desktop (>= 905px)
+  final Widget Function(BuildContext)? desktop;
 
   /// Widget par défaut si les autres ne sont pas fournis
   final Widget? child;
@@ -36,11 +36,14 @@ class ResponsiveLayout extends StatelessWidget {
 
     switch (deviceType) {
       case DeviceType.mobile:
-        return mobile ?? child!;
+        return mobile?.call(context) ?? child!;
       case DeviceType.tablet:
-        return tablet ?? mobile ?? child!;
+        return tablet?.call(context) ?? mobile?.call(context) ?? child!;
       case DeviceType.desktop:
-        return desktop ?? tablet ?? mobile ?? child!;
+        return desktop?.call(context) ??
+            tablet?.call(context) ??
+            mobile?.call(context) ??
+            child!;
     }
   }
 }

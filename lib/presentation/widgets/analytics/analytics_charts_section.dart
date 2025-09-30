@@ -2,9 +2,79 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/responsive/responsive.dart';
+import '../../../core/responsive/responsive_utils.dart';
 import '../../../domain/entities/analytics_stats.dart';
 import '../../providers/analytics_provider.dart';
 import 'charts/charts.dart';
+
+/// Configurations centralisées pour les sections de charts du haut (revenus, commandes, commissions)
+/// Permet d'appliquer des dispositions cohérentes selon les écrans
+class TopChartsConfigs {
+  /// Configuration responsive basée sur la largeur de l'écran
+  static TopChartsConfig responsive(BuildContext context) {
+    return ResponsiveUtils.responsiveValue(
+      context,
+      mobile: _mobileConfig,
+      tablet: _tabletConfig,
+      desktop: _desktopConfig,
+      desktopLarge: _desktopLargeConfig,
+    );
+  }
+
+  /// Configuration mobile : disposition en colonne
+  static const _mobileConfig = TopChartsConfig(
+    direction: Axis.vertical,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    mainAxisAlignment: MainAxisAlignment.start,
+    spacing: 16.0,
+  );
+
+  /// Configuration tablette : disposition en colonne avec espacement
+  static const _tabletConfig = TopChartsConfig(
+    direction: Axis.vertical,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    mainAxisAlignment: MainAxisAlignment.start,
+    spacing: 16.0,
+  );
+
+  /// Configuration desktop : disposition en ligne
+  static const _desktopConfig = TopChartsConfig(
+    direction: Axis.horizontal,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.start,
+    spacing: null, // Utilise horizontalSpacing du contexte
+  );
+
+  /// Configuration desktop large : disposition en ligne optimisée
+  static const _desktopLargeConfig = TopChartsConfig(
+    direction: Axis.horizontal,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.start,
+    spacing: null, // Utilise horizontalSpacing du contexte
+  );
+}
+
+/// Configuration pour la disposition des charts du haut
+class TopChartsConfig {
+  const TopChartsConfig({
+    required this.direction,
+    required this.crossAxisAlignment,
+    required this.mainAxisAlignment,
+    required this.spacing,
+  });
+
+  /// Direction principale de disposition (vertical/horizontal)
+  final Axis direction;
+
+  /// Alignement transversal
+  final CrossAxisAlignment crossAxisAlignment;
+
+  /// Alignement principal
+  final MainAxisAlignment mainAxisAlignment;
+
+  /// Espacement entre les charts (null = utilise horizontalSpacing du contexte)
+  final double? spacing;
+}
 
 /// Section contenant les graphiques d'analyse
 ///
@@ -47,34 +117,27 @@ class AnalyticsChartsSection extends ConsumerWidget {
     BuildContext context,
     AnalyticsStats analytics,
   ) {
-    if (context.isDesktop) {
-      // Sur desktop : aligner horizontalement les trois graphiques (revenus, commandes, commissions)
-      return Row(
-        children: [
-          Expanded(
-            child: RevenueChart(analytics: analytics),
-          ),
-          SizedBox(width: context.horizontalSpacing),
-          Expanded(
-            child: OrdersChart(analytics: analytics),
-          ),
-          SizedBox(width: context.horizontalSpacing),
-          Expanded(
-            child: CommissionsChart(analytics: analytics),
-          ),
-        ],
-      );
-    } else {
-      // Sur mobile/tablette : empiler verticalement
-      return Column(
-        children: [
+    final config = TopChartsConfigs.responsive(context);
+
+    return Flex(
+      direction: config.direction,
+      crossAxisAlignment: config.crossAxisAlignment,
+      mainAxisAlignment: config.mainAxisAlignment,
+      children: [
+        if (config.direction == Axis.horizontal) ...[
+          Expanded(child: RevenueChart(analytics: analytics)),
+          SizedBox(width: config.spacing ?? context.horizontalSpacing),
+          Expanded(child: OrdersChart(analytics: analytics)),
+          SizedBox(width: config.spacing ?? context.horizontalSpacing),
+          Expanded(child: CommissionsChart(analytics: analytics)),
+        ] else ...[
           RevenueChart(analytics: analytics),
-          SizedBox(height: 16.0),
+          SizedBox(height: config.spacing ?? 16.0),
           OrdersChart(analytics: analytics),
-          SizedBox(height: 16.0),
+          SizedBox(height: config.spacing ?? 16.0),
           CommissionsChart(analytics: analytics),
         ],
-      );
-    }
+      ],
+    );
   }
 }

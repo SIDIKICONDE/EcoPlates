@@ -67,11 +67,21 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
                         _getPeriodIcon(period),
                         size: 16.0 * 0.875,
                         color: isSelected
-                            ? Colors.white
-                            : DeepColorTokens.neutral600,
+                            ? DeepColorTokens.neutral0
+                            : DeepColorTokens.neutral700,
                       ),
                       SizedBox(width: 4.0),
-                      Text(period.shortLabel),
+                      Text(
+                        period.shortLabel,
+                        style: TextStyle(
+                          color: isSelected
+                              ? DeepColorTokens.neutral0
+                              : DeepColorTokens.neutral900,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
+                        ),
+                      ),
                     ],
                   ),
                   selected: isSelected,
@@ -81,8 +91,8 @@ class AnalyticsPeriodFilterChips extends ConsumerWidget {
                     }
                   },
                   selectedColor: _getPeriodColor(period),
-                  backgroundColor: DeepColorTokens.surface.withValues(
-                    alpha: 0.8,
+                  backgroundColor: DeepColorTokens.neutral50.withValues(
+                    alpha: 0.9,
                   ),
                   showCheckmark: false,
                   pressElevation: 16.0,

@@ -103,10 +103,10 @@ class AnalyticsHeader extends ConsumerWidget {
         context,
         analytics,
         crossAxisCount: 2,
-        spacing: context.borderRadius,
+        spacing: 4.0,
       );
     } else {
-      return _buildRowLayout(context, analytics, spacing: context.borderRadius);
+      return _buildRowLayout(context, analytics, spacing: 5.0);
     }
   }
 
@@ -194,7 +194,7 @@ class AnalyticsHeader extends ConsumerWidget {
       return _buildGridLoadingLayout(
         context,
         crossAxisCount: 2,
-        spacing: context.borderRadius,
+        spacing: 2.0,
       );
     } else {
       return _buildRowLoadingLayout(context, spacing: context.borderRadius);

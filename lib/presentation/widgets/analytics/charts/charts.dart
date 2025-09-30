@@ -1,5 +1,4 @@
 export 'bottom_charts_section.dart';
-export 'categories_chart.dart';
 export 'commissions_chart.dart';
 export 'conversion_funnel_chart.dart';
 export 'customer_satisfaction_chart.dart';

@@ -1,9 +1,91 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/responsive/responsive.dart';
+import '../../../../core/responsive/responsive_utils.dart';
 import '../../../../domain/entities/analytics_stats.dart';
-import 'categories_chart.dart';
 import 'customer_satisfaction_chart.dart';
 import 'top_products_chart.dart';
+
+/// Configurations centralisées pour les sections de charts analytiques
+/// Permet d'appliquer des dispositions cohérentes selon les écrans
+class AnalyticsChartsConfigs {
+  /// Configuration responsive basée sur la largeur de l'écran
+  static AnalyticsChartsConfig responsive(BuildContext context) {
+    return ResponsiveUtils.responsiveValue(
+      context,
+      mobile: _mobileConfig,
+      tablet: _tabletConfig,
+      desktop: _desktopConfig,
+      desktopLarge: _desktopLargeConfig,
+    );
+  }
+
+  /// Configuration mobile : disposition en colonne
+  static const _mobileConfig = AnalyticsChartsConfig(
+    direction: Axis.vertical,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    mainAxisAlignment: MainAxisAlignment.start,
+    chartAlignment: AnalyticsChartAlignment.fullWidth,
+  );
+
+  /// Configuration tablette : charts en pleine largeur pour meilleure lisibilité
+  static const _tabletConfig = AnalyticsChartsConfig(
+    direction: Axis.vertical,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    mainAxisAlignment: MainAxisAlignment.start,
+    chartAlignment: AnalyticsChartAlignment.fullWidth,
+  );
+
+  /// Configuration desktop : disposition en ligne
+  static const _desktopConfig = AnalyticsChartsConfig(
+    direction: Axis.horizontal,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.start,
+    chartAlignment: AnalyticsChartAlignment.equalColumns,
+  );
+
+  /// Configuration desktop large : même que desktop mais optimisée
+  static const _desktopLargeConfig = AnalyticsChartsConfig(
+    direction: Axis.horizontal,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.start,
+    chartAlignment: AnalyticsChartAlignment.equalColumns,
+  );
+}
+
+/// Configuration pour la disposition des charts analytiques
+class AnalyticsChartsConfig {
+  const AnalyticsChartsConfig({
+    required this.direction,
+    required this.crossAxisAlignment,
+    required this.mainAxisAlignment,
+    required this.chartAlignment,
+  });
+
+  /// Direction principale de disposition (vertical/horizontal)
+  final Axis direction;
+
+  /// Alignement transversal
+  final CrossAxisAlignment crossAxisAlignment;
+
+  /// Alignement principal
+  final MainAxisAlignment mainAxisAlignment;
+
+  /// Type d'alignement des charts
+  final AnalyticsChartAlignment chartAlignment;
+}
+
+/// Types d'alignement possibles pour les charts
+enum AnalyticsChartAlignment {
+  /// Tous les charts en pleine largeur
+  fullWidth,
+
+  /// Deux charts en colonnes, un centré en dessous
+  twoColumnsWithCenter,
+
+  /// Charts répartis équitablement en colonnes
+  equalColumns,
+}
 
 class BottomChartsSection extends StatelessWidget {
   const BottomChartsSection({
@@ -15,85 +97,49 @@ class BottomChartsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        if (width < 600) {
-          return _buildMobileLayout(context);
-        } else if (width < 1200) {
-          return _buildTabletLayout(context);
-        } else {
-          return _buildDesktopLayout(context);
-        }
-      },
-    );
-  }
+    final config = AnalyticsChartsConfigs.responsive(context);
 
-  /// Layout mobile : disposition en colonne
-  Widget _buildMobileLayout(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TopProductsChart(analytics: analytics),
-          SizedBox(
-            height: 24.0,
-          ),
-          CategoriesChart(analytics: analytics),
-          SizedBox(
-            height: 24.0,
-          ),
-          CustomerSatisfactionChart(analytics: analytics),
-        ],
+      padding: context.responsivePadding,
+      child: Flex(
+        direction: config.direction,
+        crossAxisAlignment: config.crossAxisAlignment,
+        mainAxisAlignment: config.mainAxisAlignment,
+        children: _buildCharts(context, config),
       ),
     );
   }
 
-  /// Layout tablette : disposition en ligne pour 2 charts + 1 en dessous
-  Widget _buildTabletLayout(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: TopProductsChart(analytics: analytics)),
-              SizedBox(
-                width: 16.0,
-              ),
-              Expanded(child: CategoriesChart(analytics: analytics)),
-            ],
-          ),
-          SizedBox(
-            height: 24.0,
-          ),
+  /// Construit la liste des charts selon la configuration
+  List<Widget> _buildCharts(
+    BuildContext context,
+    AnalyticsChartsConfig config,
+  ) {
+    switch (config.chartAlignment) {
+      case AnalyticsChartAlignment.fullWidth:
+        return [
+          TopProductsChart(analytics: analytics),
+          SizedBox(height: context.verticalSpacing),
+          CustomerSatisfactionChart(analytics: analytics),
+        ];
+
+      case AnalyticsChartAlignment.twoColumnsWithCenter:
+        return [
+          TopProductsChart(analytics: analytics),
+          SizedBox(height: context.verticalSpacing),
           // Chart de satisfaction centré
           ConstrainedBox(
-            constraints: BoxConstraints(
-              
-            ),
+            constraints: BoxConstraints(),
             child: CustomerSatisfactionChart(analytics: analytics),
           ),
-        ],
-      ),
-    );
-  }
+        ];
 
-  /// Layout desktop : disposition en ligne pour les 3 charts
-  Widget _buildDesktopLayout(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      case AnalyticsChartAlignment.equalColumns:
+        return [
           Expanded(child: TopProductsChart(analytics: analytics)),
-          SizedBox(width: 16.0),
-          Expanded(child: CategoriesChart(analytics: analytics)),
-          SizedBox(width: 16.0),
+          SizedBox(width: context.horizontalSpacing),
           Expanded(child: CustomerSatisfactionChart(analytics: analytics)),
-        ],
-      ),
-    );
+        ];
+    }
   }
 }

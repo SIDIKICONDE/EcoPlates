@@ -141,7 +141,7 @@ class KpiCard extends StatelessWidget {
     final isPositiveGrowth = config.getIsPositive(analytics);
 
     return Container(
-      height: 120,
+      height: 140,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -189,7 +189,7 @@ class KpiCard extends StatelessWidget {
                         _getTitle(context),
                         style: TextStyle(
                           color: DeepColorTokens.neutral0,
-                          fontSize: FontSizes.bodyMedium.getSize(context),
+                          fontSize: FontSizes.caption.getSize(context),
                           fontWeight: FontWeight.w600,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -209,7 +209,7 @@ class KpiCard extends StatelessWidget {
                     config.getValue(analytics),
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      fontSize: FontSizes.titleMedium.getSize(context),
+                      fontSize: FontSizes.bodyLarge.getSize(context),
                       color: DeepColorTokens.neutral0,
                       letterSpacing: 0.5,
                     ),
@@ -244,7 +244,7 @@ class KpiCard extends StatelessWidget {
                           style: TextStyle(
                             color: DeepColorTokens.neutral0,
                             fontWeight: FontWeight.w600,
-                            fontSize: FontSizes.caption.getSize(context),
+                            fontSize: FontSizes.caption.getSize(context) * 0.8,
                           ),
                         ),
                       ],

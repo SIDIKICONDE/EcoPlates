@@ -55,7 +55,7 @@ class _ReusableChartState extends State<ReusableChart> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 16.0,
+        horizontal: 8.0,
       ),
       child: Card(
         child: Padding(
